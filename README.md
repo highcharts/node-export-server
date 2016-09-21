@@ -3,8 +3,8 @@
 The export server can be ran as both a CLI converter, and as a HTTP server.
 
 ## Install
-   
-   npm install highcharts-export-server -g
+    
+    npm install highcharts-export-server -g
 
 ## Running
     
@@ -12,18 +12,18 @@ The export server can be ran as both a CLI converter, and as a HTTP server.
 
 ## Command Line Arguments
     
-    * `--infile`: Specify the input file.
-    * `--instr`: Specify the input as a string.
-    * `--outfile`: Specify the output filename.
-    * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
-    * `--scale`: The scale of the chart.
-    * `--width`: Override the width of the chart.
-    * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
-    * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
-    * `--resources`: Stringified JSON.
-    * `--host`: The hostname to run a server on.
-    * `--port`: The port to listen for incoming requests on.
-    * `--tmpdir`: The path to temporary output files.
+  * `--infile`: Specify the input file.
+  * `--instr`: Specify the input as a string.
+  * `--outfile`: Specify the output filename.
+  * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
+  * `--scale`: The scale of the chart.
+  * `--width`: Override the width of the chart.
+  * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
+  * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
+  * `--resources`: Stringified JSON.
+  * `--host`: The hostname to run a server on.
+  * `--port`: The port to listen for incoming requests on.
+  * `--tmpdir`: The path to temporary output files.
 
 ## Injecting the Highcharts dependency
 
