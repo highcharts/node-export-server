@@ -1,0 +1,21 @@
+{
+  "name": "highcharts-export-server",
+  "author": "Chris Vasseng <christer@highsoft.com>",
+  "git": "https://github.com/highcharts/node-export-server",
+  "version": "0.0.1",
+  "private": true,
+  "bin": {
+    "highcharts-export-server": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "./bin/www"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "mkdirp": "*",
+    "colors": "*",
+    "express": "*",
+    "phantomjs-prebuilt": "*",
+    "body-parser": "*"
+  }
+}
