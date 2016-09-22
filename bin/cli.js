@@ -72,6 +72,7 @@ addOption('port', 7801, 'server port');
 addOption('tmpdir', '/tmp/', 'path to temporary files');
 addOption('enableServer', false, 'start a server on 0.0.0.0');
 addOption('logLevel', 4, 'the log level. 0 = silent, 4 = verbose.');
+addOption('workers', false, 'the number of workers to spawn');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +104,21 @@ for (var i = 0; i < args.length; i++) {
 };
 
 if (options.enableServer || options.host.length) {
+
+    main.initPool({
+        initialWorkers: options.workers || 10,
+        maxWorkers: options.workers || 25    
+    });
+
     main.startServer(options.port);
 } else {
-    console.log('Running in CLI mode');
-    main.export(options);    
+ 
+    main.initPool({
+        initialWorkers: options.workers || 1,
+        maxWorkers: options.workers || 1 
+    });
+
+    main.export(options, function () {
+        main.killPool();
+    });    
 }

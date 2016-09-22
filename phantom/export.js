@@ -45,11 +45,11 @@ if (system.args.length >= 2) {
 page.onLoadFinished = function (status) {
     //Create the chart
     page.evaluate(function (chartJson) {
-      //Disable animations
-
       if (typeof window['Highcharts'] !== 'undefined') {        
-          Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
-          
+        
+        //Disable animations
+        Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
+
           Highcharts.setOptions({
             plotOptions: {
               series: {
@@ -60,8 +60,6 @@ page.onLoadFinished = function (status) {
 
           var chart = new Highcharts.Chart('highcharts', JSON.parse(chartJson));
       }
-      
-
     }, chartJson);
 
     //We're done drawing the page, now render it.

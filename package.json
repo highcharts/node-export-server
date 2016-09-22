@@ -8,14 +8,14 @@
     "highcharts-export-server": "./bin/cli.js"
   },
   "scripts": {
-    "start": "./bin/www"
+    "install": "node ./build.js"
   },
   "license": "MIT",
   "dependencies": {
     "mkdirp": "*",
     "colors": "*",
     "express": "*",
-    "phantomjs-prebuilt": "*",
+    "phantomjs-prebuilt": "*",    
     "body-parser": "*",
     "prompt": "*"
   }

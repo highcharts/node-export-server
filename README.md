@@ -6,6 +6,12 @@ The export server can be ran as both a CLI converter, and as a HTTP server.
     
     npm install highcharts-export-server -g
 
+OR:
+    
+    git clone https://github.com/highcharts/node-export-server
+    npm install
+
+
 ## Running
     
     highcharts-export-server <arguments>
