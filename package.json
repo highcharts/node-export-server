@@ -16,6 +16,7 @@
     "colors": "*",
     "express": "*",
     "phantomjs-prebuilt": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "prompt": "*"
   }
 }

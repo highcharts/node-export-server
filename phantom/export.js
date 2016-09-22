@@ -46,18 +46,21 @@ page.onLoadFinished = function (status) {
     //Create the chart
     page.evaluate(function (chartJson) {
       //Disable animations
-      
-      Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
-      
-      Highcharts.setOptions({
-        plotOptions: {
-          series: {
-            animation: false
-          }
-        }
-      });
 
-      var chart = new Highcharts.Chart('highcharts', JSON.parse(chartJson));
+      if (typeof window['Highcharts'] !== 'undefined') {        
+          Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
+          
+          Highcharts.setOptions({
+            plotOptions: {
+              series: {
+                animation: false
+              }
+            }
+          });
+
+          var chart = new Highcharts.Chart('highcharts', JSON.parse(chartJson));
+      }
+      
 
     }, chartJson);
 
@@ -74,4 +77,8 @@ page.onLoadFinished = function (status) {
 //So page.open doesn't seem to like relative local paths.
 //So we're doing it manually.
 curFilePath = curFilePath.join('/') + '/phantom'
-page.content = fs.read(curFilePath + '/template.html');
+if (fs.exists(curFilePath + '/export.html')) {
+    page.content = fs.read(curFilePath + '/export.html');    
+} else {
+    page.content = fs.read(curFilePath + '/template.html');        
+}
