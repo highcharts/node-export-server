@@ -71,7 +71,7 @@ addOption('host', '', 'start a server listening on the supplied hostname');
 addOption('port', 7801, 'server port');
 addOption('tmpdir', '/tmp/', 'path to temporary files');
 addOption('enableServer', false, 'start a server on 0.0.0.0');
-addOption('logLevel', 4, 'the log level. 0 = silent, 4 = verbose.');
+addOption('logLevel', 2, 'the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, 'the number of workers to spawn');
 
 ////////////////////////////////////////////////////////////////////////////////
