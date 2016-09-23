@@ -96,7 +96,7 @@ if (args.length <= 2) {
 //Parse arguments
 //We can't use a foreach because we're parsing pairs.
 for (var i = 0; i < args.length; i++) {
-    var option = args[i].substr(2);
+    var option = args[i].replace(/\-/g, '');
 
     if (typeof options[option] !== 'undefined') {
         options[option] = args[++i] || options[option];
