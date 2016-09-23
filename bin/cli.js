@@ -103,10 +103,12 @@ for (var i = 0; i < args.length; i++) {
     }
 };
 
+main.logLevel(options.logLevel);
+
 if (options.enableServer || options.host.length) {
 
     main.initPool({
-        initialWorkers: options.workers || 10,
+        initialWorkers: options.workers || 0,
         maxWorkers: options.workers || 25    
     });
 

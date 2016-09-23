@@ -17,6 +17,7 @@
     "express": "*",
     "phantomjs-prebuilt": "*",    
     "body-parser": "*",
-    "prompt": "*"
+    "prompt": "*",
+    "request": "*"
   }
 }
