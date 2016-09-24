@@ -31,6 +31,8 @@ OR:
   * `--port`: The port to listen for incoming requests on.
   * `--tmpdir`: The path to temporary output files.
 
+`-` and `--` can be used interchangeably when using the CLI.
+
 ## Injecting the Highcharts dependency
 
 Todo. Using CDN right now.
@@ -45,6 +47,18 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
     
     # Generate a chart and save it to mychart.png    
     curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
+
+## Performance Notice
+
+In cases of batch exports, it's faster to use the HTTP server than the CLI.
+This is due to the overhead of starting PhantomJS. 
+
+As a concrete example, running the CLI with `testcharts/basic.json` averages about
+449ms. Posting the same configuration to the HTTP server averages less than 100ms.
+
+So it's better to write a bash script that starts the server and then
+performs a set of POSTS to it through e.g. curl if not wanting to host the
+export server as a service.
 
 ## License
 
