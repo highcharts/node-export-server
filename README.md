@@ -33,13 +33,16 @@ OR:
 
 `-` and `--` can be used interchangeably when using the CLI.
 
-## Injecting the Highcharts dependency
+## Setup: Injecting the Highcharts dependency
 
-Todo. Using CDN right now.
+In order to use the export server, Highcharts.js needs to be injected
+into the export template.
 
-## As a Node module
+This is largely an automatic process. When running `npm install` you will
+be prompted to accept the license terms of Highcharts.js. Answering `yes` will
+pull the latest source from the Highcharts CDN.
 
-Todo.
+However, if you need to do this manually run `node build.js`.
 
 ## Server Test
 
@@ -50,7 +53,7 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
 
 ## Using as a Node.js Module
 
-The export server can be included as a module:
+The export server can also be used as a module:
     
     //Include the exporter module
     const exporter = require('highcharts-export-server');
