@@ -52,13 +52,42 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
 
 The export server can be included as a module:
     
+    //Include the exporter module
     const exporter = require('highcharts-export-server');
+
+    //Export settings 
+    var exportSettings = {
+        type: 'png',
+        tmpdir: '/tmp/',
+        instr: {
+            title: {
+                text: 'My Chart'
+            },
+            xAxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            },
+            series: [
+                {
+                    type: 'line',
+                    data: [1, 3, 2, 4]
+                },
+                {
+                    type: 'line',
+                    data: [5, 3, 4, 2]
+                }
+            ]
+        }
+    };
 
     //Set up a pool of PhantomJS workers
     exporter.initPool();
 
     //Perform an export
-    exporter.export(<export settings>, <chart>, function (err, res) {
+    /*
+        Export settings corresponds to the available CLI arguments described
+        above.
+    */
+    exporter.export(exportSettings, function (err, res) {
         ...
         exporter.killPool();
     });
