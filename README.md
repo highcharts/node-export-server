@@ -48,10 +48,25 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
     # Generate a chart and save it to mychart.png    
     curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
 
+## Using as a Node.js Module
+
+The export server can be included as a module:
+    
+    const exporter = require('highcharts-export-server');
+
+    //Set up a pool of PhantomJS workers
+    exporter.initPool();
+
+    //Perform an export
+    exporter.export(<export settings>, <chart>, function (err, res) {
+        ...
+        exporter.killPool();
+    });
+
 ## Performance Notice
 
 In cases of batch exports, it's faster to use the HTTP server than the CLI.
-This is due to the overhead of starting PhantomJS. 
+This is due to the overhead of starting PhantomJS for each job when using the CLI. 
 
 As a concrete example, running the CLI with `testcharts/basic.json` averages about
 449ms. Posting the same configuration to the HTTP server averages less than 100ms.
