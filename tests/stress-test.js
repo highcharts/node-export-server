@@ -48,7 +48,7 @@ function doTest(number) {
             sum += t;
             if (err) return console.log(number, 'returned error', err);
             count++;
-            console.log(number, 'done. took', t, 'ms, avg.');          
+            console.log(number, 'done. took', t, 'ms');          
         }
     );
 }
