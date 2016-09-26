@@ -146,19 +146,21 @@ function loop() {
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RENDERING
         if (data.format === 'svg') {
+            if (data.svgstr && !data.chart) {
+                fs.write(data.out, xmlDoctype + data.svgstr, 'w');
+            } else {                
+                //This temporary file nonesense has to go at some point.
+                fs.write(data.out, xmlDoctype + page.evaluate(function () {    
+                    var element = document.body.querySelector('#highcharts').firstChild;
 
-            //This temporary file nonesense has to go at some point.
-            fs.write(data.out, xmlDoctype + page.evaluate(function () {   
-                        var element = document.body.querySelector('#highcharts').firstChild;
+                    if (window.chart && window.chart.getSVG) {                                         
+                        return window.chart.getSVG();
+                    }
 
-                        if (window.chart && window.chart.getSVG) {                                         
-                            return window.chart.getSVG();
-                        }
-
-                        //Fall back to just using the SVG as it is on the page
-                        return element ? element.innerHTML : '';
-                     }
-            ).replace(/\n/g, ''), 'w');
+                    //Fall back to just using the SVG as it is on the page
+                    return element ? element.innerHTML : '';
+                }).replace(/\n/g, ''), 'w');
+            }
 
             doDone({                
                  filename: data.out
@@ -178,7 +180,7 @@ function loop() {
     };
 
     page.zoomFactor = parseFloat(data.scale);
-    
+
     if (data.svgstr && !data.chart) {
         page.content = xmlDoctype + data.svgstr;
     } else {
