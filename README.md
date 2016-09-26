@@ -31,6 +31,9 @@ OR:
   * `--host`: The hostname to run a server on.
   * `--port`: The port to listen for incoming requests on.
   * `--tmpdir`: The path to temporary output files.
+  * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
+  * `--logDest <path>`: Set path for log files, and enable file logging
+  * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
 
 `-` and `--` can be used interchangeably when using the CLI.
 
