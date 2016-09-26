@@ -123,13 +123,7 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } else if (data.svgstr) {
-            page.evaluate(function (svg) {
-                document.getElementById('highcharts').innerHTML = svg;
-            }, data.svgstr);
-        } else {
-            //Invalid data, should never reach this point
-        }
+        } 
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
@@ -184,7 +178,12 @@ function loop() {
     };
 
     page.zoomFactor = parseFloat(data.scale);
-    page.content = cachedContent;    
+    
+    if (data.svgstr && !data.chart) {
+        page.content = xmlDoctype + data.svgstr;
+    } else {
+        page.content = cachedContent;            
+    }
 }
 
 loop();

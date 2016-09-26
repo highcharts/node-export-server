@@ -18,6 +18,7 @@
     "phantomjs-prebuilt": "*",    
     "body-parser": "*",
     "prompt": "*",
-    "request": "*"
+    "request": "*",
+    "express-form-data": "*"
   }
 }
