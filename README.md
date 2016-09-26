@@ -48,6 +48,25 @@ pull the latest source from the Highcharts CDN.
 
 However, if you need to do this manually run `node build.js`.
 
+## HTTP Server
+
+The server accepts the following arguments:
+
+  * `infile`: A string containing JSON or SVG for the chart 
+  * `svg`: A string containing SVG to render
+  * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
+  * `scale`: The scale factor
+  * `width`: The chart width (overrides scale)
+  * `callback`: Javascript to execute in the highcharts constructor.
+  * `resources`: Additional resources.
+  * `constr`: The constructor to use. Either `Chart` or `Stock`.
+  * `b64`: Bool, set to true to get base64 back instead of binary.
+  * `noDownload`: Bool, set to true to not send attachment headers on the response.
+
+It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
+
+CORS is enabled for the server.
+
 ## Server Test
 
 Run the below in a terminal after running `highcharts-export-server --enableServer`.
@@ -57,7 +76,7 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
 
 ## Using as a Node.js Module
 
-The export server can also be used as a module:
+The export server can also be used as a node module to simplify integrations:
     
     //Include the exporter module
     const exporter = require('highcharts-export-server');

@@ -126,9 +126,7 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } else {
-
-        }
+        } 
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
