@@ -10,6 +10,7 @@ OR:
     
     git clone https://github.com/highcharts/node-export-server
     npm install
+    npm link
 
 
 ## Running

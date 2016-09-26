@@ -56,6 +56,8 @@ function doDone(data) {
     loop();
 }
 
+//We may need to do a request thing instead of stdin, or at least
+//compensate for when the stdin/out buffer is full.
 function loop() {
     var page = webpage.create(),
         data = system.stdin.readLine(),
@@ -87,35 +89,41 @@ function loop() {
 
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
-        page.evaluate(function (chartJson, constr, callback) {
-          if (typeof window['Highcharts'] !== 'undefined') {        
-            
-            //Disable animations
-            Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
+        if (chartJson.chartJson) {            
+            page.evaluate(function (chartJson, constr, callback) {
+              if (typeof window['Highcharts'] !== 'undefined') {        
+                
+                //Disable animations
+                Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
 
-                Highcharts.setOptions({
-                    plotOptions: {
-                      series: {
-                        animation: false
-                      }
+                    Highcharts.setOptions({
+                        plotOptions: {
+                          series: {
+                            animation: false
+                          }
+                        }
+                    });              
+
+                    if (callback) {
+                        var script = document.createElement('script');
+                        script.innerHTML = 'var cb = ' + callback;
+                        document.head.appendChild(script);
                     }
-                });              
 
-                if (callback) {
-                    var script = document.createElement('script');
-                    script.innerHTML = 'var cb = ' + callback;
-                    document.head.appendChild(script);
-                }
-
-                //Create the actual chart
-                var create = Highcharts[constr] || Highcharts.Chart;
-                window.chart = new create(
-                                    'highcharts', 
-                                    chartJson || {}, 
-                                    typeof cb !== 'undefined' ? cb : false
-                );
-          }
-        }, data.chart, data.constr, data.callback);
+                    //Create the actual chart
+                    var create = Highcharts[constr] || Highcharts.Chart;
+                    window.chart = new create(
+                                        'highcharts', 
+                                        chartJson || {}, 
+                                        typeof cb !== 'undefined' ? cb : false
+                    );
+              }
+            }, data.chart, data.constr, data.callback);
+        } else {
+            page.evaluate(function (svg) {
+                document.getElementById('highcharts').innerHTML = svg;
+            }, data.svgstr);
+        }
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
