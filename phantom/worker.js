@@ -56,13 +56,17 @@ function doDone(data) {
     loop();
 }
 
-//We may need to do a request thing instead of stdin, or at least
-//compensate for when the stdin/out buffer is full.
 function loop() {
     var page = webpage.create(),
-        data = system.stdin.readLine(),
+        incoming = system.stdin.readLine(),
+        data = '',
         res = {}
     ;    
+
+    while(incoming !== 'EOL') {
+        data += incoming;
+        incoming = system.stdin.readLine();
+    }
 
     try {
         data = JSON.parse(data);
@@ -89,7 +93,7 @@ function loop() {
 
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
-        if (data.chartJson) {            
+        if (data.chart) {            
             page.evaluate(function (chartJson, constr, callback) {
               if (typeof window['Highcharts'] !== 'undefined') {        
                 
