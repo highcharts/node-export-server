@@ -131,6 +131,14 @@ function loop() {
         }
 
         ////////////////////////////////////////////////////////////////////////
+        //HANDLE ZOOM
+        // page.evaluate(function (zoom) {
+        //     if (typeof document.body !== 'undefined') {
+        //         document.body.style.zoom = zoom;
+        //     } 
+        // }, data.scale);
+
+        ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
         if (data.resources && (data.resources.css || data.resources.js)) {
             page.evaluate(function (css, js) {
@@ -187,6 +195,8 @@ function loop() {
             //We're done drawing the page, now render it.
             //We should render to /dev/stdout or something eventually to
             //avoid going through the filesystem.
+            //We could also render b64 to the out data, 
+            //but this likely won't work correctly for pdf's.
             page.render(data.out, {
                 format: data.format || 'png'
             });

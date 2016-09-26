@@ -19,6 +19,7 @@
     "body-parser": "*",
     "prompt": "*",
     "request": "*",
-    "express-form-data": "*"
+    "express-form-data": "*",
+    "cors": "*"
   }
 }
