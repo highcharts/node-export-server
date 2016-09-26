@@ -77,6 +77,8 @@ addOption('port', 7801, 'server port');
 addOption('logLevel', 2, 'the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, 'the number of workers to spawn');
 
+addOption('logDest', false, 'path to log files. will also enable file logging.');
+
 ////////////////////////////////////////////////////////////////////////////////
 
 console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow);
@@ -107,6 +109,10 @@ for (var i = 0; i < args.length; i++) {
 };
 
 main.logLevel(options.logLevel);
+
+if (options.logDest) {
+    main.enableFileLogging(options.logDest, 'higcharts-export-server');
+}
 
 if (options.enableServer || options.host.length) {
 

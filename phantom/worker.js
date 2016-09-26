@@ -36,7 +36,10 @@ var webpage = require('webpage'),
 ;
 
 //So page.open doesn't seem to like relative local paths.
-//So we're doing it manually.
+//So we're doing it manually. This makes sense in any case
+//as we can cache it so we don't have to load from file
+//each time we process an export.
+
 curFilePath = curFilePath.join('/') + '/phantom'
 if (fs.exists(curFilePath + '/export.html')) {
     cachedContent = fs.read(curFilePath + '/export.html');    
