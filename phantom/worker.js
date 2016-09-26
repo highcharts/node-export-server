@@ -89,7 +89,7 @@ function loop() {
 
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
-        if (chartJson.chartJson) {            
+        if (data.chartJson) {            
             page.evaluate(function (chartJson, constr, callback) {
               if (typeof window['Highcharts'] !== 'undefined') {        
                 
@@ -119,10 +119,12 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } else {
+        } else if (data.svgstr) {
             page.evaluate(function (svg) {
                 document.getElementById('highcharts').innerHTML = svg;
             }, data.svgstr);
+        } else {
+            //Invalid data, should never reach this point
         }
 
         ////////////////////////////////////////////////////////////////////////
