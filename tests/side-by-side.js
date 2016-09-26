@@ -55,8 +55,11 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                     if (file.indexOf('.json') > 0 || file.indexOf('.svg') > 0) {
 
                         payload = {
+                            scale: 2,
                             type: type,
-                            infile: data.replace(/\'/g, "")
+                            infile: data.replace(/\'/g, ""),
+                            callback: 'function(chart) {chart.renderer.label("This label is added in the callback", 100, 100).attr({fill : "#90ed7d",padding: 10,r: 10,zIndex: 10}).css({color: "black",width: "100px"}).add();}'
+    
                         };
 
                         cmd = [
@@ -78,7 +81,7 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                         proc.on('close', function (code) {
                             console.log('curl done', code);
 
-                            //The phantom stuff spits out base64, so we need to open the result
+                            //The old phantom stuff spits out base64, so we need to open the result
                             //and convert it..
                             if (i === 1 && type !== 'svg') {
                                 fs.readFile('tmp/' + file + '.' + i + '.' + type, function (err, res) {
@@ -86,15 +89,11 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                                     fs.writeFile('tmp/' + file + '.' + i + '.' + type, Buffer.from(res.toString(), 'base64'), function (err) {
                                         if (err) return console.log(err);
                                     });
-                                });
-                                
+                                });                                
                             }
                         });
-
                     }
-
                 });
-
             });
         });
     });

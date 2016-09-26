@@ -131,14 +131,6 @@ function loop() {
         }
 
         ////////////////////////////////////////////////////////////////////////
-        //HANDLE ZOOM
-        // page.evaluate(function (zoom) {
-        //     if (typeof document.body !== 'undefined') {
-        //         document.body.style.zoom = zoom;
-        //     } 
-        // }, data.scale);
-
-        ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
         if (data.resources && (data.resources.css || data.resources.js)) {
             page.evaluate(function (css, js) {
