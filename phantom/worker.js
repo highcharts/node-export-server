@@ -126,7 +126,9 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } 
+        } else {
+
+        }
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
@@ -169,6 +171,19 @@ function loop() {
                  filename: data.out
             });
         } else {            
+
+            if (data.format === 'pdf') {
+                //We need to set the viewbox.
+                page.paperSize = {
+                    width: page.evaluate(function () {
+                        return document.querySelector('svg').width.baseVal.value + 20;
+                    }),
+                    height: page.evaluate(function () {
+                        return document.querySelector('svg').height.baseVal.value + 20;
+                    })
+                };
+            }
+
             //We're done drawing the page, now render it.
             //We should render to /dev/stdout or something eventually to
             //avoid going through the filesystem.
