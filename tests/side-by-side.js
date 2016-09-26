@@ -51,6 +51,7 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                 var cmd = '', payload;
 
                 types.forEach(function (type) {
+                    var reqStart = (new Date()).getTime();
                 
                     if (file.indexOf('.json') > 0 || file.indexOf('.svg') > 0) {
 
@@ -79,7 +80,7 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                         proc = spawn(cmd);
 
                         proc.on('close', function (code) {
-                            console.log('curl done', code);
+                            console.log(i, 'done with', file, 'took', (new Date()).getTime() - reqStart, 'ms', code);
 
                             //The old phantom stuff spits out base64, so we need to open the result
                             //and convert it..
