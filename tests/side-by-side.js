@@ -56,8 +56,8 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
                     if (file.indexOf('.json') > 0 || file.indexOf('.svg') > 0) {
 
                         payload = {
-                            scale: 2,
-                           // width: 900,
+                            scale: 3.5,
+                            width: 900,
                             type: type,
                             infile: data.replace(/\'/g, ""),
                             callback: 'function(chart) {chart.renderer.label("This label is added in the callback", 100, 100).attr({fill : "#90ed7d",padding: 10,r: 10,zIndex: 10}).css({color: "black",width: "100px"}).add();}'
@@ -85,7 +85,7 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
 
                             //The old phantom stuff spits out base64, so we need to open the result
                             //and convert it..
-                            if (i === 1 && type !== 'svg') {
+                            if (i === 1 && type !== 'svg' && type !== 'pdf') {
                                 fs.readFile('tmp/' + file + '.' + i + '.' + type, function (err, res) {
                                     if (err) return console.log(err);
                                     fs.writeFile('tmp/' + file + '.' + i + '.' + type, Buffer.from(res.toString(), 'base64'), function (err) {

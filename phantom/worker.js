@@ -126,7 +126,30 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } 
+        } else {
+            //This is needed for SVG input to get the image to appear at [0,0]
+            page.evaluate(function () {
+                document.querySelector('body').style.margin = '0px';
+            });            
+        }
+
+        //If the width is set, calculate a new zoom factor
+        if (data.width) {
+            data.scale = parseFloat(data.width) / page.evaluate(function () {
+                return document.querySelector('svg').width.baseVal.value;
+            });
+
+            page.zoomFactor = data.scale;
+        }
+
+        page.clipRect = {
+            width: page.evaluate(function (scale) {
+                return (document.querySelector('svg').width.baseVal.value * scale);
+            }, data.scale),
+            height: page.evaluate(function (scale) {
+                return (document.querySelector('svg').height.baseVal.value * scale);
+            }, data.scale)
+        };
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RESOURCES 
@@ -180,7 +203,7 @@ function loop() {
                         return document.querySelector('svg').height.baseVal.value + 20;
                     })
                 };
-            }
+            } 
 
             //We're done drawing the page, now render it.
             //We should render to /dev/stdout or something eventually to
