@@ -45,7 +45,7 @@ into the export template.
 
 This is largely an automatic process. When running `npm install` you will
 be prompted to accept the license terms of Highcharts.js. Answering `yes` will
-pull the latest source from the Highcharts CDN.
+pull the latest source from the Highcharts CDN and put them where they need to be.
 
 However, if you need to do this manually run `node build.js`.
 
@@ -116,6 +116,7 @@ The export server can also be used as a node module to simplify integrations:
     */
     exporter.export(exportSettings, function (err, res) {
         ...
+        //Kill the pool when we're done with it
         exporter.killPool();
     });
 

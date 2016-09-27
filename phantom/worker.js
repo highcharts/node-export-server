@@ -25,7 +25,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-
 var webpage = require('webpage'),
     fs = require('fs'),
     system = require('system'),
@@ -137,7 +136,7 @@ function loop() {
         }
 
         //If the width is set, calculate a new zoom factor
-        if (data.width) {
+        if (data.width && parseFloat(data.width) > 0) {
             data.scale = parseFloat(data.width) / page.evaluate(function () {
                 return document.querySelector('svg').width.baseVal.value;
             });
