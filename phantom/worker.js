@@ -90,12 +90,15 @@ function loop() {
     }
 
     page.onLoadFinished = function (status) {
+        var clipW, clipH;
+
         if (status !== 'success') {
             return;
         }
 
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
+
         if (data.chart) {            
             page.evaluate(function (chartJson, constr, callback) {
               if (typeof window['Highcharts'] !== 'undefined') {        
@@ -142,13 +145,19 @@ function loop() {
             page.zoomFactor = data.scale;
         }
 
+        clipW = page.evaluate(function (scale) {
+                    return (document.querySelector('svg').width.baseVal.value * scale);
+                }, data.scale);
+
+        clipH = page.evaluate(function (scale) {
+                    return (document.querySelector('svg').height.baseVal.value * scale);
+                }, data.scale);
+
         page.clipRect = {
-            width: page.evaluate(function (scale) {
-                return (document.querySelector('svg').width.baseVal.value * scale);
-            }, data.scale),
-            height: page.evaluate(function (scale) {
-                return (document.querySelector('svg').height.baseVal.value * scale);
-            }, data.scale)
+            width: clipW,
+            height: clipH,
+            top: 0,
+            left: 0
         };
 
         ////////////////////////////////////////////////////////////////////////
@@ -193,15 +202,22 @@ function loop() {
             });
         } else {            
 
+
             if (data.format === 'pdf') {
-                //We need to set the viewbox.
+                page.zoomFactor = 1;
+                //Scale everything - zoomFactor is a bit shabby still with PDF's.
+                //It does set the paper size to what it should be, but it doesn't 
+                //actually scale the contents.
+                page.evaluate(function (zoom) {                  
+                    document.body.style['zoom'] = zoom;
+                }, data.scale);
+
+                //Set the page size to fit our chart - we need some margins to
+                //prevent overflow
                 page.paperSize = {
-                    width: page.evaluate(function () {
-                        return document.querySelector('svg').width.baseVal.value + 20;
-                    }),
-                    height: page.evaluate(function () {
-                        return document.querySelector('svg').height.baseVal.value + 20;
-                    })
+                    width: clipW ,
+                    height: clipH,
+                    margin: '0px'
                 };
             } 
 
@@ -210,6 +226,8 @@ function loop() {
             //avoid going through the filesystem.
             //We could also render b64 to the out data, 
             //but this likely won't work correctly for pdf's.
+            //Note that the base64 rendering is much slower than writing to a
+            //temporary file...
             page.render(data.out, {
                 format: data.format || 'png'
             });
