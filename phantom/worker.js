@@ -202,7 +202,6 @@ function loop() {
             });
         } else {            
 
-
             if (data.format === 'pdf') {
                 page.zoomFactor = 1;
                 //Scale everything - zoomFactor is a bit shabby still with PDF's.

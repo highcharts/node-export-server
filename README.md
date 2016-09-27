@@ -34,6 +34,7 @@ OR:
   * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
   * `--logDest <path>`: Set path for log files, and enable file logging
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
+  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert
 
 `-` and `--` can be used interchangeably when using the CLI.
 

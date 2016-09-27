@@ -30,6 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 const main = require('./../lib/index');
 const args = process.argv;
 const fs = require('fs');
+const async = require('async');
 
 var optionsMeta = {},
     options = {}
@@ -79,6 +80,8 @@ addOption('workers', false, 'the number of workers to spawn');
 
 addOption('logDest', false, 'path to log files. will also enable file logging.');
 
+addOption('batch', false, 'start a batch job. string containing input/output pairs: "in=out;in=out;.."');
+
 ////////////////////////////////////////////////////////////////////////////////
 
 console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow);
@@ -124,12 +127,48 @@ if (options.enableServer || options.host.length) {
     main.startServer(options.port);
 } else {
  
-    main.initPool({
-        initialWorkers: options.workers || 1,
-        maxWorkers: options.workers || 1 
-    });
 
-    main.export(options, function (err, data) {
-        main.killPool();
-    });    
+    if (options.batch) {
+        main.initPool({
+            initialWorkers: options.workers || 5,
+            maxWorkers: options.workers || 25 
+        });
+
+        var funs = [];
+
+        options.batch = options.batch.split(';');
+        options.batch.forEach(function (pair) {
+            pair = pair.split('=');
+            if (pair.length == 2) {
+                funs.push(function (next) {
+                    main.export({
+                        infile: pair[0],
+                        outfile: pair[1],
+                        type: options.type || 'png',
+                        scale: options.scale,
+                        width: options.width,
+                        resources: options.resources,
+                        callback: options.callback,
+                        constr: options.constr,
+                        tmpdir: options.tmpdir
+                    }, next);
+                });
+            }
+        });
+
+        async.waterfall(func, function () {
+            main.killPool();
+        });
+
+    } else {
+
+        main.initPool({
+            initialWorkers: options.workers || 1,
+            maxWorkers: options.workers || 1 
+        });
+
+        main.export(options, function (err, data) {
+            main.killPool();
+        });            
+    }
 }
