@@ -131,6 +131,13 @@ So it's better to write a bash script that starts the server and then
 performs a set of POSTS to it through e.g. curl if not wanting to host the
 export server as a service.
 
+Alternatively, you can use the `--batch` switch if the output format is the same
+for each of the input files to process:
+    
+    highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;.."
+
+Other switches can be combined with this switch.
+
 ## License
 
 [MIT](LICENSE).
