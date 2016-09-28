@@ -81,7 +81,7 @@ function embed() {
 
         fs.writeFile(__dirname + '/phantom/export.html', template.replace('"{{highcharts}}";', scriptBody), function (err) {
             if (err) return console.log('Error creating template:');
-            console.log('All done!');
+            console.log('Baking complete.');
         });
     });
 }

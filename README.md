@@ -24,7 +24,7 @@ OR:
   * `--outfile`: Specify the output filename.
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
   * `--scale`: The scale of the chart.
-  * `--width`: Override the width of the chart.
+  * `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
   * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
   * `--resources`: Stringified JSON.
@@ -67,6 +67,8 @@ The server accepts the following arguments:
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
 CORS is enabled for the server.
+
+It's recommended to run the server using [forever](https://github.com/foreverjs/forever).
 
 ## Server Test
 
