@@ -127,8 +127,9 @@ The export server can also be used as a node module to simplify integrations:
 In cases of batch exports, it's faster to use the HTTP server than the CLI.
 This is due to the overhead of starting PhantomJS for each job when using the CLI. 
 
-As a concrete example, running the CLI with `testcharts/basic.json` averages about
-449ms. Posting the same configuration to the HTTP server averages less than 100ms.
+As a concrete example, running the CLI with [testcharts/basic.json](testcharts/basic.json) 
+as the input and converting to PNG averages about 449ms. 
+Posting the same configuration to the HTTP server averages less than 100ms.
 
 So it's better to write a bash script that starts the server and then
 performs a set of POSTS to it through e.g. curl if not wanting to host the
