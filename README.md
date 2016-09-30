@@ -21,6 +21,7 @@ OR:
     
   * `--infile`: Specify the input file.
   * `--instr`: Specify the input as a string.
+  * `--options`: Alias for `--instr`
   * `--outfile`: Specify the output filename.
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
   * `--scale`: The scale of the chart.
@@ -54,6 +55,7 @@ However, if you need to do this manually run `node build.js`.
 The server accepts the following arguments:
 
   * `infile`: A string containing JSON or SVG for the chart 
+  * `options`: Aliast for `infile`
   * `svg`: A string containing SVG to render
   * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
   * `scale`: The scale factor

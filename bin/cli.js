@@ -62,6 +62,7 @@ function rpad(str, pad) {
 addOption('infile', false, 'the input file');
 addOption('outfile', false, 'the output filename');
 addOption('instr', false, 'an input chart JSON file. Overrides --infile.');
+addOption('options', false, 'alias for instr. An input chart JSON file. Overrides --infile.');
 
 addOption('type', 'png', 'the format to export to');
 addOption('scale', 1, 'the scale of the exported chart');
@@ -161,6 +162,8 @@ if (options.enableServer || options.host.length) {
         });
 
     } else {
+
+        options.infile = options.infile || options.options;
 
         main.initPool({
             initialWorkers: options.workers || 1,
