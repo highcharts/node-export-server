@@ -73,6 +73,10 @@ CORS is enabled for the server.
 
 It's recommended to run the server using [forever](https://github.com/foreverjs/forever).
 
+### SSL
+
+To enable ssl support, drop your `server.key` and `server.crt` in the ssl folder.
+
 ## Server Test
 
 Run the below in a terminal after running `highcharts-export-server --enableServer`.
