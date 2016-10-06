@@ -177,6 +177,22 @@ function loop() {
             }, data.resources.css, data.resources.js);
         }
 
+        page.evaluate(function () {
+            var bodyElem,
+                foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
+            ;
+            
+            if (foreignObjectElem && !foreignObjectElem.getElementsByTagName('body').length) {
+                bodyElem = document.body || document.createElement('body');
+                bodyElem.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+                while (foreignObjectElem.firstChild) {
+                    bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
+                    foreignObjectElem.removeChild(foreignObjectElem.firstChild);
+                }
+                foreignObjectElem.appendChild(bodyElem);
+            }
+        });
+
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RENDERING
         if (data.format === 'svg') {
