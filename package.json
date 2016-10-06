@@ -20,6 +20,7 @@
     "prompt": "*",
     "request": "*",
     "express-form-data": "*",
-    "cors": "*"
+    "cors": "*",
+    "node-uuid": "*"
   }
 }

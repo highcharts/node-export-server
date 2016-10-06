@@ -5,3 +5,4 @@ out/
 tmp/
 *.log
 logs/
+charts/

@@ -64,6 +64,7 @@ The server accepts the following arguments:
   * `resources`: Additional resources.
   * `constr`: The constructor to use. Either `Chart` or `Stock`.
   * `b64`: Bool, set to true to get base64 back instead of binary.
+  * `async`: Get a download link instead of the file data
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
 
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
