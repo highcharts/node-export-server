@@ -67,6 +67,8 @@ The server accepts the following arguments:
   * `async`: Get a download link instead of the file data
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
 
+Note that the `b64` option overrides the `async` option.
+
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
 CORS is enabled for the server.
