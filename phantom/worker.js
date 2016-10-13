@@ -77,16 +77,7 @@ function loop() {
         return;
     }
 
-    //Inject required script files
-    if (data.resources && data.resources.files) {
-        data.resources.files.forEach(function (f) {
-            if (f.indexOf('http') === 0) {
-                page.includeJs(f, function () {});
-            } else {
-                page.injectJs(f);
-            }
-        });
-    }
+    
 
     page.onLoadFinished = function (status) {
         var clipW, clipH;
@@ -258,6 +249,17 @@ function loop() {
         page.content = xmlDoctype + data.svgstr;
     } else {
         page.content = cachedContent;            
+    }
+
+    //Inject required script files
+    if (data.resources && data.resources.files) {
+        data.resources.files.forEach(function (f) {
+            if (f.indexOf('http') === 0) {
+                page.includeJs(f, function () {});
+            } else {
+                page.injectJs(f);
+            }
+        });
     }
 }
 
