@@ -82,6 +82,7 @@ addOption('workers', false, 'the number of workers to spawn');
 addOption('logDest', false, 'path to log files. will also enable file logging.');
 
 addOption('batch', false, 'start a batch job. string containing input/output pairs: "in=out;in=out;.."');
+addOption('sslPath', false, 'Set the path where to find the SSL certificate/key');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -125,10 +126,9 @@ if (options.enableServer || options.host.length) {
         maxWorkers: options.workers || 25    
     });
 
-    main.startServer(options.port);
+    main.startServer(options.port, 443, options.sslPath);
 } else {
  
-
     if (options.batch) {
         main.initPool({
             initialWorkers: options.workers || 5,
