@@ -49,7 +49,7 @@ This is largely an automatic process. When running `npm install` you will
 be prompted to accept the license terms of Highcharts.js. Answering `yes` will
 pull the latest source from the Highcharts CDN and put them where they need to be.
 
-However, if you need to do this manually run `node build.js`.
+However, if you need to do this manually you can run `node build.js`.
 
 ## HTTP Server
 
@@ -141,7 +141,7 @@ The export server can also be used as a node module to simplify integrations:
   * `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
   * `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
   * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
-  * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names.
+  * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names. `fn` is called when the export is completed, with an object as the second argument containing the the filename attribute.
   * `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
   * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
     * `maxWorkers` (default 25) - max count of worker processes
