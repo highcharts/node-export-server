@@ -142,7 +142,7 @@ The export server can also be used as a node module to simplify integrations:
   * `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
   * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
   * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names.
-  * `startServer(port)`: start an http server on the given port
+  * `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
   * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
     * `maxWorkers` (default 25) - max count of worker processes
     * `initialWorkers` (default 5) - initial worker process count
