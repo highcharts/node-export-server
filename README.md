@@ -161,6 +161,9 @@ Example:
       asyncLoading: true
     }
 
+Note that if `highexp.done()` isn't called regardless of the Ajax return state,
+the PhantomJS process will wait indefinitely. So make sure it's called at some point!
+
 ## Performance Notice
 
 In cases of batch exports, it's faster to use the HTTP server than the CLI.
