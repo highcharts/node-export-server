@@ -137,16 +137,17 @@ The export server can also be used as a node module to simplify integrations:
 **highcharts-export-server module**
 
 **Functions**
-    * `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
-    * `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
-    * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
-    * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names.
-    * `startServer(port)`: start an http server on the given port
-    * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
-        * `maxWorkers` (default 25) - max count of worker processes
-        * `initialWorkers` (default 5) - initial worker process count
-        * `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
-    * `killPool()`: kill the phantom processes
+
+  * `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
+  * `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
+  * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
+  * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names.
+  * `startServer(port)`: start an http server on the given port
+  * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
+    * `maxWorkers` (default 25) - max count of worker processes
+    * `initialWorkers` (default 5) - initial worker process count
+    * `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
+  * `killPool()`: kill the phantom processes
 
 ## Performance Notice
 
