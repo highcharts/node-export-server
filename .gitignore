@@ -6,3 +6,4 @@ tmp/
 *.log
 logs/
 charts/
+test.js

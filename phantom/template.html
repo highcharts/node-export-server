@@ -17,6 +17,20 @@
     </style>
 
     <script>
+        var highexp = {};
+
+        (function () {
+            var done = false;
+
+            highexp.done = function () {
+                done = true;
+            };
+
+            highexp.isDone = function () {
+                return done;
+            };
+        })();
+
         "{{highcharts}}";
     </script>
 

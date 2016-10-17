@@ -65,26 +65,8 @@ function loop() {
         res = {}
     ;    
 
-    while(incoming !== 'EOL') {
-        data += incoming;
-        incoming = system.stdin.readLine();
-    }
-
-    try {
-        data = JSON.parse(data);
-    } catch (e) {
-        system.stderr.writeLine('worker.js - ' + e);
-        return;
-    }
-
-    
-
-    page.onLoadFinished = function (status) {
+    function process() {
         var clipW, clipH;
-
-        if (status !== 'success') {
-            return;
-        }
 
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
@@ -241,7 +223,40 @@ function loop() {
                 filename: data.out
             });
         }
-    };
+    }
+
+    while(incoming !== 'EOL') {
+        data += incoming;
+        incoming = system.stdin.readLine();
+    }
+
+    try {
+        data = JSON.parse(data);
+    } catch (e) {
+        system.stderr.writeLine('worker.js - ' + e);
+        return;
+    }
+
+    if (data.resources && data.resources.asyncLoading) {
+        //We need to poll. This is not ideal, but it's the easiest way 
+        //to ensure that everything is processed in the right order.
+        setTimeout(function () {
+            if (page.evaluate(function () {
+                return highexp.isDone();
+            })) {
+                process();
+            }
+        }, 20);
+    } else {
+        //No async resources, so just listen to page load        
+        page.onLoadFinished = function (status) {
+            if (status !== 'success') {
+                return;
+            }
+
+            process();
+        };
+    }
 
     page.zoomFactor = parseFloat(data.scale);
 
@@ -250,7 +265,7 @@ function loop() {
     } else {
         page.content = cachedContent;            
     }
-
+ 
     //Inject required script files
     if (data.resources && data.resources.files) {
         data.resources.files.forEach(function (f) {

@@ -36,7 +36,7 @@ OR:
   * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
   * `--logDest <path>`: Set path for log files, and enable file logging
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
-  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert
+  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
 
 `-` and `--` can be used interchangeably when using the CLI.
 
@@ -148,6 +148,18 @@ The export server can also be used as a node module to simplify integrations:
     * `initialWorkers` (default 5) - initial worker process count
     * `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
   * `killPool()`: kill the phantom processes
+
+## Using Ajax in Injected Resources
+
+If you need to perform Ajax requests inside one of the resource scripts,
+set `asyncLoading` to true, and call `highexp.done()` in the Ajax return to process the chart.
+
+Example:
+    
+    resources: {
+      files: 'myAjaxScript.js',
+      asyncLoading: true
+    }
 
 ## Performance Notice
 
