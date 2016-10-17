@@ -161,8 +161,21 @@ Example:
       asyncLoading: true
     }
 
-Note that if `highexp.done()` isn't called regardless of the Ajax return state,
-the PhantomJS process will wait indefinitely. So make sure it's called at some point!
+myAjaxScript.js:
+    
+    jQuery.ajax({
+      url: 'example.com',
+      success: function (data) {
+        ...
+        highexp.done();
+      },
+      error: function () {
+        highexp.done();
+      }
+    });
+
+If the Ajax call doesn't call `highexp.done()` within 60 seconds, the 
+rendering will time out.
 
 ## Performance Notice
 

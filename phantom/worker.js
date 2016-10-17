@@ -31,7 +31,9 @@ var webpage = require('webpage'),
     currentFile = system.args[3],
     curFilePath = fs.absolute(currentFile).split('/'),
     cachedContent = '',
-    xmlDoctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+    xmlDoctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+    maxWaitTime = 60000,
+    pollInterval = 20
 ;
 
 //So page.open doesn't seem to like relative local paths.
@@ -62,9 +64,10 @@ function loop() {
     var page = webpage.create(),
         incoming = system.stdin.readLine(),
         data = '',
-        res = {}
+        res = {},
+        currentWaitTime = 0
     ;    
-
+ 
     function process() {
         var clipW, clipH;
 
@@ -225,6 +228,20 @@ function loop() {
         }
     }
 
+    function poll() {
+        if (currentWaitTime > maxWaitTime) {
+            //We have timed out.
+            process();
+        } else if (page.evaluate(function () {
+            return highexp.isDone();
+        })) {
+            process();
+        } else {
+            currentWaitTime += pollInterval;
+            setTimeout(poll, pollInterval);
+        }
+    }
+
     while(incoming !== 'EOL') {
         data += incoming;
         incoming = system.stdin.readLine();
@@ -240,15 +257,9 @@ function loop() {
     if (data.resources && data.resources.asyncLoading) {
         //We need to poll. This is not ideal, but it's the easiest way 
         //to ensure that everything is processed in the right order.
-        setTimeout(function () {
-            if (page.evaluate(function () {
-                return highexp.isDone();
-            })) {
-                process();
-            }
-        }, 20);
+        poll();
     } else {
-        //No async resources, so just listen to page load        
+        //No async resources, so just listen to page load.        
         page.onLoadFinished = function (status) {
             if (status !== 'success') {
                 return;
