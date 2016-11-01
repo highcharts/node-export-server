@@ -10,6 +10,7 @@
   "scripts": {
     "install": "node ./build.js"
   },
+  "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
     "mkdirp": "*",
