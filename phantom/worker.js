@@ -42,7 +42,7 @@ var webpage = require('webpage'),
 //each time we process an export.
 
 //curFilePath = curFilePath.join('/') + '/phantom'
-curFilePath = fs.workingDirectory;
+curFilePath = system.args[4] + 'phantom';//fs.workingDirectory;
 if (fs.exists(curFilePath + '/export.html')) {
     cachedContent = fs.read(curFilePath + '/export.html');    
 } else {

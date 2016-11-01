@@ -32,6 +32,7 @@ const fs = require('fs');
 const request = require('request');
 const async = require('async');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
+const package = require('package.json');
 
 const cdnScripts = [
     "https://code.highcharts.com/stock/highstock.js",
