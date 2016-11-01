@@ -41,7 +41,8 @@ var webpage = require('webpage'),
 //as we can cache it so we don't have to load from file
 //each time we process an export.
 
-curFilePath = curFilePath.join('/') + '/phantom'
+//curFilePath = curFilePath.join('/') + '/phantom'
+curFilePath = fs.workingDirectory;
 if (fs.exists(curFilePath + '/export.html')) {
     cachedContent = fs.read(curFilePath + '/export.html');    
 } else {
