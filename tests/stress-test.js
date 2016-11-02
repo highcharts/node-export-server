@@ -35,7 +35,7 @@ var sum = 0,
             'Content-Type': 'application/json'
         },
         method: 'POST',
-        body: JSON.stringify({infile: {"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}})
+        body: JSON.stringify({"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}})
     }
 ;
 

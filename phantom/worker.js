@@ -258,7 +258,8 @@ function loop() {
     if (data.resources && data.resources.asyncLoading) {
         //We need to poll. This is not ideal, but it's the easiest way 
         //to ensure that everything is processed in the right order.
-        poll();
+        page.onLoadFinished = function () {};
+        poll();        
     } else {
         //No async resources, so just listen to page load.        
         page.onLoadFinished = function (status) {
