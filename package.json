@@ -13,6 +13,7 @@
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
+    "express-rate-limit": "*",
     "mkdirp": "*",
     "colors": "*",
     "express": "*",
