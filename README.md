@@ -143,6 +143,22 @@ The export server can also be used as a node module to simplify integrations:
   * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
   * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names. `fn` is called when the export is completed, with an object as the second argument containing the the filename attribute.
   * `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
+  * `server` - the server instance 
+    * `enableRateLimiting(options)` - enable rate limiting on the POST path
+      * `max` - the maximum amount of requests before rate limiting kicks in
+      * `window` - the time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
+      * `delay` - the amount to delay each successive request before hitting the max
+      * `trustProxy` - set this to true if behind a load balancer
+    * `app()` - returns the express app
+    * `express()` - return the express module instance
+    * `useFilter(when, fn)` - attach a filter to the POST route. Returning false in the callback will terminate the request.
+      * `when` - either `beforeRequest` or `afterRequest`
+      * `fn` - the function to call 
+        * `req` - the request object
+        * `res` - the result object
+        * `data` - the request data
+        * `id` - the request ID
+        * `uniqueid` - the unique id for the request (used for temporary file names)        
   * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
     * `maxWorkers` (default 25) - max count of worker processes
     * `initialWorkers` (default 5) - initial worker process count
