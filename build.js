@@ -34,15 +34,23 @@ const async = require('async');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
 const package = require(__dirname + '/package.json');
 
-const cdnScripts = [
-    "https://code.highcharts.com/stock/highstock.js",
-    "https://code.highcharts.com/adapters/standalone-framework.js",
-    "https://code.highcharts.com/highcharts-more.js",
+const cdnScriptsCommon = [
     "https://code.highcharts.com/highcharts-3d.js",
     "https://code.highcharts.com/modules/data.js",
     "https://code.highcharts.com/modules/exporting.js",
     "https://code.highcharts.com/modules/funnel.js",
+    "https://code.highcharts.com/adapters/standalone-framework.js",
     "https://code.highcharts.com/modules/solid-gauge.js"
+];
+
+const cdnScriptsStyled = [
+    "http://code.highcharts.com/stock/js/highstock.js",
+    "https://code.highcharts.com/js/highcharts-more.js",
+];
+
+const cdnScriptsStandard = [
+    "http://code.highcharts.com/stock/highstock.js",
+    "https://code.highcharts.com/highcharts-more.js",
 ];
 
 var schema = {
@@ -61,12 +69,12 @@ var schema = {
 
 require('colors');
 
-function embed() {
+function embed(scripts, out, fn) {
     var funs = [],
         scriptBody = ''
     ;
 
-    cdnScripts.forEach(function (script) {
+    scripts.forEach(function (script) {
         funs.push(function (next) {
             request(script, function (error, response, body) {
                 if (error) return next(error);                
@@ -78,11 +86,11 @@ function embed() {
 
     async.waterfall(funs, function (err) {
         if (err) return console.log('error fetching Highcharts:', err);
-        console.log('CDN fetch complete, creating export template');
+        console.log('CDN fetch complete, creating export template', out);
 
-        fs.writeFile(__dirname + '/phantom/export.html', template.replace('"{{highcharts}}";', scriptBody), function (err) {
-            if (err) return console.log('Error creating template:');
-            console.log('Baking complete.');
+        fs.writeFile(__dirname + '/phantom/' + out + '.html', template.replace('"{{highcharts}}";', scriptBody), function (err) {
+            if (err) return console.log('Error creating template:', err);
+            if (fn) fn();
         });
     });
 }
@@ -97,7 +105,8 @@ prompt.get(schema, function (err, result) {
 
     if (result.agree === 'Y' || result.agree === 'YES') {
         console.log('Pulling latest Highcharts');
-        embed();
+        embed(cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
+        embed(cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
     } else {
         console.log('License terms not accepted, aborting'.red);
     }

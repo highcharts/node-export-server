@@ -63,6 +63,7 @@ addOption('infile', false, 'the input file');
 addOption('outfile', false, 'the output filename');
 addOption('instr', false, 'an input chart JSON file. Overrides --infile.');
 addOption('options', false, 'alias for instr. An input chart JSON file. Overrides --infile.');
+addOption('styledMode', false, 'set to true to used the styled mode Highcharts libraries');
 
 addOption('type', 'png', 'the format to export to');
 addOption('scale', 1, 'the scale of the exported chart');
@@ -158,7 +159,8 @@ if (options.enableServer || options.host.length) {
                         resources: options.resources,
                         callback: options.callback,
                         constr: options.constr,
-                        tmpdir: options.tmpdir
+                        tmpdir: options.tmpdir,
+                        styledMode: options.styledMode
                     }, next);
                 });
             }

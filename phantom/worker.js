@@ -31,20 +31,24 @@ var webpage = require('webpage'),
     currentFile = system.args[3],
     curFilePath = fs.absolute(currentFile).split('/'),
     cachedContent = '',
+    cachedContentStyled = '',
     xmlDoctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
-    maxWaitTime = 60000,
-    pollInterval = 20
+    maxWaitTime = 6000,
+    pollInterval = 20,
+    importRe = /@import\s*([^;]*);/g
 ;
 
 //So page.open doesn't seem to like relative local paths.
 //So we're doing it manually. This makes sense in any case
 //as we can cache it so we don't have to load from file
 //each time we process an export.
-
-//curFilePath = curFilePath.join('/') + '/phantom'
+//We're actually getting the module root path from node based on __dirname.
+//This is to make everything work nicely when the export server is used as a module.
 curFilePath = system.args[1] + 'phantom';
-if (fs.exists(curFilePath + '/export.html')) {
+
+if (fs.exists(curFilePath + '/export.html') && fs.exists(curFilePath + '/export_styled.html')) {
     cachedContent = fs.read(curFilePath + '/export.html');    
+    cachedContentStyled = fs.read(curFilePath + '/export_styled.html');    
 } else {
     cachedContent = fs.read(curFilePath + '/template.html');        
 }
@@ -66,8 +70,28 @@ function loop() {
         incoming = system.stdin.readLine(),
         data = '',
         res = {},
-        currentWaitTime = 0
+        pendingScripts = {},
+        currentWaitTime = 0,
+        cachedCopy = '',
+        css = '',
+        imports
     ;    
+
+    page.settings.localToRemoteUrlAccessEnabled = true;
+
+    //Inject the JS in data.resources.js into a new script node 
+    function injectRawJS() {
+        if (data.resources && data.resources.js) {
+            page.evaluate(function (js) {                    
+                if (js) {
+                    var script = document.createElement('script');
+                    script.innerHTML = js;
+                    document.head.appendChild(script);
+                }
+
+            }, data.resources.js);
+        }         
+    }
  
     function process() {
         var clipW, clipH;
@@ -105,12 +129,7 @@ function loop() {
                     );
               }
             }, data.chart, data.constr, data.callback);
-        } else {
-            //This is needed for SVG input to get the image to appear at [0,0]
-            page.evaluate(function () {
-                document.querySelector('body').style.margin = '0px';
-            });            
-        }
+        } 
 
         //If the width is set, calculate a new zoom factor
         if (data.width && parseFloat(data.width) > 0) {
@@ -130,29 +149,16 @@ function loop() {
                 }, data.scale);
 
         page.clipRect = {
-            width: clipW,
-            height: clipH,
+            width: clipW - 1,
+            height: clipH - 1,
             top: 0,
             left: 0
         };
 
-        ////////////////////////////////////////////////////////////////////////
-        //HANDLE RESOURCES 
-        if (data.resources && (data.resources.css || data.resources.js)) {
-            page.evaluate(function (css, js) {
-                
-                if (css) {
-                    document.head.querySelector('style').innerHTML += css;
-                }
-
-                if (js) {
-                    var script = document.createElement('script');
-                    script.innerHTML = js;
-                    document.head.appendChild(script);
-                }
-
-            }, data.resources.css, data.resources.js);
-        }
+        page.viewportSize = {
+            width: clipW,
+            height: clipH 
+        };
 
         page.evaluate(function () {
             var bodyElem,
@@ -229,6 +235,9 @@ function loop() {
         }
     }
 
+    //Handles polling in cases where async rendering is enabled.
+    //This expects that whatever javascript is included in resources
+    //calls highexp.done() when done processing.
     function poll() {
         if (currentWaitTime > maxWaitTime) {
             //We have timed out.
@@ -243,6 +252,10 @@ function loop() {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    //Parse the input - we need a loop in case the std buffer is long enough
+    //to force a flush in the middle of the data stream.
     while(incoming !== 'EOL') {
         data += incoming;
         incoming = system.stdin.readLine();
@@ -255,28 +268,71 @@ function loop() {
         return;
     }
 
-    if (data.resources && data.resources.asyncLoading) {
+    if (data.resources && data.resources.css) {
+        //Extract @import urls and move them to link tags.
+        //We want to avoid polling, and phantom doesn't wait for @import includes to load.
+        imports = data.resources.css.match(importRe);
+
+        imports.forEach(function (imp) {
+            if (!imp) return;
+
+            //There's like a million ways to write the import statement, 
+            //this extracts the URL from all of them. Hopefully.
+            imp = imp.replace('url(', '')
+                     .replace('@import', '')
+                     .replace(/\"/g, '')
+                     .replace(/\'/g, '')
+                     .replace(/\;/, '')
+                     .replace(/\)/g, '')
+                     .trim()
+            ;
+            
+            css += '<link href="' + imp + '" type="text/css" rel="stylesheet"/>\n';
+        });
+
+        //The rest of the sheet is inserted into a separate style tag
+        css += '<style>' + data.resources.css + '</style>';
+    }        
+
+    if (data.renderAsync || (data.resources && data.resources.asyncLoading)) {
         //We need to poll. This is not ideal, but it's the easiest way 
-        //to ensure that everything is processed in the right order.
-        page.onLoadFinished = function () {};
-        poll();        
+        //to ensure that users have control over when the rendering is "done".
+        //Opens up for e.g. Ajax requests.
+        page.onLoadFinished = function () {
+            injectRawJS();   
+            poll();
+        };
+        
     } else {
         //No async resources, so just listen to page load.        
         page.onLoadFinished = function (status) {
             if (status !== 'success') {
                 return;
             }
-
+            injectRawJS();
             process();
         };
     }
+
+    page.onResourceError = function (err) {
+        system.stderr.writeLine('worker.js resource error - ' + err);
+    };
+
+    //Inject the CSS int the template
+    if (data.styledMode) {
+        cachedCopy = cachedContentStyled.replace('{{css}}', css);            
+    } else {
+        cachedCopy = cachedContent.replace('{{css}}', css);            
+    }
+
+   // fs.write('test.html', cachedCopy, 'w');
 
     page.zoomFactor = parseFloat(data.scale);
 
     if (data.svgstr && !data.chart) {
         page.content = xmlDoctype + data.svgstr;
     } else {
-        page.content = cachedContent;            
+        page.content = cachedCopy;            
     }
  
     //Inject required script files
@@ -291,4 +347,5 @@ function loop() {
     }
 }
 
+//Start listening for stdin messages
 loop();

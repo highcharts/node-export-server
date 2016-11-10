@@ -7,3 +7,7 @@ tmp/
 logs/
 charts/
 test.js
+
+/style.css
+
+/phantom/style.css

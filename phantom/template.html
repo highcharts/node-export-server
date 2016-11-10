@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+    <script>
+    var highexp = {};
+
+    (function () {
+        var done = false;
+
+        highexp.done = function () {
+            done = true;
+        };
+
+        highexp.isDone = function () {
+            return done;
+        };
+    })();
+    </script>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{css}}
+
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background:#FFF;
-            font-family: Verdana, sans-serif;
-        }
+    html, body {
+        margin: 0;
+        
+    }
     </style>
 
     <script>
-        var highexp = {};
-
-        (function () {
-            var done = false;
-
-            highexp.done = function () {
-                done = true;
-            };
-
-            highexp.isDone = function () {
-                return done;
-            };
-        })();
-
         "{{highcharts}}";
     </script>
 
