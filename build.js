@@ -44,12 +44,12 @@ const cdnScriptsCommon = [
 ];
 
 const cdnScriptsStyled = [
-    "http://code.highcharts.com/stock/js/highstock.js",
+    "https://code.highcharts.com/stock/js/highstock.js",
     "https://code.highcharts.com/js/highcharts-more.js",
 ];
 
 const cdnScriptsStandard = [
-    "http://code.highcharts.com/stock/highstock.js",
+    "https://code.highcharts.com/stock/highstock.js",
     "https://code.highcharts.com/highcharts-more.js",
 ];
 
