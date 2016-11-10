@@ -284,7 +284,7 @@ function loop() {
         //We want to avoid polling, and phantom doesn't wait for @import includes to load.
         imports = data.resources.css.match(importRe);
 
-        imports.forEach(function (imp) {
+        (imports || []).forEach(function (imp) {
             if (!imp) return;
 
             //There's like a million ways to write the import statement, 
