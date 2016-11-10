@@ -120,13 +120,24 @@ function loop() {
                         document.head.appendChild(script);
                     }
 
-                    //Create the actual chart
-                    var create = Highcharts[constr] || Highcharts.Chart;
-                    window.chart = new create(
-                                        'highcharts', 
-                                        chartJson || {}, 
-                                        typeof cb !== 'undefined' ? cb : false
-                    );
+                    try {
+                        if (typeof chartJson === 'string') {
+                            var chartScript = document.createElement('script');
+                            chartScript.innerHTML = 'var __chartData = ' + chartJson + ';';
+                            document.head.appendChild(chartScript);                            
+                        }
+
+                        //Create the actual chart
+                        var create = Highcharts[constr] || Highcharts.Chart;
+
+                        window.chart = new create(
+                                            'highcharts', 
+                                            (typeof chartJson === 'string' ? __chartData : chartJson ) || {}, 
+                                            typeof cb !== 'undefined' ? cb : false
+                        );
+                    } catch (e) {
+                        document.getElementById('highcharts').innerHTML = '<h1>Chart input data error</h1>' + e;
+                    }
               }
             }, data.chart, data.constr, data.callback);
         } 
@@ -294,7 +305,7 @@ function loop() {
         css += '<style>' + data.resources.css + '</style>';
     }        
 
-    if (data.renderAsync || (data.resources && data.resources.asyncLoading)) {
+    if (data.asyncRendering || (data.resources && data.resources.asyncLoading)) {
         //We need to poll. This is not ideal, but it's the easiest way 
         //to ensure that users have control over when the rendering is "done".
         //Opens up for e.g. Ajax requests.
@@ -322,7 +333,7 @@ function loop() {
     if (data.styledMode) {
         cachedCopy = cachedContentStyled.replace('{{css}}', css);            
     } else {
-        cachedCopy = cachedContent.replace('{{css}}', css);            
+        cachedCopy = cachedContent.replace('{{css}}', css);
     }
 
    // fs.write('test.html', cachedCopy, 'w');

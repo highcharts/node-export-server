@@ -67,6 +67,7 @@ The server accepts the following arguments:
   * `b64`: Bool, set to true to get base64 back instead of binary.
   * `async`: Get a download link instead of the file data
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
+  * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
 
 Note that the `b64` option overrides the `async` option.
 
