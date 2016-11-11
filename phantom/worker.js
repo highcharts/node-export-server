@@ -142,6 +142,20 @@ function loop() {
             }, data.chart, data.constr, data.callback);
         } 
 
+        if (data.svgstr && !data.chart && data.styledMode) {
+            page.evaluate(function (css) {
+                //We need to apply the style to the SVG
+                var defs = document.createElement('defs'),
+                    style = document.createElement('style')
+                ;
+
+                style.innerHTML = css;
+
+                defs.appendChild(style);
+                document.querySelector('svg').appendChild(defs);
+            }, css);
+        }
+
         //If the width is set, calculate a new zoom factor
         if (data.width && parseFloat(data.width) > 0) {
             data.scale = parseFloat(data.width) / page.evaluate(function () {
