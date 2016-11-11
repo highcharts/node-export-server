@@ -37,7 +37,7 @@ const package = require(__dirname + '/package.json');
 const cdnScriptsCommon = [
     "https://code.highcharts.com/highcharts-3d.js",
     "https://code.highcharts.com/modules/data.js",
-    "https://code.highcharts.com/modules/exporting.js",
+ //   "https://code.highcharts.com/modules/exporting.js",
     "https://code.highcharts.com/modules/funnel.js",
     "https://code.highcharts.com/adapters/standalone-framework.js",
     "https://code.highcharts.com/modules/solid-gauge.js"

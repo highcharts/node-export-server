@@ -65,6 +65,8 @@ addOption('instr', false, 'an input chart JSON file. Overrides --infile.');
 addOption('options', false, 'alias for instr. An input chart JSON file. Overrides --infile.');
 addOption('styledMode', false, 'set to true to used the styled mode Highcharts libraries');
 
+addOption('allowFileResources', true, 'allow injecting resources from the filesystem. Has no effect when running as a server.');
+
 addOption('type', 'png', 'the format to export to');
 addOption('scale', 1, 'the scale of the exported chart');
 addOption('resources', false, 'additional resource');
@@ -160,7 +162,8 @@ if (options.enableServer || options.host.length) {
                         callback: options.callback,
                         constr: options.constr,
                         tmpdir: options.tmpdir,
-                        styledMode: options.styledMode
+                        styledMode: options.styledMode,
+                        allowFileResources: options.allowFileResources
                     }, next);
                 });
             }
