@@ -185,6 +185,7 @@ function loop() {
             height: clipH 
         };
 
+        //Handle foreign object elements
         page.evaluate(function () {
             var bodyElem,
                 foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
@@ -211,7 +212,13 @@ function loop() {
                 fs.write(data.out, xmlDoctype + page.evaluate(function () {    
                     var element = document.body.querySelector('#highcharts').firstChild;
 
-                    if (window.chart && window.chart.getSVG) {                                         
+                    //When we're in styled mode, prefer getChartHTML.
+                    //getChartHTML will only be defined if the styled libraries are 
+                    //included, which they always are if the overall 
+                    //settings are styledMode = true                    
+                    if (window.chart && window.chart.getChartHTML) {
+                        return window.chart.getChartHTML();
+                    } else if (window.chart && window.chart.getSVG) {                                         
                         return window.chart.getSVG();
                     }
 
@@ -291,6 +298,10 @@ function loop() {
     } catch (e) {
         system.stderr.writeLine('worker.js - ' + e);
         return;
+    }
+
+    if (data.format === 'svg') {
+        data.scale = false;
     }
 
     if (data.resources && data.resources.css) {

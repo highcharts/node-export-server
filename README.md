@@ -169,13 +169,15 @@ The export server can also be used as a node module to simplify integrations:
 ## Using Ajax in Injected Resources
 
 If you need to perform Ajax requests inside one of the resource scripts,
-set `asyncLoading` to true, and call `highexp.done()` in the Ajax return to process the chart.
+set `asyncRendering` to true, and call `highexp.done()` in the Ajax return to process the chart.
 
 Example:
     
-    resources: {
-      files: 'myAjaxScript.js',
-      asyncLoading: true
+    {
+      asyncRendering: true,
+      resources: {
+        files: 'myAjaxScript.js'    
+      }
     }
 
 myAjaxScript.js:

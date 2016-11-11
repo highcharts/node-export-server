@@ -37,7 +37,6 @@ const package = require(__dirname + '/package.json');
 const cdnScriptsCommon = [
     "https://code.highcharts.com/highcharts-3d.js",
     "https://code.highcharts.com/modules/data.js",
- //   "https://code.highcharts.com/modules/exporting.js",
     "https://code.highcharts.com/modules/funnel.js",
     "https://code.highcharts.com/adapters/standalone-framework.js",
     "https://code.highcharts.com/modules/solid-gauge.js"
@@ -46,11 +45,13 @@ const cdnScriptsCommon = [
 const cdnScriptsStyled = [
     "https://code.highcharts.com/stock/js/highstock.js",
     "https://code.highcharts.com/js/highcharts-more.js",
+    "http://code.highcharts.com/maps/js/modules/exporting.js"
 ];
 
 const cdnScriptsStandard = [
     "https://code.highcharts.com/stock/highstock.js",
     "https://code.highcharts.com/highcharts-more.js",
+    "https://code.highcharts.com/modules/exporting.js"
 ];
 
 var schema = {
