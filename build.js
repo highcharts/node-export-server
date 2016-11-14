@@ -96,7 +96,18 @@ function embed(scripts, out, fn) {
     });
 }
 
+function embedAll() {
+    console.log('Pulling latest Highcharts');
+    embed(cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
+    embed(cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
+}
+
 console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
+
+if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
+    embedAll();
+    return;
+}
 
 prompt.message = '';
 prompt.start();
@@ -105,9 +116,7 @@ prompt.get(schema, function (err, result) {
     result.agree = result.agree.toUpperCase();
 
     if (result.agree === 'Y' || result.agree === 'YES') {
-        console.log('Pulling latest Highcharts');
-        embed(cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
-        embed(cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
+       embedAll();
     } else {
         console.log('License terms not accepted, aborting'.red);
     }
