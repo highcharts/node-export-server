@@ -156,6 +156,12 @@ function loop() {
             }, css);
         }
 
+        if (data.svgstr) {
+            page.evaluate(function () {
+                document.body.style.margin = '0';
+            });
+        }
+
         //If the width is set, calculate a new zoom factor
         if (data.width && parseFloat(data.width) > 0) {
             data.scale = parseFloat(data.width) / page.evaluate(function () {
@@ -163,7 +169,7 @@ function loop() {
             });
 
             page.zoomFactor = data.scale;
-        }
+        }        
 
         clipW = page.evaluate(function (scale) {
                     return (document.querySelector('svg').width.baseVal.value * scale);
@@ -171,7 +177,7 @@ function loop() {
 
         clipH = page.evaluate(function (scale) {
                     return (document.querySelector('svg').height.baseVal.value * scale);
-                }, data.scale);
+                }, data.scale || 1);
 
         page.clipRect = {
             width: clipW - 1,
@@ -182,7 +188,9 @@ function loop() {
 
         page.viewportSize = {
             width: clipW,
-            height: clipH 
+            height: clipH,
+            top: 0,
+            left: 0 
         };
 
         //Handle foreign object elements
@@ -204,6 +212,13 @@ function loop() {
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RENDERING
+
+        if (data.format === 'jpeg') {
+            page.evaluate(function () {
+                document.body.style.backgroundColor = 'white';
+            });
+        }
+
         if (data.format === 'svg') {
             if (data.svgstr && !data.chart) {
                 fs.write(data.out, xmlDoctype + data.svgstr, 'w');
