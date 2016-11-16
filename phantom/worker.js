@@ -126,7 +126,23 @@ function loop() {
                             //Right. So this is not cool. BUT: we allow callbacks
                             //and direct JS injection, so this doesn't really
                             //open up things that aren't already open.
-                            var __chartData = eval('(' + chartJson + ')');                 
+                            var __chartData = eval('(' + chartJson + ')');  
+
+                            if (__chartData) {
+                                __chartData.chart = __chartData.chart || {};
+
+                                if (__chartData.exporting) {
+                                    if (__chartData.exporting.sourceWidth) {
+                                        __chartData.chart.width = __chartData.exporting.sourceWidth;
+                                    }
+                                    if (__chartData.exporting.sourceHeight) {
+                                        __chartData.chart.height = __chartData.exporting.sourceHeight;
+                                    }
+                                }
+                                
+                                __chartData.chart.width = __chartData.chart.width || 600;
+                                __chartData.chart.height = __chartData.chart.height || 400;
+                            }               
                         }
 
                         //Create the actual chart
@@ -167,7 +183,8 @@ function loop() {
         //If the width is set, calculate a new zoom factor
         if (data.width && parseFloat(data.width) > 0) {
             data.scale = parseFloat(data.width) / page.evaluate(function () {
-                return document.querySelector('svg').width.baseVal.value;
+                var svg = document.querySelector('svg');
+                return svg ? svg.width.baseVal.value : 600;
             });
 
             page.zoomFactor = data.scale;
@@ -175,12 +192,12 @@ function loop() {
 
         clipW = page.evaluate(function (scale) {
                     var svg = document.querySelector('svg');
-                    return svg ? svg.width.baseVal.value * scale : 600;
+                    return svg ? (svg.width.baseVal.value * scale) : (600 * scale);
                 }, data.scale);
 
         clipH = page.evaluate(function (scale) {
                     var svg = document.querySelector('svg');
-                    return svg ? svg.height.baseVal.value * scale : 400;
+                    return svg ? (svg.height.baseVal.value * scale) : (400 * scale);
                 }, data.scale || 1);
 
         page.clipRect = {
