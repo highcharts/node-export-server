@@ -73,7 +73,7 @@ addOption('resources', false, 'additional resource');
 addOption('callback', false, 'JavaScript file with code to run on construction');
 addOption('width', false, 'the width of the exported chart, overrides chart settings');
 addOption('constr', 'Chart', 'the constructor to use. Either Chart or Stock.');
-addOption('tmpdir', '/tmp/', 'path to temporary files');
+addOption('tmpdir', 'tmp/', 'path to temporary files');
 
 addOption('enableServer', false, 'start a server on 0.0.0.0');
 addOption('host', '', 'start a server listening on the supplied hostname');
@@ -87,6 +87,8 @@ addOption('logDest', false, 'path to log files. will also enable file logging.')
 
 addOption('batch', false, 'start a batch job. string containing input/output pairs: "in=out;in=out;.."');
 addOption('sslPath', false, 'Set the path where to find the SSL certificate/key');
+
+addOption('fromFile', false, 'load all options from file');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -119,11 +121,28 @@ for (var i = 0; i < args.length; i++) {
 
 main.logLevel(options.logLevel);
 
+if (options.fromFile) {
+    try {
+        var old = options;
+        options = JSON.parse(fs.readFileSync(options.fromFile, 'utf8'));
+
+        Object.keys(old).forEach(function (key) {
+            if (!options[key]) {
+                options[key] = old[key];
+            }
+        });
+
+    } catch (e) {
+        console.log('unable to load options from file:', e);
+        return;
+    }
+}
+
 if (options.logDest) {
     main.enableFileLogging(options.logDest, 'higcharts-export-server');
 }
 
-if (options.enableServer || options.host.length) {
+if (options.enableServer || (options.host && options.host.length)) {
 
     main.initPool({
         initialWorkers: options.workers || 0,

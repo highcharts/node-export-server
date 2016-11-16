@@ -172,11 +172,13 @@ function loop() {
         }        
 
         clipW = page.evaluate(function (scale) {
-                    return (document.querySelector('svg').width.baseVal.value * scale);
+                    var svg = document.querySelector('svg');
+                    return svg ? svg.width.baseVal.value * scale : 600;
                 }, data.scale);
 
         clipH = page.evaluate(function (scale) {
-                    return (document.querySelector('svg').height.baseVal.value * scale);
+                    var svg = document.querySelector('svg');
+                    return svg ? svg.height.baseVal.value * scale : 400;
                 }, data.scale || 1);
 
         page.clipRect = {
