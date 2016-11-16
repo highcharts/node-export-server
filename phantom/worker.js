@@ -78,6 +78,7 @@ function loop() {
     ;    
 
     page.settings.localToRemoteUrlAccessEnabled = true;
+   // page.settings.XSSAuditingEnabled = true;
 
     //Inject the JS in data.resources.js into a new script node 
     function injectRawJS() {
@@ -122,9 +123,10 @@ function loop() {
 
                     try {
                         if (typeof chartJson === 'string') {
-                            var chartScript = document.createElement('script');
-                            chartScript.innerHTML = 'var __chartData = ' + chartJson + ';';
-                            document.head.appendChild(chartScript);                            
+                            //Right. So this is not cool. BUT: we allow callbacks
+                            //and direct JS injection, so this doesn't really
+                            //open up things that aren't already open.
+                            var __chartData = eval('(' + chartJson + ')');                 
                         }
 
                         //Create the actual chart
