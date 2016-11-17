@@ -20,28 +20,35 @@ OR:
     highcharts-export-server <arguments>
 
 ## Command Line Arguments
-    
+
+**General options**
+
   * `--infile`: Specify the input file.
   * `--instr`: Specify the input as a string.
   * `--options`: Alias for `--instr`
   * `--outfile`: Specify the output filename.
+  * `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server. Defaults to `true`.
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
   * `--scale`: The scale of the chart.
   * `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
   * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
   * `--resources`: Stringified JSON.
-  * `--host`: The hostname to run a server on.
-  * `--port`: The port to listen for incoming requests on.
-  * `--tmpdir`: The path to temporary output files.
-  * `--sslPath`: The path to the SSL key/certificate. Indirectly enables SSL support.
-  * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
+  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
   * `--logDest <path>`: Set path for log files, and enable file logging
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
-  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
   * `--fromFile "options.json"`: Read CLI options from JSON file
+  * `--tmpdir`: The path to temporary output files.
+  * `--workers`: Number of workers to spawn
 
-`-` and `--` can be used interchangeably when using the CLI.
+**Server related options**
+
+  * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
+  * `--host`: The hostname to run the server on.
+  * `--port`: The port to listen for incoming requests on.
+  * `--sslPath`: The path to the SSL key/certificate. Indirectly enables SSL support.
+
+*`-` and `--` can be used interchangeably when using the CLI.*
 
 ## Setup: Injecting the Highcharts dependency
 
@@ -53,6 +60,16 @@ be prompted to accept the license terms of Highcharts.js. Answering `yes` will
 pull the latest source from the Highcharts CDN and put them where they need to be.
 
 However, if you need to do this manually you can run `node build.js`.
+
+If you're deploying an application/service that depend on the export server 
+as a node module, you can set the environment variable `ACCEPT_HIGHCHARTS_LICENSE` to `YES`
+on your server, and it will automatically agree to the licensing terms when running
+`npm install`.
+
+## Note About Resources and the CLI
+
+If `--resources` is not set, and a file `resources.json` exist in the folder
+from which the cli tool was ran, it will use the `resources.json` file.
 
 ## HTTP Server
 
@@ -71,6 +88,9 @@ The server accepts the following arguments:
   * `async`: Get a download link instead of the file data
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
   * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
+  * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
+  * `dataOptions`: Passed to `Highcharts.data(..)`
+  * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
 
 Note that the `b64` option overrides the `async` option.
 
@@ -78,7 +98,7 @@ It responds to `application/json`, `multipart/form-data`, and URL encoded reques
 
 CORS is enabled for the server.
 
-It's recommended to run the server using [forever](https://github.com/foreverjs/forever).
+It's recommended to run the server using [forever](https://github.com/foreverjs/forever) unless running in a managed environment such as AWS Elastic Beanstalk.
 
 ### SSL
 
@@ -153,6 +173,7 @@ The export server can also be used as a node module to simplify integrations:
       * `window` - the time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
       * `delay` - the amount to delay each successive request before hitting the max
       * `trustProxy` - set this to true if behind a load balancer
+      * `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
     * `app()` - returns the express app
     * `express()` - return the express module instance
     * `useFilter(when, fn)` - attach a filter to the POST route. Returning false in the callback will terminate the request.

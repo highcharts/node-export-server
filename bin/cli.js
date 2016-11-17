@@ -157,6 +157,15 @@ if (options.enableServer || (options.host && options.host.length)) {
 
     main.startServer(options.port, 443, options.sslPath);
 } else {
+
+    //Try to load resources from file.
+    if (!options.resources) {
+        try {
+            options.resources = JSON.parse(
+                fs.readFileSync('resources.json', 'utf8')
+            );            
+        } catch (e) {}
+    }
  
     if (options.batch) {
         main.initPool({

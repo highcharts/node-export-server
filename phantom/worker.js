@@ -80,33 +80,82 @@ function loop() {
     page.settings.localToRemoteUrlAccessEnabled = true;
    // page.settings.XSSAuditingEnabled = true;
 
-    //Inject the JS in data.resources.js into a new script node 
+     function injectJSString(name, script) {
+        page.evaluate(function (name, js) {
+            if (js === 'null' || !js) {
+                return;
+            }
+
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+
+            if (name) {
+                script.innerHTML = 'var ' + name + ' = ' + js;
+            } else {
+                script.innerHTML = js;
+            }
+
+            document.head.appendChild(script);
+        }, name, script);
+    }
+
+    //Inject potential raw JS into new script nodes 
+    //This is called after the page content is set.
     function injectRawJS() {
         if (data.resources && data.resources.js) {
-            page.evaluate(function (js) {                    
-                if (js) {
-                    var script = document.createElement('script');
-                    script.innerHTML = js;
-                    document.head.appendChild(script);
+            injectJSString(false, data.resources.js);
+        }         
+
+        if (data.customCode) {
+            injectJSString('customCode', 'function (options) { ' + data.customCode + '}');
+        }
+
+        if (data.globalOptions) {
+            injectJSString('globalOptions', data.globalOptions);
+        }
+
+        if (data.themeOptions) {
+            injectJSString('themeOptions', data.themeOptions);
+        }
+
+        if (data.callback) {
+            injectJSString('cb', data.callback);
+        }
+
+        if (data.dataOptions) {
+            injectJSString('dataOptions', data.dataOptions);
+        }
+    }
+
+    //Build the actual chart
+    function buildChart() {
+        if (data.chart) {            
+            page.evaluate(function (chartJson, constr) {
+                var options = chartJson
+                ;
+
+                function doChart(options) {
+                    //Create the actual chart
+                    window.chart = new (Highcharts[constr] || Highcharts.Chart)(
+                        'highcharts', 
+                        options || {}, 
+                        typeof cb !== 'undefined' ? cb : false
+                    );                            
                 }
 
-            }, data.resources.js);
-        }         
-    }
- 
-    function process() {
-        var clipW, clipH;
+                function parseData(completeHandler, chartOptions, dataConfig) {
+                    try {
+                        dataConfig.complete = completeHandler;
+                        Highcharts.data(dataConfig, chartOptions);
+                    } catch (error) {
+                        completeHandler(undefined);
+                    }
+                }
 
-        ////////////////////////////////////////////////////////////////////////
-        //CREATE THE CHART
-
-        if (data.chart) {            
-            page.evaluate(function (chartJson, constr, callback) {
-              if (typeof window['Highcharts'] !== 'undefined') {        
-                
-                //Disable animations
-                Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
-
+                if (typeof window['Highcharts'] !== 'undefined') {        
+                    //Disable animations
+                    Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
+                   
                     Highcharts.setOptions({
                         plotOptions: {
                           series: {
@@ -115,10 +164,10 @@ function loop() {
                         }
                     });              
 
-                    if (callback) {
-                        var script = document.createElement('script');
-                        script.innerHTML = 'var cb = ' + callback;
-                        document.head.appendChild(script);
+                    //document.getElementById('highcharts').innerHTML = JSON.stringify(chartJson, undefined, '  ');
+
+                    if (window['globalOptions']) {
+                        Highcharts.setOptions(globalOptions);
                     }
 
                     try {
@@ -142,36 +191,130 @@ function loop() {
                                 
                                 __chartData.chart.width = __chartData.chart.width || 600;
                                 __chartData.chart.height = __chartData.chart.height || 400;
+                                
                             }               
+
+                            options = __chartData;
                         }
 
-                        //Create the actual chart
-                        var create = Highcharts[constr] || Highcharts.Chart;
+                        if (window['themeOptions'] && Object.keys(window.themeOptions).length) {
+                            options = Highcharts.merge(true, themeOptions, options);                            
+                        }
 
-                        window.chart = new create(
-                                            'highcharts', 
-                                            (typeof chartJson === 'string' ? __chartData : chartJson ) || {}, 
-                                            typeof cb !== 'undefined' ? cb : false
-                        );
+                        if (window['dataOptions'] && Object.keys(window.dataOptions).length) {
+                            parseData(function (opts) {
+                                var mergedOptions;
+
+                                if (options.series) {
+                                    Highcharts.each(options.series, function (series, i) {
+                                        options.series[i] = Highcharts.merge(series, opts.series[i]);
+                                    });
+                                }
+
+                                mergedOptions = Highcharts.merge(true, opts, options);
+
+                                if (window['customCode']) {
+                                    window.customCode(mergedOptions);
+                                }
+
+                                doChart(mergedOptions);
+
+                            }, options, dataOptions);
+                        } else {    
+                            doChart(options);                            
+                        }
+                        
+
                     } catch (e) {
                         document.getElementById('highcharts').innerHTML = '<h1>Chart input data error</h1>' + e;
                     }
-              }
-            }, data.chart, data.constr, data.callback);
+                }
+            }, data.chart, data.constr);
         } 
+    }
+
+    //Applies the style to the svg: <defs><style> goes here </style></defs>
+    function applyStyleToSVG() {
+        page.evaluate(function (css) {
+            //We need to apply the style to the SVG
+            var defs = document.createElement('defs'),
+                style = document.createElement('style')
+            ;
+
+            style.innerHTML = css;
+
+            defs.appendChild(style);
+            document.querySelector('svg').appendChild(defs);
+        }, css);
+    }
+
+    function handleForeignObjects() {
+        page.evaluate(function () {
+            var bodyElem,
+                foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
+            ;
+            
+            if (foreignObjectElem && !foreignObjectElem.getElementsByTagName('body').length) {
+                bodyElem = document.body || document.createElement('body');
+                bodyElem.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+                while (foreignObjectElem.firstChild) {
+                    bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
+                    foreignObjectElem.removeChild(foreignObjectElem.firstChild);
+                }
+                foreignObjectElem.appendChild(bodyElem);
+            }
+        });
+    }
+
+    function clip() {
+        var clipW, clipH;
+     
+        clipW = page.evaluate(function (scale) {
+                    var svg = document.querySelector('svg');
+                    return svg ? 
+                          (svg.width.baseVal.value * scale) : 
+                          (600 * scale);
+                }, data.scale);
+
+        clipH = page.evaluate(function (scale) {
+                    var svg = document.querySelector('svg');
+                    return svg ? 
+                          (svg.height.baseVal.value * scale) : 
+                          (400 * scale);
+                }, data.scale || 1);
+
+        page.clipRect = {
+            width: clipW - 1,
+            height: clipH - 1,
+            top: 0,
+            left: 0
+        };
+
+        page.viewportSize = {
+            width: clipW,
+            height: clipH,
+            top: 0,
+            left: 0 
+        };
+
+        if (data.format === 'pdf') {
+            //Set the page size to fit our chart 
+            page.paperSize = {
+                width: clipW ,
+                height: clipH,
+                margin: '0px'
+            };
+        }
+    }
+
+    function process() {
+        ////////////////////////////////////////////////////////////////////////
+        //CREATE THE CHART
+
+        buildChart();        
 
         if (data.svgstr && !data.chart && data.styledMode) {
-            page.evaluate(function (css) {
-                //We need to apply the style to the SVG
-                var defs = document.createElement('defs'),
-                    style = document.createElement('style')
-                ;
-
-                style.innerHTML = css;
-
-                defs.appendChild(style);
-                document.querySelector('svg').appendChild(defs);
-            }, css);
+            applyStyleToSVG();
         }
 
         if (data.svgstr) {
@@ -190,46 +333,10 @@ function loop() {
             page.zoomFactor = data.scale;
         }        
 
-        clipW = page.evaluate(function (scale) {
-                    var svg = document.querySelector('svg');
-                    return svg ? (svg.width.baseVal.value * scale) : (600 * scale);
-                }, data.scale);
-
-        clipH = page.evaluate(function (scale) {
-                    var svg = document.querySelector('svg');
-                    return svg ? (svg.height.baseVal.value * scale) : (400 * scale);
-                }, data.scale || 1);
-
-        page.clipRect = {
-            width: clipW - 1,
-            height: clipH - 1,
-            top: 0,
-            left: 0
-        };
-
-        page.viewportSize = {
-            width: clipW,
-            height: clipH,
-            top: 0,
-            left: 0 
-        };
-
+        //Set up clipping
+        clip();
         //Handle foreign object elements
-        page.evaluate(function () {
-            var bodyElem,
-                foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
-            ;
-            
-            if (foreignObjectElem && !foreignObjectElem.getElementsByTagName('body').length) {
-                bodyElem = document.body || document.createElement('body');
-                bodyElem.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
-                while (foreignObjectElem.firstChild) {
-                    bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
-                    foreignObjectElem.removeChild(foreignObjectElem.firstChild);
-                }
-                foreignObjectElem.appendChild(bodyElem);
-            }
-        });
+        handleForeignObjects();
 
         ////////////////////////////////////////////////////////////////////////
         //HANDLE RENDERING
@@ -275,15 +382,7 @@ function loop() {
                 //actually scale the contents.
                 page.evaluate(function (zoom) {                  
                     document.body.style['zoom'] = zoom;
-                }, data.scale);
-
-                //Set the page size to fit our chart - we need some margins to
-                //prevent overflow
-                page.paperSize = {
-                    width: clipW ,
-                    height: clipH,
-                    margin: '0px'
-                };
+                }, data.scale);                
             } 
 
             //We're done drawing the page, now render it.
@@ -396,8 +495,6 @@ function loop() {
     } else {
         cachedCopy = cachedContent.replace('{{css}}', css);
     }
-
-   // fs.write('test.html', cachedCopy, 'w');
 
     page.zoomFactor = parseFloat(data.scale);
 
