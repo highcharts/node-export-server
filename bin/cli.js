@@ -194,7 +194,8 @@ if (options.enableServer || (options.host && options.host.length)) {
 
     } else {
 
-        options.infile = options.infile || options.options;
+        options.infile = options.infile;
+        options.instr = options.instr || options.options;
 
         main.initPool({
             initialWorkers: options.workers || 1,
