@@ -120,7 +120,7 @@ function embed(version, scripts, out, fn) {
 
     async.waterfall(funs, function (err) {
         if (err === 404) {
-            console.log('The version you requested is invalid.'.red);
+            console.log('The version you requested is invalid!'.red);
             console.log('Please try again');
             return startPrompt();
         }
@@ -129,27 +129,33 @@ function embed(version, scripts, out, fn) {
             return console.log('error fetching Highcharts:', err);
         }
 
-        console.log('CDN fetch complete, creating export template', out);
+        console.log('Creating export template', out + '..');
 
         fs.writeFile(
             __dirname + '/phantom/' + out + '.html', 
             template.replace('"{{highcharts}}";', scriptBody), 
             function (err) {
                 if (err) return console.log('Error creating template:', err);
-                if (fn) fn();
+                if (fn) fn();                
             }
         );
     });
 }
 
-function embedAll(version, includeStyled) {
-    console.log('Pulling latest Highcharts');
+function endMsg() {
+    console.log('All done! Happy charting!'.green);
+    console.log('For documentation, see https://github.com/highcharts/node-export-server');
+}
 
-    if (includeStyled) {
-        embed(false, cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
-    }
-    
-    embed(version, cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
+function embedAll(version, includeStyled) {
+    console.log('Pulling Highcharts from CDN (' + version + ')..');
+    embed(version, cdnScriptsStandard.concat(cdnScriptsCommon), 'export', function () {        
+        if (includeStyled) {
+            embed(false, cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled', endMsg);
+        } else {
+            endMsg();
+        }
+    });
 }
 
 function startPrompt() {
@@ -161,7 +167,8 @@ function startPrompt() {
 
         if (result.agree === 'Y' || result.agree === 'YES') {
             embedAll(result.version, 
-                     result.styledMode === 'Y' || result.styledMode === 'YES'
+                     result.styledMode.toUpperCase() === 'Y' || 
+                     result.styledMode.toUpperCase() === 'YES'
             );
         } else {
             console.log('License terms not accepted, aborting'.red);
@@ -169,12 +176,11 @@ function startPrompt() {
     });
 }
 
-console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
-
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
     embedAll(process.env.HIGHCHARTS_VERSION || 'latest', 
              process.env.HIGHCHARTS_USE_STYLED || true
     );    
 } else {    
+    console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
     startPrompt();
 }

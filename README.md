@@ -57,14 +57,18 @@ into the export template.
 
 This is largely an automatic process. When running `npm install` you will
 be prompted to accept the license terms of Highcharts.js. Answering `yes` will
-pull the latest source from the Highcharts CDN and put them where they need to be.
+pull the version of your choosing from the Highcharts CDN and put them where they need to be.
 
 However, if you need to do this manually you can run `node build.js`.
+
+### Using In Automated Deployments
 
 If you're deploying an application/service that depend on the export server 
 as a node module, you can set the environment variable `ACCEPT_HIGHCHARTS_LICENSE` to `YES`
 on your server, and it will automatically agree to the licensing terms when running
-`npm install`.
+`npm install`. You can also use `HIGHCHARTS_VERSION` and `HIGHCHARTS_USE_STYLED`
+to bake with a specific Highcharts version, and to enable styled mode (requires
+a Highcharts 5 license).
 
 ## Note About Resources and the CLI
 
