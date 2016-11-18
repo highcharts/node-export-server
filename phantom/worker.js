@@ -46,11 +46,16 @@ var webpage = require('webpage'),
 //This is to make everything work nicely when the export server is used as a module.
 curFilePath = system.args[1] + 'phantom';
 
-if (fs.exists(curFilePath + '/export.html') && fs.exists(curFilePath + '/export_styled.html')) {
+if (fs.exists(curFilePath + '/export.html')) {
     cachedContent = fs.read(curFilePath + '/export.html');    
-    cachedContentStyled = fs.read(curFilePath + '/export_styled.html');    
 } else {
     cachedContent = fs.read(curFilePath + '/template.html');        
+}
+
+if (fs.exists(curFilePath + '/export_styled.html')) {
+    cachedContentStyled = fs.read(curFilePath + '/export_styled.html');        
+} else {
+    cachedContentStyled = cachedContent;
 }
 
 function doDone(data) {

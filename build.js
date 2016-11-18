@@ -33,25 +33,26 @@ const request = require('request');
 const async = require('async');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
 const package = require(__dirname + '/package.json');
+const cdnURL = 'https://code.highcharts.com/'
 
 const cdnScriptsCommon = [
-    "https://code.highcharts.com/highcharts-3d.js",
-    "https://code.highcharts.com/modules/data.js",
-    "https://code.highcharts.com/modules/funnel.js",
-    "https://code.highcharts.com/adapters/standalone-framework.js",
-    "https://code.highcharts.com/modules/solid-gauge.js"
+    "{{version}}/highcharts-3d.js",
+    "{{version}}/modules/data.js",
+    "{{version}}/modules/funnel.js",
+    "{{version}}/adapters/standalone-framework.js",
+    "{{version}}/modules/solid-gauge.js"
 ];
 
 const cdnScriptsStyled = [
-    "https://code.highcharts.com/stock/js/highstock.js",
-    "https://code.highcharts.com/js/highcharts-more.js",
-    "http://code.highcharts.com/maps/js/modules/exporting.js"
+    "stock/js/highstock.js",
+    "js/highcharts-more.js",
+    "maps/js/modules/exporting.js"
 ];
 
 const cdnScriptsStandard = [
-    "https://code.highcharts.com/stock/highstock.js",
-    "https://code.highcharts.com/highcharts-more.js",
-    "https://code.highcharts.com/modules/exporting.js"
+    "stock/{{version}}/highstock.js",
+    "{{version}}/highcharts-more.js",
+    "{{version}}/modules/exporting.js"
 ];
 
 var schema = {
@@ -59,10 +60,32 @@ var schema = {
         agree: {
             description: 'Agree to the license terms? y/n',
             required: true,
+            default: 'no',
             message: 'Please enter (y)es or (n)o',
             conform: function (value) {
                 value = value.toUpperCase();
-                return value === 'Y' || value === 'N' || value === 'YES' || value === 'NO';
+                return value === 'Y'   || 
+                       value === 'N'   || 
+                       value === 'YES' || 
+                       value === 'NO';
+            }
+        },
+        version: {
+            description: 'Select your Highcharts version (e.g. 4.2.2):',
+            required: true,
+            message: 'Enter as e.g. 4.2.2. Default is latest.',
+            default: 'latest'
+        },
+        styledMode: {
+            description: 'Enable styled mode? (requires Highcharts/Highstock 5 license)',
+            default: 'no',
+            required: true,
+            conform: function (value) {
+                value = value.toUpperCase();
+                return value === 'Y'   || 
+                       value === 'N'   || 
+                       value === 'YES' || 
+                       value === 'NO';
             }
         }
     }
@@ -70,15 +93,25 @@ var schema = {
 
 require('colors');
 
-function embed(scripts, out, fn) {
+function embed(version, scripts, out, fn) {
     var funs = [],
         scriptBody = ''
     ;
 
     scripts.forEach(function (script) {
+
+        if (version !== 'latest' && version) {
+            script = script.replace('{{version}}', version);
+        } else {
+            script = script.replace('{{version}}/', '');
+        }
+
+        console.log('  ', (cdnURL + script).gray);
+
         funs.push(function (next) {
-            request(script, function (error, response, body) {
-                if (error) return next(error);                
+            request(cdnURL + script, function (error, response, body) {
+                if (error) return next(error);     
+                if (body.trim().indexOf('<!DOCTYPE') === 0) return next(404);           
                 scriptBody += body;                
                 next();
             });
@@ -86,27 +119,40 @@ function embed(scripts, out, fn) {
     });
 
     async.waterfall(funs, function (err) {
-        if (err) return console.log('error fetching Highcharts:', err);
+        if (err === 404) {
+            console.log('The version you requested is invalid.'.red);
+            console.log('Please try again');
+            return startPrompt();
+        }
+
+        if (err) { 
+            return console.log('error fetching Highcharts:', err);
+        }
+
         console.log('CDN fetch complete, creating export template', out);
 
-        fs.writeFile(__dirname + '/phantom/' + out + '.html', template.replace('"{{highcharts}}";', scriptBody), function (err) {
-            if (err) return console.log('Error creating template:', err);
-            if (fn) fn();
-        });
+        fs.writeFile(
+            __dirname + '/phantom/' + out + '.html', 
+            template.replace('"{{highcharts}}";', scriptBody), 
+            function (err) {
+                if (err) return console.log('Error creating template:', err);
+                if (fn) fn();
+            }
+        );
     });
 }
 
-function embedAll() {
+function embedAll(version, includeStyled) {
     console.log('Pulling latest Highcharts');
-    embed(cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
-    embed(cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
+
+    if (includeStyled) {
+        embed(false, cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled');
+    }
+    
+    embed(version, cdnScriptsStandard.concat(cdnScriptsCommon), 'export');
 }
 
-console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
-
-if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
-    embedAll();    
-} else {    
+function startPrompt() {
     prompt.message = '';
     prompt.start();
 
@@ -114,10 +160,21 @@ if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
         result.agree = result.agree.toUpperCase();
 
         if (result.agree === 'Y' || result.agree === 'YES') {
-           embedAll();
+            embedAll(result.version, 
+                     result.styledMode === 'Y' || result.styledMode === 'YES'
+            );
         } else {
             console.log('License terms not accepted, aborting'.red);
         }
     });
 }
 
+console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
+
+if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
+    embedAll(process.env.HIGHCHARTS_VERSION || 'latest', 
+             process.env.HIGHCHARTS_USE_STYLED || true
+    );    
+} else {    
+    startPrompt();
+}
