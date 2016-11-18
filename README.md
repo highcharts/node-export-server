@@ -2,7 +2,7 @@
 
 **NOTE: This is currently in beta**
 
-The export server can be ran as both a CLI converter, and as a HTTP server.
+The export server can be ran both as a CLI converter, and/or as an HTTP server.
 
 ## Install
     

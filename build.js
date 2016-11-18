@@ -149,13 +149,21 @@ function endMsg() {
 
 function embedAll(version, includeStyled) {
     console.log('Pulling Highcharts from CDN (' + version + ')..');
-    embed(version, cdnScriptsStandard.concat(cdnScriptsCommon), 'export', function () {        
-        if (includeStyled) {
-            embed(false, cdnScriptsStyled.concat(cdnScriptsCommon), 'export_styled', endMsg);
-        } else {
-            endMsg();
+    embed(version, 
+          cdnScriptsStandard.concat(cdnScriptsCommon), 
+          'export', 
+          function () {        
+            if (includeStyled) {
+                embed(false, 
+                      cdnScriptsStyled.concat(cdnScriptsCommon),
+                      'export_styled', 
+                      endMsg
+                );
+            } else {
+                endMsg();
+            }
         }
-    });
+    );
 }
 
 function startPrompt() {
