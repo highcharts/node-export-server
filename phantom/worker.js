@@ -191,7 +191,7 @@ function loop() {
                                 
                                 __chartData.chart.width = __chartData.chart.width || 600;
                                 __chartData.chart.height = __chartData.chart.height || 400;
-                                
+
                             }               
 
                             options = __chartData;
@@ -349,7 +349,11 @@ function loop() {
 
         if (data.format === 'svg') {
             if (data.svgstr && !data.chart) {
-                fs.write(data.out, xmlDoctype + data.svgstr, 'w');
+                if (data.svgstr.indexOf('<?xml') >= 0) {
+                    fs.write(data.out, data.svgstr, 'w');                    
+                } else {
+                    fs.write(data.out, xmlDoctype + data.svgstr, 'w');                    
+                }
             } else {                
                 //This temporary file nonesense has to go at some point.
                 fs.write(data.out, xmlDoctype + page.evaluate(function () {    
@@ -489,18 +493,26 @@ function loop() {
         system.stderr.writeLine('worker.js resource error - ' + err);
     };
 
-    //Inject the CSS int the template
-    if (data.styledMode) {
-        cachedCopy = cachedContentStyled.replace('{{css}}', css);            
-    } else {
-        cachedCopy = cachedContent.replace('{{css}}', css);
-    }
-
     page.zoomFactor = parseFloat(data.scale);
 
     if (data.svgstr && !data.chart) {
-        page.content = xmlDoctype + data.svgstr;
+
+        if (data.svgstr.indexOf('<?xml') >= 0) {
+            //There's already an xml start tag..
+            page.content = data.svgstr;
+        } else {
+            page.content = xmlDoctype + data.svgstr;
+        }
+
     } else {
+
+        //Inject the CSS into the template
+        if (data.styledMode) {
+            cachedCopy = cachedContentStyled.replace('{{css}}', css);            
+        } else {
+            cachedCopy = cachedContent.replace('{{css}}', css);
+        }
+        
         page.content = cachedCopy;            
     }
  
