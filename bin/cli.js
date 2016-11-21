@@ -158,6 +158,8 @@ if (options.enableServer || (options.host && options.host.length)) {
     main.startServer(options.port, 443, options.sslPath);
 } else {
 
+    options.async = true;
+
     //Try to load resources from file.
     if (!options.resources) {
         try {

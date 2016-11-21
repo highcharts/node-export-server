@@ -65,7 +65,8 @@ function doDone(data) {
         return console.log(e);
     }
 
-    system.stdout.writeLine(data);
+    system.stdout.write(data);
+    system.stdout.flush();
 
     loop();
 }
@@ -401,13 +402,19 @@ function loop() {
             //but this likely won't work correctly for pdf's.
             //Note that the base64 rendering is much slower than writing to a
             //temporary file...
-            page.render(data.out, {
-                format: data.format || 'png'
-            });
+            if (data.async || data.format === 'pdf') {
+                page.render(data.out, {
+                    format: data.format || 'png'
+                });    
 
-            doDone({
-                filename: data.out
-            });
+                doDone({
+                    filename: data.out
+                });            
+            } else {
+                doDone({
+                    data: page.renderBase64(data.format || 'png')
+                });
+            }
         }
     }
 
