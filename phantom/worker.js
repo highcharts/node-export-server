@@ -290,8 +290,8 @@ function loop() {
                 }, data.scale || 1);
 
         page.clipRect = {
-            width: clipW - 1,
-            height: clipH - 1,
+            width: clipW,
+            height: clipH,
             top: 0,
             left: 0
         };
@@ -502,7 +502,9 @@ function loop() {
     }
 
     page.onResourceError = function (err) {
-        system.stderr.writeLine('worker.js resource error - ' + err);
+        system.stderr.writeLine('worker.js resource error - ' + 
+                                JSOn.stringify(err, undefined, ' ')
+                               );
     };
 
     page.zoomFactor = parseFloat(data.scale);
