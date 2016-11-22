@@ -160,6 +160,7 @@ if (options.enableServer || (options.host && options.host.length)) {
 
     options.async = true;
 
+
     //Try to load resources from file.
     if (!options.resources) {
         try {
@@ -172,7 +173,8 @@ if (options.enableServer || (options.host && options.host.length)) {
     if (options.batch) {
         main.initPool({
             initialWorkers: options.workers || 5,
-            maxWorkers: options.workers || 25 
+            maxWorkers: options.workers || 25,
+            reaper: false 
         });
 
         var funs = [];
@@ -210,7 +212,8 @@ if (options.enableServer || (options.host && options.host.length)) {
 
         main.initPool({
             initialWorkers: options.workers || 1,
-            maxWorkers: options.workers || 1 
+            maxWorkers: options.workers || 1 ,
+            reaper: false
         });
 
         main.export(options, function (err, data) {

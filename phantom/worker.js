@@ -255,6 +255,7 @@ function loop() {
     }
 
     function handleForeignObjects() {
+
         page.evaluate(function () {
             var bodyElem,
                 foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
@@ -267,7 +268,7 @@ function loop() {
                     bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
                     foreignObjectElem.removeChild(foreignObjectElem.firstChild);
                 }
-                foreignObjectElem.appendChild(bodyElem);
+                //foreignObjectElem.appendChild(bodyElem);
             }
         });
     }
