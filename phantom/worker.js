@@ -140,6 +140,8 @@ function loop() {
                 var options = chartJson
                 ;
 
+                document.getElementById('highcharts').innerHTML = '';
+
                 function doChart(options) {
                     //Create the actual chart
                     window.chart = new (Highcharts[constr] || Highcharts.Chart)(
@@ -197,7 +199,6 @@ function loop() {
                                 
                                 __chartData.chart.width = __chartData.chart.width || 600;
                                 __chartData.chart.height = __chartData.chart.height || 400;
-
                             }               
 
                             options = __chartData;
@@ -262,13 +263,13 @@ function loop() {
             ;
             
             if (foreignObjectElem && !foreignObjectElem.getElementsByTagName('body').length) {
-                bodyElem = document.body || document.createElement('body');
+                bodyElem = document.createElement('body');
                 bodyElem.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
                 while (foreignObjectElem.firstChild) {
                     bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
                     foreignObjectElem.removeChild(foreignObjectElem.firstChild);
                 }
-                //foreignObjectElem.appendChild(bodyElem);
+                foreignObjectElem.appendChild(bodyElem);
             }
         });
     }
