@@ -140,7 +140,7 @@ function loop() {
                 var options = chartJson
                 ;
 
-                document.getElementById('highcharts').innerHTML = '';
+
 
                 function doChart(options) {
                     //Create the actual chart
@@ -269,7 +269,7 @@ function loop() {
                     bodyElem.appendChild(foreignObjectElem.firstChild.cloneNode(true));
                     foreignObjectElem.removeChild(foreignObjectElem.firstChild);
                 }
-                foreignObjectElem.appendChild(bodyElem);
+               // foreignObjectElem.appendChild(bodyElem);
             }
         });
     }
@@ -488,6 +488,10 @@ function loop() {
         //to ensure that users have control over when the rendering is "done".
         //Opens up for e.g. Ajax requests.
         page.onLoadFinished = function () {
+            // page.evaluate(function () {
+            //     document.getElementById('highcharts').innerHTML = '';
+            // });
+
             injectRawJS();   
             poll();
         };
@@ -495,6 +499,7 @@ function loop() {
     } else {
         //No async resources, so just listen to page load.        
         page.onLoadFinished = function (status) {
+           // document.getElementById('highcharts').innerHTML = '';
             if (status !== 'success') {
                 return;
             }
