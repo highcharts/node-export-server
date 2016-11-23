@@ -133,7 +133,10 @@ function embed(version, scripts, out, fn) {
 
         fs.writeFile(
             __dirname + '/phantom/' + out + '.html', 
-            template.replace('"{{highcharts}}";', scriptBody), 
+            template
+                .replace('"{{highcharts}}";', scriptBody)
+                .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
+                , 
             function (err) {
                 if (err) return console.log('Error creating template:', err);
                 if (fn) fn();                
