@@ -36,11 +36,10 @@ const package = require(__dirname + '/package.json');
 const cdnURL = 'https://code.highcharts.com/'
 
 const cdnScriptsCommon = [
-    "{{version}}/highcharts-3d.js",
-    "{{version}}/modules/data.js",
-    "{{version}}/modules/funnel.js",
-    "{{version}}/adapters/standalone-framework.js",
-    "{{version}}/modules/solid-gauge.js"
+    //"{{version}}/highcharts-3d.js"
+     "{{version}}/modules/data.js",
+     "{{version}}/modules/funnel.js",
+     "{{version}}/modules/solid-gauge.js"
 ];
 
 const cdnScriptsStyled = [
@@ -53,6 +52,10 @@ const cdnScriptsStandard = [
     "stock/{{version}}/highstock.js",
     "{{version}}/highcharts-more.js",
     "{{version}}/modules/exporting.js"
+];
+
+const cdnLegacy = [    
+    "{{version}}/adapters/standalone-framework.js"
 ];
 
 var schema = {
@@ -98,6 +101,14 @@ function embed(version, scripts, out, fn) {
         scriptBody = ''
     ;
 
+    version = version.trim();
+
+    console.log(version);
+
+    if (version && parseInt(version[0]) < 5 && version[0] !== 'c')  {
+        scripts = scripts.concat(cdnLegacy);
+    }
+
     scripts.forEach(function (script) {
 
         if (version !== 'latest' && version) {
@@ -110,16 +121,17 @@ function embed(version, scripts, out, fn) {
 
         funs.push(function (next) {
             request(cdnURL + script, function (error, response, body) {
-                if (error) return next(error);     
-                if (body.trim().indexOf('<!DOCTYPE') === 0) return next(404);           
+                if (error) return next(error, cdnURL + script);     
+                if (body.trim().indexOf('<!DOCTYPE') === 0) return next(404, script);           
                 scriptBody += body;                
                 next();
             });
         });
     });
 
-    async.waterfall(funs, function (err) {
+    async.waterfall(funs, function (err, script) {
         if (err === 404) {
+            console.log('Could not find', (script.toString()).bold);
             console.log('The version you requested is invalid!'.red);
             console.log('Please try again');
             return startPrompt();
