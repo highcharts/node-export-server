@@ -36,10 +36,10 @@ const package = require(__dirname + '/package.json');
 const cdnURL = 'https://code.highcharts.com/'
 
 const cdnScriptsCommon = [
-    //"{{version}}/highcharts-3d.js"
-     "{{version}}/modules/data.js",
-     "{{version}}/modules/funnel.js",
-     "{{version}}/modules/solid-gauge.js"
+    "{{version}}/highcharts-3d.js",
+    "{{version}}/modules/data.js",
+    "{{version}}/modules/funnel.js",
+    "{{version}}/modules/solid-gauge.js"
 ];
 
 const cdnScriptsStyled = [
@@ -56,6 +56,10 @@ const cdnScriptsStandard = [
 
 const cdnLegacy = [    
     "{{version}}/adapters/standalone-framework.js"
+];
+
+const cdnMaps = [
+    "maps/{{version}}/modules/map.js"
 ];
 
 var schema = {
@@ -79,6 +83,19 @@ var schema = {
             message: 'Enter as e.g. 4.2.2. Default is latest.',
             default: 'latest'
         },
+        maps: {
+            description: 'Include Maps? (requires Maps license)',
+            default: 'no',
+            required: true,
+            conform: function (value) {
+                value = value.toUpperCase();
+                return value === 'Y'   || 
+                       value === 'N'   || 
+                       value === 'YES' || 
+                       value === 'NO'
+                ;
+            }
+        },
         styledMode: {
             description: 'Enable styled mode? (requires Highcharts/Highstock 5 license)',
             default: 'no',
@@ -88,7 +105,8 @@ var schema = {
                 return value === 'Y'   || 
                        value === 'N'   || 
                        value === 'YES' || 
-                       value === 'NO';
+                       value === 'NO'
+                ;
             }
         }
     }
@@ -101,7 +119,9 @@ function embed(version, scripts, out, fn) {
         scriptBody = ''
     ;
 
-    version = version.trim();
+    if (version) {
+        version = version.trim();        
+    }
 
     console.log(version);
 
@@ -162,15 +182,24 @@ function endMsg() {
     console.log('For documentation, see https://github.com/highcharts/node-export-server');
 }
 
-function embedAll(version, includeStyled) {
+function embedAll(version, includeStyled, includeMaps) {
+    var standard = cdnScriptsStandard.concat(cdnScriptsCommon),
+        styled = cdnScriptsStyled.concat(cdnScriptsCommon)
+    ;
+
+    if (includeMaps) {
+        standard = standard.concat(cdnMaps);
+        styled = standard.concat(cdnMaps);
+    }
+ 
     console.log('Pulling Highcharts from CDN (' + version + ')..');
     embed(version, 
-          cdnScriptsStandard.concat(cdnScriptsCommon), 
+          standard, 
           'export', 
           function () {        
             if (includeStyled) {
                 embed(false, 
-                      cdnScriptsStyled.concat(cdnScriptsCommon),
+                      styled,
                       'export_styled', 
                       endMsg
                 );
@@ -191,7 +220,9 @@ function startPrompt() {
         if (result.agree === 'Y' || result.agree === 'YES') {
             embedAll(result.version, 
                      result.styledMode.toUpperCase() === 'Y' || 
-                     result.styledMode.toUpperCase() === 'YES'
+                     result.styledMode.toUpperCase() === 'YES',
+                     result.maps.toUpperCase() === 'Y' || 
+                     result.maps.toUpperCase() === 'YES'                    
             );
         } else {
             console.log('License terms not accepted, aborting'.red);
@@ -201,7 +232,8 @@ function startPrompt() {
 
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
     embedAll(process.env.HIGHCHARTS_VERSION || 'latest', 
-             process.env.HIGHCHARTS_USE_STYLED || true
+             process.env.HIGHCHARTS_USE_STYLED || true,
+             process.env.HIGHCHARTS_USE_MAPS || true
     );    
 } else {    
     console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
