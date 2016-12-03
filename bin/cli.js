@@ -94,18 +94,21 @@ addOption('fromFile', false, 'load all options from file');
 
 console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow);
 
-//Print usage if no arguments supplied
-if (args.length <= 2) {
+function printUsage() {
     console.log('Usage:'.bold);
     
     Object.keys(optionsMeta).forEach(function (option) {
         console.log('  ' + rpad('-' + option), 
                     optionsMeta[option].help, 
-                    'default:', 
-                    optionsMeta[option].default
+                    ('default: ' + 
+                    optionsMeta[option].default).bold
         );
-    });
+    });    
+}
 
+//Print usage if no arguments supplied
+if (args.length <= 2) {
+    printUsage();
     return;
 }
 
@@ -115,7 +118,13 @@ for (var i = 0; i < args.length; i++) {
     var option = args[i].replace(/\-/g, '');
 
     if (typeof options[option] !== 'undefined') {
-        options[option] = args[++i] || options[option];
+        if (args[++i]) {
+            options[option] = args[i] || options[option];            
+        } else {
+            console.log(('Missing argument value for ' + option + '!').red, '\n');
+            printUsage();
+            return;
+        }
     }
 };
 

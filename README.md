@@ -104,6 +104,13 @@ CORS is enabled for the server.
 
 It's recommended to run the server using [forever](https://github.com/foreverjs/forever) unless running in a managed environment such as AWS Elastic Beanstalk.
 
+### Running in Forever
+
+The easiest way to run in forever is to clone the node export server repo, and in the 
+project folder running `forever start ./bin/cli.js --enableServer 1`.
+
+Please see the forever documentation for additional options (such as log destination).
+
 ### SSL
 
 To enable ssl support, drop your `server.key` and `server.crt` in the ssl folder,
