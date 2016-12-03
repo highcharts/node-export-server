@@ -111,7 +111,7 @@ or add `--sslPath <path to key/crt>` when running the server.
 
 ## Server Test
 
-Run the below in a terminal after running `highcharts-export-server --enableServer`.
+Run the below in a terminal after running `highcharts-export-server --enableServer 1`.
     
     # Generate a chart and save it to mychart.png    
     curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
