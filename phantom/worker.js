@@ -80,17 +80,11 @@ function loop() {
         currentWaitTime = 0,
         cachedCopy = '',
         css = '',
-        imports,
-        genTime
+        imports
     ;    
 
     page.settings.localToRemoteUrlAccessEnabled = true;
    // page.settings.XSSAuditingEnabled = true;
-
-    function timeIt(msg) {
-        var t = (new Date()).getTime();
-        system.stderr.writeLine(msg +'Current time: '+ (t - genTime) + 'ms');
-    }
 
      function injectJSString(name, script) {
         page.evaluate(function (name, js) {
@@ -147,8 +141,7 @@ function loop() {
                 var options = chartJson
                 ;
 
-                function doChart(options) {
-                    document.getElementById('highcharts').innerHTML = JSON.stringify(options, undefined, '  ');
+                function doChart(options) {                   
                     //Create the actual chart
                     window.chart = new (Highcharts[constr] || Highcharts.Chart)(
                         'highcharts', 
@@ -450,9 +443,7 @@ function loop() {
     while(incoming !== 'EOL') {
         data += incoming;
         incoming = system.stdin.readLine();
-    }
-
-    genTime = (new Date()).getTime();
+    }    
 
     try {
         data = JSON.parse(data);
