@@ -59,36 +59,36 @@ function rpad(str, pad) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-addOption('infile', false, 'the input file');
-addOption('outfile', false, 'the output filename');
-addOption('instr', false, 'an input chart JSON file. Overrides --infile.');
-addOption('options', false, 'alias for instr. An input chart JSON file. Overrides --infile.');
-addOption('styledMode', false, 'set to true to used the styled mode Highcharts libraries');
+addOption('infile', false, '<string>: the input file');
+addOption('outfile', false, '<string>: the output filename');
+addOption('instr', false, '<string>: an input chart JSON file. Overrides --infile.');
+addOption('options', false, '<string>: alias for instr. An input chart JSON file. Overrides --infile.');
+addOption('styledMode', false, '<1|0>: set to true to used the styled mode Highcharts libraries');
 
-addOption('allowFileResources', true, 'allow injecting resources from the filesystem. Has no effect when running as a server.');
+addOption('allowFileResources', true, '<1|0>: allow injecting resources from the filesystem. Has no effect when running as a server.');
 
-addOption('type', 'png', 'the format to export to');
-addOption('scale', 1, 'the scale of the exported chart');
-addOption('resources', false, 'additional resource');
-addOption('callback', false, 'JavaScript file with code to run on construction');
-addOption('width', false, 'the width of the exported chart, overrides chart settings');
-addOption('constr', 'Chart', 'the constructor to use. Either Chart or Stock.');
-addOption('tmpdir', 'tmp/', 'path to temporary files');
+addOption('type', 'png', '<string>: the format to export to');
+addOption('scale', 1, '<number>: the scale of the exported chart');
+addOption('resources', false, '<string>: additional resource');
+addOption('callback', false, '<string>: JavaScript file with code to run on construction');
+addOption('width', false, '<number>: the width of the exported chart, overrides chart settings');
+addOption('constr', 'Chart', '<string>: the constructor to use. Either Chart or Stock.');
+addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 
-addOption('enableServer', false, 'start a server on 0.0.0.0');
-addOption('host', '', 'start a server listening on the supplied hostname');
-addOption('port', 7801, 'server port');
-addOption('rateLimit', false, 'enable rate limiting. Argument is the max requests allowed in one minute');
+addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
+addOption('host', '', '<string>: start a server listening on the supplied hostname');
+addOption('port', 7801, '<number>: server port');
+addOption('rateLimit', false, '<1|0>: enable rate limiting. Argument is the max requests allowed in one minute');
 
-addOption('logLevel', 2, 'the log level. 0 = silent, 4 = verbose.');
-addOption('workers', false, 'the number of workers to spawn');
+addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
+addOption('workers', false, '<number>: the number of workers to spawn');
 
-addOption('logDest', false, 'path to log files. will also enable file logging.');
+addOption('logDest', false, '<string>: path to log files. will also enable file logging.');
 
-addOption('batch', false, 'start a batch job. string containing input/output pairs: "in=out;in=out;.."');
-addOption('sslPath', false, 'Set the path where to find the SSL certificate/key');
+addOption('batch', false, '<string>: start a batch job. string containing input/output pairs: "in=out;in=out;.."');
+addOption('sslPath', false, '<string>: Set the path where to find the SSL certificate/key');
 
-addOption('fromFile', false, 'load all options from file');
+addOption('fromFile', false, '<string>: load all options from file');
 
 ////////////////////////////////////////////////////////////////////////////////
 
