@@ -80,6 +80,7 @@ function loop() {
         currentWaitTime = 0,
         cachedCopy = '',
         css = '',
+        jsIncludes = '',
         imports
     ;    
 
@@ -515,6 +516,14 @@ function loop() {
 
     page.zoomFactor = parseFloat(data.scale);
 
+     if (data.resources && data.resources.files) {
+        data.resources.files.forEach(function (f) {
+            if (f.indexOf('http') === 0) {                
+                jsIncludes += '<script type="text/javascript" src="' + f + '"></script>';
+            } 
+        });
+    }
+
     if (data.svgstr && !data.chart) {
 
         if (data.svgstr.indexOf('<?xml') >= 0) {
@@ -525,12 +534,15 @@ function loop() {
         }
 
     } else {
-
         //Inject the CSS into the template
         if (data.styledMode) {
             cachedCopy = cachedContentStyled.replace('{{css}}', css);            
         } else {
             cachedCopy = cachedContent.replace('{{css}}', css);
+        }
+
+        if (jsIncludes.length) {
+            cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
         }
         
         page.content = cachedCopy;            
@@ -539,11 +551,9 @@ function loop() {
     //Inject required script files
     if (data.resources && data.resources.files) {
         data.resources.files.forEach(function (f) {
-            if (f.indexOf('http') === 0) {
-                page.includeJs(f, function () {});
-            } else {
-                page.injectJs(f);
-            }
+            if (f.indexOf('http') !== 0) {
+                page.injectJs(f);                
+            } 
         });
     }
 }
