@@ -1,7 +1,5 @@
 # Highcharts Node.js Export Server
 
-**NOTE: This is currently in beta**
-
 The export server can be ran both as a CLI converter, and/or as an HTTP server.
 
 ## Install

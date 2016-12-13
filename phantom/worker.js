@@ -475,7 +475,6 @@ function loop() {
                      .replace(/\)/g, '')
                      .trim()
             ;
-            
             css += '<link href="' + imp + '" type="text/css" rel="stylesheet"/>\n';
         });
 
@@ -534,6 +533,7 @@ function loop() {
         }
 
     } else {
+        
         //Inject the CSS into the template
         if (data.styledMode) {
             cachedCopy = cachedContentStyled.replace('{{css}}', css);            
@@ -541,6 +541,9 @@ function loop() {
             cachedCopy = cachedContent.replace('{{css}}', css);
         }
 
+        //Inject JS includes into template
+        //We can't use inject functions because Phantom won't wait for 
+        //those to be loaded before calling onLoadFinished..
         if (jsIncludes.length) {
             cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
         }
