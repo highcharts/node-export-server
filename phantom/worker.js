@@ -544,9 +544,9 @@ function loop() {
         //Inject JS includes into template
         //We can't use inject functions because Phantom won't wait for 
         //those to be loaded before calling onLoadFinished..
-        if (jsIncludes.length) {
-            cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
-        }
+       
+        cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
+        
         
         page.content = cachedCopy;            
     }
