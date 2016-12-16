@@ -158,7 +158,7 @@ if (options.enableServer || (options.host && options.host.length)) {
         maxWorkers: options.workers || 25    
     });
 
-    if (options.rateLimit === 1 || options.rateLimit === 'true') {
+    if (options.rateLimit && options.rateLimit !== 0) {
         main.server.enableRateLimiting({
             max: options.rateLimit
         });
