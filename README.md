@@ -45,6 +45,7 @@ OR:
   * `--host`: The hostname to run the server on.
   * `--port`: The port to listen for incoming requests on.
   * `--sslPath`: The path to the SSL key/certificate. Indirectly enables SSL support.
+  * `--rateLimit`: Argument is the max requests allowed in one minute. Disabled by default.
 
 *`-` and `--` can be used interchangeably when using the CLI.*
 

@@ -78,7 +78,7 @@ addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
 addOption('host', '', '<string>: start a server listening on the supplied hostname');
 addOption('port', 7801, '<number>: server port');
-addOption('rateLimit', false, '<1|0>: enable rate limiting. Argument is the max requests allowed in one minute');
+addOption('rateLimit', false, '<number>: Argument is the max requests allowed in one minute. Disabled by default.');
 
 addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
@@ -158,7 +158,7 @@ if (options.enableServer || (options.host && options.host.length)) {
         maxWorkers: options.workers || 25    
     });
 
-    if (options.rateLimit && options.rateLimit !== 0) {
+    if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
         main.server.enableRateLimiting({
             max: options.rateLimit
         });
