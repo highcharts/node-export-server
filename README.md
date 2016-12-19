@@ -79,7 +79,7 @@ from which the cli tool was ran, it will use the `resources.json` file.
 The server accepts the following arguments:
 
   * `infile`: A string containing JSON or SVG for the chart 
-  * `options`: Aliast for `infile`
+  * `options`: Alias for `infile`
   * `svg`: A string containing SVG to render
   * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
   * `scale`: The scale factor
