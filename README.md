@@ -1,5 +1,7 @@
 # Highcharts Node.js Export Server
 
+Convert Highcharts.JS charts to static image files.
+
 ## What & Why
 
 This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files. 
@@ -193,9 +195,13 @@ The export server can also be used as a node module to simplify integrations:
         above.
     */
     exporter.export(exportSettings, function (err, res) {
-        ...
-        //Kill the pool when we're done with it
+        //The export result is now in res.
+        //If the output is not PDF or SVG, it will be base64 encoded (res.data).
+        //If the output is a PDF or SVG, it will contain a filename (res.filename).
+
+        //Kill the pool when we're done with it, and exit the application
         exporter.killPool();
+        process.exit(1);
     });
 
 ### Node.js API Reference
