@@ -1,6 +1,37 @@
 # Highcharts Node.js Export Server
 
-The export server can be ran both as a CLI converter, and/or as an HTTP server.
+## What & Why
+
+This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files. 
+It supports PNG, JPEG, SVG, and PDF output; and the input can be either SVG, or JSON-formatted chart options.
+
+The application can be used either as a CLI (Command Line Interface), as an HTTP server, or as a node.js module.
+
+### Use Cases
+
+The main use case for the export server is situations where headless conversion of charts are required.
+Common use cases include automatic report generation, static caching, and for including charts in e.g.
+presentations, or other documents.
+
+In addition, the HTTP mode can be used to run your own export server for your users,
+rather than relying on the public export.highcharts.com server which is rate limited.
+
+The HTTP server can either be ran stand-alone and integrate with your other applications and services,
+or it can be ran in such a way that the export buttons on your charts route to your own server.
+
+To do latter, add:
+    
+    {
+      exporting: {
+        server: "<IP to the self-hosted export server>"
+      }
+    }
+
+to the chart options when creating your charts.
+
+For systems that generate automatic reports, using the export server as a node.js module
+is a great fit - especially if your report generator is also written in node.
+See [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-module) for examples.
 
 ## Install
     
