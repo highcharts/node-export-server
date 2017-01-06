@@ -30,7 +30,7 @@ const request = require('request');
 var sum = 0,
     count = 0,
     options = {
-        url: 'http://127.0.0.1:7801',
+        url: 'http://127.0.0.1:8081',///?key=AIzaSyAhONZJpMCBqCfQjFUj21cR2klf6JWbVSo&access_token=3074urfkhdfoer',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -57,4 +57,4 @@ setInterval(function () {
     for (var i = 0; i < 9; i++) {
         doTest(i);
     }    
-}, 500);
+}, 100);

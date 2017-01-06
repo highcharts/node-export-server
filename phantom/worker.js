@@ -546,8 +546,7 @@ function loop() {
         //those to be loaded before calling onLoadFinished..
        
         cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
-        
-        
+                
         page.content = cachedCopy;            
     }
  

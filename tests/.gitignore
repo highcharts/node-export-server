@@ -1,0 +1,6 @@
+tmp/
+results/
+*.png
+*.pdf
+*.svg
+*.jpg
