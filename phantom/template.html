@@ -39,6 +39,20 @@
 
 <body>
 
+<!-- 
+    Want to hear a fun fact?
+
+    WebKit doesn't load external font sets unless it finds a reference to it 
+    in the DOM. 
+
+    Guess how long this took to debug?
+
+    Anyway, here is the fix:
+
+ -->
+<div style="font-family: 'Unica One';width:0px;height:0px;">:(</div>
+<div style="font-family: 'Signika:400,700';width:0px;height:0px;">:(</div>
+
 <div id="highcharts">
     <div style="padding:5px;">
         <h2>Export Server not configured!</h2>Please complete the configuration by running <code>node build.js</code>

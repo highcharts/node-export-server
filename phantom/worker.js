@@ -86,6 +86,11 @@ function loop() {
 
     page.settings.localToRemoteUrlAccessEnabled = true;
    // page.settings.XSSAuditingEnabled = true;
+    page.settings.resourceTimeout = 5000;
+
+    //User agent to force gfonts to serve woff and not woff2
+    //Fixes issues with font-weight/font-style
+    page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0';
 
      function injectJSString(name, script) {
         page.evaluate(function (name, js) {
@@ -437,6 +442,19 @@ function loop() {
         }
     }
 
+    //Polls for document.readyState === 'complete'
+    function softPoll() {
+        var readyState = page.evaluate(function () {
+            return document.readyState;
+        });
+
+        if (readyState === 'complete') {
+            process();                    
+        } else {                    
+            setTimeout(softPoll);
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
 
     //Parse the input - we need a loop in case the std buffer is long enough
@@ -475,6 +493,7 @@ function loop() {
                      .replace(/\)/g, '')
                      .trim()
             ;
+
             css += '<link href="' + imp + '" type="text/css" rel="stylesheet"/>\n';
         });
 
@@ -486,24 +505,20 @@ function loop() {
         //We need to poll. This is not ideal, but it's the easiest way 
         //to ensure that users have control over when the rendering is "done".
         //Opens up for e.g. Ajax requests.
-        page.onLoadFinished = function () {
-            // page.evaluate(function () {
-            //     document.getElementById('highcharts').innerHTML = '';
-            // });
-
+        page.onLoadFinished = function () {            
             injectRawJS();   
             poll();
         };
         
     } else {
         //No async resources, so just listen to page load.        
-        page.onLoadFinished = function (status) {
-           // document.getElementById('highcharts').innerHTML = '';
+        page.onLoadFinished = function (status) {          
             if (status !== 'success') {
                 return;
             }
-            injectRawJS();
-            process();
+
+            injectRawJS();          
+            softPoll();
         };
     }
 
