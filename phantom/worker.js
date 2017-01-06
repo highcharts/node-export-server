@@ -509,7 +509,7 @@ function loop() {
 
     page.onResourceError = function (err) {
         system.stderr.writeLine('worker.js resource error - ' + 
-                                JSOn.stringify(err, undefined, ' ')
+                                JSON.stringify(err, undefined, ' ')
                                );
     };
 
