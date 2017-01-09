@@ -84,6 +84,7 @@ addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
 
 addOption('logDest', false, '<string>: path to log files. will also enable file logging.');
+addOption('logFile', 'highcharts-export-server.log', '<string>: filename to log to.');
 
 addOption('batch', false, '<string>: start a batch job. string containing input/output pairs: "in=out;in=out;.."');
 addOption('sslPath', false, '<string>: Set the path where to find the SSL certificate/key');
@@ -128,8 +129,6 @@ for (var i = 0; i < args.length; i++) {
     }
 };
 
-main.logLevel(options.logLevel);
-
 if (options.fromFile) {
     try {
         var old = options;
@@ -147,8 +146,13 @@ if (options.fromFile) {
     }
 }
 
+main.logLevel(options.logLevel);
+
 if (options.logDest) {
-    main.enableFileLogging(options.logDest, 'higcharts-export-server');
+    main.enableFileLogging(
+        options.logDest, 
+        options.logFile || 'highcharts-export-server.log'
+    );
 }
 
 if (options.enableServer || (options.host && options.host.length)) {

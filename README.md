@@ -67,6 +67,7 @@ OR:
   * `--resources`: Stringified JSON.
   * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
   * `--logDest <path>`: Set path for log files, and enable file logging
+  * `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable logging.
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
   * `--fromFile "options.json"`: Read CLI options from JSON file
   * `--tmpdir`: The path to temporary output files.
