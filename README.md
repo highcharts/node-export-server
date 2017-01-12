@@ -25,7 +25,7 @@ To do latter, add:
     
     {
       exporting: {
-        server: "<IP to the self-hosted export server>"
+        url: "<IP to the self-hosted export server>"
       }
     }
 
