@@ -72,6 +72,7 @@ OR:
   * `--fromFile "options.json"`: Read CLI options from JSON file
   * `--tmpdir`: The path to temporary output files.
   * `--workers`: Number of workers to spawn
+  * `--workLimit`: the pieces of work that can be performed before restarting a phantom process
 
 **Server related options**
 
@@ -79,6 +80,8 @@ OR:
   * `--host`: The hostname to run the server on.
   * `--port`: The port to listen for incoming requests on.
   * `--sslPath`: The path to the SSL key/certificate. Indirectly enables SSL support.
+  * `--sslPort`: Port on which to run the HTTPS server
+  * `--sslOnly`: Set to true to only serve over HTTPS
   * `--rateLimit`: Argument is the max requests allowed in one minute. Disabled by default.
 
 *`-` and `--` can be used interchangeably when using the CLI.*
@@ -147,8 +150,10 @@ Please see the forever documentation for additional options (such as log destina
 
 ### SSL
 
-To enable ssl support, drop your `server.key` and `server.crt` in the ssl folder,
-or add `--sslPath <path to key/crt>` when running the server.
+To enable ssl support, add `--sslPath <path to key/crt>` when running the server.
+Note that the certificate files needs to be named as such:
+  * `server.crt`
+  * `server.key`
 
 ## Server Test
 
@@ -204,6 +209,22 @@ The export server can also be used as a node module to simplify integrations:
         exporter.killPool();
         process.exit(1);
     });
+
+### Worker Count & Work Limit
+
+The export server utilizes a pool of *workers*, where one worker is a 
+PhantomJS process responsible for converting charts. The pool size 
+can be set with the `--workers` switch, and should be tweaked to fit the hardware
+on which you're running the server. It's recommended that you start with the default (8),
+and work your way up gradually. The `tests/http/stress-test.js` script can be used
+to test the server. It fires batches of 10 requests every 10ms, and expects the
+server to be running on port 8081.
+
+PhantomJS becomes somewhat unstable the more export requests it has historically handled.
+To work around this, each of the workers has a maximum number of requests it can
+handle before it restarts itself. This number is 60 by default, and can be tweaked with
+`--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
+use case.
 
 ### Node.js API Reference
 

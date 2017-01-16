@@ -76,18 +76,21 @@ addOption('constr', 'Chart', '<string>: the constructor to use. Either Chart or 
 addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 
 addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
+addOption('sslOnly', false, '<bool>: set this to true to only serve over HTTPS');
 addOption('host', '', '<string>: start a server listening on the supplied hostname');
 addOption('port', 7801, '<number>: server port');
 addOption('rateLimit', false, '<number>: Argument is the max requests allowed in one minute. Disabled by default.');
 
 addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
+addOption('workLimit', 60, '<number>: the pieces of work that can be performed before restarting a phantom process');
 
 addOption('logDest', false, '<string>: path to log files. will also enable file logging.');
 addOption('logFile', 'highcharts-export-server.log', '<string>: filename to log to.');
 
 addOption('batch', false, '<string>: start a batch job. string containing input/output pairs: "in=out;in=out;.."');
 addOption('sslPath', false, '<string>: Set the path where to find the SSL certificate/key');
+addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 
 addOption('fromFile', false, '<string>: load all options from file');
 
@@ -159,7 +162,8 @@ if (options.enableServer || (options.host && options.host.length)) {
 
     main.initPool({
         initialWorkers: options.workers || 0,
-        maxWorkers: options.workers || 25    
+        maxWorkers: options.workers || 4,
+        workLimit: options.workLimit  
     });
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
@@ -168,7 +172,14 @@ if (options.enableServer || (options.host && options.host.length)) {
         });
     }
 
-    main.startServer(options.port, 443, options.sslPath);
+    main.startServer(options.port, 
+                     options.sslPort, 
+                     options.sslPath, 
+                     function (srv) {
+
+                     },
+                     options.sslOnly);        
+
 } else {
 
     options.async = true;
@@ -187,6 +198,7 @@ if (options.enableServer || (options.host && options.host.length)) {
         main.initPool({
             initialWorkers: options.workers || 5,
             maxWorkers: options.workers || 25,
+            workLimit: options.workLimit,
             reaper: false 
         });
 
