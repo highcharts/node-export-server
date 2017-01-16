@@ -155,6 +155,22 @@ Note that the certificate files needs to be named as such:
   * `server.crt`
   * `server.key`
 
+### Worker Count & Work Limit
+
+The export server utilizes a pool of *workers*, where one worker is a 
+PhantomJS process responsible for converting charts. The pool size 
+can be set with the `--workers` switch, and should be tweaked to fit the hardware
+on which you're running the server. It's recommended that you start with the default (8),
+and work your way up gradually. The `tests/http/stress-test.js` script can be used
+to test the server. It fires batches of 10 requests every 10ms, and expects the
+server to be running on port 8081.
+
+PhantomJS becomes somewhat unstable the more export requests it has historically handled.
+To work around this, each of the workers has a maximum number of requests it can
+handle before it restarts itself. This number is 60 by default, and can be tweaked with
+`--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
+use case.
+
 ## Server Test
 
 Run the below in a terminal after running `highcharts-export-server --enableServer 1`.
@@ -210,21 +226,6 @@ The export server can also be used as a node module to simplify integrations:
         process.exit(1);
     });
 
-### Worker Count & Work Limit
-
-The export server utilizes a pool of *workers*, where one worker is a 
-PhantomJS process responsible for converting charts. The pool size 
-can be set with the `--workers` switch, and should be tweaked to fit the hardware
-on which you're running the server. It's recommended that you start with the default (8),
-and work your way up gradually. The `tests/http/stress-test.js` script can be used
-to test the server. It fires batches of 10 requests every 10ms, and expects the
-server to be running on port 8081.
-
-PhantomJS becomes somewhat unstable the more export requests it has historically handled.
-To work around this, each of the workers has a maximum number of requests it can
-handle before it restarts itself. This number is 60 by default, and can be tweaked with
-`--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
-use case.
 
 ### Node.js API Reference
 
