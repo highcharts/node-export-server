@@ -30,7 +30,7 @@ const request = require('request');
 var sum = 0,
     count = 0,
     options = {
-        url: 'http://127.0.0.1:8081',///?key=AIzaSyAhONZJpMCBqCfQjFUj21cR2klf6JWbVSo&access_token=3074urfkhdfoer',
+        url: 'http://127.0.0.1:8081',
         headers: {
             'Content-Type': 'application/json'
         },
