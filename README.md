@@ -161,7 +161,7 @@ The export server utilizes a pool of *workers*, where one worker is a
 PhantomJS process responsible for converting charts. The pool size 
 can be set with the `--workers` switch, and should be tweaked to fit the hardware
 on which you're running the server. It's recommended that you start with the default (8),
-and work your way up gradually. The `tests/http/stress-test.js` script can be used
+and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/http/stress-test.js` script can be used
 to test the server. It fires batches of 10 requests every 10ms, and expects the
 server to be running on port 8081.
 

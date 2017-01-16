@@ -1,1 +1,0 @@
-Put server.key/server.crt here to enable SSL.
