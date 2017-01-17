@@ -42,7 +42,7 @@ function addOption(option, def, help) {
     options[option] = def;
     optionsMeta[option] = {
         default: def,
-        help
+        help: help
     };
 }
 

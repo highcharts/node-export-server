@@ -67,7 +67,7 @@ OR:
   * `--resources`: Stringified JSON.
   * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
   * `--logDest <path>`: Set path for log files, and enable file logging
-  * `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable logging.
+  * `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
   * `--fromFile "options.json"`: Read CLI options from JSON file
   * `--tmpdir`: The path to temporary output files.
@@ -170,6 +170,15 @@ To work around this, each of the workers has a maximum number of requests it can
 handle before it restarts itself. This number is 60 by default, and can be tweaked with
 `--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
 use case.
+
+### System requirements
+
+The system requirements largely depend on your use case.
+
+It's largely CPU and memory bound, so when using in heavy-traffic situations,
+it needs a fairly beefy server. It's recommended that the server has at least 1GB
+of memory regardless of traffic, and more than one core.
+
 
 ## Server Test
 
