@@ -179,6 +179,26 @@ It's largely CPU and memory bound, so when using in heavy-traffic situations,
 it needs a fairly beefy server. It's recommended that the server has at least 1GB
 of memory regardless of traffic, and more than one core.
 
+### Installing fonts
+
+Got a fancy font you want to use? PhantomJS (and therefore the export server) requires fonts to be properly installed on the system in order to use them to render charts.
+
+#### OS X
+Install your desired fonts with the Font Book app, or place it in /Library/Fonts/ (system) or ~/Library/Fonts/ (user)
+
+#### Linux
+Copy or move the TTF file to the `/usr/share/fonts/truetype` (may require sudo privileges):
+```
+mkdir -p /usr/share/fonts/truetype
+cp yourFont.ttf /usr/share/fonts/truetype/
+fc-cache -fv
+```
+
+#### Windows
+Copy or move the TTF file to `C:\Windows\Fonts\`:
+```
+copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
+```
 
 ## Server Test
 
