@@ -46,6 +46,12 @@ OR:
     npm link
 
 
+Note: depending on how you installed Node, you may have to create a symlink from `nodejs` to `node`. Example on Linux:
+
+```
+ln -s `which nodejs` /usr/bin/node
+```
+
 ## Running
     
     highcharts-export-server <arguments>
@@ -171,7 +177,7 @@ handle before it restarts itself. This number is 60 by default, and can be tweak
 `--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
 use case.
 
-### System requirements
+### System Requirements
 
 The system requirements largely depend on your use case.
 
@@ -179,7 +185,9 @@ It's largely CPU and memory bound, so when using in heavy-traffic situations,
 it needs a fairly beefy server. It's recommended that the server has at least 1GB
 of memory regardless of traffic, and more than one core.
 
-### Installing fonts
+
+
+### Installing Fonts
 
 Got a fancy font you want to use? PhantomJS (and therefore the export server) requires fonts to be properly installed on the system in order to use them to render charts.
 
