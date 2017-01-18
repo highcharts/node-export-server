@@ -142,7 +142,7 @@ It's recommended to run the server using [forever](https://github.com/foreverjs/
 
 ### Running in Forever
 
-The easiest way to run in forever is to clone the node export server repo, and run `forever start ./bin/cli.js --enableServer 1` in the project folder.
+The easiest way to run in forever is to clone the node export server repo, and run `forever start ./bin/cli.js --enableServer 1 --killSignal SIGINT` in the project folder.
 
 Remember to install forever first: `sudo npm install -g forever`.
 
