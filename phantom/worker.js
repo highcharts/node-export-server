@@ -119,7 +119,14 @@ function loop() {
         }         
 
         if (data.customCode) {
-            injectJSString('customCode', 'function (options) { ' + data.customCode + '}');
+            if (data.customCode.trim().indexOf('function') === 0) {
+                injectJSString('customCode', data.customCode);                
+            } else {
+                injectJSString(
+                    'customCode', 
+                    'function (options) { ' + data.customCode + '}'
+                );
+            }
         }
 
         if (data.globalOptions) {
@@ -157,11 +164,15 @@ function loop() {
                 }
 
                 function parseData(completeHandler, chartOptions, dataConfig) {
-                    try {
-                        dataConfig.complete = completeHandler;
-                        Highcharts.data(dataConfig, chartOptions);
-                    } catch (error) {
-                        completeHandler(undefined);
+                    if (dataConfig) {
+                        try {
+                            dataConfig.complete = completeHandler;
+                            Highcharts.data(dataConfig, chartOptions);
+                        } catch (error) {
+                            completeHandler(undefined);
+                        }
+                    } else {
+                        completeHandler(chartOptions);                
                     }
                 }
 
@@ -213,7 +224,8 @@ function loop() {
                             options = Highcharts.merge(true, themeOptions, options);                            
                         }
 
-                        if (window['dataOptions'] && Object.keys(window.dataOptions).length) {
+                        if (typeof window['dataOptions'] !== 'undefined') {
+
                             parseData(function (opts) {
                                 var mergedOptions;
 
@@ -230,12 +242,14 @@ function loop() {
                                 }
 
                                 doChart(mergedOptions);
-
                             }, options, dataOptions);
+
+                        } else if (typeof window['customCode'] !== 'undefined') {                            
+                            customCode(options);
+                            doChart(options);
                         } else {    
                             doChart(options);                            
-                        }
-                        
+                        }          
 
                     } catch (e) {
                         document.getElementById('highcharts').innerHTML = '<h1>Chart input data error</h1>' + e;

@@ -4,6 +4,8 @@ const exporter = require('./../../lib/index.js');
 //Export settings 
 var exportSettings = {
     type: 'png',
+    outfile: 'module_test.png',
+    async: true,
     options: {
         title: {
             text: 'My Chart'
@@ -25,17 +27,15 @@ var exportSettings = {
             series: {
               dataLabels: {
                 enabled: true,
-                allowOverlap: true,
-                formatter: function () {
-                    var last = this.series.data[this.series.data.length - 1];
-                    if (this.point.category === last.category && this.point.y === last.y) {
-                      return this.series.name;
-                    }
-                    return "";
-                  }
+                allowOverlap: true          
               }
             }
         }
+    },
+    customCode: function (options) {
+        options.title = { 
+            text: 'Changed through custom code!'
+        };
     }
 };
 
