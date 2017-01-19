@@ -5,7 +5,7 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
@@ -15,6 +15,7 @@
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
+    "async": "*",
     "express-rate-limit": "*",
     "mkdirp": "*",
     "colors": "*",
