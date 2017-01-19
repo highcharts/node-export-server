@@ -36,6 +36,10 @@ is a great fit - especially if your report generator is also written in node.
 See [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-module) for examples.
 
 ## Install
+
+First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.org/en/download/) and download/install node for your platform. 
+
+After node.js is installed, install the export server by opening a terminal and typing:
     
     npm install highcharts-export-server -g
 
