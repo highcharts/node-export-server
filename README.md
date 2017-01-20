@@ -36,6 +36,10 @@ is a great fit - especially if your report generator is also written in node.
 See [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-module) for examples.
 
 ## Install
+
+First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.org/en/download/) and download/install node for your platform. 
+
+After node.js is installed, install the export server by opening a terminal and typing:
     
     npm install highcharts-export-server -g
 
@@ -189,7 +193,11 @@ of memory regardless of traffic, and more than one core.
 
 ### Installing Fonts
 
-Got a fancy font you want to use? PhantomJS (and therefore the export server) requires fonts to be properly installed on the system in order to use them to render charts.
+Does your Linux server not have Arial or Calibri? PhantomJS uses the system installed fonts to render pages. Therefore the Highcharts Export Server requires fonts to be properly installed on the system in order to use them to render charts.
+
+Note that the default font-family config in Highcharts is `"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif"`.
+
+Fonts are installed differently depending on your system. Please follow the below guides for font installation on most common systems.
 
 #### OS X
 Install your desired fonts with the Font Book app, or place it in /Library/Fonts/ (system) or ~/Library/Fonts/ (user)
