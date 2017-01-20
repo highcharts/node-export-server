@@ -5,7 +5,7 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "1.0.7",
+  "version": "1.0.8",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
@@ -20,7 +20,7 @@
     "mkdirp": "*",
     "colors": "*",
     "express": "*",
-    "phantomjs-prebuilt": "*",    
+    "phantomjs-prebuilt": "2.1.13",    
     "body-parser": "*",
     "prompt": "*",
     "request": "*",
