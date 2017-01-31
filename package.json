@@ -5,7 +5,7 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "1.0.8",
+  "version": "1.0.8.1",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
@@ -27,5 +27,8 @@
     "express-form-data": "*",
     "cors": "*",
     "uuid": "*"
+  },
+  "engines": {
+    "node": ">=5.10.0"
   }
 }
