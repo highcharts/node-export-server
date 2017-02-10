@@ -20,13 +20,13 @@
     "mkdirp": "*",
     "colors": "*",
     "express": "*",
-    "phantomjs-prebuilt": "2.1.13",    
+    "phantomjs-prebuilt": "2.1.13",
     "body-parser": "*",
     "prompt": "*",
     "request": "*",
     "express-form-data": "*",
     "cors": "*",
-    "uuid": "*"
+    "uuid": ">=3.0.1"
   },
   "engines": {
     "node": ">=5.10.0"
