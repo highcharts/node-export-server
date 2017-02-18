@@ -63,6 +63,7 @@ addOption('infile', false, '<string>: the input file');
 addOption('outfile', false, '<string>: the output filename');
 addOption('instr', false, '<string>: an input chart JSON file. Overrides --infile.');
 addOption('options', false, '<string>: alias for instr. An input chart JSON file. Overrides --infile.');
+addOption('globalOptions', false, '<string>: A JSON string with options to be passed to Highcharts.setOptions');
 addOption('styledMode', false, '<1|0>: set to true to used the styled mode Highcharts libraries');
 
 addOption('allowFileResources', true, '<1|0>: allow injecting resources from the filesystem. Has no effect when running as a server.');
