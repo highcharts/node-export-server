@@ -83,6 +83,8 @@ ln -s `which nodejs` /usr/bin/node
   * `--tmpdir`: The path to temporary output files.
   * `--workers`: Number of workers to spawn
   * `--workLimit`: the pieces of work that can be performed before restarting a phantom process
+  * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
+  * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
 
 **Server related options**
 
@@ -188,8 +190,6 @@ The system requirements largely depend on your use case.
 It's largely CPU and memory bound, so when using in heavy-traffic situations,
 it needs a fairly beefy server. It's recommended that the server has at least 1GB
 of memory regardless of traffic, and more than one core.
-
-
 
 ### Installing Fonts
 
