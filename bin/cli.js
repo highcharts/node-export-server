@@ -64,6 +64,7 @@ addOption('outfile', false, '<string>: the output filename');
 addOption('instr', false, '<string>: an input chart JSON file. Overrides --infile.');
 addOption('options', false, '<string>: alias for instr. An input chart JSON file. Overrides --infile.');
 addOption('styledMode', false, '<1|0>: set to 1 to used the styled mode Highcharts libraries');
+addOption('globalOptions', false, '<string>: A JSON string with options to be passed to Highcharts.setOptions');
 
 addOption('listenToProcessExits', true, '<1|0>: set to 0 to skip attaching process.exit handlers');
 
