@@ -226,7 +226,7 @@ if (options.enableServer || (options.host && options.host.length)) {
             }
         });
 
-        async.waterfall(func, function () {
+        async.waterfall(funs, function () {
             main.killPool();
         });
 
