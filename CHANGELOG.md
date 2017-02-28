@@ -4,6 +4,7 @@
   * Fixed an issue with `themeOptions` when using CLI mode
   * Added `listenToProcessExits` option to pool.init(..)
   * Exposed `listenToProcessExits` in CLI mode
+  * Fixed issue with `--callback` when the callback was a file
 
 # 1.0.10
 
