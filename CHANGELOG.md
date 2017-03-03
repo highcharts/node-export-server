@@ -1,4 +1,8 @@
 
+# 1.0.12
+
+  * Fixed an issue with `--batch` exporting
+  
 # 1.0.11
 
   * Fixed an issue with `themeOptions` when using CLI mode
@@ -18,6 +22,3 @@
 # 1.0.8
  
  * Fixed `phantomjs-prebuilt` dependency version
-
-
-
