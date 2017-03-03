@@ -217,6 +217,7 @@ if (options.enableServer || (options.host && options.host.length)) {
                     main.export({
                         infile: pair[0],
                         outfile: pair[1],
+                        async: true,
                         type: options.type || 'png',
                         scale: options.scale,
                         width: options.width,
@@ -226,7 +227,9 @@ if (options.enableServer || (options.host && options.host.length)) {
                         tmpdir: options.tmpdir,
                         styledMode: options.styledMode,
                         allowFileResources: options.allowFileResources
-                    }, next);
+                    }, function () {
+                        next();
+                    });
                 });
             }
         });
