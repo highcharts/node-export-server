@@ -26,7 +26,7 @@
 
     <style>
         html, body {
-            margin: 0;      
+            margin: 0;
         }
     </style>
 
@@ -39,19 +39,19 @@
 
 <body>
 
-<!-- 
+<!--
     Want to hear a fun fact?
 
-    WebKit doesn't load external font sets unless it finds a reference to it 
-    in the DOM. 
+    WebKit doesn't load external font sets unless it finds a reference to it
+    in the DOM.
 
     Guess how long this took to debug?
 
     Anyway, here is the fix:
 
  -->
-<div style="font-family: 'Unica One';width:0px;height:0px;">:(</div>
-<div style="font-family: 'Signika';width:0px;height:0px;">:(</div>
+<div style="font-family: 'Unica One';position:absolute;left:-999999px;">:(</div>
+<div style="font-family: 'Signika';position:absolute;left:-999999px;">:(</div>
 
 <div id="highcharts">
     <div style="padding:5px;">
