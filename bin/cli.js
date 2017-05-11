@@ -227,7 +227,8 @@ if (options.enableServer || (options.host && options.host.length)) {
                         constr: options.constr,
                         tmpdir: options.tmpdir,
                         styledMode: options.styledMode,
-                        allowFileResources: options.allowFileResources
+                        allowFileResources: options.allowFileResources,
+                        globalOptions: options.globalOptions
                     }, function () {
                         next();
                     });
