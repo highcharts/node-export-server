@@ -1,3 +1,5 @@
+# 1.0.15
+  * Fixed an issue with SVG export
 
 # 1.0.12
 

@@ -92,9 +92,9 @@ function loop() {
     //Fixes issues with font-weight/font-style
     page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0';
 
-     function injectJSString(name, script) {
+    function injectJSString(name, script) {
         page.evaluate(function (name, js) {
-            if (js === 'null' || !js) {
+            if (js === 'null' || typeof js === 'undefined' || !js) {
                 return;
             }
 
@@ -107,7 +107,10 @@ function loop() {
                 script.innerHTML = js;
             }
 
-            document.head.appendChild(script);
+            try {
+                document.head.appendChild(script);            
+            } catch (e) {}
+
         }, name, script);
     }
 
@@ -120,7 +123,7 @@ function loop() {
 
         if (data.customCode) {
             if (data.customCode.trim().indexOf('function') === 0) {
-                injectJSString('customCode', data.customCode);                
+                injectJSString('customCode', data.customCode);
             } else {
                 injectJSString(
                     'customCode', 
@@ -142,6 +145,7 @@ function loop() {
         }
 
         if (data.dataOptions) {
+            
             injectJSString('dataOptions', data.dataOptions);
         }
     }
@@ -220,7 +224,7 @@ function loop() {
                             options = __chartData;
                         }
 
-                        if (window['themeOptions'] && Object.keys(window.themeOptions).length) {
+                        if (typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
                             options = Highcharts.merge(true, themeOptions, options);                            
                         }
 
@@ -383,22 +387,21 @@ function loop() {
                 }
             } else {                
                 //This temporary file nonesense has to go at some point.
-                fs.write(data.out, xmlDoctype + page.evaluate(function () {    
+                fs.write(data.out, xmlDoctype + page.evaluate(function (data) {    
                     var element = document.body.querySelector('#highcharts').firstChild;
-
                     //When we're in styled mode, prefer getChartHTML.
                     //getChartHTML will only be defined if the styled libraries are 
                     //included, which they always are if the overall 
                     //settings are styledMode = true                    
-                    if (window.chart && window.chart.getChartHTML) {
+                    if (data.styledMode && window.chart && window.chart.getChartHTML) {
                         return window.chart.getChartHTML();
                     } else if (window.chart && window.chart.getSVG) {                                         
-                        return window.chart.getSVG();
+                      return window.chart.getSVG();
                     }
 
                     //Fall back to just using the SVG as it is on the page
                     return element ? element.innerHTML : '';
-                }).replace(/\n/g, ''), 'w');
+                }, data).replace(/\n/g, ''), 'w');
             }
 
             doDone({                
