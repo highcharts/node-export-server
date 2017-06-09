@@ -224,8 +224,8 @@ function loop() {
                             options = __chartData;
                         }
 
-                        if (typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
-                            options = Highcharts.merge(true, themeOptions, options);                            
+                        if (window.themeOptions && typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
+                            options = Highcharts.merge(true, themeOptions, options);
                         }
 
                         if (typeof window['dataOptions'] !== 'undefined') {
