@@ -72,7 +72,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
   * `--scale`: The scale of the chart.
   * `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
-  * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
+  * `--constr`: The constructor to use. Any `Chart` (default) or `StockChart` or `Map`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
   * `--resources`: Stringified JSON.
   * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
