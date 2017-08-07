@@ -1,3 +1,12 @@
+# 2.0.0
+  * Fixed Phantom cleanup: instead of reaping every 2.5s, workers are checked for timeout when other work is posted.
+  * Added additional error handlers to
+    * `hhtp(s)Server`, `process`
+  * Worker busy check before restarting
+  * Now checking if the client connection is still open before sending returns
+  * Changed return codes for error conditions
+  * Misc stability fixes
+
 # 1.0.15
   * Fixed an issue with SVG export
 
