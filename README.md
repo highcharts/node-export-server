@@ -70,7 +70,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--outfile`: Specify the output filename.
   * `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server. Defaults to `true`.
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
-  * `--scale`: The scale of the chart.
+  * `--scale`: The scale of the chart. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
   * `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
   * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
@@ -131,13 +131,13 @@ The server accepts the following arguments:
   * `options`: Alias for `infile`
   * `svg`: A string containing SVG to render
   * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
-  * `scale`: The scale factor
+  * `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
   * `width`: The chart width (overrides scale)
   * `callback`: Javascript to execute in the highcharts constructor.
   * `resources`: Additional resources.
   * `constr`: The constructor to use. Either `Chart` or `Stock`.
   * `b64`: Bool, set to true to get base64 back instead of binary.
-  * `async`: Get a download link instead of the file data
+  * `async`: Get a download link instead of the file data.
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
   * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
   * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
