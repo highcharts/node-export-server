@@ -104,14 +104,14 @@ console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.y
 
 function printUsage() {
     console.log('Usage:'.bold);
-    
+
     Object.keys(optionsMeta).forEach(function (option) {
-        console.log('  ' + rpad('-' + option), 
-                    optionsMeta[option].help, 
-                    ('default: ' + 
+        console.log('  ' + rpad('-' + option),
+                    optionsMeta[option].help,
+                    ('default: ' +
                     optionsMeta[option].default).bold
         );
-    });    
+    });
 }
 
 //Print usage if no arguments supplied
@@ -127,7 +127,7 @@ for (var i = 0; i < args.length; i++) {
 
     if (typeof options[option] !== 'undefined') {
         if (args[++i]) {
-            options[option] = args[i] || options[option];            
+            options[option] = args[i] || options[option];
         } else {
             console.log(('Missing argument value for ' + option + '!').red, '\n');
             printUsage();
@@ -157,7 +157,7 @@ main.logLevel(options.logLevel);
 
 if (options.logDest) {
     main.enableFileLogging(
-        options.logDest, 
+        options.logDest,
         options.logFile || 'highcharts-export-server.log'
     );
 }
@@ -168,7 +168,7 @@ if (options.enableServer || (options.host && options.host.length)) {
         listenToProcessExits: options.listenToProcessExits,
         initialWorkers: options.workers || 0,
         maxWorkers: options.workers || 4,
-        workLimit: options.workLimit  
+        workLimit: options.workLimit
     });
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
@@ -177,13 +177,15 @@ if (options.enableServer || (options.host && options.host.length)) {
         });
     }
 
-    main.startServer(options.port, 
-                     options.sslPort, 
-                     options.sslPath, 
+    main.startServer(options.port,
+                     options.sslPort,
+                     options.sslPath,
                      function (srv) {
 
                      },
-                     options.sslOnly);        
+                     options.sslOnly,
+                     options.tmpdir
+    );
 
 } else {
 
@@ -195,17 +197,17 @@ if (options.enableServer || (options.host && options.host.length)) {
         try {
             options.resources = JSON.parse(
                 fs.readFileSync('resources.json', 'utf8')
-            );            
+            );
         } catch (e) {}
     }
- 
+
     if (options.batch) {
         main.initPool({
             listenToProcessExits: options.listenToProcessExits,
             initialWorkers: options.workers || 5,
             maxWorkers: options.workers || 25,
             workLimit: options.workLimit,
-            reaper: false 
+            reaper: false
         });
 
         var funs = [];
@@ -254,6 +256,6 @@ if (options.enableServer || (options.host && options.host.length)) {
 
         main.export(options, function (err, data) {
             main.killPool();
-        });            
+        });
     }
 }

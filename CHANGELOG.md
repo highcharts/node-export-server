@@ -1,3 +1,7 @@
+# 2.0.1
+  
+  * Fixed `tmpdir` when running as server
+
 # 2.0.0
   * Fixed Phantom cleanup: instead of reaping every 2.5s, workers are checked for timeout when other work is posted.
   * Added additional error handlers to
