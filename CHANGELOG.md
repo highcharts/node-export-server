@@ -1,3 +1,8 @@
+# 2.0.2
+ 
+ * Server now respects `host` option
+ * Added promise sample/test for batch export
+
 # 2.0.1
   
   * Fixed `tmpdir` when running as server
