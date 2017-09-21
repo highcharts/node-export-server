@@ -80,7 +80,7 @@ addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 
 addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
 addOption('sslOnly', false, '<bool>: set this to true to only serve over HTTPS');
-addOption('host', '', '<string>: start a server listening on the supplied hostname');
+addOption('host', false, '<string>: start a server listening on the supplied hostname');
 addOption('port', 7801, '<number>: server port');
 addOption('rateLimit', false, '<number>: Argument is the max requests allowed in one minute. Disabled by default.');
 
@@ -184,7 +184,8 @@ if (options.enableServer || (options.host && options.host.length)) {
 
                      },
                      options.sslOnly,
-                     options.tmpdir
+                     options.tmpdir,
+                     options.host
     );
 
 } else {
