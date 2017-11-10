@@ -1,3 +1,7 @@
+# 2.0.3
+
+ * Server will now wait for bundled images to load
+
 # 2.0.2
  
  * Server now respects `host` option

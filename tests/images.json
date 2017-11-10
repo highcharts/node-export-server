@@ -1,0 +1,150 @@
+{
+  "constr": "Chart",
+  "options": {
+    "chart": {
+        "renderTo": "container",
+        "marginRight": 80,
+        "type": "spline"
+      },
+      "xAxis": [
+        {
+          "tickWidth": 0,
+          "lineWidth": 0,
+          "categories": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ]
+        }
+      ],
+      "series": [
+        {
+          "data": [
+            {
+              "y": 29.9
+            },
+            {
+              "y": 71.5
+            },
+            {
+              "y": 106.4
+            },
+            {
+              "y": 129.2
+            },
+            {
+              "y": 144
+            },
+            {
+              "y": 176
+            },
+            {
+              "y": 135.6
+            },
+            {
+              "y": 148.5
+            },
+            {
+              "y": 216.4
+            },
+            {
+              "y": 194.1
+            },
+            {
+              "y": 95.6
+            },
+            {
+              "y": 54.4
+            }
+          ]
+        },
+        {
+          "data": [
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/snow.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/snow.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            },
+            {
+              "y": 220,
+              "marker": {
+                "symbol": "url(http://www.highcharts.com/demo/gfx/sun.png)"
+              }
+            }
+          ],
+          "type": "scatter"
+        }
+      ]
+
+  }
+}
