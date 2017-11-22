@@ -1,3 +1,8 @@
+# 2.0.4
+  
+  * Fixed bug causing unpredictable export results if one or more exported
+    charts contain bundled images
+
 # 2.0.3
 
  * Server will now wait for bundled images to load

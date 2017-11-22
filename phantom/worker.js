@@ -35,6 +35,7 @@ var webpage = require('webpage'),
     xmlDoctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
     maxWaitTime = 6000,
     pollInterval = 20,
+    imagePollTimeout = false,
     importRe = /@import\s*([^;]*);/g
 ;
 
@@ -62,6 +63,8 @@ function doDone(data) {
     try {
         data = JSON.stringify(data);
     } catch (e) {
+        system.stderr.writeLn('Error generating chart');
+        system.stderr.flush();
         return console.log(e);
     }
 
@@ -165,7 +168,7 @@ function loop() {
         function pollForImages() {
           pollStart = pollStart || (new Date()).getTime();
           if (!isDone() && (new Date()).getTime() - pollStart < pollTimeout) {
-            setInterval(pollForImages, 0);
+            imagePollTimeout = setTimeout(pollForImages, 0);
           } else {
             onDone();
           }
@@ -175,7 +178,7 @@ function loop() {
             page.evaluate(function (chartJson, constr) {
                 var options = chartJson;
 
-                window.isDoneLoadingImages = false
+                window.isDoneLoadingImages = false;
 
                 function doChart(options) {
                     //Create the actual chart
@@ -502,6 +505,8 @@ function loop() {
 
     ///////////////////////////////////////////////////////////////////////////
 
+    clearTimeout(imagePollTimeout);
+
     //Parse the input - we need a loop in case the std buffer is long enough
     //to force a flush in the middle of the data stream.
     while(incoming !== 'EOL') {
@@ -561,6 +566,10 @@ function loop() {
             if (status !== 'success') {
                 return;
             }
+
+            page.evaluate(function () {
+              window.isDoneLoadingImages = false;
+            });
 
             injectRawJS();
             softPoll();
