@@ -41,7 +41,8 @@ const cdnScriptsCommon = [
     "{{version}}/modules/funnel.js",
     "{{version}}/modules/solid-gauge.js",
     "{{version}}/modules/heatmap.js",
-    "{{version}}/modules/treemap.js"
+    "{{version}}/modules/treemap.js",
+    "{{version}}/modules/sunburst.js"
 ];
 
 const cdnScriptsStyled = [
