@@ -286,6 +286,8 @@ function loop() {
                     }
                 }
             }, data.chart, data.constr);
+        } else {
+          return onDone();
         }
 
         pollForImages();

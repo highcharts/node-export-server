@@ -1,3 +1,7 @@
+# 2.0.6
+  
+  * Fixed issue potentially causing SVG exports to hang
+
 # 2.0.5
 
   * Increased timeout for rendering by 1 second
