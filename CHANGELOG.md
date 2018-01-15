@@ -1,3 +1,8 @@
+# 2.0.5
+
+  * Increased timeout for rendering by 1 second
+  * Fixed port numbers for stress test
+
 # 2.0.4
   
   * Fixed bug causing unpredictable export results if one or more exported
