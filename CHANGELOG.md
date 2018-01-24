@@ -1,3 +1,8 @@
+# 2.0.7
+
+  * Now including sunburst/xrange/streamgraph/tilemap when baking with a  supported version
+  * Added package-lock.json
+
 # 2.0.6
   
   * Fixed issue potentially causing SVG exports to hang
