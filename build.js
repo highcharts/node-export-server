@@ -143,6 +143,7 @@ function embed(version, scripts, out, fn) {
 
     scripts.forEach(function (script) {
         let scriptOriginal = script;
+        let fullURL = '';
 
         if (version !== 'latest' && version) {
             script = script.replace('{{version}}', version);
@@ -152,13 +153,15 @@ function embed(version, scripts, out, fn) {
 
         // Allow using full URLs in the include arrays
         if (script.indexOf('http') >= 0) {
-          cdnURL = '';
+          fullURL = script;
+        } else {
+          fullURL = cdnURL + script;
         }
 
-        console.log('  ', (cdnURL + script).gray);
+        console.log('  ', (fullURL).gray);
 
         funs.push(function (next) {
-            request(cdnURL + script, function (error, response, body) {
+            request(fullURL, function (error, response, body) {
 
                 if (error) {
                   if (cdnScriptsOptional[scriptOriginal]) {
@@ -166,7 +169,7 @@ function embed(version, scripts, out, fn) {
                     return next();
                   }
 
-                  return next(error, cdnURL + script);
+                  return next(error, fullURL);
                 }
 
                 if (body.trim().indexOf('<!DOCTYPE') === 0) {
