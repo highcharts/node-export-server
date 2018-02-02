@@ -150,6 +150,11 @@ function embed(version, scripts, out, fn) {
             script = script.replace('{{version}}/', '');
         }
 
+        // Allow using full URLs in the include arrays
+        if (script.indexOf('http') >= 0) {
+          cdnURL = '';
+        }
+
         console.log('  ', (cdnURL + script).gray);
 
         funs.push(function (next) {
