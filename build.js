@@ -73,8 +73,9 @@ const cdnMaps = [
     "maps/{{version}}/modules/map.js"
 ];
 
+////////////////////////////////////////////////////////////////////////////////
 
-var schema = {
+let schema = {
     properties: {
         agree: {
             description: 'Agree to the license terms? y/n',
@@ -123,6 +124,8 @@ var schema = {
         }
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 require('colors');
 
