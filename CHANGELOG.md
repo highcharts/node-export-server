@@ -1,3 +1,7 @@
+# 2.0.8
+  
+  * Fixed `tmpdir` when starting in server mode
+
 # 2.0.7
 
   * Now including sunburst/xrange/streamgraph/tilemap when baking with a  supported version
