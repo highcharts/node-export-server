@@ -98,6 +98,17 @@ ln -s `which nodejs` /usr/bin/node
 
 *`-` and `--` can be used interchangeably when using the CLI.*
 
+### Note about chart size
+
+The `width` argument is mostly to set a zoom factor rather than an absolute width.
+
+If you need to set the _height_ of the chart, it can be done in two ways:
+- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height)
+- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight)
+
+The latter is prefered, as it lets you set a separate sizing when exporting and
+when displaying the chart in your web page.
+
 ## Setup: Injecting the Highcharts dependency
 
 In order to use the export server, Highcharts.js needs to be injected
