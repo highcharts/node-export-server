@@ -97,6 +97,8 @@ addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 
 addOption('fromFile', false, '<string>: load all options from file');
 
+addOption('maxUploadSize', '50mb', '<quantity>: specify a custom max file upload size');
+addOption('maxFieldsSize', '5mb', '<quantity>: specify a custom max fields size');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -185,7 +187,9 @@ if (options.enableServer || (options.host && options.host.length)) {
                      },
                      options.sslOnly,
                      options.tmpdir,
-                     options.host
+                     options.host,
+                     options.maxUploadSize,
+                     options.maxFieldsSize
     );
 
 } else {
