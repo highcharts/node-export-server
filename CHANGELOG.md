@@ -1,3 +1,7 @@
+# 2.0.9
+  
+  * Added build config for including moment.js support
+
 # 2.0.8
   
   * Fixed `tmpdir` when starting in server mode

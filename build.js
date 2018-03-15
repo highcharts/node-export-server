@@ -73,7 +73,22 @@ const cdnMaps = [
     "maps/{{version}}/modules/map.js"
 ];
 
+const cdnMoment = [
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js'
+];
+
+const rawScripts = [];
+
 ////////////////////////////////////////////////////////////////////////////////
+
+const boolConform = (value) => {
+  value = value.toUpperCase();
+  return value === 'Y'   ||
+         value === 'N'   ||
+         value === 'YES' ||
+         value === 'NO';
+};
 
 let schema = {
     properties: {
@@ -82,13 +97,7 @@ let schema = {
             required: true,
             default: 'no',
             message: 'Please enter (y)es or (n)o',
-            conform: function (value) {
-                value = value.toUpperCase();
-                return value === 'Y'   ||
-                       value === 'N'   ||
-                       value === 'YES' ||
-                       value === 'NO';
-            }
+            conform: boolConform
         },
         version: {
             description: 'Select your Highcharts version (e.g. 4.2.2):',
@@ -100,27 +109,19 @@ let schema = {
             description: 'Include Maps? (requires Maps license)',
             default: 'no',
             required: true,
-            conform: function (value) {
-                value = value.toUpperCase();
-                return value === 'Y'   ||
-                       value === 'N'   ||
-                       value === 'YES' ||
-                       value === 'NO'
-                ;
-            }
+            conform: boolConform
         },
         styledMode: {
-            description: 'Enable styled mode? (requires Highcharts/Highstock 5 license)',
+            description: 'Enable styled mode? (requires Highcharts/Highstock 5+ license)',
             default: 'no',
             required: true,
-            conform: function (value) {
-                value = value.toUpperCase();
-                return value === 'Y'   ||
-                       value === 'N'   ||
-                       value === 'YES' ||
-                       value === 'NO'
-                ;
-            }
+            conform: boolConform
+        },
+        moment: {
+          description: 'Include moment.js for date/time handling?',
+          default: 'no',
+          required: true,
+          conform: boolConform
         }
     }
 };
@@ -137,8 +138,6 @@ function embed(version, scripts, out, fn) {
     if (version) {
         version = version.trim();
     }
-
-    console.log(version);
 
     if (version && parseInt(version[0]) < 5 && version[0] !== 'c')  {
         scripts = scripts.concat(cdnLegacy);
@@ -199,8 +198,13 @@ function embed(version, scripts, out, fn) {
         }
 
         if (err) {
-            return console.log('error fetching Highcharts:', err);
+            return console.log('error fetching Highcharts:', err, `
+            If you're behind a proxy, please follow this guide:
+            https://github.com/request/request#controlling-proxy-behaviour-using-environment-variables
+            `);
         }
+
+        let additionalScripts = rawScripts.map((s) => `<script src="${s}"></script>`) || '';
 
         console.log('Creating export template', out + '..');
 
@@ -209,6 +213,7 @@ function embed(version, scripts, out, fn) {
             template
                 .replace('"{{highcharts}}";', scriptBody)
                 .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
+                .replace('{{additionalScripts}}', additionalScripts)
                 ,
             function (err) {
                 if (err) return console.log('Error creating template:', err);
@@ -223,22 +228,29 @@ function endMsg() {
     console.log('For documentation, see https://github.com/highcharts/node-export-server');
 }
 
-function embedAll(version, includeStyled, includeMaps) {
+function embedAll(version, includeStyled, includeMaps, includeMoment) {
     var standard = cdnScriptsStandard.concat(cdnScriptsCommon),
         styled = cdnScriptsStyled.concat(cdnScriptsCommon)
     ;
 
     if (includeMaps) {
+        console.log('Including maps support'.green);
         standard = standard.concat(cdnMaps);
-        styled = standard.concat(cdnMaps);
+        styled = styled.concat(cdnMaps);
     }
 
-    console.log('Pulling Highcharts from CDN (' + version + ')..');
+    if (includeMoment) {
+        console.log('Including moment.js support'.green);
+        cdnMoment.forEach((t) => { rawScripts.push(t); });
+    }
+
+    console.log(('Pulling Highcharts from CDN (' + version + ')..').gray);
     embed(version,
           standard,
           'export',
           function () {
             if (includeStyled) {
+                console.log('Including styled mode support'.green);
                 embed(false,
                       styled,
                       'export_styled',
@@ -251,6 +263,11 @@ function embedAll(version, includeStyled, includeMaps) {
     );
 }
 
+function affirmative(str) {
+  str = (str || '').toUpperCase();
+  return str === 'YES' || str === 'Y' || str === '1';
+}
+
 function startPrompt() {
     prompt.message = '';
     prompt.start();
@@ -260,10 +277,9 @@ function startPrompt() {
 
         if (result.agree === 'Y' || result.agree === 'YES') {
             embedAll(result.version,
-                     result.styledMode.toUpperCase() === 'Y' ||
-                     result.styledMode.toUpperCase() === 'YES',
-                     result.maps.toUpperCase() === 'Y' ||
-                     result.maps.toUpperCase() === 'YES'
+                     affirmative(result.styledMode),
+                     affirmative(result.maps),
+                     affirmative(result.moment)
             );
         } else {
             console.log('License terms not accepted, aborting'.red);
@@ -274,7 +290,8 @@ function startPrompt() {
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
     embedAll(process.env.HIGHCHARTS_VERSION || 'latest',
              process.env.HIGHCHARTS_USE_STYLED || true,
-             process.env.HIGHCHARTS_USE_MAPS || true
+             process.env.HIGHCHARTS_USE_MAPS || true,
+             process.env.HIGHCHARTS_MOMENT || false
     );
 } else {
     console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
