@@ -129,6 +129,17 @@ on your server, and it will automatically agree to the licensing terms when runn
 to bake with a specific Highcharts version, and to enable styled mode (requires
 a Highcharts 5 license).
 
+If you're using the export server as a dependency in your own app,
+depending on your setup, it may be possible to set the env variable in your `package.json` file:
+
+```
+{
+  "scripts": {
+    "preinstall": "export ACCEPT_HIGHCHARTS_LICENSE=1"
+  }
+}
+```
+
 ## Note About Resources and the CLI
 
 If `--resources` is not set, and a file `resources.json` exist in the folder
