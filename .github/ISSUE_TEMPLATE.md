@@ -4,6 +4,8 @@
 <!-- our other support channels: https://www.highcharts.com/support -->
 <!-- IF YOUR POST DOES NOT FIT THE BELOW TEMPLATE, PLEASE USE THE LINK ABOVE! -->
 
+<!-- We also can't provide in-depth support specific to your server/net config. -->
+
 #### Expected behaviour
 
 
