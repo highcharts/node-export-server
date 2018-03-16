@@ -1,3 +1,7 @@
+# 2.0.10
+  
+  * Fixed issue with injecting some resources when they weren't strings (e.g. `globalOptions`)
+
 # 2.0.9
   
   * Added build config for including moment.js support

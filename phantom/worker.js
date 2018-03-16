@@ -101,6 +101,12 @@ function loop() {
                 return;
             }
 
+            // if (typeof js !== 'string' && !(js instanceof String)) {
+              try {
+                js = JSON.stringify(js);
+              } catch(e) {}
+            // }
+
             var script = document.createElement('script');
             script.type = 'text/javascript';
 
