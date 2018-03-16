@@ -39,7 +39,10 @@ See [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-mo
 
 First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.org/en/download/) and download/install node for your platform. 
 
-After node.js is installed, install the export server by opening a terminal and typing:
+Next, install phantomjs requirements: http://phantomjs.org/build.html
+
+
+Then install the export server by opening a terminal and typing:
     
     npm install highcharts-export-server -g
 
@@ -55,6 +58,12 @@ Note: depending on how you installed Node, you may have to create a symlink from
 ```
 ln -s `which nodejs` /usr/bin/node
 ```
+## Installing In Automated Deployments like Docker
+
+You can add this line to your Dockerfile to avoid the issue where HighCharts will not render charts because the license was not accepted during build:
+    
+    RUN HIGHCHARTS_USE_STYLED=NO HIGHCHARTS_VERSION=latest ACCEPT_HIGHCHARTS_LICENSE=YES npm install -g highcharts-export-server
+
 
 ## Running
     
