@@ -31,6 +31,9 @@ const main = require('./../lib/index');
 const args = process.argv;
 const fs = require('fs');
 const async = require('async');
+const pkg = require('../package.json');
+
+let logoPrinted = false;
 
 var optionsMeta = {},
     options = {}
@@ -97,12 +100,31 @@ addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 
 addOption('fromFile', false, '<string>: load all options from file');
 
+addOption('nologo', false, '<boolean>: skip printing the big logo on startup');
 
 ////////////////////////////////////////////////////////////////////////////////
 
-console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow);
+function printLogo() {
+  if (options.nologo) {
+    console.log(`starting highcharts export server v${pkg.version}...`);
+    return;
+  }
+
+  if (logoPrinted) return;
+
+  console.log(
+    fs.readFileSync(
+      __dirname + '/../msg/startup.msg'
+    ).toString().bold.yellow,
+    `
+                                                                  v${pkg.version}`
+  );
+
+  logoPrinted = true;
+}
 
 function printUsage() {
+    printLogo();
     console.log('Usage:'.bold);
 
     Object.keys(optionsMeta).forEach(function (option) {
@@ -124,7 +146,6 @@ if (args.length <= 2) {
 //We can't use a foreach because we're parsing pairs.
 for (var i = 0; i < args.length; i++) {
     var option = args[i].replace(/\-/g, '');
-
     if (typeof options[option] !== 'undefined') {
         if (args[++i]) {
             options[option] = args[i] || options[option];
@@ -135,6 +156,8 @@ for (var i = 0; i < args.length; i++) {
         }
     }
 };
+
+printLogo();
 
 if (options.fromFile) {
     try {
