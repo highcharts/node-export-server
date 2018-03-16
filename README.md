@@ -140,6 +140,20 @@ depending on your setup, it may be possible to set the env variable in your `pac
 }
 ```
 
+## Note about process.exit listeners
+
+The export server attaches event listeners to process.exit. This is to
+make sure that all the phantom processes are properly killed off when the 
+application is terminated.
+
+Listeners are also attached to uncaught exceptions - if one appears,
+the entire pool is killed, and the application terminated. 
+
+If you do not want this behavior, start the server with `--listenToProcessExits 0`.
+
+Be aware though - if you disable this and you don't take great care to manually
+kill the pool, your server _will_ bleed memory when the app is terminated.
+
 ## Note About Resources and the CLI
 
 If `--resources` is not set, and a file `resources.json` exist in the folder
