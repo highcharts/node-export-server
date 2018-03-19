@@ -255,6 +255,12 @@ Copy or move the TTF file to `C:\Windows\Fonts\`:
 ```
 copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 ```
+### Google fonts
+
+If you need Google Fonts in your custom installation, they can be had here:
+https://github.com/google/fonts
+
+Download them, and follow the above instructions for your OS.
 
 ## Server Test
 
