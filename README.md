@@ -196,6 +196,10 @@ Remember to install forever first: `sudo npm install -g forever`.
 
 Please see the forever documentation for additional options (such as log destination).
 
+### AWS Lamba
+
+See [this](https://github.com/highcharts/node-export-server/issues/81) issue.
+
 ### SSL
 
 To enable ssl support, add `--sslPath <path to key/crt>` when running the server.
