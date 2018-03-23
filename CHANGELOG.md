@@ -1,3 +1,7 @@
+# 2.0.11
+
+  * Fixed another issue with `globalOptions` in CLI/Server mode
+
 # 2.0.10
   
   * Fixed issue with injecting some resources when they weren't strings (e.g. `globalOptions`)
