@@ -96,16 +96,18 @@ function loop() {
     page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0';
 
     function injectJSString(name, script) {
+
+        if (typeof script !== 'string' && !(script instanceof String)) {
+          try {
+            script = JSON.stringify(script);
+          } catch(e) {}
+        }
+
         page.evaluate(function (name, js) {
             if (js === 'null' || typeof js === 'undefined' || !js) {
                 return;
             }
 
-            // if (typeof js !== 'string' && !(js instanceof String)) {
-              try {
-                js = JSON.stringify(js);
-              } catch(e) {}
-            // }
 
             var script = document.createElement('script');
             script.type = 'text/javascript';
