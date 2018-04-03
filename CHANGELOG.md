@@ -1,3 +1,10 @@
+# 2.0.12
+  
+  * Build.js now uses cached respones when building styled mode to speed things up
+  * `historgram-bellcurve` is now included by default
+  * Added optional inclusion system to build.js 
+    - Will now prompt for inclusion of `wordcloud` and `annotations`
+
 # 2.0.11
 
   * Fixed another issue with `globalOptions` in CLI/Server mode

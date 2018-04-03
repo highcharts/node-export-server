@@ -33,7 +33,7 @@ const request = require('request');
 const async = require('async');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
 const package = require(__dirname + '/package.json');
-const cdnURL = 'https://code.highcharts.com/'
+const cdnURL = 'https://code.highcharts.com/';
 
 // We allow the fetch for these to fail without error.
 // This is because it's only available in version 6+
@@ -43,6 +43,15 @@ const cdnScriptsOptional = {
   '{{version}}/modules/streamgraph.js': 1,
   '{{version}}/modules/tilemap.js': 1
 };
+
+// The scripts here will appear as user prompts
+const cdnScriptsQuery = {
+  "wordcloud": "{{version}}/modules/wordcloud.js",
+  "annotations": "{{version}}/modules/annotations.js"
+};
+
+// Push raw URL's here to force include them
+const cdnAdditional = [];
 
 const cdnScriptsCommon = [
     "{{version}}/highcharts-3d.js",
@@ -80,6 +89,9 @@ const cdnMoment = [
 ];
 
 const rawScripts = [];
+
+const cachedScripts = {};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -129,12 +141,27 @@ let schema = {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// Augment the schema with the query CDN scripts
+
+Object.keys(cdnScriptsQuery).forEach((name) => {
+  schema.properties[name] = {
+    description: `Enable ${name} support? y/n`,
+    required: false,
+    default: 'no',
+    conform: boolConform
+  };
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 require('colors');
 
-function embed(version, scripts, out, fn) {
+function embed(version, scripts, out, fn, optionals) {
     var funs = [],
         scriptBody = ''
     ;
+
+    optionals = optionals || {};
 
     if (version) {
         version = version.trim();
@@ -161,13 +188,21 @@ function embed(version, scripts, out, fn) {
           fullURL = cdnURL + script;
         }
 
-        console.log('  ', (fullURL).gray);
 
         funs.push(function (next) {
+            // If we've allready fetched the required script, just return it.
+            if (cachedScripts[fullURL]) {
+              console.log(('   using cached fetch for ' + fullURL).gray);
+              scriptBody += cachedScripts[fullURL];
+              return next();
+            }
+
+            console.log('  ', (fullURL).gray);
+
             request(fullURL, function (error, response, body) {
 
                 if (error) {
-                  if (cdnScriptsOptional[scriptOriginal]) {
+                  if (optionals[scriptOriginal]) {
                     console.log(`  ${script} is not available for v${version}`.gray)
                     return next();
                   }
@@ -176,7 +211,7 @@ function embed(version, scripts, out, fn) {
                 }
 
                 if (body.trim().indexOf('<!DOCTYPE') === 0) {
-                  if (cdnScriptsOptional[scriptOriginal]) {
+                  if (optionals[scriptOriginal]) {
                     console.log(`   ${script.substr(script.lastIndexOf('/') + 1)} is not available for v${version}, skipped..`.yellow);
                     return next();
                   }
@@ -184,6 +219,7 @@ function embed(version, scripts, out, fn) {
                   return next(404, script);
                 }
 
+                cachedScripts[fullURL] = body;
                 scriptBody += body;
                 next();
             });
@@ -229,9 +265,9 @@ function endMsg() {
     console.log('For documentation, see https://github.com/highcharts/node-export-server');
 }
 
-function embedAll(version, includeStyled, includeMaps, includeMoment) {
-    var standard = cdnScriptsStandard.concat(cdnScriptsCommon),
-        styled = cdnScriptsStyled.concat(cdnScriptsCommon)
+function embedAll(version, includeStyled, includeMaps, includeMoment, optionals) {
+    var standard = cdnScriptsStandard.concat(cdnScriptsCommon).concat(cdnAdditional),
+        styled = cdnScriptsStyled.concat(cdnScriptsCommon).concat(cdnAdditional)
     ;
 
     if (includeMaps) {
@@ -246,21 +282,26 @@ function embedAll(version, includeStyled, includeMaps, includeMoment) {
     }
 
     console.log(('Pulling Highcharts from CDN (' + version + ')..').gray);
-    embed(version,
-          standard,
-          'export',
-          function () {
-            if (includeStyled) {
-                console.log('Including styled mode support'.green);
-                embed(false,
-                      styled,
-                      'export_styled',
-                      endMsg
-                );
-            } else {
-                endMsg();
-            }
+
+    embed(
+      version,
+      standard,
+      'export',
+      function () {
+        if (includeStyled) {
+            console.log('Including styled mode support'.green);
+            embed(
+              false,
+              styled,
+              'export_styled',
+              endMsg,
+              optionals
+            );
+        } else {
+         endMsg();
         }
+      },
+      optionals
     );
 }
 
@@ -269,23 +310,42 @@ function affirmative(str) {
   return str === 'YES' || str === 'Y' || str === '1';
 }
 
+function getOptionals(include) {
+  let optionalScripts = {};
+
+  Object.keys(cdnScriptsOptional).forEach((url) => {
+    optionalScripts[url] = 1;
+  });
+
+  // Build list of optionals
+  Object.keys(cdnScriptsQuery).forEach((name) => {
+    if (!include || affirmative(include[name])) {
+      optionalScripts[cdnScriptsQuery[name]] = 1;
+      cdnAdditional.push(cdnScriptsQuery[name]);
+    }
+  });
+
+  return optionalScripts;
+}
+
 function startPrompt() {
-    prompt.message = '';
-    prompt.start();
+  prompt.message = '';
+  prompt.start();
 
-    prompt.get(schema, function (err, result) {
-        result.agree = result.agree.toUpperCase();
+  prompt.get(schema, function (err, result) {
+    result.agree = result.agree.toUpperCase();
 
-        if (result.agree === 'Y' || result.agree === 'YES') {
-            embedAll(result.version,
-                     affirmative(result.styledMode),
-                     affirmative(result.maps),
-                     affirmative(result.moment)
-            );
-        } else {
-            console.log('License terms not accepted, aborting'.red);
-        }
-    });
+    if (result.agree === 'Y' || result.agree === 'YES') {
+        embedAll(result.version,
+                 affirmative(result.styledMode),
+                 affirmative(result.maps),
+                 affirmative(result.moment),
+                 getOptionals(result)
+        );
+    } else {
+        console.log('License terms not accepted, aborting'.red);
+    }
+  });
 }
 
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
