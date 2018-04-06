@@ -188,7 +188,6 @@ function embed(version, scripts, out, fn, optionals) {
           fullURL = cdnURL + script;
         }
 
-
         funs.push(function (next) {
             // If we've allready fetched the required script, just return it.
             if (cachedScripts[fullURL]) {
@@ -241,7 +240,7 @@ function embed(version, scripts, out, fn, optionals) {
             `);
         }
 
-        let additionalScripts = rawScripts.map((s) => `<script src="${s}"></script>`) || '';
+        let additionalScripts = rawScripts.map((s) => `<script src="${s}"></script>`).join('') || '';
 
         console.log('Creating export template', out + '..');
 
