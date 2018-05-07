@@ -1,3 +1,11 @@
+# 2.0.14
+
+  * Fixed issue with CDN pull failing when using Highcharts < 6.0
+
+# 2.0.13
+  
+  * Fixed an issue that caused a comma to appear when exporting charts
+
 # 2.0.12
   
   * Build.js now uses cached respones when building styled mode to speed things up

@@ -41,7 +41,8 @@ const cdnScriptsOptional = {
   '{{version}}/modules/sunburst.js': 1,
   '{{version}}/modules/xrange.js': 1,
   '{{version}}/modules/streamgraph.js': 1,
-  '{{version}}/modules/tilemap.js': 1
+  '{{version}}/modules/tilemap.js': 1,
+  '{{version}}/modules/histogram-bellcurve.js': 1
 };
 
 // The scripts here will appear as user prompts
@@ -53,14 +54,16 @@ const cdnScriptsQuery = {
 // Push raw URL's here to force include them
 const cdnAdditional = [];
 
+// Push map collection includes here
+const cdnMapCollection = [];
+
 const cdnScriptsCommon = [
     "{{version}}/highcharts-3d.js",
     "{{version}}/modules/data.js",
     "{{version}}/modules/funnel.js",
     "{{version}}/modules/solid-gauge.js",
     "{{version}}/modules/heatmap.js",
-    "{{version}}/modules/treemap.js",
-    "{{version}}/modules/histogram-bellcurve.js"
+    "{{version}}/modules/treemap.js"
 ].concat(Object.keys(cdnScriptsOptional));
 
 const cdnScriptsStyled = [
@@ -271,8 +274,13 @@ function embedAll(version, includeStyled, includeMaps, includeMoment, optionals)
 
     if (includeMaps) {
         console.log('Including maps support'.green);
-        standard = standard.concat(cdnMaps);
-        styled = styled.concat(cdnMaps);
+        standard = standard.concat(cdnMaps).concat(cdnMapCollection);
+        styled = styled.concat(cdnMaps).concat(cdnMapCollection);
+
+        // Map collections are user supplied, so we need to allow them to 404
+        cdnMapCollection.forEach((url) => {
+          cdnScriptsOptional[url] = 1;
+        });
     }
 
     if (includeMoment) {
