@@ -1,3 +1,6 @@
+# Master
+  * Added `queueSize` option to `initPool` to set the request overfow queue size 
+
 # 2.0.14
 
   * Fixed issue with CDN pull failing when using Highcharts < 6.0
