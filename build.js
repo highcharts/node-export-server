@@ -200,7 +200,7 @@ function embed(version, scripts, out, fn, optionals) {
             // If we've allready fetched the required script, just return it.
             if (cachedScripts[fullURL]) {
               console.log(('   using cached fetch for ' + fullURL).gray);
-              scriptBody += cachedScripts[fullURL];
+              scriptBody += cachedScripts[fullURL] + ';';
               return next();
             }
 
@@ -227,7 +227,7 @@ function embed(version, scripts, out, fn, optionals) {
                 }
 
                 cachedScripts[fullURL] = body;
-                scriptBody += body;
+                scriptBody += body + ';';
                 next();
             });
         });
