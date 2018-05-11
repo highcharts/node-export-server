@@ -33,7 +33,8 @@ const request = require('request');
 const async = require('async');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
 const package = require(__dirname + '/package.json');
-const cdnURL = 'https://code.highcharts.com/';
+
+let cdnURL = 'https://code.highcharts.com/';
 
 // We allow the fetch for these to fail without error.
 // This is because it's only available in version 6+
@@ -138,6 +139,10 @@ let schema = {
           default: 'no',
           required: true,
           conform: boolConform
+        },
+        cdnURL: {
+          description: 'Which CDN would you like to use?',
+          default: cdnURL
         }
     }
 };
@@ -341,6 +346,8 @@ function startPrompt() {
 
   prompt.get(schema, function (err, result) {
     result.agree = result.agree.toUpperCase();
+
+    cdnURL = result.cdnURL || cdnURL;
 
     if (result.agree === 'Y' || result.agree === 'YES') {
         embedAll(result.version,
