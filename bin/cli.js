@@ -31,6 +31,9 @@ const main = require('./../lib/index');
 const args = process.argv;
 const fs = require('fs');
 const async = require('async');
+const pkg = require('../package.json');
+
+let logoPrinted = false;
 
 var optionsMeta = {},
     options = {}
@@ -80,7 +83,7 @@ addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 
 addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
 addOption('sslOnly', false, '<bool>: set this to true to only serve over HTTPS');
-addOption('host', '', '<string>: start a server listening on the supplied hostname');
+addOption('host', false, '<string>: start a server listening on the supplied hostname');
 addOption('port', 7801, '<number>: server port');
 addOption('rateLimit', false, '<number>: Argument is the max requests allowed in one minute. Disabled by default.');
 
@@ -97,21 +100,40 @@ addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 
 addOption('fromFile', false, '<string>: load all options from file');
 
+addOption('nologo', false, '<boolean>: skip printing the big logo on startup');
 
 ////////////////////////////////////////////////////////////////////////////////
 
-console.log(fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow);
+function printLogo() {
+  if (options.nologo) {
+    console.log(`starting highcharts export server v${pkg.version}...`);
+    return;
+  }
+
+  if (logoPrinted) return;
+
+  console.log(
+    fs.readFileSync(
+      __dirname + '/../msg/startup.msg'
+    ).toString().bold.yellow,
+    `
+                                                                  v${pkg.version}`
+  );
+
+  logoPrinted = true;
+}
 
 function printUsage() {
+    printLogo();
     console.log('Usage:'.bold);
-    
+
     Object.keys(optionsMeta).forEach(function (option) {
-        console.log('  ' + rpad('-' + option), 
-                    optionsMeta[option].help, 
-                    ('default: ' + 
+        console.log('  ' + rpad('-' + option),
+                    optionsMeta[option].help,
+                    ('default: ' +
                     optionsMeta[option].default).bold
         );
-    });    
+    });
 }
 
 //Print usage if no arguments supplied
@@ -124,10 +146,9 @@ if (args.length <= 2) {
 //We can't use a foreach because we're parsing pairs.
 for (var i = 0; i < args.length; i++) {
     var option = args[i].replace(/\-/g, '');
-
     if (typeof options[option] !== 'undefined') {
         if (args[++i]) {
-            options[option] = args[i] || options[option];            
+            options[option] = args[i] || options[option];
         } else {
             console.log(('Missing argument value for ' + option + '!').red, '\n');
             printUsage();
@@ -135,6 +156,8 @@ for (var i = 0; i < args.length; i++) {
         }
     }
 };
+
+printLogo();
 
 if (options.fromFile) {
     try {
@@ -157,7 +180,7 @@ main.logLevel(options.logLevel);
 
 if (options.logDest) {
     main.enableFileLogging(
-        options.logDest, 
+        options.logDest,
         options.logFile || 'highcharts-export-server.log'
     );
 }
@@ -168,7 +191,7 @@ if (options.enableServer || (options.host && options.host.length)) {
         listenToProcessExits: options.listenToProcessExits,
         initialWorkers: options.workers || 0,
         maxWorkers: options.workers || 4,
-        workLimit: options.workLimit  
+        workLimit: options.workLimit
     });
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
@@ -177,13 +200,16 @@ if (options.enableServer || (options.host && options.host.length)) {
         });
     }
 
-    main.startServer(options.port, 
-                     options.sslPort, 
-                     options.sslPath, 
+    main.startServer(options.port,
+                     options.sslPort,
+                     options.sslPath,
                      function (srv) {
 
                      },
-                     options.sslOnly);        
+                     options.sslOnly,
+                     options.tmpdir,
+                     options.host
+    );
 
 } else {
 
@@ -195,17 +221,17 @@ if (options.enableServer || (options.host && options.host.length)) {
         try {
             options.resources = JSON.parse(
                 fs.readFileSync('resources.json', 'utf8')
-            );            
+            );
         } catch (e) {}
     }
- 
+
     if (options.batch) {
         main.initPool({
             listenToProcessExits: options.listenToProcessExits,
             initialWorkers: options.workers || 5,
             maxWorkers: options.workers || 25,
             workLimit: options.workLimit,
-            reaper: false 
+            reaper: false
         });
 
         var funs = [];
@@ -227,7 +253,8 @@ if (options.enableServer || (options.host && options.host.length)) {
                         constr: options.constr,
                         tmpdir: options.tmpdir,
                         styledMode: options.styledMode,
-                        allowFileResources: options.allowFileResources
+                        allowFileResources: options.allowFileResources,
+                        globalOptions: options.globalOptions
                     }, function () {
                         next();
                     });
@@ -253,6 +280,6 @@ if (options.enableServer || (options.host && options.host.length)) {
 
         main.export(options, function (err, data) {
             main.killPool();
-        });            
+        });
     }
 }

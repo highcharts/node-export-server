@@ -35,6 +35,7 @@ var webpage = require('webpage'),
     xmlDoctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
     maxWaitTime = 6000,
     pollInterval = 20,
+    imagePollTimeout = false,
     importRe = /@import\s*([^;]*);/g
 ;
 
@@ -47,13 +48,13 @@ var webpage = require('webpage'),
 curFilePath = system.args[1] + 'phantom';
 
 if (fs.exists(curFilePath + '/export.html')) {
-    cachedContent = fs.read(curFilePath + '/export.html');    
+    cachedContent = fs.read(curFilePath + '/export.html');
 } else {
-    cachedContent = fs.read(curFilePath + '/template.html');        
+    cachedContent = fs.read(curFilePath + '/template.html');
 }
 
 if (fs.exists(curFilePath + '/export_styled.html')) {
-    cachedContentStyled = fs.read(curFilePath + '/export_styled.html');        
+    cachedContentStyled = fs.read(curFilePath + '/export_styled.html');
 } else {
     cachedContentStyled = cachedContent;
 }
@@ -62,6 +63,8 @@ function doDone(data) {
     try {
         data = JSON.stringify(data);
     } catch (e) {
+        system.stderr.writeLn('Error generating chart');
+        system.stderr.flush();
         return console.log(e);
     }
 
@@ -82,7 +85,7 @@ function loop() {
         css = '',
         jsIncludes = '',
         imports
-    ;    
+    ;
 
     page.settings.localToRemoteUrlAccessEnabled = true;
    // page.settings.XSSAuditingEnabled = true;
@@ -92,11 +95,19 @@ function loop() {
     //Fixes issues with font-weight/font-style
     page.settings.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0';
 
-     function injectJSString(name, script) {
+    function injectJSString(name, script) {
+
+        if (typeof script !== 'string' && !(script instanceof String)) {
+          try {
+            script = JSON.stringify(script);
+          } catch(e) {}
+        }
+
         page.evaluate(function (name, js) {
-            if (js === 'null' || !js) {
+            if (js === 'null' || typeof js === 'undefined' || !js) {
                 return;
             }
+
 
             var script = document.createElement('script');
             script.type = 'text/javascript';
@@ -107,23 +118,26 @@ function loop() {
                 script.innerHTML = js;
             }
 
-            document.head.appendChild(script);
+            try {
+                document.head.appendChild(script);
+            } catch (e) {}
+
         }, name, script);
     }
 
-    //Inject potential raw JS into new script nodes 
+    //Inject potential raw JS into new script nodes
     //This is called after the page content is set.
     function injectRawJS() {
         if (data.resources && data.resources.js) {
             injectJSString(false, data.resources.js);
-        }         
+        }
 
         if (data.customCode) {
             if (data.customCode.trim().indexOf('function') === 0) {
-                injectJSString('customCode', data.customCode);                
+                injectJSString('customCode', data.customCode);
             } else {
                 injectJSString(
-                    'customCode', 
+                    'customCode',
                     'function (options) { ' + data.customCode + '}'
                 );
             }
@@ -142,25 +156,45 @@ function loop() {
         }
 
         if (data.dataOptions) {
+
             injectJSString('dataOptions', data.dataOptions);
         }
     }
 
     //Build the actual chart
-    function buildChart() {
+    function buildChart(onDone) {
 
-        if (data.chart) {            
+        var pollTimeout = 2000;
+        var pollStart = 0;
+
+        function isDone() {
+          return page.evaluate(function () {
+            return window.isDoneLoadingImages;
+          });
+        }
+
+        function pollForImages() {
+          pollStart = pollStart || (new Date()).getTime();
+          if (!isDone() && (new Date()).getTime() - pollStart < pollTimeout) {
+            imagePollTimeout = setTimeout(pollForImages, 0);
+          } else {
+            onDone();
+          }
+        }
+
+        if (data.chart) {
             page.evaluate(function (chartJson, constr) {
-                var options = chartJson
-                ;
+                var options = chartJson;
 
-                function doChart(options) {                   
+                window.isDoneLoadingImages = false;
+
+                function doChart(options) {
                     //Create the actual chart
                     window.chart = new (Highcharts[constr] || Highcharts.Chart)(
-                        'highcharts', 
-                        options || {}, 
+                        'highcharts',
+                        options || {},
                         typeof cb !== 'undefined' ? cb : false
-                    );                            
+                    );
                 }
 
                 function parseData(completeHandler, chartOptions, dataConfig) {
@@ -172,21 +206,25 @@ function loop() {
                             completeHandler(undefined);
                         }
                     } else {
-                        completeHandler(chartOptions);                
+                        completeHandler(chartOptions);
                     }
                 }
 
-                if (typeof window['Highcharts'] !== 'undefined') {        
+                if (typeof window['Highcharts'] !== 'undefined') {
                     //Disable animations
                     Highcharts.SVGRenderer.prototype.Element.prototype.animate = Highcharts.SVGRenderer.prototype.Element.prototype.attr;
-                   
+
                     Highcharts.setOptions({
                         plotOptions: {
                           series: {
                             animation: false
                           }
                         }
-                    });              
+                    });
+
+                    Highcharts.addEvent(Highcharts.Chart.prototype, 'load', function () {
+                      window.isDoneLoadingImages = true;
+                    });
 
                     //document.getElementById('highcharts').innerHTML = JSON.stringify(chartJson, undefined, '  ');
 
@@ -199,7 +237,7 @@ function loop() {
                             //Right. So this is not cool. BUT: we allow callbacks
                             //and direct JS injection, so this doesn't really
                             //open up things that aren't already open.
-                            var __chartData = eval('(' + chartJson + ')');  
+                            var __chartData = eval('(' + chartJson + ')');
 
                             if (__chartData) {
                                 __chartData.chart = __chartData.chart || {};
@@ -212,16 +250,16 @@ function loop() {
                                         __chartData.chart.height = __chartData.exporting.sourceHeight;
                                     }
                                 }
-                                
+
                                 __chartData.chart.width = __chartData.chart.width || 600;
                                 __chartData.chart.height = __chartData.chart.height || 400;
-                            }               
+                            }
 
                             options = __chartData;
                         }
 
-                        if (window['themeOptions'] && Object.keys(window.themeOptions).length) {
-                            options = Highcharts.merge(true, themeOptions, options);                            
+                        if (window.themeOptions && typeof window.themeOptions !== 'undefined' && Object.keys(window.themeOptions).length) {
+                            options = Highcharts.merge(true, themeOptions, options);
                         }
 
                         if (typeof window['dataOptions'] !== 'undefined') {
@@ -244,19 +282,23 @@ function loop() {
                                 doChart(mergedOptions);
                             }, options, dataOptions);
 
-                        } else if (typeof window['customCode'] !== 'undefined') {                            
+                        } else if (typeof window['customCode'] !== 'undefined') {
                             customCode(options);
                             doChart(options);
-                        } else {    
-                            doChart(options);                            
-                        }          
+                        } else {
+                            doChart(options);
+                        }
 
                     } catch (e) {
                         document.getElementById('highcharts').innerHTML = '<h1>Chart input data error</h1>' + e;
                     }
                 }
             }, data.chart, data.constr);
-        } 
+        } else {
+          return onDone();
+        }
+
+        pollForImages();
     }
 
     //Applies the style to the svg: <defs><style> goes here </style></defs>
@@ -280,7 +322,7 @@ function loop() {
             var bodyElem,
                 foreignObjectElem = document.getElementsByTagName('foreignObject')[0]
             ;
-            
+
             if (foreignObjectElem && !foreignObjectElem.getElementsByTagName('body').length) {
                 bodyElem = document.body || document.createElement('body');
                 bodyElem.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
@@ -295,18 +337,18 @@ function loop() {
 
     function clip() {
         var clipW, clipH;
-     
+
         clipW = page.evaluate(function (scale) {
                     var svg = document.querySelector('svg');
-                    return svg ? 
-                          (svg.width.baseVal.value * scale) : 
+                    return svg ?
+                          (svg.width.baseVal.value * scale) :
                           (600 * scale);
                 }, data.scale);
 
         clipH = page.evaluate(function (scale) {
                     var svg = document.querySelector('svg');
-                    return svg ? 
-                          (svg.height.baseVal.value * scale) : 
+                    return svg ?
+                          (svg.height.baseVal.value * scale) :
                           (400 * scale);
                 }, data.scale || 1);
 
@@ -321,11 +363,11 @@ function loop() {
             width: clipW,
             height: clipH,
             top: 0,
-            left: 0 
+            left: 0
         };
 
         if (data.format === 'pdf') {
-            //Set the page size to fit our chart 
+            //Set the page size to fit our chart
             page.paperSize = {
                 width: clipW ,
                 height: clipH,
@@ -334,109 +376,111 @@ function loop() {
         }
     }
 
-    function process() {
+    function process(onDone) {
         ////////////////////////////////////////////////////////////////////////
         //CREATE THE CHART
 
-        buildChart();        
+        buildChart(function () {
 
-        if (data.svgstr && !data.chart && data.styledMode) {
-            applyStyleToSVG();
-        }
-
-        if (data.svgstr) {
-            page.evaluate(function () {
-                document.body.style.margin = '0';
-            });
-        }
-
-        //If the width is set, calculate a new zoom factor
-        if (data.width && parseFloat(data.width) > 0) {
-            data.scale = parseFloat(data.width) / page.evaluate(function () {
-                var svg = document.querySelector('svg');
-                return svg ? svg.width.baseVal.value : 600;
-            });
-
-            page.zoomFactor = data.scale;
-        }        
-
-        //Set up clipping
-        clip();
-        //Handle foreign object elements
-        handleForeignObjects();
-
-        ////////////////////////////////////////////////////////////////////////
-        //HANDLE RENDERING
-
-        if (data.format === 'jpeg') {
-            page.evaluate(function () {
-                document.body.style.backgroundColor = 'white';
-            });
-        }
-
-        if (data.format === 'svg') {
-            if (data.svgstr && !data.chart) {
-                if (data.svgstr.indexOf('<?xml') >= 0) {
-                    fs.write(data.out, data.svgstr, 'w');                    
-                } else {
-                    fs.write(data.out, xmlDoctype + data.svgstr, 'w');                    
-                }
-            } else {                
-                //This temporary file nonesense has to go at some point.
-                fs.write(data.out, xmlDoctype + page.evaluate(function () {    
-                    var element = document.body.querySelector('#highcharts').firstChild;
-
-                    //When we're in styled mode, prefer getChartHTML.
-                    //getChartHTML will only be defined if the styled libraries are 
-                    //included, which they always are if the overall 
-                    //settings are styledMode = true                    
-                    if (window.chart && window.chart.getChartHTML) {
-                        return window.chart.getChartHTML();
-                    } else if (window.chart && window.chart.getSVG) {                                         
-                        return window.chart.getSVG();
-                    }
-
-                    //Fall back to just using the SVG as it is on the page
-                    return element ? element.innerHTML : '';
-                }).replace(/\n/g, ''), 'w');
+            if (data.svgstr && !data.chart && data.styledMode) {
+                applyStyleToSVG();
             }
 
-            doDone({                
-                 filename: data.out
-            });
-        } else {            
-
-            if (data.format === 'pdf') {
-                page.zoomFactor = 1;
-                //Scale everything - zoomFactor is a bit shabby still with PDF's.
-                //It does set the paper size to what it should be, but it doesn't 
-                //actually scale the contents.
-                page.evaluate(function (zoom) {                  
-                    document.body.style['zoom'] = zoom;
-                }, data.scale);                
-            } 
-
-            //We're done drawing the page, now render it.
-            //We should render to /dev/stdout or something eventually to
-            //avoid going through the filesystem.
-            //We could also render b64 to the out data, 
-            //but this likely won't work correctly for pdf's.
-            //Note that the base64 rendering is much slower than writing to a
-            //temporary file...
-            if (data.async || data.format === 'pdf') {
-                page.render(data.out, {
-                    format: data.format || 'png'
-                });    
-
-                doDone({
-                    filename: data.out
-                });            
-            } else {
-                doDone({
-                    data: page.renderBase64(data.format || 'png')
+            if (data.svgstr) {
+                page.evaluate(function () {
+                    document.body.style.margin = '0';
                 });
             }
-        }
+
+            //If the width is set, calculate a new zoom factor
+            if (data.width && parseFloat(data.width) > 0) {
+                data.scale = parseFloat(data.width) / page.evaluate(function () {
+                    var svg = document.querySelector('svg');
+                    return svg ? svg.width.baseVal.value : 600;
+                });
+
+                page.zoomFactor = data.scale;
+            }
+
+            //Set up clipping
+            clip();
+            //Handle foreign object elements
+            handleForeignObjects();
+
+            ////////////////////////////////////////////////////////////////////////
+            //HANDLE RENDERING
+
+            if (data.format === 'jpeg') {
+                page.evaluate(function () {
+                    document.body.style.backgroundColor = 'white';
+                });
+            }
+
+            if (data.format === 'svg') {
+                if (data.svgstr && !data.chart) {
+                    if (data.svgstr.indexOf('<?xml') >= 0) {
+                        fs.write(data.out, data.svgstr, 'w');
+                    } else {
+                        fs.write(data.out, xmlDoctype + data.svgstr, 'w');
+                    }
+                } else {
+                    //This temporary file nonesense has to go at some point.
+                    fs.write(data.out, xmlDoctype + page.evaluate(function (data) {
+                        var element = document.body.querySelector('#highcharts').firstChild;
+                        //When we're in styled mode, prefer getChartHTML.
+                        //getChartHTML will only be defined if the styled libraries are
+                        //included, which they always are if the overall
+                        //settings are styledMode = true
+                        if (data.styledMode && window.chart && window.chart.getChartHTML) {
+                            return window.chart.getChartHTML();
+                        } else if (window.chart && window.chart.getSVG) {
+                          return window.chart.getSVG();
+                        }
+
+                        //Fall back to just using the SVG as it is on the page
+                        return element ? element.innerHTML : '';
+                    }, data).replace(/\n/g, ''), 'w');
+                }
+
+                doDone({
+                     filename: data.out
+                });
+            } else {
+
+                if (data.format === 'pdf') {
+                    page.zoomFactor = 1;
+                    //Scale everything - zoomFactor is a bit shabby still with PDF's.
+                    //It does set the paper size to what it should be, but it doesn't
+                    //actually scale the contents.
+                    page.evaluate(function (zoom) {
+                        document.body.style['zoom'] = zoom;
+                    }, data.scale);
+                }
+
+                //We're done drawing the page, now render it.
+                //We should render to /dev/stdout or something eventually to
+                //avoid going through the filesystem.
+                //We could also render b64 to the out data,
+                //but this likely won't work correctly for pdf's.
+                //Note that the base64 rendering is much slower than writing to a
+                //temporary file...
+                if (data.async || data.format === 'pdf') {
+                    page.render(data.out, {
+                        format: data.format || 'png'
+                    });
+
+                    doDone({
+                        filename: data.out
+                    });
+                } else {
+                    doDone({
+                        data: page.renderBase64(data.format || 'png')
+                    });
+                }
+            }
+
+            // onDone();
+        });
     }
 
     //Handles polling in cases where async rendering is enabled.
@@ -463,20 +507,22 @@ function loop() {
         });
 
         if (readyState === 'complete') {
-            process();                    
-        } else {                    
+            process();
+        } else {
             setTimeout(softPoll);
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
+    clearTimeout(imagePollTimeout);
+
     //Parse the input - we need a loop in case the std buffer is long enough
     //to force a flush in the middle of the data stream.
     while(incoming !== 'EOL') {
         data += incoming;
         incoming = system.stdin.readLine();
-    }    
+    }
 
     try {
         data = JSON.parse(data);
@@ -497,7 +543,7 @@ function loop() {
         (imports || []).forEach(function (imp) {
             if (!imp) return;
 
-            //There's like a million ways to write the import statement, 
+            //There's like a million ways to write the import statement,
             //this extracts the URL from all of them. Hopefully.
             imp = imp.replace('url(', '')
                      .replace('@import', '')
@@ -513,31 +559,35 @@ function loop() {
 
         //The rest of the sheet is inserted into a separate style tag
         css += '<style>' + data.resources.css + '</style>';
-    }        
+    }
 
     if (data.asyncRendering || (data.resources && data.resources.asyncLoading)) {
-        //We need to poll. This is not ideal, but it's the easiest way 
+        //We need to poll. This is not ideal, but it's the easiest way
         //to ensure that users have control over when the rendering is "done".
         //Opens up for e.g. Ajax requests.
-        page.onLoadFinished = function () {            
-            injectRawJS();   
+        page.onLoadFinished = function () {
+            injectRawJS();
             poll();
         };
-        
+
     } else {
-        //No async resources, so just listen to page load.        
-        page.onLoadFinished = function (status) {          
+        //No async resources, so just listen to page load.
+        page.onLoadFinished = function (status) {
             if (status !== 'success') {
                 return;
             }
 
-            injectRawJS();          
+            page.evaluate(function () {
+              window.isDoneLoadingImages = false;
+            });
+
+            injectRawJS();
             softPoll();
         };
     }
 
     page.onResourceError = function (err) {
-        system.stderr.writeLine('worker.js resource error - ' + 
+        system.stderr.writeLine('worker.js resource error - ' +
                                 JSON.stringify(err, undefined, ' ')
                                );
     };
@@ -546,9 +596,9 @@ function loop() {
 
      if (data.resources && data.resources.files) {
         data.resources.files.forEach(function (f) {
-            if (f.indexOf('http') === 0) {                
+            if (f.indexOf('http') === 0) {
                 jsIncludes += '<script type="text/javascript" src="' + f + '"></script>';
-            } 
+            }
         });
     }
 
@@ -562,29 +612,29 @@ function loop() {
         }
 
     } else {
-        
+
         //Inject the CSS into the template
         if (data.styledMode) {
-            cachedCopy = cachedContentStyled.replace('{{css}}', css);            
+            cachedCopy = cachedContentStyled.replace('{{css}}', css);
         } else {
             cachedCopy = cachedContent.replace('{{css}}', css);
         }
 
         //Inject JS includes into template
-        //We can't use inject functions because Phantom won't wait for 
+        //We can't use inject functions because Phantom won't wait for
         //those to be loaded before calling onLoadFinished..
-       
-        cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);            
-                
-        page.content = cachedCopy;            
+
+        cachedCopy = cachedCopy.replace('{{js}}', jsIncludes);
+
+        page.content = cachedCopy;
     }
- 
+
     //Inject required script files
     if (data.resources && data.resources.files) {
         data.resources.files.forEach(function (f) {
             if (f.indexOf('http') !== 0) {
-                page.injectJs(f);                
-            } 
+                page.injectJs(f);
+            }
         });
     }
 }

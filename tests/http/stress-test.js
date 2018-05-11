@@ -30,7 +30,7 @@ const request = require('request');
 var sum = 0,
     count = 0,
     options = {
-        url: 'http://127.0.0.1:8081',
+        url: 'http://127.0.0.1:7801',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -39,7 +39,7 @@ var sum = 0,
     }
 ;
 
-function doTest(number) {    
+function doTest(number) {
     var start = (new Date()).getTime();
 
     request.post(options,
@@ -48,7 +48,7 @@ function doTest(number) {
             sum += t;
             if (err) return console.log(number, 'returned error', err);
             count++;
-            console.log(number, 'done. took', t, 'ms');          
+            console.log(number, 'done. took', t, 'ms');
         }
     );
 }
@@ -56,5 +56,5 @@ function doTest(number) {
 setInterval(function () {
     for (var i = 0; i < 9; i++) {
         doTest(i);
-    }    
+    }
 }, 100);

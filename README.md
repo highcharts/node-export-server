@@ -70,9 +70,9 @@ ln -s `which nodejs` /usr/bin/node
   * `--outfile`: Specify the output filename.
   * `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server. Defaults to `true`.
   * `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
-  * `--scale`: The scale of the chart.
+  * `--scale`: The scale of the chart. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
   * `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
-  * `--constr`: The constructor to use. Either `Chart` or `StockChart`.
+  * `--constr`: The constructor to use. Either `Chart`, `Map` (requires that the server was installed with maps support), or `StockChart`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
   * `--resources`: Stringified JSON.
   * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
@@ -98,6 +98,17 @@ ln -s `which nodejs` /usr/bin/node
 
 *`-` and `--` can be used interchangeably when using the CLI.*
 
+### Note about chart size
+
+The `width` argument is mostly to set a zoom factor rather than an absolute width.
+
+If you need to set the _height_ of the chart, it can be done in two ways:
+- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height)
+- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight)
+
+The latter is prefered, as it lets you set a separate sizing when exporting and
+when displaying the chart in your web page.
+
 ## Setup: Injecting the Highcharts dependency
 
 In order to use the export server, Highcharts.js needs to be injected
@@ -118,6 +129,31 @@ on your server, and it will automatically agree to the licensing terms when runn
 to bake with a specific Highcharts version, and to enable styled mode (requires
 a Highcharts 5 license).
 
+If you're using the export server as a dependency in your own app,
+depending on your setup, it may be possible to set the env variable in your `package.json` file:
+
+```
+{
+  "scripts": {
+    "preinstall": "export ACCEPT_HIGHCHARTS_LICENSE=1"
+  }
+}
+```
+
+## Note about process.exit listeners
+
+The export server attaches event listeners to process.exit. This is to
+make sure that all the phantom processes are properly killed off when the 
+application is terminated.
+
+Listeners are also attached to uncaught exceptions - if one appears,
+the entire pool is killed, and the application terminated. 
+
+If you do not want this behavior, start the server with `--listenToProcessExits 0`.
+
+Be aware though - if you disable this and you don't take great care to manually
+kill the pool, your server _will_ bleed memory when the app is terminated.
+
 ## Note About Resources and the CLI
 
 If `--resources` is not set, and a file `resources.json` exist in the folder
@@ -131,13 +167,13 @@ The server accepts the following arguments:
   * `options`: Alias for `infile`
   * `svg`: A string containing SVG to render
   * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
-  * `scale`: The scale factor
+  * `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
   * `width`: The chart width (overrides scale)
   * `callback`: Javascript to execute in the highcharts constructor.
   * `resources`: Additional resources.
   * `constr`: The constructor to use. Either `Chart` or `Stock`.
   * `b64`: Bool, set to true to get base64 back instead of binary.
-  * `async`: Get a download link instead of the file data
+  * `async`: Get a download link instead of the file data.
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
   * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
   * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
@@ -159,6 +195,10 @@ The easiest way to run in forever is to clone the node export server repo, and r
 Remember to install forever first: `sudo npm install -g forever`.
 
 Please see the forever documentation for additional options (such as log destination).
+
+### AWS Lamba
+
+See [this](https://github.com/highcharts/node-export-server/issues/81) issue.
 
 ### SSL
 
@@ -215,6 +255,12 @@ Copy or move the TTF file to `C:\Windows\Fonts\`:
 ```
 copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 ```
+### Google fonts
+
+If you need Google Fonts in your custom installation, they can be had here:
+https://github.com/google/fonts
+
+Download them, and follow the above instructions for your OS.
 
 ## Server Test
 
