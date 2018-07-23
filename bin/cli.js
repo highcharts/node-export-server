@@ -86,6 +86,8 @@ addOption('sslOnly', false, '<bool>: set this to true to only serve over HTTPS')
 addOption('host', false, '<string>: start a server listening on the supplied hostname');
 addOption('port', 7801, '<number>: server port');
 addOption('rateLimit', false, '<number>: Argument is the max requests allowed in one minute. Disabled by default.');
+addOption('skipKey', false, '<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter and should be provided with skipToken argument.');
+addOption('skipToken', false, '<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter. and should be provided with skipKey argument.');
 
 addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
@@ -196,7 +198,9 @@ if (options.enableServer || (options.host && options.host.length)) {
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
         main.server.enableRateLimiting({
-            max: options.rateLimit
+            max: options.rateLimit,
+            skipKey: options.skipKey,
+            skipToken: options.skipToken
         });
     }
 
