@@ -4,7 +4,7 @@ Convert Highcharts.JS charts to static image files.
 
 ## What & Why
 
-This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files. 
+This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files.
 It supports PNG, JPEG, SVG, and PDF output; and the input can be either SVG, or JSON-formatted chart options.
 
 The application can be used either as a CLI (Command Line Interface), as an HTTP server, or as a node.js module.
@@ -22,7 +22,7 @@ The HTTP server can either be ran stand-alone and integrate with your other appl
 or it can be ran in such a way that the export buttons on your charts route to your own server.
 
 To do latter, add:
-    
+
     {
       exporting: {
         url: "<IP to the self-hosted export server>"
@@ -37,14 +37,14 @@ See [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-mo
 
 ## Install
 
-First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.org/en/download/) and download/install node for your platform. 
+First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.org/en/download/) and download/install node for your platform.
 
 After node.js is installed, install the export server by opening a terminal and typing:
-    
+
     npm install highcharts-export-server -g
 
 OR:
-    
+
     git clone https://github.com/highcharts/node-export-server
     npm install
     npm link
@@ -57,7 +57,7 @@ ln -s `which nodejs` /usr/bin/node
 ```
 
 ## Running
-    
+
     highcharts-export-server <arguments>
 
 ## Command Line Arguments
@@ -75,7 +75,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--constr`: The constructor to use. Either `Chart`, `Map` (requires that the server was installed with maps support), or `StockChart`.
   * `--callback`: File containing JavaScript to call in the constructor of Highcharts.
   * `--resources`: Stringified JSON.
-  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert  
+  * `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert
   * `--logDest <path>`: Set path for log files, and enable file logging
   * `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
   * `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
@@ -83,6 +83,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--tmpdir`: The path to temporary output files.
   * `--workers`: Number of workers to spawn
   * `--workLimit`: the pieces of work that can be performed before restarting a phantom process
+  * `--queueSize`: how many request can be stored in overflow count when there are not enough
   * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
   * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
 
@@ -124,7 +125,7 @@ However, if you need to do this manually you can run `node build.js`.
 
 ### Using In Automated Deployments
 
-If you're deploying an application/service that depend on the export server 
+If you're deploying an application/service that depend on the export server
 as a node module, you can set the environment variable `ACCEPT_HIGHCHARTS_LICENSE` to `YES`
 on your server, and it will automatically agree to the licensing terms when running
 `npm install`. You can also use `HIGHCHARTS_VERSION` and `HIGHCHARTS_USE_STYLED`
@@ -145,11 +146,11 @@ depending on your setup, it may be possible to set the env variable in your `pac
 ## Note about process.exit listeners
 
 The export server attaches event listeners to process.exit. This is to
-make sure that all the phantom processes are properly killed off when the 
+make sure that all the phantom processes are properly killed off when the
 application is terminated.
 
 Listeners are also attached to uncaught exceptions - if one appears,
-the entire pool is killed, and the application terminated. 
+the entire pool is killed, and the application terminated.
 
 If you do not want this behavior, start the server with `--listenToProcessExits 0`.
 
@@ -165,7 +166,7 @@ from which the cli tool was ran, it will use the `resources.json` file.
 
 The server accepts the following arguments:
 
-  * `infile`: A string containing JSON or SVG for the chart 
+  * `infile`: A string containing JSON or SVG for the chart
   * `options`: Alias for `infile`
   * `svg`: A string containing SVG to render
   * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
@@ -211,8 +212,8 @@ Note that the certificate files needs to be named as such:
 
 ### Worker Count & Work Limit
 
-The export server utilizes a pool of *workers*, where one worker is a 
-PhantomJS process responsible for converting charts. The pool size 
+The export server utilizes a pool of *workers*, where one worker is a
+PhantomJS process responsible for converting charts. The pool size
 can be set with the `--workers` switch, and should be tweaked to fit the hardware
 on which you're running the server. It's recommended that you start with the default (8),
 and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/http/stress-test.js` script can be used
@@ -222,7 +223,7 @@ server to be running on port 8081.
 PhantomJS becomes somewhat unstable the more export requests it has historically handled.
 To work around this, each of the workers has a maximum number of requests it can
 handle before it restarts itself. This number is 60 by default, and can be tweaked with
-`--workLimit`. As with `--workers`, this number should also be tweaked to fit your 
+`--workLimit`. As with `--workers`, this number should also be tweaked to fit your
 use case.
 
 ### System Requirements
@@ -267,18 +268,18 @@ Download them, and follow the above instructions for your OS.
 ## Server Test
 
 Run the below in a terminal after running `highcharts-export-server --enableServer 1`.
-    
-    # Generate a chart and save it to mychart.png    
+
+    # Generate a chart and save it to mychart.png
     curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
 
 ## Using as a Node.js Module
 
 The export server can also be used as a node module to simplify integrations:
-    
+
     //Include the exporter module
     const exporter = require('highcharts-export-server');
 
-    //Export settings 
+    //Export settings
     var exportSettings = {
         type: 'png',
         options: {
@@ -331,7 +332,7 @@ The export server can also be used as a node module to simplify integrations:
   * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
   * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names. `fn` is called when the export is completed, with an object as the second argument containing the the filename attribute.
   * `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
-  * `server` - the server instance 
+  * `server` - the server instance
     * `enableRateLimiting(options)` - enable rate limiting on the POST path
       * `max` - the maximum amount of requests before rate limiting kicks in
       * `window` - the time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
@@ -342,16 +343,17 @@ The export server can also be used as a node module to simplify integrations:
     * `express()` - return the express module instance
     * `useFilter(when, fn)` - attach a filter to the POST route. Returning false in the callback will terminate the request.
       * `when` - either `beforeRequest` or `afterRequest`
-      * `fn` - the function to call 
+      * `fn` - the function to call
         * `req` - the request object
         * `res` - the result object
         * `data` - the request data
         * `id` - the request ID
-        * `uniqueid` - the unique id for the request (used for temporary file names)        
+        * `uniqueid` - the unique id for the request (used for temporary file names)
   * `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
     * `maxWorkers` (default 25) - max count of worker processes
     * `initialWorkers` (default 5) - initial worker process count
     * `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
+    * `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
   * `killPool()`: kill the phantom processes
 
 ## Using Ajax in Injected Resources
@@ -360,16 +362,16 @@ If you need to perform Ajax requests inside one of the resource scripts,
 set `asyncRendering` to true, and call `highexp.done()` in the Ajax return to process the chart.
 
 Example:
-    
+
     {
       asyncRendering: true,
       resources: {
-        files: 'myAjaxScript.js'    
+        files: 'myAjaxScript.js'
       }
     }
 
 myAjaxScript.js:
-    
+
     jQuery.ajax({
       url: 'example.com',
       success: function (data) {
@@ -381,16 +383,16 @@ myAjaxScript.js:
       }
     });
 
-If the Ajax call doesn't call `highexp.done()` within 60 seconds, the 
+If the Ajax call doesn't call `highexp.done()` within 60 seconds, the
 rendering will time out.
 
 ## Performance Notice
 
 In cases of batch exports, it's faster to use the HTTP server than the CLI.
-This is due to the overhead of starting PhantomJS for each job when using the CLI. 
+This is due to the overhead of starting PhantomJS for each job when using the CLI.
 
-As a concrete example, running the CLI with [testcharts/basic.json](testcharts/basic.json) 
-as the input and converting to PNG averages about 449ms. 
+As a concrete example, running the CLI with [testcharts/basic.json](testcharts/basic.json)
+as the input and converting to PNG averages about 449ms.
 Posting the same configuration to the HTTP server averages less than 100ms.
 
 So it's better to write a bash script that starts the server and then
@@ -399,7 +401,7 @@ export server as a service.
 
 Alternatively, you can use the `--batch` switch if the output format is the same
 for each of the input files to process:
-    
+
     highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;.."
 
 Other switches can be combined with this switch.
