@@ -83,6 +83,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--tmpdir`: The path to temporary output files.
   * `--workers`: Number of workers to spawn
   * `--workLimit`: the pieces of work that can be performed before restarting a phantom process
+  * `--queueSize`: how many request can be stored in overflow count when there are not enough
   * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
   * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
 
