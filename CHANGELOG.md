@@ -3,6 +3,7 @@
   * Added option to supply `cdnURL` to build script (#133)
   * Added `;` between included scripts. Fixes map collections (#128)
   * Added `--skipKey` and `--skipToken` CLI options to configure the rate limiter
+  * Added `--queueSize` switch to the CLI options to set the overflow queue size
 
 # 2.0.14
 
