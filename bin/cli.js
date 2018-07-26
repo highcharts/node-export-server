@@ -92,6 +92,7 @@ addOption('skipToken', false, '<number|string>: Option to be passed as an argume
 addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
 addOption('workLimit', 60, '<number>: the pieces of work that can be performed before restarting a phantom process');
+addOption('queueSize', 5, '<number>: the size of the request overfow queue');
 
 addOption('logDest', false, '<string>: path to log files. will also enable file logging.');
 addOption('logFile', 'highcharts-export-server.log', '<string>: filename to log to.');
@@ -193,7 +194,8 @@ if (options.enableServer || (options.host && options.host.length)) {
         listenToProcessExits: options.listenToProcessExits,
         initialWorkers: options.workers || 0,
         maxWorkers: options.workers || 4,
-        workLimit: options.workLimit
+        workLimit: options.workLimit,
+        queueSize: options.queueSize
     });
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
@@ -235,6 +237,7 @@ if (options.enableServer || (options.host && options.host.length)) {
             initialWorkers: options.workers || 5,
             maxWorkers: options.workers || 25,
             workLimit: options.workLimit,
+            queueSize: options.queueSize,
             reaper: false
         });
 
@@ -279,6 +282,7 @@ if (options.enableServer || (options.host && options.host.length)) {
             listenToProcessExits: options.listenToProcessExits,
             initialWorkers: options.workers || 1,
             maxWorkers: options.workers || 1 ,
+            queueSize: options.queueSize,
             reaper: false
         });
 
