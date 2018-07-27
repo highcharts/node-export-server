@@ -4,6 +4,7 @@
   * Added `;` between included scripts. Fixes map collections (#128)
   * Added `--skipKey` and `--skipToken` CLI options to configure the rate limiter
   * Added `--queueSize` switch to the CLI options to set the overflow queue size
+  * Fixed issue with silent installs and default values
 
 # 2.0.14
 

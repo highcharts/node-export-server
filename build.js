@@ -362,11 +362,16 @@ function startPrompt() {
   });
 }
 
+function useIfDefined(what, def) {
+  return (typeof what === 'undefined' ? def : what);
+}
+
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
-    embedAll(process.env.HIGHCHARTS_VERSION || 'latest',
-             process.env.HIGHCHARTS_USE_STYLED || true,
-             process.env.HIGHCHARTS_USE_MAPS || true,
-             process.env.HIGHCHARTS_MOMENT || false
+    embedAll(
+      useIfDefined(process.env.HIGHCHARTS_VERSION, 'latest'),
+      useIfDefined(process.env.HIGHCHARTS_USE_STYLED, true),
+      useIfDefined(process.env.HIGHCHARTS_USE_MAPS, true),
+      useIfDefined(process.env.HIGHCHARTS_MOMENT, false)
     );
 } else {
     console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
