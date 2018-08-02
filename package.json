@@ -5,7 +5,7 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "2.0.14",
+  "version": "2.0.15",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },

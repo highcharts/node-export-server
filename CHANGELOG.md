@@ -1,4 +1,5 @@
-# Master
+# 2.0.15
+
   * Added `queueSize` option to `initPool` to set the request overfow queue size 
   * Added option to supply `cdnURL` to build script (#133)
   * Added `;` between included scripts. Fixes map collections (#128)
