@@ -354,6 +354,7 @@ The export server can also be used as a node module to simplify integrations:
     * `initialWorkers` (default 5) - initial worker process count
     * `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
     * `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
+    * `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
   * `killPool()`: kill the phantom processes
 
 ## Using Ajax in Injected Resources
