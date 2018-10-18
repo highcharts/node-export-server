@@ -91,9 +91,9 @@ ln -s `which nodejs` /usr/bin/node
 
   * `--enableServer <1|0>`: Enable the server (done also when supplying --host)
   * `--host`: The hostname to run the server on.
-  * `--port`: The port to listen for incoming requests on.
+  * `--port`: The port to listen for incoming requests on. Defaults to `7801`.
   * `--sslPath`: The path to the SSL key/certificate. Indirectly enables SSL support.
-  * `--sslPort`: Port on which to run the HTTPS server
+  * `--sslPort`: Port on which to run the HTTPS server. Defaults to `443`.
   * `--sslOnly`: Set to true to only serve over HTTPS
   * `--rateLimit`: Argument is the max requests allowed in one minute. Disabled by default.
   * `--skipKey` and `--skipToken`: Key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
