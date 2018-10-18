@@ -1,9 +1,10 @@
 # 2.0.16
-  
+
   * Added support for bullet charts
   * Added support for Gantt charts
   * Added configuration option for chart generation timeout (`--timeoutThreshold`)
   * Gracefull failing of 404 map collections now working properly
+  * Increased max configuration size from 5MB to 50MB
   * Updated express version
   * Updated docs
 
