@@ -1,3 +1,12 @@
+# 2.0.16
+  
+  * Added support for bullet charts
+  * Added support for Gantt charts
+  * Added configuration option for chart generation timeout (`--timeoutThreshold`)
+  * Gracefull failing of 404 map collections now working properly
+  * Updated express version
+  * Updated docs
+
 # 2.0.15
 
   * Added `queueSize` option to `initPool` to set the request overfow queue size 

@@ -85,7 +85,11 @@ const cdnLegacy = [
 ];
 
 const cdnMaps = [
-    "maps/{{version}}/modules/map.js"
+    'maps/{{version}}/modules/map.js'
+];
+
+const cdnGantt = [
+    '{{version}}/modules/gantt.js'
 ];
 
 const cdnMoment = [
@@ -128,6 +132,12 @@ let schema = {
             default: 'no',
             required: true,
             conform: boolConform
+        },
+        gantt: {
+          description: 'Include Gantt? (requires Gantt license, and >V6.2)',
+          default: 'no',
+          required: true,
+          conform: boolConform
         },
         styledMode: {
             description: 'Enable styled mode? (requires Highcharts/Highstock 5+ license)',
@@ -273,10 +283,12 @@ function endMsg() {
     console.log('For documentation, see https://github.com/highcharts/node-export-server');
 }
 
-function embedAll(version, includeStyled, includeMaps, includeMoment, optionals) {
+function embedAll(version, includeStyled, includeMaps, includeMoment, includeGantt, optionals) {
     var standard = cdnScriptsStandard.concat(cdnScriptsCommon).concat(cdnAdditional),
         styled = cdnScriptsStyled.concat(cdnScriptsCommon).concat(cdnAdditional)
     ;
+
+    optionals = optionals || {};
 
     if (includeMaps) {
         console.log('Including maps support'.green);
@@ -285,7 +297,20 @@ function embedAll(version, includeStyled, includeMaps, includeMoment, optionals)
 
         // Map collections are user supplied, so we need to allow them to 404
         cdnMapCollection.forEach((url) => {
-          cdnScriptsOptional[url] = 1;
+          optionals[url] = 1;
+        });
+    }
+
+    if (includeGantt) {
+        console.log('Including Gantt support'.green);
+
+        standard = standard.concat(cdnGantt);
+        styled = styled.concat(cdnGantt);
+
+        // Gantt was introduced in 6.2. To avoid 404 errors if fetching an
+        // older version by accident, let the fetch fail gracefully
+        cdnGantt.forEach((url) => {
+            optionals[url] = 1
         });
     }
 
@@ -355,6 +380,7 @@ function startPrompt() {
                  affirmative(result.styledMode),
                  affirmative(result.maps),
                  affirmative(result.moment),
+                 affirmative(result.gantt),
                  getOptionals(result)
         );
     } else {
@@ -372,7 +398,8 @@ if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
       useIfDefined(process.env.HIGHCHARTS_VERSION, 'latest'),
       useIfDefined(process.env.HIGHCHARTS_USE_STYLED, true),
       useIfDefined(process.env.HIGHCHARTS_USE_MAPS, true),
-      useIfDefined(process.env.HIGHCHARTS_MOMENT, false)
+      useIfDefined(process.env.HIGHCHARTS_MOMENT, false),
+      useIfDefined(process.env.HIGHCHARTS_USE_GANTT, true)
     );
 } else {
     console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);

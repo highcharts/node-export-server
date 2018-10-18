@@ -143,6 +143,11 @@ depending on your setup, it may be possible to set the env variable in your `pac
 }
 ```
 
+#### Including Maps and/or Gantt support in automated deployments
+
+Use the environment variables `HIGHCHARTS_USE_MAPS` and `HIGHCHARTS_USE_GANTT`
+to enable support of either.
+
 ## Note about process.exit listeners
 
 The export server attaches event listeners to process.exit. This is to
