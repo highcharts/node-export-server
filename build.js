@@ -43,7 +43,8 @@ const cdnScriptsOptional = {
   '{{version}}/modules/xrange.js': 1,
   '{{version}}/modules/streamgraph.js': 1,
   '{{version}}/modules/tilemap.js': 1,
-  '{{version}}/modules/histogram-bellcurve.js': 1
+  '{{version}}/modules/histogram-bellcurve.js': 1,
+  '{{version}}/modules/bullet.js': 1
 };
 
 // The scripts here will appear as user prompts
