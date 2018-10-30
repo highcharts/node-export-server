@@ -104,6 +104,7 @@ addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 addOption('fromFile', false, '<string>: load all options from file');
 
 addOption('nologo', false, '<boolean>: skip printing the big logo on startup');
+addOption('timeoutThreshold', 3500, '<number>: the maximum allowed time for each export job execution, in milliseconds');
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -195,7 +196,8 @@ if (options.enableServer || (options.host && options.host.length)) {
         initialWorkers: options.workers || 0,
         maxWorkers: options.workers || 4,
         workLimit: options.workLimit,
-        queueSize: options.queueSize
+        queueSize: options.queueSize,
+        timeoutThreshold: options.timeoutThreshold || 3500
     });
 
     if (options.rateLimit && options.rateLimit !== 0 && options.rateLimit !== false) {
