@@ -1,3 +1,7 @@
+# 2.0.17
+
+  * Fixed automated install with older Highcharts
+
 # 2.0.16
 
   * Added support for bullet charts
