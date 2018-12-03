@@ -1,6 +1,8 @@
 # 2.0.17
 
   * Fixed automated install with older Highcharts
+  * Updated phantomjs-prebuilt version
+  * Updated body-parser version
 
 # 2.0.16
 
