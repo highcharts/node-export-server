@@ -44,7 +44,8 @@ const cdnScriptsOptional = {
   '{{version}}/modules/streamgraph.js': 1,
   '{{version}}/modules/tilemap.js': 1,
   '{{version}}/modules/histogram-bellcurve.js': 1,
-  '{{version}}/modules/bullet.js': 1
+  '{{version}}/modules/bullet.js': 1,
+  '{{version}}/modules/variable-pie.js': 1
 };
 
 // The scripts here will appear as user prompts
