@@ -1,11 +1,12 @@
 {
-  "name": "highcharts-export-server",
-  "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
+  "name": "highcharts-export-server-pie",
+  "author": "Andy Hird AS <andy@hird.net> (https://github.com/andyhird/)",
+  "description": "The Highcharts node export server with added Piechart support",
   "repository": {
-    "url": "https://github.com/highcharts/node-export-server",
+    "url": "https://github.com/andyhird/node-export-server",
     "type": "git"
   },
-  "version": "2.0.16",
+  "version": "1.0.0",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },

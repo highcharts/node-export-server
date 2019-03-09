@@ -1,6 +1,6 @@
 # Highcharts Node.js Export Server
 
-Convert Highcharts.JS charts to static image files.
+Convert Highcharts.JS charts to static image files with added Pie chart support.
 
 ## What & Why
 
