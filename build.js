@@ -266,7 +266,7 @@ function embed(version, scripts, out, fn, optionals) {
         fs.writeFile(
             __dirname + '/phantom/' + out + '.html',
             template
-                .replace('"{{highcharts}}";', scriptBody)
+                .replace('"{{highcharts}}";', () => scriptBody)
                 .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
                 .replace('{{additionalScripts}}', additionalScripts)
                 ,
