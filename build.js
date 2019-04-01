@@ -50,7 +50,8 @@ const cdnScriptsOptional = {
   '{{version}}/modules/funnel3d.js': 1,
   '{{version}}/modules/pyramid3d.js': 1,
   '{{version}}/modules/dependency-wheel.js': 1,
-  '{{version}}/modules/item-series.js': 1
+  '{{version}}/modules/item-series.js': 1,
+  '{{version}}/modules/timeline.js': 1
 };
 
 // The scripts here will appear as user prompts
