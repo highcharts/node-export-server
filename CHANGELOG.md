@@ -1,3 +1,7 @@
+# 2.0.17
+  * Added support for 7.1 charts
+  * Updated dependencies
+
 # 2.0.16
 
   * Added support for bullet charts

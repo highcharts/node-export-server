@@ -5,7 +5,7 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "2.0.16",
+  "version": "2.0.17",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
@@ -16,16 +16,16 @@
   "license": "MIT",
   "dependencies": {
     "async": "2.1.4",
+    "body-parser": "^1.18.3",
+    "colors": "*",
+    "cors": "2.8.1",
+    "express": "4.16.0",
+    "express-form-data": "2.0.0",
     "express-rate-limit": "2.6.0",
     "mkdirp": "*",
-    "colors": "*",
-    "express": "4.16.0",
-    "phantomjs-prebuilt": "2.1.14",
-    "body-parser": "1.16.0",
+    "phantomjs-prebuilt": "^2.1.16",
     "prompt": "*",
-    "request": "*",
-    "express-form-data": "2.0.0",
-    "cors": "2.8.1",
+    "request": "^2.88.0",
     "uuid": ">=3.0.1"
   },
   "engines": {
