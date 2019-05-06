@@ -401,6 +401,9 @@ function useIfDefined(what, def) {
 }
 
 if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
+
+    cdnURL = process.env.HIGHCHARTS_CDN || cdnURL;
+
     embedAll(
       useIfDefined(process.env.HIGHCHARTS_VERSION, 'latest'),
       useIfDefined(process.env.HIGHCHARTS_USE_STYLED, true),

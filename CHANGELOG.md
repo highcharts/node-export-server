@@ -1,3 +1,6 @@
+# 2.0.18
+  * Added HIGHCHARTS_CDN variable support for build process
+
 # 2.0.17
   * Added support for 7.1 charts
   * Updated dependencies
