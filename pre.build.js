@@ -1,5 +1,5 @@
 
-const pkg = require('./package.json');
+const pkg = require(__dirname + '/package.json');
 const fs = require('fs');
 
 const version = process.env.HIGHCHARTS_VERSION;
@@ -11,7 +11,7 @@ if (useNPM) {
 
   console.log(`Preinstall: adding Highcharts@${pkg.dependencies.highcharts} dependency`);
 
-  fs.writeFileSync('./package.json', JSON.stringify(pkg, 0, '  '));
+  fs.writeFileSync(__dirname + '/package.json', JSON.stringify(pkg, 0, '  '));
 } else {
   console.log('Preinstall: no tasks to be done, skipping');
 }

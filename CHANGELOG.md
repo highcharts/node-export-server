@@ -1,3 +1,6 @@
+# 2.0.20
+  * Fixed pathing issue with NPM build when installing globally
+
 # 2.0.19
   * Added support for fetching sources through `npm` for automated builds. To use, set `HIGHCHARTS_CDN` to `npm`.
   * Added support for `pareto` charts
