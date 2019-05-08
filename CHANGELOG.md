@@ -1,3 +1,8 @@
+# 2.0.19
+  * Added support for fetching sources through `npm` for automated builds. To use, set `HIGHCHARTS_CDN` to `npm`.
+  * Added support for `pareto` charts
+  * Fixed issue with script concatination causing exporting errors when including certain modules
+
 # 2.0.18
   * Added HIGHCHARTS_CDN variable support for build process
 

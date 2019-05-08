@@ -123,6 +123,7 @@ pull the version of your choosing from the Highcharts CDN and put them where the
 
 However, if you need to do this manually you can run `node build.js`.
 
+
 ### Using In Automated Deployments
 
 If you're deploying an application/service that depend on the export server
@@ -142,6 +143,17 @@ depending on your setup, it may be possible to set the env variable in your `pac
   }
 }
 ```
+
+*Library fetches* 
+
+When fetching the built Highcharts library, the default behaviour is to
+fetch them from `code.highcharts.com`.
+
+In automated deployments, it's also possible to fetch using NPM instead.
+
+This is done by setting `HIGHCHARTS_VERSION` to `npm` in addition to setting
+the afformentioned `ACCEPT_HIGHCHARTS_LICENSE` to `YES`.
+
 
 #### Including Maps and/or Gantt support in automated deployments
 

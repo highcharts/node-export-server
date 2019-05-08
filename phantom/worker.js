@@ -65,7 +65,7 @@ function doDone(data) {
     } catch (e) {
         system.stderr.writeLn('Error generating chart');
         system.stderr.flush();
-        return console.log(e);
+        return console.log('doDone:', e);
     }
 
     system.stdout.write(data);
@@ -612,7 +612,6 @@ function loop() {
         }
 
     } else {
-
         //Inject the CSS into the template
         if (data.styledMode) {
             cachedCopy = cachedContentStyled.replace('{{css}}', css);
