@@ -216,7 +216,7 @@ Remember to install forever first: `sudo npm install -g forever`.
 
 Please see the forever documentation for additional options (such as log destination).
 
-### AWS Lamba
+### AWS Lambda
 
 See [this](https://github.com/highcharts/node-export-server/issues/81) issue.
 
