@@ -1,4 +1,10 @@
-# 2.0.20
+# 2.0.25
+  * Fixed issue with optional scripts when using env variables to accept prompts
+
+# 2.0.23
+  * Fixed issue with optional dependencies when installing headless
+
+# 2.0.20-2.0.22
   * Fixed pathing issue with NPM build when installing globally
 
 # 2.0.19

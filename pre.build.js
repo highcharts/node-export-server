@@ -9,7 +9,7 @@ if (useNPM) {
 
   pkg.dependencies.highcharts = version || '*';
 
-  console.log(`Preinstall: adding Highcharts@${pkg.dependencies.highcharts} dependency`);
+  console.log(`Preinstall: adding Highcharts@${pkg.dependencies.highcharts} dependency to ${__dirname}/package.json`);
 
   fs.writeFileSync(__dirname + '/package.json', JSON.stringify(pkg, 0, '  '));
 } else {

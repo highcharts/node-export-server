@@ -35,7 +35,7 @@ const path = require('path');
 const template = fs.readFileSync(__dirname + '/phantom/template.html').toString();
 const package = require(__dirname + '/package.json');
 
-const npmLocation = __dirname + '/node_modules/highcharts/';
+let npmLocation = __dirname + '/node_modules/highcharts/';
 
 let highchartsPackage = {};
 let officialCDNURL = 'https://code.highcharts.com/';
@@ -234,16 +234,17 @@ function embed(version, scripts, out, fn, optionals) {
             console.log('  ', (fullURL).gray);
 
             const handleScript = (error, body) => {
-                if (error) {
-                  if (optionals[scriptOriginal]) {
-                    console.log(`  notice: ${script} is not available for v${version}, skipped.`.yellow)
-                    return next();
-                  }
 
-                  return next(error, fullURL);
-                }
+                // if ((error || body.trim().indexOf('<!DOCTYPE') === 0)) {
+                //   console.log(optionals, scriptOriginal);
+                //   if (optionals[scriptOriginal]) {
+                //     console.log(`  notice: ${script} is not available for v${version}, skipped.`.yellow)
+                    // return next();
+                  // }
+                  // return next(error, fullURL);
+                // }
 
-                if (body.trim().indexOf('<!DOCTYPE') === 0) {
+                if ((body || '').trim().indexOf('<!DOCTYPE') === 0) {
                   if (optionals[scriptOriginal]) {
                     console.log(`   ${script.substr(script.lastIndexOf('/') + 1)} is not available for v${version}, skipped..`.yellow);
                     return next();
@@ -351,6 +352,11 @@ function embedAll(version, includeStyled, includeMaps, includeMoment, includeGan
       // Reset cdn url to official CDN in case we need to do a fallback
       cdnURL = officialCDNURL;
 
+      // See if we need to check the parent folder instead
+      if (!fs.existsSync(npmLocation)) {
+        npmLocation = __dirname + '/../highcharts/';
+      }
+
       // Check if the NPM package has been installed before doing anything.
       if (!fs.existsSync(npmLocation)) {
         console.log('Could not get Highcharts through NPM: the NPM package is not installed! Using fallback to CDN.'.red);
@@ -391,7 +397,7 @@ function affirmative(str) {
   return str === 'YES' || str === 'Y' || str === '1';
 }
 
-function getOptionals(include) {
+function getOptionals(include, forceInclude) {
   let optionalScripts = {};
 
   Object.keys(cdnScriptsOptional).forEach((url) => {
@@ -400,7 +406,7 @@ function getOptionals(include) {
 
   // Build list of optionals
   Object.keys(cdnScriptsQuery).forEach((name) => {
-    if (!include || affirmative(include[name])) {
+    if (forceInclude || (!include || affirmative(include[name]))) {
       optionalScripts[cdnScriptsQuery[name]] = 1;
       cdnAdditional.push(cdnScriptsQuery[name]);
     }
@@ -445,7 +451,8 @@ if (process.env.ACCEPT_HIGHCHARTS_LICENSE) {
       useIfDefined(process.env.HIGHCHARTS_USE_STYLED, true),
       useIfDefined(process.env.HIGHCHARTS_USE_MAPS, true),
       useIfDefined(process.env.HIGHCHARTS_MOMENT, false),
-      useIfDefined(process.env.HIGHCHARTS_USE_GANTT, true)
+      useIfDefined(process.env.HIGHCHARTS_USE_GANTT, true),
+      getOptionals(cdnScriptsOptional, true)
     );
 } else {
     console.log(fs.readFileSync(__dirname + '/msg/licenseagree.msg').toString().bold);
