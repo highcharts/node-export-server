@@ -1,5 +1,10 @@
-function(chart) {
-    chart.renderer.label('This label is added in the callback', 100, 100)
+function (chart) {
+    chart.renderer.label(
+        'This label is added in the callback.<br>Highcharts version ' +
+            Highcharts.version,
+        100,
+        100
+    )
     .attr({
         fill : '#90ed7d',
         padding: 10,
