@@ -1,3 +1,6 @@
+# 2.0.26
+  * Added `coloraxis` module to build script
+
 # 2.0.25
   * Fixed issue with optional scripts when using env variables to accept prompts
 
