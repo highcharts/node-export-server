@@ -1,3 +1,6 @@
+# 2.0.27
+  * Added `venn` module to build script
+
 # 2.0.26
   * Added `coloraxis` module to build script
 
