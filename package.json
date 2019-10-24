@@ -5,11 +5,12 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "2.0.27",
+  "version": "2.0.28",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
   "scripts": {
+    "dev": "node ./bin/cli.js --enableServer 1 --authToken password",
     "preinstall": "node ./pre.build.js",
     "postinstall": "node ./post.build.js",
     "install": "node ./build.js"
