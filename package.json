@@ -24,7 +24,7 @@
     "express": "4.16.0",
     "express-form-data": "2.0.0",
     "express-rate-limit": "2.6.0",
-    "mkdirp": "*",
+    "mkdirp": "0.5.1",
     "phantomjs-prebuilt": "2.1.14",
     "prompt": "*",
     "request": "*",
