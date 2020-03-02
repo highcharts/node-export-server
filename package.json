@@ -28,7 +28,7 @@
     "phantomjs-prebuilt": "2.1.14",
     "prompt": "*",
     "request": "*",
-    "uuid": ">=3.0.1"
+    "uuid": "3.0.1"
   },
   "engines": {
     "node": ">=6.4.0"
