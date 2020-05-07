@@ -1,3 +1,6 @@
+# 2.0.28
+  * Fixed UUID and mkdirp versions in package.json
+
 # 2.0.27
   * Added `venn` module to build script
 
