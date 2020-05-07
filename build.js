@@ -60,7 +60,9 @@ const cdnScriptsOptional = {
   '{{version}}/modules/timeline.js': 1,
   '{{version}}/modules/pareto.js': 1,
   '{{version}}/modules/coloraxis.js': 1,
-  '{{version}}/modules/venn.js': 1
+  '{{version}}/modules/venn.js': 1,
+  "{{version}}/modules/dumbbell.js": 1,
+  '{{version}}/modules/lollipop.js': 1
 };
 
 // The scripts here will appear as user prompts
