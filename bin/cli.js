@@ -105,6 +105,8 @@ addOption('fromFile', false, '<string>: load all options from file');
 
 addOption('nologo', false, '<boolean>: skip printing the big logo on startup');
 
+addOption('authToken', null, '<string>: token to check authorization before make export');
+
 ////////////////////////////////////////////////////////////////////////////////
 
 function printLogo() {
@@ -214,7 +216,8 @@ if (options.enableServer || (options.host && options.host.length)) {
                      },
                      options.sslOnly,
                      options.tmpdir,
-                     options.host
+                     options.host,
+                     options.authToken
     );
 
 } else {

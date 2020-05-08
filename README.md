@@ -97,6 +97,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--sslOnly`: Set to true to only serve over HTTPS
   * `--rateLimit`: Argument is the max requests allowed in one minute. Disabled by default.
   * `--skipKey` and `--skipToken`: Key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
+  * `--authToken`: Token guard export route by checking Authorization request header in case enableServer. There is no auth check by default.
 
 
 *`-` and `--` can be used interchangeably when using the CLI.*
