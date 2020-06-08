@@ -1,9 +1,12 @@
 {
-  "name": "highcharts-export-server",
+  "name": "@entrinsik/highcharts-export-server",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "repository": {
-    "url": "https://github.com/highcharts/node-export-server",
+    "url": "https://github.com/entrinsik-org/node-export-server",
     "type": "git"
+  },
+  "publishConfig": {
+    "registry": "http://docker.entrinsik.com/repository/entNPM/"
   },
   "version": "2.0.27",
   "bin": {
