@@ -424,6 +424,11 @@ for each of the input files to process:
 
 Other switches can be combined with this switch.
 
+## Run in docker
+You can run export-server inside docker like this:
+    
+    docker run -p 7801:7801 -d p0m1d0rka/hightcharts-export-server:0.0.1    
+
 ## License
 
 [MIT](LICENSE).
