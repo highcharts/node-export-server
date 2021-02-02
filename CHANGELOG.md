@@ -1,3 +1,7 @@
+# 2.0.39
+  * Added polyfill for `DOMParser` to accommodate Highcharts 9.0
+  * Updated some dependencies
+
 # 2.0.28
   * Fixed UUID and mkdirp versions in package.json
 
