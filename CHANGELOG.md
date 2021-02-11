@@ -1,4 +1,7 @@
-# 2.0.39
+# 2.0.30
+  * Fixed compatibility with `mkdirp >=v1.0`
+
+# 2.0.29
   * Added polyfill for `DOMParser` to accommodate Highcharts 9.0
   * Updated some dependencies
 
