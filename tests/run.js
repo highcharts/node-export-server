@@ -45,7 +45,7 @@ console.log('Loads all JSON files in the test folder and runs them. Results are 
 
 console.log('');
 
-files.forEach(function (file) {    
+files.forEach(function (file) {
     if (file.indexOf('.json') > 0) {
         console.log(('Preparing test ' + file).bold.gray);
         funs.push(function (next) {
@@ -53,18 +53,18 @@ files.forEach(function (file) {
 
             try {
                 options = require(__dirname + '/' + file);
-                
-                options.outfile = __dirname + 
-                                 '/results/' + 
+
+                options.outfile = __dirname +
+                                 '/results/' +
                                  file.replace('.json', '.png');
-                
+
                 options.async = true;
                 options.reqID = file;
 
 
                 exporter.export(options, function (err, result, status, t) {
                     if (err) {
-                        console.log(('Test ' + file + ' failed!').red);
+                        console.log(('Test ' + file + ' failed: ' + err).red);
                     } else {
                         console.log(('Test ' + file + ' processed [' + t + 'ms]').green);
                     }
@@ -76,7 +76,7 @@ files.forEach(function (file) {
                 console.error('[bad test format]'.red, e);
                 next();
             }
-        }); 
+        });
     }
 });
 
@@ -86,13 +86,13 @@ console.log('');
 
 async.waterfall(funs, function (err) {
     console.log('');
-    
+
     if (fails > 0) {
-        console.log('Completed with errors'.red, 
-                    (funs.length - fails) + '/' + funs.length, 
+        console.log('Completed with errors'.red,
+                    (funs.length - fails) + '/' + funs.length,
                     'passed.');
     } else {
-        console.log((funs.length + '/' + funs.length + ' tests ran OK.').bold.green);        
+        console.log((funs.length + '/' + funs.length + ' tests ran OK.').bold.green);
     }
 
     console.log('');

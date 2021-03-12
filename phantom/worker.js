@@ -89,6 +89,9 @@ function loop() {
   page.settings.XSSAuditingEnabled = true;
   page.settings.resourceTimeout = 5000;
 
+  // Do not allow iframes etc.
+  page.navigationLocked = true;
+
   //User agent to force gfonts to serve woff and not woff2
   //Fixes issues with font-weight/font-style
   page.settings.userAgent =
@@ -629,8 +632,7 @@ function loop() {
   }
 
   if (data.svgstr && !data.chart) {
-    // Do not allow iframes or javascript when exporting SVG
-    page.navigationLocked = true;
+    // Do not allow javascript when exporting SVG
     page.settings.javascriptEnabled = false;
 
     if (data.svgstr.indexOf("<?xml") >= 0) {
