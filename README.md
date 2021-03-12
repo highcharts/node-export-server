@@ -2,6 +2,20 @@
 
 Convert Highcharts.JS charts to static image files.
 
+# Breaking changes in v2.1.0
+
+Version 2.1.0 has a couple of breaking changes:
+
+  * Log destinations must now exist before starting file logging
+  * When running in server mode, the following options are now disabled by default:
+    - `callback`
+    - `resources`
+    - `customCode`
+
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when
+starting the server. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet.
+
 ## What & Why
 
 This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files.
