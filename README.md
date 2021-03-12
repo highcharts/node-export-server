@@ -2,6 +2,20 @@
 
 Convert Highcharts.JS charts to static image files.
 
+# Breaking changes in v2.1.0
+
+Version 2.1.0 has a couple of breaking changes:
+
+  * Log destinations must now exist before starting file logging
+  * When running in server mode, the following options are now disabled by default:
+    - `callback`
+    - `resources`
+    - `customCode`
+
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when
+starting the server. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet.
+
 ## What & Why
 
 This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files.
@@ -86,6 +100,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--queueSize`: how many request can be stored in overflow count when there are not enough
   * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
   * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
+  * `--allowCodeExecution`: Set to 1 to allow execution of arbitrary code when exporting. Defaults to `0`, and is required for `callback`, `resources`, and `customCode` export settings. *Turning this on is not recommended unless running on a sandboxed server without access to the general internet, or if running well-defined exports using the CLI*
 
 **Server related options**
 
@@ -206,15 +221,7 @@ It responds to `application/json`, `multipart/form-data`, and URL encoded reques
 
 CORS is enabled for the server.
 
-It's recommended to run the server using [forever](https://github.com/foreverjs/forever) unless running in a managed environment such as AWS Elastic Beanstalk.
-
-### Running in Forever
-
-The easiest way to run in forever is to clone the node export server repo, and run `forever start --killSignal SIGINT ./bin/cli.js --enableServer 1` in the project folder.
-
-Remember to install forever first: `sudo npm install -g forever`.
-
-Please see the forever documentation for additional options (such as log destination).
+It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment such as AWS Elastic Beanstalk. Please refer to the pm2 documentation for details on how to set this up.
 
 ### AWS Lamba
 
