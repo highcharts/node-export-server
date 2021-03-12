@@ -1,3 +1,25 @@
+# 2.1.0
+
+This version is not backwards compatible out of the box!
+
+*Breaking changes:*
+  * Log destinations must now exist before starting file logging
+  * When running in server mode, the following options are now disabled by default:
+    - `callback`
+    - `resources`
+    - `customCode`
+
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when
+starting the server. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet.
+
+*Changelog*
+  * Added the `--allowCodeExecution` flag which is now required to be set when exporting pure JavaScript, using additional external resources, or using callback when running in server mode.
+  * Removed the `mkdirp` dependency
+  * SVG exporting will now block JavaScript entirely
+  * Added the `navigationLocked` flag to the Phantom page, which blocks e.g. `<iframe>` and page redirects.
+
+
 # 2.0.30
   * Fixed compatibility with `mkdirp >=v1.0`
 
