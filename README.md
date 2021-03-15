@@ -13,8 +13,8 @@ Version 2.1.0 has a couple of breaking changes:
     - `customCode`
 
 Disabled options can be enabled by adding the `--allowCodeExecution` flag when
-starting the server. Using this flag is not recommended, and should not be
-done unless the server is sandboxed and not reachable on the public internet.
+starting the server/CLI. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet, or if only using the CLI in a controlled manner (e.g. it's not possible for a user to change the configuration sent to it through a different system).
 
 ## What & Why
 
