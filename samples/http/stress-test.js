@@ -28,33 +28,35 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 const request = require('request');
 
 var sum = 0,
-    count = 0,
-    options = {
-        url: 'http://127.0.0.1:7801',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}})
-    }
-;
-
+  count = 0,
+  options = {
+    url: 'http://127.0.0.1:7801',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      infile: {
+        title: { text: 'Steep Chart' },
+        xAxis: { categories: ['Jan', 'Feb', 'Mar'] },
+        series: [{ data: [29.9, 71.5, 106.4] }]
+      }
+    })
+  };
 function doTest(number) {
-    var start = (new Date()).getTime();
+  var start = new Date().getTime();
 
-    request.post(options,
-        function (err, r, res) {
-            var t = (new Date()).getTime() - start;
-            sum += t;
-            if (err) return console.log(number, 'returned error', err);
-            count++;
-            console.log(number, 'done. took', t, 'ms');
-        }
-    );
+  request.post(options, function (err, r, res) {
+    var t = new Date().getTime() - start;
+    sum += t;
+    if (err) return console.log(number, 'returned error', err);
+    count++;
+    console.log(number, 'done. took', t, 'ms');
+  });
 }
 
 setInterval(function () {
-    for (var i = 0; i < 9; i++) {
-        doTest(i);
-    }
+  for (var i = 0; i < 9; i++) {
+    doTest(i);
+  }
 }, 100);

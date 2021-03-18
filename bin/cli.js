@@ -27,11 +27,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-const main = require("./../lib/index");
+const main = require('./../lib/index');
 const args = process.argv;
-const fs = require("fs");
-const async = require("async");
-const pkg = require("../package.json");
+const fs = require('fs');
+const pkg = require('../package.json');
 
 let logoPrinted = false;
 
@@ -52,7 +51,7 @@ function rpad(str, pad) {
   pad = pad || 20;
   if (str.length < pad) {
     for (var i = str.length; i < pad; i++) {
-      str = str + ".";
+      str = str + '.';
     }
   }
   return str;
@@ -60,129 +59,135 @@ function rpad(str, pad) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-addOption("infile", false, "<string>: the input file");
-addOption("outfile", false, "<string>: the output filename");
+addOption('infile', false, '<string>: the input file');
+addOption('outfile', false, '<string>: the output filename');
 addOption(
-  "instr",
+  'instr',
   false,
-  "<string>: an input chart JSON file. Overrides --infile."
+  '<string>: an input chart JSON file. Overrides --infile.'
 );
 addOption(
-  "options",
+  'options',
   false,
-  "<string>: alias for instr. An input chart JSON file. Overrides --infile."
+  '<string>: alias for instr. An input chart JSON file. Overrides --infile.'
 );
 addOption(
-  "styledMode",
+  'styledMode',
   false,
-  "<1|0>: set to 1 to used the styled mode Highcharts libraries"
+  '<1|0>: set to 1 to used the styled mode Highcharts libraries'
 );
 addOption(
-  "globalOptions",
+  'globalOptions',
   false,
-  "<string>: A JSON string with options to be passed to Highcharts.setOptions"
+  '<string>: A JSON string with options to be passed to Highcharts.setOptions'
 );
 
 addOption(
-  "listenToProcessExits",
+  'listenToProcessExits',
   true,
-  "<1|0>: set to 0 to skip attaching process.exit handlers"
+  '<1|0>: set to 0 to skip attaching process.exit handlers'
 );
 
 addOption(
-  "allowFileResources",
+  'allowFileResources',
   true,
-  "<1|0>: allow injecting resources from the filesystem. Has no effect when running as a server."
+  '<1|0>: allow injecting resources from the filesystem. Has no effect when running as a server.'
 );
 
-addOption("type", "png", "<string>: the format to export to");
-addOption("scale", 1, "<number>: the scale of the exported chart");
-addOption("resources", false, "<string>: additional resource");
+addOption('type', 'png', '<string>: the format to export to');
+addOption('scale', 1, '<number>: the scale of the exported chart');
+addOption('resources', false, '<string>: additional resource');
 addOption(
-  "callback",
+  'callback',
   false,
-  "<string>: JavaScript file with code to run on construction"
+  '<string>: JavaScript file with code to run on construction'
 );
 addOption(
-  "width",
+  'width',
   false,
-  "<number>: the width of the exported chart, overrides chart settings"
+  '<number>: the width of the exported chart, overrides chart settings'
 );
 addOption(
-  "constr",
-  "Chart",
-  "<string>: the constructor to use. Either Chart or Stock."
+  'constr',
+  'Chart',
+  '<string>: the constructor to use. Either Chart or Stock.'
 );
-addOption("tmpdir", "tmp/", "<string>: path to temporary files");
+addOption('tmpdir', 'tmp/', '<string>: path to temporary files');
 
-addOption("enableServer", false, "<1|0>: start a server on 0.0.0.0");
+addOption('enableServer', false, '<1|0>: start a server on 0.0.0.0');
 addOption(
-  "sslOnly",
+  'sslOnly',
   false,
-  "<bool>: set this to true to only serve over HTTPS"
+  '<bool>: set this to true to only serve over HTTPS'
 );
 addOption(
-  "host",
+  'host',
   false,
-  "<string>: start a server listening on the supplied hostname"
+  '<string>: start a server listening on the supplied hostname'
 );
-addOption("port", 7801, "<number>: server port");
+addOption('port', 7801, '<number>: server port');
 addOption(
-  "rateLimit",
+  'rateLimit',
   false,
-  "<number>: Argument is the max requests allowed in one minute. Disabled by default."
-);
-addOption(
-  "skipKey",
-  false,
-  "<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter and should be provided with skipToken argument."
+  '<number>: Argument is the max requests allowed in one minute. Disabled by default.'
 );
 addOption(
-  "skipToken",
+  'skipKey',
   false,
-  "<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter. and should be provided with skipKey argument."
+  '<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter and should be provided with skipToken argument.'
+);
+addOption(
+  'skipToken',
+  false,
+  '<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter. and should be provided with skipKey argument.'
 );
 
-addOption("logLevel", 2, "<number>: the log level. 0 = silent, 4 = verbose.");
-addOption("workers", false, "<number>: the number of workers to spawn");
+addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
+addOption('workers', false, '<number>: the number of workers to spawn');
 addOption(
-  "workLimit",
+  'workLimit',
   60,
-  "<number>: the pieces of work that can be performed before restarting a phantom process"
+  '<number>: the pieces of work that can be performed before restarting a phantom process'
 );
-addOption("queueSize", 5, "<number>: the size of the request overfow queue");
+addOption('queueSize', 5, '<number>: the size of the request overfow queue');
 
 addOption(
-  "logDest",
+  'logDest',
   false,
-  "<string>: path to log files. will also enable file logging."
+  '<string>: path to log files. will also enable file logging.'
 );
 addOption(
-  "logFile",
-  "highcharts-export-server.log",
-  "<string>: filename to log to."
+  'logFile',
+  'highcharts-export-server.log',
+  '<string>: filename to log to.'
 );
 
 addOption(
-  "batch",
+  'batch',
   false,
   '<string>: start a batch job. string containing input/output pairs: "in=out;in=out;.."'
 );
 addOption(
-  "sslPath",
+  'sslPath',
   false,
-  "<string>: Set the path where to find the SSL certificate/key"
+  '<string>: Set the path where to find the SSL certificate/key'
 );
-addOption("sslPort", 443, "<number>: Port on which to run the SSL server");
+addOption('sslPort', 443, '<number>: Port on which to run the SSL server');
 
-addOption("fromFile", false, "<string>: load all options from file");
+addOption('fromFile', false, '<string>: load all options from file');
 
-addOption("nologo", false, "<boolean>: skip printing the big logo on startup");
+addOption('nologo', false, '<boolean>: skip printing the big logo on startup');
 
 addOption(
-  "allowCodeExecution",
+  'allowCodeExecution',
   false,
-  "<boolean>: if set to true, exporting JavaScript files will be enabled"
+  '<boolean>: if set to true, exporting JavaScript files will be enabled'
+);
+
+addOption(
+  'config',
+  false,
+  '<string>: if set, load config from the specified JSON file'
 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +201,7 @@ function printLogo() {
   if (logoPrinted) return;
 
   console.log(
-    fs.readFileSync(__dirname + "/../msg/startup.msg").toString().bold.yellow,
+    fs.readFileSync(__dirname + '/../msg/startup.msg').toString().bold.yellow,
     `
                                                                   v${pkg.version}`
   );
@@ -206,13 +211,13 @@ function printLogo() {
 
 function printUsage() {
   printLogo();
-  console.log("Usage:".bold);
+  console.log('Usage:'.bold);
 
   Object.keys(optionsMeta).forEach(function (option) {
     console.log(
-      "  " + rpad("-" + option),
+      '  ' + rpad('-' + option),
       optionsMeta[option].help,
-      ("default: " + optionsMeta[option].default).bold
+      ('default: ' + optionsMeta[option].default).bold
     );
   });
 }
@@ -226,12 +231,12 @@ if (args.length <= 2) {
 //Parse arguments
 //We can't use a foreach because we're parsing pairs.
 for (var i = 0; i < args.length; i++) {
-  var option = args[i].replace(/\-/g, "");
-  if (typeof options[option] !== "undefined") {
+  var option = args[i].replace(/\-/g, '');
+  if (typeof options[option] !== 'undefined') {
     if (args[++i]) {
       options[option] = args[i] || options[option];
     } else {
-      console.log(("Missing argument value for " + option + "!").red, "\n");
+      console.log(('Missing argument value for ' + option + '!').red, '\n');
       printUsage();
       return;
     }
@@ -243,7 +248,7 @@ printLogo();
 if (options.fromFile) {
   try {
     var old = options;
-    options = JSON.parse(fs.readFileSync(options.fromFile, "utf8"));
+    options = JSON.parse(fs.readFileSync(options.fromFile, 'utf8'));
 
     Object.keys(old).forEach(function (key) {
       if (!options[key]) {
@@ -251,7 +256,7 @@ if (options.fromFile) {
       }
     });
   } catch (e) {
-    console.log("unable to load options from file:", e);
+    console.log('unable to load options from file:', e);
     return;
   }
 }
@@ -261,7 +266,7 @@ main.logLevel(options.logLevel);
 if (options.logDest) {
   main.enableFileLogging(
     options.logDest,
-    options.logFile || "highcharts-export-server.log"
+    options.logFile || 'highcharts-export-server.log'
   );
 }
 
@@ -271,7 +276,8 @@ if (options.enableServer || (options.host && options.host.length)) {
     initialWorkers: options.workers || 0,
     maxWorkers: options.workers || 4,
     workLimit: options.workLimit,
-    queueSize: options.queueSize
+    queueSize: options.queueSize,
+    configFile: options.config
   });
 
   if (
@@ -302,7 +308,7 @@ if (options.enableServer || (options.host && options.host.length)) {
   //Try to load resources from file.
   if (!options.resources) {
     try {
-      options.resources = JSON.parse(fs.readFileSync("resources.json", "utf8"));
+      options.resources = JSON.parse(fs.readFileSync('resources.json', 'utf8'));
     } catch (e) {}
   }
 
@@ -313,14 +319,15 @@ if (options.enableServer || (options.host && options.host.length)) {
       maxWorkers: options.workers || 25,
       workLimit: options.workLimit,
       queueSize: options.queueSize,
-      reaper: false
+      reaper: false,
+      configFile: options.config
     });
 
     var funs = [];
 
-    options.batch = options.batch.split(";");
+    options.batch = options.batch.split(';');
     options.batch.forEach(function (pair) {
-      pair = pair.split("=");
+      pair = pair.split('=');
       if (pair.length == 2) {
         funs.push(function (next) {
           main.export(
@@ -329,7 +336,7 @@ if (options.enableServer || (options.host && options.host.length)) {
               infile: pair[0],
               outfile: pair[1],
               async: true,
-              type: options.type || "png",
+              type: options.type || 'png',
               scale: options.scale,
               width: options.width,
               resources: options.resources,
@@ -348,9 +355,10 @@ if (options.enableServer || (options.host && options.host.length)) {
       }
     });
 
-    async.waterfall(funs, function () {
-      main.killPool();
-    });
+    // @TODO: Convert to promises
+    // async.waterfall(funs, function () {
+    //   main.killPool();
+    // });
   } else {
     options.infile = options.infile;
     options.instr = options.instr || options.options;

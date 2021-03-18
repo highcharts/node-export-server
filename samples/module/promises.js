@@ -5,7 +5,6 @@
  * @returns {Promise}
  */
 const exportCharts = (charts, exportOptions) => {
-
   // If you "steal" this funciton, change the below to require('highcharts-export-server'),
   // and make sure that the export server is included as a dependency in your project,
   // or that it's installed globally (not recommended for module usage).
@@ -22,7 +21,6 @@ const exportCharts = (charts, exportOptions) => {
   charts.forEach((chart, i) => {
     promises.push(
       new Promise((resolve, reject) => {
-
         // Use common option (e.g. filetype etc)
         let exportData = Object.assign({}, exportOptions);
         exportData.options = chart;
@@ -44,7 +42,7 @@ const exportCharts = (charts, exportOptions) => {
       exporter.killPool();
       return Promise.resolve(chartResults);
     })
-    .catch(e => {
+    .catch((e) => {
       exporter.killPool();
       return Promise.reject(e);
     });
@@ -65,10 +63,11 @@ exportCharts([
       text: 'Chart 2'
     }
   }
-]).then(charts => {
-  // Result of export is in charts, which is an array of base64 encoded files.
-  console.log('All done!');
-})
-.catch(e => {
-  console.log('Something went wrong:', e);
-});
+])
+  .then((charts) => {
+    // Result of export is in charts, which is an array of base64 encoded files.
+    console.log('All done!');
+  })
+  .catch((e) => {
+    console.log('Something went wrong:', e);
+  });

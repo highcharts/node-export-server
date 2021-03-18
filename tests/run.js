@@ -27,10 +27,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+const testPath = __dirname;
 const fs = require('fs');
-const files = fs.readdirSync(__dirname);
+const files = fs.readdirSync(testPath);
 const exporter = require('../lib/index.js');
-const async = require('async');
 
 var funs = [];
 var fails = 0;
@@ -38,65 +38,46 @@ var fails = 0;
 require('colors');
 
 exporter.initPool({});
-exporter.logLevel(2);
+exporter.logLevel(4);
 
 console.log('Highcharts Export Server Automagic Test Runner'.yellow);
-console.log('Loads all JSON files in the test folder and runs them. Results are stored in ./results.');
+console.log(
+  'Loads all JSON files in the test folder and runs them. Results are stored in ./results.'
+);
 
 console.log('');
 
-files.forEach(function (file) {
-    if (file.indexOf('.json') > 0) {
-        console.log(('Preparing test ' + file).bold.gray);
-        funs.push(function (next) {
-            var options;
+Promise.all(
+  files
+    .filter(
+      (file) => file.length > 5 && file.indexOf('.json') === file.length - 5
+    )
+    .map(
+      (file) =>
+        new Promise((resolve, reject) => {
+          console.log(`[test runner] Processing test ${file}`.bold);
 
-            try {
-                options = require(__dirname + '/' + file);
+          const st = new Date().getTime();
 
-                options.outfile = __dirname +
-                                 '/results/' +
-                                 file.replace('.json', '.png');
+          const options = require(testPath + '/' + file);
 
-                options.async = true;
-                options.reqID = file;
+          options.outfile =
+            __dirname + '/results/' + file.replace('.json', '.png');
+          options.async = true;
+          options.reqID = file;
 
+          exporter.export(options, (err, result, status, t) => {
+            const et = new Date().getTime();
 
-                exporter.export(options, function (err, result, status, t) {
-                    if (err) {
-                        console.log(('Test ' + file + ' failed: ' + err).red);
-                    } else {
-                        console.log(('Test ' + file + ' processed [' + t + 'ms]').green);
-                    }
-
-                    next();
-                });
-
-            } catch(e) {
-                console.error('[bad test format]'.red, e);
-                next();
-            }
-        });
-    }
-});
-
-console.log('');
-console.log('Executing tests'.yellow);
-console.log('');
-
-async.waterfall(funs, function (err) {
-    console.log('');
-
-    if (fails > 0) {
-        console.log('Completed with errors'.red,
-                    (funs.length - fails) + '/' + funs.length,
-                    'passed.');
-    } else {
-        console.log((funs.length + '/' + funs.length + ' tests ran OK.').bold.green);
-    }
-
-    console.log('');
-    console.log('Look in', (__dirname + '/results').bold, 'for tentative results.');
-    console.log('Results needs to be manually verified if tests "pass".');
-    process.exit(1);
-});
+            console.log(
+              `[test runner] Done with ${file} - time: ${
+                et - st
+              }ms: err: ${err}`.bold
+            );
+            return err ? reject(err) : resolve();
+          });
+        })
+    )
+)
+  .then(() => console.log('All done!'))
+  .catch((e) => console.log(e));

@@ -5,31 +5,46 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "2.1.0",
+  "version": "3.0.0",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
   "scripts": {
-    "preinstall": "node ./pre.build.js",
-    "postinstall": "node ./post.build.js",
-    "install": "node ./build.js"
+    "install": "node install.js"
   },
   "main": "lib/index.js",
   "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "husky": "^4.3.8",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.1.1"
+  },
   "dependencies": {
-    "async": "2.1.4",
-    "body-parser": "1.16.0",
+    "body-parser": "^1.19.0",
     "colors": "*",
     "cors": "2.8.1",
+    "dotenv": "^8.2.0",
     "express": "4.16.0",
     "express-form-data": "2.0.0",
     "express-rate-limit": "2.6.0",
-    "phantomjs-prebuilt": "2.1.14",
-    "prompt": "*",
+    "generic-pool": "^3.7.2",
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^8.0.0",
     "request": "*",
     "uuid": "3.0.1"
   },
   "engines": {
-    "node": ">=6.4.0"
+    "node": ">=10.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "npx eslint --cache --fix",
+    "*.{js,css,md}": "npx prettier --write"
   }
 }

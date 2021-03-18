@@ -8,6 +8,8 @@ logs/
 charts/
 test.js
 
+.cache
+
 /style.css
 
 /phantom/style.css
