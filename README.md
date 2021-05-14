@@ -98,6 +98,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--workers`: Number of workers to spawn
   * `--workLimit`: the pieces of work that can be performed before restarting a phantom process
   * `--queueSize`: how many request can be stored in overflow count when there are not enough
+  * `--workTimeout`: timeout for workers to render a chart (milliseconds)
   * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
   * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
   * `--allowCodeExecution`: Set to 1 to allow execution of arbitrary code when exporting. Defaults to `0`, and is required for `callback`, `resources`, and `customCode` export settings. *Turning this on is not recommended unless running on a sandboxed server without access to the general internet, or if running well-defined exports using the CLI*
