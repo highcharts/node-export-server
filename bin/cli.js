@@ -151,6 +151,11 @@ addOption(
   "<number>: the pieces of work that can be performed before restarting a phantom process"
 );
 addOption("queueSize", 5, "<number>: the size of the request overfow queue");
+addOption(
+  "workTimeout",
+  3500,
+  "<number>: Timeout for workers to render a chart (milliseconds)"
+)
 
 addOption(
   "logDest",
@@ -271,7 +276,8 @@ if (options.enableServer || (options.host && options.host.length)) {
     initialWorkers: options.workers || 0,
     maxWorkers: options.workers || 4,
     workLimit: options.workLimit,
-    queueSize: options.queueSize
+    queueSize: options.queueSize,
+    timeoutThreshold: +options.workTimeout
   });
 
   if (
