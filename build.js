@@ -62,7 +62,8 @@ const cdnScriptsOptional = {
   '{{version}}/modules/coloraxis.js': 1,
   '{{version}}/modules/venn.js': 1,
   "{{version}}/modules/dumbbell.js": 1,
-  '{{version}}/modules/lollipop.js': 1
+  '{{version}}/modules/lollipop.js': 1,
+  '{{version}}/modules/no-data-to-display.js' : 1
 };
 
 // The scripts here will appear as user prompts
@@ -83,7 +84,8 @@ const cdnScriptsCommon = [
     "{{version}}/modules/funnel.js",
     "{{version}}/modules/solid-gauge.js",
     "{{version}}/modules/heatmap.js",
-    "{{version}}/modules/treemap.js"
+    "{{version}}/modules/treemap.js",
+    "{{version}}/modules/no-data-to-display.js"
 ].concat(Object.keys(cdnScriptsOptional));
 
 const cdnScriptsStyled = [
