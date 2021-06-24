@@ -354,6 +354,7 @@ The export server can also be used as a node module to simplify integrations:
   * `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
   * `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
   * `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
+  * `setLog(function)`: provide a custom logging function to replace the default `log`
   * `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names. `fn` is called when the export is completed, with an object as the second argument containing the the filename attribute.
   * `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
   * `server` - the server instance
