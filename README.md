@@ -223,7 +223,7 @@ CORS is enabled for the server.
 
 It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment such as AWS Elastic Beanstalk. Please refer to the pm2 documentation for details on how to set this up.
 
-### AWS Lamba
+### AWS Lambda
 
 See [this](https://github.com/highcharts/node-export-server/issues/81) issue.
 
