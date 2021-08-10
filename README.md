@@ -1,3 +1,9 @@
+# DEPRECATED
+
+This repository was the previous way to deploy our own custom Highchart's node export server to Heroku. It has been replaced by https://github.com/CO2Management/highcharts-export-server. Please use that repo from now on.
+
+----------
+
 # Highcharts Node.js Export Server
 
 Convert Highcharts.JS charts to static image files.
