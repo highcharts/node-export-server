@@ -68,7 +68,8 @@ const cdnScriptsOptional = {
 // The scripts here will appear as user prompts
 const cdnScriptsQuery = {
   "wordcloud": "{{version}}/modules/wordcloud.js",
-  "annotations": "{{version}}/modules/annotations.js"
+  "annotations": "{{version}}/modules/annotations.js",
+  "pattern-fill": "{{version}}/modules/pattern-fill.js"
 };
 
 // Push raw URL's here to force include them
