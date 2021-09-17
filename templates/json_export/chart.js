@@ -21,64 +21,65 @@ See LICENSE file in root for details.
  *
  */
 module.exports = (data) => `
+  window.isRenderComplete = false;
+  Highcharts.animObject = function () { return { duration: 0 }; };
 
-window.isRenderComplete = false;
+  Highcharts.wrap(
+    Highcharts.Chart.prototype,
+    'init',
+    function (proceed, userOptions, cb) {
+      var merge = Highcharts.merge;
 
-Highcharts.animObject = function () { return { duration: 0 }; }
-
-Highcharts.wrap(
-  Highcharts.Chart.prototype,
-  'init',
-  function (proceed, userOptions, cb) {
-    var merge = Highcharts.merge;
-
-    // Override userOptions with image friendly options.
-    userOptions = merge(userOptions, {
+      // Override userOptions with image friendly options
+      userOptions = merge(userOptions, {
         chart: {
-            animation: false,
-            borderWidth: 0,
-            forExport: true
+          animation: false,
+          borderWidth: 0,
+          forExport: true
         },
         credits: {
-            enabled: false
+          enabled: false
         },
         exporting: {
-            enabled: false
+          enabled: false
         },
         caption: {
-          string: ""
+          string: ''
         },
         /*
         Expects tooltip in userOptions when forExport is true.
         https://github.com/highcharts/highcharts/blob/3ad430a353b8056b9e764aa4e5cd6828aa479db2/js/parts/Chart.js#L241
         */
         tooltip: {}
-    });
-    (userOptions.series || []).forEach(function (series) {
+      });
+
+      (userOptions.series || []).forEach(function (series) {
         series.animation = false;
-    });
+      });
 
-    // Add flag to know if chart render has been called.
-    if (!window.onHighchartsRender) {
-      window.onHighchartsRender = Highcharts.addEvent(
-        this, 'render', () => { window.isRenderComplete = true; }
-      );
+      // Add flag to know if chart render has been called.
+      if (!window.onHighchartsRender) {
+        window.onHighchartsRender = Highcharts.addEvent(
+          this, 'render', () => { window.isRenderComplete = true; }
+        );
+      }
+
+      proceed.apply(this, [userOptions, cb]);
     }
-    proceed.apply(this, [userOptions, cb]);
-  }
-);
+  );
 
-Highcharts.wrap(
-  Highcharts.Series.prototype,
-  'init',
-  function (proceed, chart, options) {
-    proceed.apply(this, [chart, options]);
-  }
-);
+  Highcharts.wrap(
+    Highcharts.Series.prototype,
+    'init',
+    function (proceed, chart, options) {
+      proceed.apply(this, [chart, options]);
+    }
+  );
 
-
-// The actual demo export
-
-Highcharts.chart('container', ${data.chart}, ${data.callback});
-
+  // The actual demo export
+  Highcharts.chart(
+    'container',
+    ${JSON.stringify(data.chart)},
+    ${data.callback}
+  );
 `;
