@@ -26,17 +26,25 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
+///
+const prompts = require('prompts');
+const { createCacheDest } = require('../lib/cache.js');
+///
 
 const main = require('./../lib/index');
 const args = process.argv;
 const fs = require('fs');
 const pkg = require('../package.json');
 
+///
+const { join } = require('path');
+const fsPromises = fs.promises;
+///
+
 let logoPrinted = false;
 
 var optionsMeta = {},
   options = {};
-////////////////////////////////////////////////////////////////////////////////
 
 function addOption(option, def, help) {
   options[option] = def;
@@ -56,8 +64,6 @@ function rpad(str, pad) {
   }
   return str;
 }
-
-////////////////////////////////////////////////////////////////////////////////
 
 addOption('infile', false, '<string>: the input file');
 addOption('outfile', false, '<string>: the output filename');
@@ -190,8 +196,6 @@ addOption(
   '<string>: if set, load config from the specified JSON file'
 );
 
-////////////////////////////////////////////////////////////////////////////////
-
 function printLogo() {
   if (options.nologo) {
     console.log(`starting highcharts export server v${pkg.version}...`);
@@ -221,6 +225,76 @@ function printUsage() {
     );
   });
 }
+
+///
+// In this case we want to prepare config manually
+if (args.length === 3 && args[2] === 'config') {
+  printLogo();
+
+  // Prepare manual config
+  const manualConfig = {};
+
+  // Question about configuration category
+  (async () => {
+    const onSubmit = async (p, categories) => {
+      let questionsCounter = 0;
+      let allQuestions = [];
+
+      // Create a corresponding property in the manualConfig object
+      categories.forEach((section) => {
+        // Init the specific section of config object
+        manualConfig[section] = {};
+
+        // Collect the questions
+        allQuestions = [...allQuestions, ...main.configDescriptions[section]];
+      });
+
+      const result = await prompts(allQuestions, {
+        onSubmit(prompt, answer) {
+          manualConfig[prompt.section][prompt.name] = answer;
+
+          // Get the default moudles
+          if (prompt.defaultModules && !answer.length) {
+            manualConfig[prompt.section][prompt.name] = prompt.defaultModules;
+          }
+
+          if (++questionsCounter === allQuestions.length) {
+            createCacheDest();
+            try {
+              (async () => {
+                await fsPromises.writeFile(
+                  join('.cache', 'config.json'),
+                  JSON.stringify(manualConfig),
+                  'utf8'
+                );
+              })();
+            } catch (e) {
+              log(1, `Error while creating config.json: ${e}`);
+            }
+            return true;
+          }
+        }
+      });
+
+      return true;
+    };
+
+    // Category prompt
+    await prompts(
+      {
+        type: 'multiselect',
+        name: 'category',
+        message: 'Which category do you want to configure?',
+        instructions: 'Space: Select specific, A: Select all, Enter: Confirm.',
+        choices: main.configDescriptions.sections
+      },
+      { onSubmit }
+    );
+  })();
+
+  return;
+}
+///
 
 //Print usage if no arguments supplied
 if (args.length <= 2) {
