@@ -159,7 +159,7 @@ depending on your setup, it may be possible to set the env variable in your `pac
 }
 ```
 
-*Library fetches* 
+*Library fetches*
 
 When fetching the built Highcharts library, the default behaviour is to
 fetch them from `code.highcharts.com`.
@@ -208,14 +208,12 @@ The server accepts the following arguments:
   * `resources`: Additional resources.
   * `constr`: The constructor to use. Either `Chart` or `Stock`.
   * `b64`: Bool, set to true to get base64 back instead of binary.
-  * `async`: Get a download link instead of the file data.
+  * ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of Desember 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
   * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
   * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
   * `dataOptions`: Passed to `Highcharts.data(..)`
   * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
-
-Note that the `b64` option overrides the `async` option.
 
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
