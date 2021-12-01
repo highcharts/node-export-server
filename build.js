@@ -294,19 +294,26 @@ function embed(version, scripts, out, fn, optionals) {
 
         console.log('Creating export template', out + '..');
 
+        // Insert scriptbody without using regex.
+        const handlebar = '"{{highcharts}}"';
+        const hcIndex = template.indexOf(handlebar);
+        const output = [
+          template.slice(0, hcIndex),
+          scriptBody,
+          template.slice(hcIndex + handlebar.length)
+        ].join('')
+          .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
+          .replace('{{additionalScripts}}', additionalScripts)
+
         fs.writeFile(
-            __dirname + '/phantom/' + out + '.html',
-            template
-                .replace('"{{highcharts}}";', scriptBody)
-                .replace('<div style="padding:5px;">', '<div style="padding:5px;display:none;">')
-                .replace('{{additionalScripts}}', additionalScripts)
-                ,
-            function (err) {
-                if (err) return console.log('Error creating template:', err);
-                if (fn) fn();
-            }
+          __dirname + '/phantom/' + out + '.html',
+          output,
+          function (err) {
+            if (err) return console.log('Error creating template:', err);
+            if (fn) fn();
+          }
         );
-    });
+      });
 }
 
 function endMsg() {
