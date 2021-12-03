@@ -48,8 +48,6 @@ const exportCharts = (charts, exportOptions) => {
     });
 };
 
-////////////////////////////////////////////////////////////////////////////////
-
 // Export a couple of charts
 
 exportCharts([
