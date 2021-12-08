@@ -31,96 +31,62 @@ const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
 const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
 
-const { cli: configCli } = require('../lib/schemas/configCli.js');
+const { defaultConfig, nestedArgs } = require('../lib/schemas/config.js');
 
 const args = process.argv;
 
-// Sets default values for server's options and returns them
-let options = initDefaultOptions(configCli);
+// Set default values for server's options and returns them
+let options = initDefaultOptions(defaultConfig);
 
 // Print initial logo or text
-printLogo(options.other.nologo);
+printLogo(options.other.noLogo);
 
 // Print the usage information if no arguments supplied
 if (args.length <= 2) {
-  return printUsage();
+  return printUsage(defaultConfig);
 }
 
 // Parse provided arguments
-options = pairArgumentValue(options, args);
-
-// In this case we want to prepare config manually
-if (options.resources.config) {
-  return manualConfiguration(options.resources.config);
-}
+options = pairArgumentValue(options, args, defaultConfig, nestedArgs);
 
 // If all options correctly parsed
 if (options) {
-  // If the fromFile points correct JSON file with options, use it
-  if (options.resources.fromFile) {
-    try {
-      // Save the old options
-      const oldOptions = options;
-
-      // Get options from the file
-      options = JSON.parse(readFileSync(options.resources.fromFile, 'utf8'));
-      /// TO DO: Correctly merge options from the custom JSON file
-      Object.keys(oldOptions).forEach((key) => {
-        if (!options[key]) {
-          options[key] = oldOptions[key];
-        }
-      });
-    } catch (error) {
-      return console.log(
-        `Unable to load options from the ${options.resources.fromFile} file: `,
-        error
-      );
-    }
+  // In this case we want to prepare config manually
+  if (options.customCode.createConfig) {
+    return manualConfiguration(options.customCode.createConfig);
   }
 
-  // Set the log level
-  main.logLevel(options.logLevel);
+  // Start server
+  if (options.server.enable) {
+    // Init a pool for the server and send options
+    main.initPool(options);
 
-  // Set the log file path and name
-  if (options.logDest) {
-    main.enableFileLogging(
-      options.logDest,
-      options.logFile || 'highcharts-export-server.log'
-    );
-  }
+    console.log('Above is async function.');
+    ////
+    /// TO DO: Commented just for now!!
+    // if (
+    //   options.rateLimit &&
+    //   options.rateLimit !== 0 &&
+    //   options.rateLimit !== false
+    // ) {
+    //   main.server.enableRateLimiting({
+    //     max: options.rateLimit,
+    //     skipKey: options.skipKey,
+    //     skipToken: options.skipToken
+    //   });
+    // }
 
-  if (options.enableServer || (options.host && options.host.length)) {
-    main.initPool({
-      listenToProcessExits: options.listenToProcessExits,
-      initialWorkers: options.initialWorkers || 0,
-      maxWorkers: options.workers || 4,
-      workLimit: options.workLimit,
-      queueSize: options.queueSize,
-      configFile: options.config
-    });
-
-    if (
-      options.rateLimit &&
-      options.rateLimit !== 0 &&
-      options.rateLimit !== false
-    ) {
-      main.server.enableRateLimiting({
-        max: options.rateLimit,
-        skipKey: options.skipKey,
-        skipToken: options.skipToken
-      });
-    }
-
-    main.startServer(
-      options.port,
-      options.sslPort,
-      options.sslPath,
-      function (srv) {},
-      options.sslOnly,
-      options.tmpdir,
-      options.host,
-      options.allowCodeExecution
-    );
+    // main.startServer(
+    //   options.port,
+    //   options.sslPort,
+    //   options.sslPath,
+    //   function (srv) {},
+    //   options.sslOnly,
+    //   options.tempDir,
+    //   options.host,
+    //   options.allowCodeExecution
+    // );
+    ////
   } else {
     options.async = true;
 
@@ -131,6 +97,7 @@ if (options) {
       } catch (e) {}
     }
 
+    // Perform batch exports
     if (options.batch) {
       main.initPool({
         listenToProcessExits: options.listenToProcessExits,
@@ -139,7 +106,7 @@ if (options) {
         workLimit: options.workLimit,
         queueSize: options.queueSize,
         reaper: false,
-        configFile: options.config
+        loadConfig: options.config
       });
 
       var funs = [];
@@ -161,7 +128,7 @@ if (options) {
                 resources: options.resources,
                 callback: options.callback,
                 constr: options.constr,
-                tmpdir: options.tmpdir,
+                tempDir: options.tempDir,
                 styledMode: options.styledMode,
                 allowFileResources: options.allowFileResources,
                 globalOptions: options.globalOptions
@@ -179,6 +146,7 @@ if (options) {
       //   main.killPool();
       // });
     } else {
+      // Or simply export chart through CLI
       options.infile = options.infile;
       options.instr = options.instr || options.options;
 
