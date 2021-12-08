@@ -2,7 +2,7 @@ node_modules/
 .DS_Store
 *.png
 out/
-tmp/
+temp/
 *.log
 logs/
 charts/

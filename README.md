@@ -92,8 +92,8 @@ ln -s `which nodejs` /usr/bin/node
 - `--logDest <path>`: Set path for log files, and enable file logging
 - `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
 - `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
-- `--fromFile "options.json"`: Read CLI options from JSON file
-- `--tmpdir`: The path to temporary output files.
+- `--cliFile "options.json"`: Read CLI options from JSON file
+- `--tempdir`: The path to temporary output files.
 - `--workers`: Number of workers to spawn
 - `--workLimit`: the pieces of work that can be performed before restarting a phantom process
 - `--queueSize`: how many request can be stored in overflow count when there are not enough
