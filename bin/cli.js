@@ -61,104 +61,84 @@ if (options) {
     // Init a pool for the server and send options
     main.initPool(options);
 
-    console.log('Above is async function.');
-    ////
-    /// TO DO: Commented just for now!!
-    // if (
-    //   options.rateLimit &&
-    //   options.rateLimit !== 0 &&
-    //   options.rateLimit !== false
-    // ) {
-    //   main.server.enableRateLimiting({
-    //     max: options.rateLimit,
-    //     skipKey: options.skipKey,
-    //     skipToken: options.skipToken
-    //   });
-    // }
-
-    // main.startServer(
-    //   options.port,
-    //   options.sslPort,
-    //   options.sslPath,
-    //   function (srv) {},
-    //   options.sslOnly,
-    //   options.tempDir,
-    //   options.host,
-    //   options.allowCodeExecution
-    // );
-    ////
+    // Run the server
+    main.startServer(options.server);
   } else {
-    options.async = true;
-
-    //Try to load resources from file.
-    if (!options.resources) {
+    // Try to load resources from a file
+    if (!options.customCode.resources) {
       try {
         options.resources = JSON.parse(readFileSync('resources.json', 'utf8'));
-      } catch (e) {}
+      } catch (notice) {
+        main.log(3, `[cli] - No resources found`);
+      }
     }
 
     // Perform batch exports
-    if (options.batch) {
-      main.initPool({
-        listenToProcessExits: options.listenToProcessExits,
-        initialWorkers: options.initialWorkers || 5,
-        maxWorkers: options.workers || 25,
-        workLimit: options.workLimit,
-        queueSize: options.queueSize,
-        reaper: false,
-        loadConfig: options.config
-      });
-
-      var funs = [];
-
-      options.batch = options.batch.split(';');
-      options.batch.forEach(function (pair) {
-        pair = pair.split('=');
-        if (pair.length == 2) {
-          funs.push(function (next) {
-            main.export(
-              {
-                allowCodeExecution: options.allowCodeExecution,
-                infile: pair[0],
-                outfile: pair[1],
-                async: true,
-                type: options.type || 'png',
-                scale: options.scale,
-                width: options.width,
-                resources: options.resources,
-                callback: options.callback,
-                constr: options.constr,
-                tempDir: options.tempDir,
-                styledMode: options.styledMode,
-                allowFileResources: options.allowFileResources,
-                globalOptions: options.globalOptions
-              },
-              function () {
-                next();
-              }
-            );
-          });
-        }
-      });
-
-      // @TODO: Convert to promises
+    if (options.export.batch) {
+      //// Commented only just for now!
+      // main.initPool({
+      //   listenToProcessExits: options.listenToProcessExits,
+      //   initialWorkers: options.initialWorkers || 5,
+      //   maxWorkers: options.workers || 25,
+      //   workLimit: options.workLimit,
+      //   queueSize: options.queueSize,
+      //   reaper: false,
+      //   loadConfig: options.config
+      // });
+      // var funs = [];
+      // options.batch = options.batch.split(';');
+      // options.batch.forEach(function (pair) {
+      //   pair = pair.split('=');
+      //   if (pair.length == 2) {
+      //     funs.push(function (next) {
+      //       main.export(
+      //         {
+      //           allowCodeExecution: options.allowCodeExecution,
+      //           infile: pair[0],
+      //           outfile: pair[1],
+      //           type: options.type || 'png',
+      //           scale: options.scale,
+      //           width: options.width,
+      //           resources: options.resources,
+      //           callback: options.callback,
+      //           constr: options.constr,
+      //           tempDir: options.tempDir,
+      //           styledMode: options.styledMode,
+      //           allowFileResources: options.allowFileResources,
+      //           globalOptions: options.globalOptions
+      //         },
+      //         function () {
+      //           next();
+      //         }
+      //       );
+      //     });
+      //   }
+      // });
+      /// TO DO: Convert to promises
       // async.waterfall(funs, function () {
       //   main.killPool();
       // });
+      ////
     } else {
       // Or simply export chart through CLI
-      options.infile = options.infile;
-      options.instr = options.instr || options.options;
+      options.export.instr = options.export.instr || options.export.options;
 
-      main.initPool({
-        listenToProcessExits: options.listenToProcessExits,
-        initialWorkers: options.initialWorkers || 1,
-        maxWorkers: options.workers || 1,
-        queueSize: options.queueSize,
-        reaper: false
-      });
+      // If not set explicitly, use default option for a single export
+      if (!args.includes('--initialWorkers', '--maxWorkers')) {
+        options.pool = {
+          ...options.pool,
+          initialWorkers: 1,
+          maxWorkers: 1,
+          reaper: false
+        };
+      }
 
-      main.export(options, function (err, data) {
+      // Init a pool for one export
+      main.initPool(options);
+
+      // Perform an export
+      main.export(options, (error, data) => {
+        // Kill the pool
         main.killPool();
       });
     }
