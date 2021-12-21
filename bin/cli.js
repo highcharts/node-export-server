@@ -25,7 +25,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-const { readFileSync } = require('fs');
+const { readFileSync, writeFileSync } = require('fs');
 
 const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
@@ -69,60 +69,68 @@ if (options) {
       try {
         options.resources = JSON.parse(readFileSync('resources.json', 'utf8'));
       } catch (notice) {
-        main.log(3, `[cli] - No resources found`);
+        main.log(3, `[cli] - No resources found.`);
       }
     }
 
     // Perform batch exports
     if (options.export.batch) {
-      //// Commented only just for now!
-      // main.initPool({
-      //   listenToProcessExits: options.listenToProcessExits,
-      //   initialWorkers: options.initialWorkers || 5,
-      //   maxWorkers: options.workers || 25,
-      //   workLimit: options.workLimit,
-      //   queueSize: options.queueSize,
-      //   reaper: false,
-      //   loadConfig: options.config
-      // });
-      // var funs = [];
-      // options.batch = options.batch.split(';');
-      // options.batch.forEach(function (pair) {
-      //   pair = pair.split('=');
-      //   if (pair.length == 2) {
-      //     funs.push(function (next) {
-      //       main.export(
-      //         {
-      //           allowCodeExecution: options.allowCodeExecution,
-      //           infile: pair[0],
-      //           outfile: pair[1],
-      //           type: options.type || 'png',
-      //           scale: options.scale,
-      //           width: options.width,
-      //           resources: options.resources,
-      //           callback: options.callback,
-      //           constr: options.constr,
-      //           tempDir: options.tempDir,
-      //           styledMode: options.styledMode,
-      //           allowFileResources: options.allowFileResources,
-      //           globalOptions: options.globalOptions
-      //         },
-      //         function () {
-      //           next();
-      //         }
-      //       );
-      //     });
-      //   }
-      // });
-      /// TO DO: Convert to promises
-      // async.waterfall(funs, function () {
-      //   main.killPool();
-      // });
-      ////
+      const batchFunctions = [];
+
+      // If not set explicitly, use default option for batch exports
+      if (!args.includes('--initialWorkers', '--maxWorkers')) {
+        options.pool = {
+          ...options.pool,
+          initialWorkers: 5,
+          maxWorkers: 25,
+          reaper: false
+        };
+      }
+
+      // Init a pool for the batch exports
+      main.initPool(options);
+
+      // Split and pair the --batch arguments
+      for (let pair of options.export.batch.split(';')) {
+        pair = pair.split('=');
+        if (pair.length === 2) {
+          batchFunctions.push(
+            new Promise((resolve) => {
+              main.startExport(
+                {
+                  ...options,
+                  export: {
+                    ...options.export,
+                    infile: pair[0],
+                    outfile: pair[1]
+                  }
+                },
+                (data, error) => {
+                  // Throw an error
+                  if (error) {
+                    throw error;
+                  }
+
+                  // Save the base64 from a buffer to a correct image file
+                  writeFileSync(
+                    data.options.export.outfile,
+                    Buffer.from(data.result.data, 'base64')
+                  );
+
+                  resolve();
+                }
+              );
+            })
+          );
+        }
+      }
+
+      // Kill the pool after all exports are done
+      Promise.all(batchFunctions).then(() => {
+        main.killPool();
+      });
     } else {
       // Or simply export chart through CLI
-      options.export.instr = options.export.instr || options.export.options;
-
       // If not set explicitly, use default option for a single export
       if (!args.includes('--initialWorkers', '--maxWorkers')) {
         options.pool = {
@@ -136,8 +144,22 @@ if (options) {
       // Init a pool for one export
       main.initPool(options);
 
+      // Use instr or its alias, options
+      options.export.instr = options.export.instr || options.export.options;
+
       // Perform an export
-      main.export(options, (error, data) => {
+      main.startExport(options, (data, error) => {
+        // Throw an error
+        if (error) {
+          throw error;
+        }
+
+        // Save the base64 from a buffer to a correct image file
+        writeFileSync(
+          data.options.export.outfile,
+          Buffer.from(data.result.data, 'base64')
+        );
+
         // Kill the pool
         main.killPool();
       });
