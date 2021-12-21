@@ -64,7 +64,7 @@ Promise.all(
           options.outfile =
             __dirname + '/results/' + file.replace('.json', '.png');
           options.async = true;
-          options.reqID = file;
+          options.requestId = file;
 
           exporter.export(options, (err, result, status, t) => {
             const et = new Date().getTime();
