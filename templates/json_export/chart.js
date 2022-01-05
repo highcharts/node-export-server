@@ -20,7 +20,7 @@ See LICENSE file in root for details.
  * based on configurations.
  *
  */
-module.exports = (data) => `
+module.exports = (options, callback) => `
   window.isRenderComplete = false;
   Highcharts.animObject = function () { return { duration: 0 }; };
 
@@ -79,7 +79,7 @@ module.exports = (data) => `
   // The actual demo export
   Highcharts.chart(
     'container',
-    ${JSON.stringify(data.chart)},
-    ${data.callback}
+    ${JSON.stringify(options)},
+    ${callback}
   );
 `;

@@ -82,8 +82,8 @@ ln -s `which nodejs` /usr/bin/node
 - `--options`: Alias for `--instr`
 - `--outfile`: Specify the output filename.
 - `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server. Defaults to `true`.
-- `--type`: The type of the exported file. Valid options are `jpg png pdf svg`.
-- `--scale`: The scale of the chart. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
+- `--type`: The type of the exported file. Valid options are `jpeg png pdf svg`.
+- `--scale`: The scale of the chart. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
 - `--constr`: The constructor to use. Either `Chart`, `Map` (requires that the server was installed with maps support), or `StockChart`.
 - `--callback`: File containing JavaScript to call in the constructor of Highcharts.
@@ -92,8 +92,8 @@ ln -s `which nodejs` /usr/bin/node
 - `--logDest <path>`: Set path for log files, and enable file logging
 - `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
 - `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
-- `--fromFile "options.json"`: Read CLI options from JSON file
-- `--tmpdir`: The path to temporary output files.
+- `--cliFile "options.json"`: Read CLI options from JSON file
+- `--tempdir`: The path to temporary output files.
 - `--workers`: Number of workers to spawn
 - `--workLimit`: the pieces of work that can be performed before restarting a phantom process
 - `--queueSize`: how many request can be stored in overflow count when there are not enough
@@ -194,7 +194,7 @@ The server accepts the following arguments:
 - `options`: Alias for `infile`
 - `svg`: A string containing SVG to render
 - `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
-- `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
+- `scale`: The scale factor. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `width`: The chart width (overrides scale)
 - `callback`: Javascript to execute in the highcharts constructor.
 - `resources`: Additional resources.

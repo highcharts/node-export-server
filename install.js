@@ -27,14 +27,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-const pkg = require(__dirname + '/package.json');
+const packageVersion = require(__dirname + '/package.json').version;
 
 require('colors');
 
 console.log(
   `
-
-Highcharts Export Server V${pkg.version}
+Highcharts Export Server V${packageVersion}
 
 ${
   'This software requires a valid Highcharts license for commercial use.'.bold
@@ -46,6 +45,5 @@ https://shop.highsoft.com/
 
 To customize your installation (include additional/fewer modules and so on),
 please refer to the readme file.
-
 `.green
 );

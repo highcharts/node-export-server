@@ -65,7 +65,7 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
             cmd.push("'" + JSON.stringify(payload) + "'");
 
             cmd = cmd
-              .concat([url, '-o', 'tmp/' + file + '.' + i + '.' + type])
+              .concat([url, '-o', 'temp/' + file + '.' + i + '.' + type])
               .join(' ');
 
             proc = spawn(cmd);
@@ -85,11 +85,11 @@ fs.readdir(__dirname + '/../testcharts/', function (err, files) {
               //and convert it..
               if (i === 1 && type !== 'svg' && type !== 'pdf') {
                 fs.readFile(
-                  'tmp/' + file + '.' + i + '.' + type,
+                  'temp/' + file + '.' + i + '.' + type,
                   function (err, res) {
                     if (err) return console.log(err);
                     fs.writeFile(
-                      'tmp/' + file + '.' + i + '.' + type,
+                      'temp/' + file + '.' + i + '.' + type,
                       Buffer.from(res.toString(), 'base64'),
                       function (err) {
                         if (err) return console.log(err);
