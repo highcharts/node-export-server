@@ -2,12 +2,14 @@ const highexp = {};
 
 (function () {
   highexp.init = function () {
-    const previewBtn = document.getElementById('preview'),
-      options = document.getElementById('options').value,
-      jsonData = JSON.stringify(JSON.parse(options));
+    const previewBtn = document.getElementById('preview');
+    const downloadBtn = document.getElementById('download');
 
     previewBtn.addEventListener('click', function (e) {
       e.preventDefault();
+
+      const options = document.getElementById('options').value,
+        jsonData = JSON.stringify(JSON.parse(options));
 
       const http = new easyHTTP();
 
@@ -38,6 +40,25 @@ const highexp = {};
           ).innerHTML = `<img src="data:image/png; base64,${post}"/>`;
         }
       });
+    });
+
+    downloadBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const options = document.getElementById('options').value;
+      const jsonData = JSON.stringify(JSON.parse(options));
+      const http = new XMLHttpRequest();
+
+      http.open('POST', 'http://127.0.0.1:7801/');
+      http.setRequestHeader('Content-type', 'application/json');
+
+      http.onreadystatechange = function () {
+        if (http.readyState === 4) {
+          console.log(http);
+          console.log(http.responseText);
+        }
+      };
+      http.send(jsonData);
     });
   };
 })();
