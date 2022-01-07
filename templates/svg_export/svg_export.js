@@ -24,11 +24,11 @@ module.exports = (chart) => `
     <title>Highcarts Export</title>
   </head>
   <style>
-    ${cssTemplate(chart)}
+    ${cssTemplate()}
   </style>
   <body>
     <div id="chart-container">
-      ${chart.svgstr}
+      ${chart}
     </div>
   </body>
 </html>

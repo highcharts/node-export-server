@@ -14,20 +14,20 @@ See LICENSE file in root for details.
 
 // @format
 
-module.exports = (chart) => `
+module.exports = () => `
 
-html, body{
+html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 #table-div, #sliders, #datatable, .highcharts-description, .highcharts-caption, #controls, .ld-row {
-  display:none;
+  display: none;
   height: 0;
 }
 
-#chart-container{
+#chart-container {
   box-sizing: border-box;
   margin: 0;
   max-height: 100vh;
@@ -39,7 +39,6 @@ html, body{
   margin-bottom: 0 !important;
 }
 
-#chart-container #container{
-}
+#chart-container #container {}
 
 `;
