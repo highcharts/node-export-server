@@ -149,16 +149,18 @@ const start = async () => {
         options.export.instr = options.export.instr || options.export.options;
 
         // Perform an export
-        main.startExport(options, (data, error) => {
+        main.startExport(options, (info, error) => {
           // Throw an error
           if (error) {
             throw error;
           }
 
+          const { outfile, type } = info.options.export;
+
           // Save the base64 from a buffer to a correct image file
           writeFileSync(
-            data.options.export.outfile,
-            Buffer.from(data.result.data, 'base64')
+            outfile,
+            type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
           );
 
           // Kill the pool
