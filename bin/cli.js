@@ -61,10 +61,10 @@ const start = async () => {
     // Start server
     if (options.server.enable) {
       // Init a pool for the server and send options
-      main.initPool(options);
+      await main.initPool(options);
 
       // Run the server
-      main.startServer(options.server);
+      await main.startServer(options.server);
     } else {
       // Try to load resources from a file
       if (!options.customCode.resources) {
