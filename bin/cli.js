@@ -29,7 +29,12 @@ const { readFileSync, writeFileSync } = require('fs');
 
 const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
-const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
+const {
+  isCorrectJSON,
+  printLogo,
+  printUsage,
+  pairArgumentValue
+} = require('../lib/utils');
 
 const { defaultConfig, nestedArgs } = require('../lib/schemas/config.js');
 
@@ -67,9 +72,12 @@ const start = async () => {
       await main.startServer(options.server);
     } else {
       // Try to load resources from a file
-      if (!options.customCode.resources) {
+      if (
+        !options.customCode.resources &&
+        options.customCode.allowFileResources
+      ) {
         try {
-          options.customCode.resources = JSON.parse(
+          options.customCode.resources = isCorrectJSON(
             readFileSync('resources.json', 'utf8')
           );
         } catch (notice) {
