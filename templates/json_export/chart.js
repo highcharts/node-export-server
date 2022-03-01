@@ -20,7 +20,8 @@ See LICENSE file in root for details.
  * based on configurations.
  *
  */
-module.exports = (options, callback) => `
+module.exports = (chartOptions, options) => `
+  var merge = Highcharts.merge;
   window.isRenderComplete = false;
   Highcharts.animObject = function () { return { duration: 0 }; };
 
@@ -28,8 +29,6 @@ module.exports = (options, callback) => `
     Highcharts.Chart.prototype,
     'init',
     function (proceed, userOptions, cb) {
-      var merge = Highcharts.merge;
-
       // Override userOptions with image friendly options
       userOptions = merge(userOptions, {
         chart: {
@@ -76,10 +75,21 @@ module.exports = (options, callback) => `
     }
   );
 
+  // Merge the globalOptions and themeOptions
+  var mergedOptions = merge(
+    ${JSON.stringify(options.export.themeOptions)},
+    ${JSON.stringify(options.export.globalOptions)}
+  );
+
+  // Set global options
+  if (mergedOptions !== {}) {
+    Highcharts.setOptions(mergedOptions);
+  }
+
   // The actual demo export
   Highcharts.chart(
     'container',
-    ${JSON.stringify(options)},
-    ${callback}
+    ${JSON.stringify(chartOptions)},
+    ${options.customCode.callback}
   );
 `;

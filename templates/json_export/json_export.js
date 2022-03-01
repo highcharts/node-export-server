@@ -21,14 +21,14 @@ const jsTemplate = require('./chart.js');
  * This template is used when doing config based exports.
  * @TODO: Add option to use CDN
  */
-module.exports = (options, callback, hcSources) => `
+module.exports = (chartOptions, options, hcSources) => `
 <!DOCTYPE html>
 <html lang='en-US'>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Highcarts Export</title>
 
-    <style>${cssTemplate(options)}</style>
+    <style>${cssTemplate(chartOptions)}</style>
 
     <script>
       ${hcSources}
@@ -41,7 +41,7 @@ module.exports = (options, callback, hcSources) => `
     </div>
 
     <script>
-      ${jsTemplate(options, callback)}
+      ${jsTemplate(chartOptions, options)}
     </script>
   </body>
 </html>

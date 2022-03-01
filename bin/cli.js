@@ -25,12 +25,12 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-const { readFileSync, writeFileSync } = require('fs');
+const { writeFileSync } = require('fs');
 
 const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
 const {
-  isCorrectJSON,
+  handleResources,
   printLogo,
   printUsage,
   pairArgumentValue
@@ -71,19 +71,11 @@ const start = async () => {
       // Run the server
       await main.startServer(options.server);
     } else {
-      // Try to load resources from a file
-      if (
-        !options.customCode.resources &&
+      // Process resources
+      options.customCode.resources = handleResources(
+        options.customCode.resources,
         options.customCode.allowFileResources
-      ) {
-        try {
-          options.customCode.resources = isCorrectJSON(
-            readFileSync('resources.json', 'utf8')
-          );
-        } catch (notice) {
-          main.log(3, `[cli] - No resources found.`);
-        }
-      }
+      );
 
       // Perform batch exports
       if (options.export.batch) {
