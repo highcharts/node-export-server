@@ -86,14 +86,6 @@ module.exports = (chartOptions, options) => `
     Highcharts.setOptions(mergedOptions);
   }
 
-  // Execute the customCode function directly before chart render
-  var customCodeFunc = ${JSON.stringify(options.payload.customCode)};
-
-  // If a correct function, call it
-  if (typeof customCodeFunc === 'function') {
-    customCodeFunc(${JSON.stringify(chartOptions)});
-  }
-
   // The actual demo export
   Highcharts.chart(
     'container',
