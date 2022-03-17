@@ -10,7 +10,7 @@ Version 2.1.0 has a couple of breaking changes:
 - The following options are now disabled by default:
   - `callback`
   - `resources`
-  - `customCode`
+  <!-- - `customCode` -->
 
 Disabled options can be enabled by adding the `--allowCodeExecution` flag when
 starting the server/CLI. Using this flag is not recommended, and should not be
@@ -93,13 +93,13 @@ ln -s `which nodejs` /usr/bin/node
 - `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
 - `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
 - `--cliFile "options.json"`: Read CLI options from JSON file
-- `--tempdir`: The path to temporary output files.
+<!-- - `--tempdir`: The path to temporary output files. -->
 - `--workers`: Number of workers to spawn
 - `--workLimit`: the pieces of work that can be performed before restarting a phantom process
 - `--queueSize`: how many request can be stored in overflow count when there are not enough
 - `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
 - `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
-- `--allowCodeExecution`: Set to 1 to allow execution of arbitrary code when exporting. Defaults to `0`, and is required for `callback`, `resources`, and `customCode` export settings. _Turning this on is not recommended unless running on a sandboxed server without access to the general internet, or if running well-defined exports using the CLI_
+- `--allowCodeExecution`: Set to 1 to allow execution of arbitrary code when exporting. Defaults to `0`, and is required for `callback`, `resources`<!--, and `customCode` --> export settings. _Turning this on is not recommended unless running on a sandboxed server without access to the general internet, or if running well-defined exports using the CLI_
 
 **Server related options**
 
@@ -202,10 +202,10 @@ The server accepts the following arguments:
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `async`: Get a download link instead of the file data.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
-- `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
+<!-- - `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart. -->
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-- `dataOptions`: Passed to `Highcharts.data(..)`
-- `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
+<!-- - `dataOptions`: Passed to `Highcharts.data(..)`
+- `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return. -->
 
 Note that the `b64` option overrides the `async` option.
 
@@ -379,7 +379,7 @@ The export server can also be used as a node module to simplify integrations:
   - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
 - `killPool()`: kill the phantom processes
 
-## Using Ajax in Injected Resources
+<!-- ## Using Ajax in Injected Resources
 
 If you need to perform Ajax requests inside one of the resource scripts,
 set `asyncRendering` to true, and call `highexp.done()` in the Ajax return to process the chart.
@@ -407,7 +407,7 @@ myAjaxScript.js:
     });
 
 If the Ajax call doesn't call `highexp.done()` within 60 seconds, the
-rendering will time out.
+rendering will time out. -->
 
 ## Performance Notice
 

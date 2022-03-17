@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 // @format
 
-module.exports = (options) => `
+module.exports = (chartOptions) => `
 
 html, body {
   margin: 0;
@@ -30,7 +30,7 @@ html, body {
 #chart-container {
   box-sizing: border-box;
   margin: 0;
-  max-width: ${options.chart.width}px;
+  max-width: ${chartOptions.chart.width}px;
   max-height: 100vh;
   overflow: auto;
 }
@@ -41,7 +41,7 @@ html, body {
 }
 
 #chart-container #container {
-  max-width: ${options.chart.width}px;
+  max-width: ${chartOptions.chart.width}px;
 }
 
 `;
