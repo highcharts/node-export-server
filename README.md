@@ -85,14 +85,13 @@ ln -s `which nodejs` /usr/bin/node
 - `--type`: The type of the exported file. Valid options are `jpeg png pdf svg`.
 - `--scale`: The scale of the chart. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `--width`: Scale the chart to fit the width supplied - overrides `--scale`.
-- `--constr`: The constructor to use. Either `Chart`, `Map` (requires that the server was installed with maps support), or `StockChart`.
+- `--constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` (requires that the server was installed with maps support) or `ganttChart`.
 - `--callback`: File containing JavaScript to call in the constructor of Highcharts.
 - `--resources`: Stringified JSON.
 - `--batch "input.json=output.png;input2.json=output2.png;.."`: Batch convert
 - `--logDest <path>`: Set path for log files, and enable file logging
 - `--logFile <filename>`: Set the name of the log file (without the path). Defaults to `highcharts-export-server.log`. Note that `--logDest` also needs to be set to enable file logging.
 - `--logLevel <0..4>`: Set the log level. 0 = off, 1 = errors, 2 = warn, 3 = notice, 4 = verbose
-- `--cliFile "options.json"`: Read CLI options from JSON file
 <!-- - `--tempdir`: The path to temporary output files. -->
 - `--workers`: Number of workers to spawn
 - `--workLimit`: the pieces of work that can be performed before restarting a phantom process

@@ -87,7 +87,7 @@ module.exports = (chartOptions, options) => `
   }
 
   // The actual demo export
-  Highcharts.chart(
+  Highcharts['${options.export.constr}' || 'chart'](
     'container',
     ${JSON.stringify(chartOptions)},
     ${options.customCode.callback}
