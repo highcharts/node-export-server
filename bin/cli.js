@@ -125,7 +125,7 @@ addOption(
   false,
   '<string>: start a server listening on the supplied hostname'
 );
-addOption('port', 7801, '<number>: server port');
+addOption('port', 8080, '<number>: server port');
 addOption(
   'rateLimit',
   false,
@@ -142,7 +142,7 @@ addOption(
   '<number|string>: Option to be passed as an argument of enableRateLimmiter function. It allows bypassing the rate limmiter. and should be provided with skipKey argument.'
 );
 
-addOption('logLevel', 2, '<number>: the log level. 0 = silent, 4 = verbose.');
+addOption('logLevel', 4, '<number>: the log level. 0 = silent, 4 = verbose.');
 addOption('workers', false, '<number>: the number of workers to spawn');
 addOption(
   'workLimit',
