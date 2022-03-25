@@ -9,7 +9,10 @@ const highexp = {};
       e.preventDefault();
 
       const options = document.getElementById('options').value,
-        jsonData = JSON.stringify(JSON.parse(options));
+        jsonData = JSON.stringify({
+          infile: options,
+          base64: true
+        });
 
       const http = new easyHTTP();
 
@@ -30,18 +33,17 @@ const highexp = {};
         this.http.send(jsonData);
       };
 
-      const url =
-        window.location.origin +
-        (window.location.port ? ':' + window.location.port : '');
+      const url = window.location.origin;
 
       // Post
       http.post(url, jsonData, function (err, post) {
         if (err) {
           console.log(err);
         } else {
+          const j = JSON.parse(post);
           document.getElementById(
             'preview-container'
-          ).innerHTML = `<img src="data:image/png; base64,${post}"/>`;
+          ).innerHTML = `<img src="data:image/png; base64,${j.base64}"/>`;
         }
       });
     });
@@ -53,7 +55,7 @@ const highexp = {};
       const jsonData = JSON.stringify(JSON.parse(options));
       const http = new XMLHttpRequest();
 
-      http.open('POST', 'http://127.0.0.1:7801/');
+      http.open('POST', url);
       http.setRequestHeader('Content-type', 'application/json');
 
       http.onreadystatechange = function () {
