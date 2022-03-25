@@ -30,8 +30,12 @@ const highexp = {};
         this.http.send(jsonData);
       };
 
+      const url =
+        window.location.origin +
+        (window.location.port ? ':' + window.location.port : '');
+
       // Post
-      http.post('http://127.0.0.1:7801/', jsonData, function (err, post) {
+      http.post(url, jsonData, function (err, post) {
         if (err) {
           console.log(err);
         } else {
