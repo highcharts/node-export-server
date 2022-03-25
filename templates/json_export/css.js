@@ -14,9 +14,9 @@ See LICENSE file in root for details.
 
 // @format
 
-module.exports = (chart) => `
+module.exports = (chartOptions) => `
 
-html, body{
+html, body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -27,10 +27,10 @@ html, body{
   height: 0;
 }
 
-#chart-container{
+#chart-container {
   box-sizing: border-box;
   margin: 0;
-  max-width: ${chart.width}px;
+  max-width: ${chartOptions.chart.width}px;
   max-height: 100vh;
   overflow: auto;
 }
@@ -40,8 +40,8 @@ html, body{
   margin-bottom: 0 !important;
 }
 
-#chart-container #container{
-  max-width: ${chart.width}px;
+#chart-container #container {
+  max-width: ${chartOptions.chart.width}px;
 }
 
 `;

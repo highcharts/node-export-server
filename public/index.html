@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Highcharts Export Server</title>
+</head>
+
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,400italic" type="text/css">
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<script type="text/javascript" src="js/main.js"></script>
+
+<body>
+  <div class="page box-size">
+    <div class="panel-container main-panel box-size">
+      <div class="panel">
+        <h1>Highcharts Export Server</h1>
+        This page allows you to experiment with different options for the export server.
+
+        <label>Options</label>
+        <div class="info">Your Highcharts configuration object.</div>
+        <div class="error" id="error"></div>
+        <textarea id="options" class="codeinput box-size">{ "infile": "{ \"series\": [{ \"data\": [29.9, 71.5, 106.4] }] }", "base64": true }</textarea>
+
+      </div>
+
+    </div>
+
+    <div class="panel-container chart-panel box-size">
+      <div class="panel" style="pointer-events:auto;">
+        <h1>Result Preview</h1>
+        <div id="preview-container" class="preview-container">
+          <div class="info">Click the Preview button to see a preview.</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="buttons">
+      <button id="preview" class="button">PREVIEW</button>
+      <button id="download" class="button">DOWNLOAD</button>
+
+    </div>
+
+  </div>
+
+  <div class="header"></div>
+
+</body>
+
+<script>
+  highexp.init();
+</script>
+
+</html>
