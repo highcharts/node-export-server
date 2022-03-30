@@ -1,70 +1,119 @@
-const highexp = {};
+var highexp = {};
 
 (function () {
   highexp.init = function () {
-    const previewBtn = document.getElementById('preview');
-    const downloadBtn = document.getElementById('download');
-
-    previewBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      const options = document.getElementById('options').value,
-        jsonData = JSON.stringify({
-          infile: options,
-          base64: true
-        });
-
-      const http = new easyHTTP();
-
-      function easyHTTP() {
-        this.http = new XMLHttpRequest();
-      }
-
-      // Make an HTTP POST Request
-      easyHTTP.prototype.post = function (url, data, callback) {
-        this.http.open('POST', url, true);
-        this.http.setRequestHeader('Content-type', 'application/json');
-
-        let self = this;
-        this.http.onload = function () {
-          callback(null, self.http.responseText);
-        };
-
-        this.http.send(jsonData);
+    var options = document.getElementById('options'),
+      format = document.getElementById('format'),
+      width = document.getElementById('width'),
+      scale = document.getElementById('scale'),
+      constr = document.getElementById('constr'),
+      error = document.getElementById('error'),
+      btnPreview = document.getElementById('preview'),
+      btnDownload = document.getElementById('download'),
+      preview = document.getElementById('preview-container'),
+      optionsCM,
+      callbackCM,
+      cssCM,
+      jsCm,
+      mime = {
+        'image/png': 'png',
+        'image/jpeg': 'jpg',
+        'image/svg+xml': 'xml',
+        'application/pdf': 'pdf'
       };
-
-      const url = window.location.origin;
-
-      // Post
-      http.post(url, jsonData, function (err, post) {
-        if (err) {
-          console.log(err);
-        } else {
-          const j = JSON.parse(post);
-          document.getElementById(
-            'preview-container'
-          ).innerHTML = `<img src="data:image/png; base64,${j.base64}"/>`;
-        }
-      });
+    optionsCM = CodeMirror.fromTextArea(options, {
+      lineNumbers: true,
+      mode: 'javascript'
     });
 
-    downloadBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const options = document.getElementById('options').value;
-      const jsonData = JSON.stringify(JSON.parse(options));
-      const http = new XMLHttpRequest();
-
-      http.open('POST', url);
-      http.setRequestHeader('Content-type', 'application/json');
-
-      http.onreadystatechange = function () {
-        if (http.readyState === 4) {
-          console.log(http);
-          console.log(http.responseText);
+    function ajax(url, data, yes, no) {
+      var r = new XMLHttpRequest();
+      r.open('post', url, true);
+      r.setRequestHeader('Content-Type', 'application/json');
+      r.onreadystatechange = function () {
+        if (r.readyState === 4 && r.status === 200) {
+          if (yes) {
+            yes(r.responseText);
+          }
+        } else if (r.readyState === 4) {
+          if (no) {
+            no(r.status, r.responseText);
+          }
         }
       };
-      http.send(jsonData);
-    });
+      r.send(JSON.stringify(data));
+    }
+
+    function toStructure(async) {
+      return {
+        infile: optionsCM.getValue(),
+        width: width.value.length ? width.value : false,
+        scale: scale.value.length ? scale.value : false,
+        constr: constr.value,
+        type: format.value,
+        b64: async
+      };
+    }
+
+    btnPreview.onclick = function () {
+      preview.innerHTML =
+        '<div class="info">Processing chart, please wait..</div>';
+
+      ajax(
+        '/',
+        toStructure(true),
+        function (data) {
+          var embed = document.createElement('embed');
+          embed.className = 'box-size';
+
+          if (
+            format.value === 'image/png' ||
+            format.value === 'image/jpeg' ||
+            format.value === 'image/svg+xml'
+          ) {
+            preview.innerHTML =
+              '<img src="data:' + format.value + ';base64,' + data + '"/>';
+          } else {
+            // if (format.value === 'pdf') {
+            preview.innerHTML = '';
+            try {
+              embed.src = 'data:application/pdf;base64,' + data;
+              embed.style.width = '100%';
+              embed.style.height = document.body.clientHeight - 280 + 'px';
+              preview.appendChild(embed);
+            } catch (e) {
+              preview.innerHTML = e;
+            }
+          }
+        },
+        function (r, txt) {
+          if (r == 429) {
+            preview.innerHTML =
+              '<div class="info">Too many requests - please try again later</div>';
+          } else {
+            preview.innerHTML =
+              '<div class="info">Error when processing chart: ' +
+              txt +
+              '</div>';
+          }
+        }
+      );
+    };
+
+    btnDownload.onclick = function () {
+      ajax(
+        '/',
+        toStructure(true),
+        function (data) {
+          var l = document.createElement('a');
+          l.download = 'chart.' + mime[format.value];
+          l.href = 'data:' + format.value + ';base64,' + data;
+          document.body.appendChild(l);
+          l.click();
+          document.body.removeChild(l);
+        },
+        function () {}
+      );
+    };
   };
 })();
