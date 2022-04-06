@@ -1,6 +1,19 @@
 # 3.0.0
 
+_Fixes and enhancements:_
+
 - Replaced PhantomJS with Puppeteer
+- Updated the config handling system to optionally load JSON files, and improved environment var loading
+- Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
+- The install step no longer requires interaction when installing
+- Replaced the worker pool system with `generic-pool`
+- Error messages are now sent back to the client instead of being displayed in rasterized output
+- Updated NPM dependencies
+
+_New Features:_
+
+- Added `/health` route to server to display basic server information
+- Added a UI served on `/` to perform exports from JSON configurations in browser
 
 # 2.1.0
 
