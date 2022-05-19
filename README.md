@@ -107,6 +107,7 @@ _Available options:_
 - `--allowForceInject`: Allow injecting code directly. Has no effect when running as a server. (defaults to `false`)
 - `--resources`: An additional resource in a form of stringified JSON. It can contains files, js and css sections. (defaults to `false`)
 - `--callback`: A JavaScript file with a function to run on construction. (defaults to `false`)
+- `--customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
 - `--loadConfig`: A file that contains a pre-defined config to use. (defaults to `false`)
 - `--createConfig`: Allows to set options through a prompt and save in a provided config file. (defaults to `false`)
 - `--enableServer`: If set to true, starts a server on 0.0.0.0. (defaults to `false`)
@@ -238,6 +239,7 @@ The format, with its default values are as follows:
     "allowFileResources": true,
     "allowForceInject": false,
     "callback": false,
+    "customCode": false,
     "resources": false,
     "loadConfig": false,
     "createConfig": false
