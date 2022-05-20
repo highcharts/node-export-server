@@ -10,7 +10,7 @@ Version 2.1.0 has a couple of breaking changes:
 - The following options are now disabled by default:
   - `callback`
   - `resources`
-  <!-- - `customCode` -->
+  - `customCode`
 
 Disabled options can be enabled by adding the `--allowCodeExecution` flag when
 starting the server/CLI. Using this flag is not recommended, and should not be
@@ -107,6 +107,7 @@ _Available options:_
 - `--allowForceInject`: Allow injecting code directly. Has no effect when running as a server. (defaults to `false`)
 - `--resources`: An additional resource in a form of stringified JSON. It can contains files, js and css sections. (defaults to `false`)
 - `--callback`: A JavaScript file with a function to run on construction. (defaults to `false`)
+- `--customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
 - `--loadConfig`: A file that contains a pre-defined config to use. (defaults to `false`)
 - `--createConfig`: Allows to set options through a prompt and save in a provided config file. (defaults to `false`)
 - `--enableServer`: If set to true, starts a server on 0.0.0.0. (defaults to `false`)
@@ -238,6 +239,7 @@ The format, with its default values are as follows:
     "allowFileResources": true,
     "allowForceInject": false,
     "callback": false,
+    "customCode": false,
     "resources": false,
     "loadConfig": false,
     "createConfig": false
@@ -440,8 +442,8 @@ The server accepts the following arguments in a POST body:
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
 <!-- - `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart. -->
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-<!-- - `dataOptions`: Passed to `Highcharts.data(..)`
-- `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return. -->
+<!-- - `dataOptions`: Passed to `Highcharts.data(..)` -->
+- `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
 
 Note that the `b64` option overrides the `async` option.
 
