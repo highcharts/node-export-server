@@ -5,30 +5,31 @@
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
   },
-  "version": "2.0.16",
+  "version": "2.1.0",
   "bin": {
     "highcharts-export-server": "./bin/cli.js"
   },
   "scripts": {
+    "preinstall": "node ./pre.build.js",
+    "postinstall": "node ./post.build.js",
     "install": "node ./build.js"
   },
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
     "async": "2.1.4",
-    "express-rate-limit": "2.6.0",
-    "mkdirp": "*",
-    "colors": "*",
-    "express": "4.16.0",
-    "phantomjs-prebuilt": "2.1.14",
     "body-parser": "1.16.0",
+    "colors": "*",
+    "cors": "2.8.1",
+    "express": "4.16.0",
+    "express-form-data": "2.0.0",
+    "express-rate-limit": "2.6.0",
+    "phantomjs-prebuilt": "2.1.14",
     "prompt": "*",
     "request": "*",
-    "express-form-data": "2.0.0",
-    "cors": "2.8.1",
-    "uuid": ">=3.0.1"
+    "uuid": "3.0.1"
   },
   "engines": {
-    "node": ">=5.10.0"
+    "node": ">=6.4.0"
   }
 }

@@ -1,3 +1,62 @@
+# 2.1.0
+
+This version is not backwards compatible out of the box!
+
+*Breaking changes:*
+  * Log destinations must now exist before starting file logging
+  * When running in server mode, the following options are now disabled by default:
+    - `callback`
+    - `resources`
+    - `customCode`
+
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when
+starting the server. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet.
+
+*Changelog*
+  * Added the `--allowCodeExecution` flag which is now required to be set when exporting pure JavaScript, using additional external resources, or using callback when running in server mode.
+  * Removed the `mkdirp` dependency
+  * SVG exporting will now block JavaScript entirely
+  * Added the `navigationLocked` flag to the Phantom page, which blocks e.g. `<iframe>` and page redirects.
+
+
+# 2.0.30
+  * Fixed compatibility with `mkdirp >=v1.0`
+
+# 2.0.29
+  * Added polyfill for `DOMParser` to accommodate Highcharts 9.0
+  * Updated some dependencies
+
+# 2.0.28
+  * Fixed UUID and mkdirp versions in package.json
+
+# 2.0.27
+  * Added `venn` module to build script
+
+# 2.0.26
+  * Added `coloraxis` module to build script
+
+# 2.0.25
+  * Fixed issue with optional scripts when using env variables to accept prompts
+
+# 2.0.23
+  * Fixed issue with optional dependencies when installing headless
+
+# 2.0.20-2.0.22
+  * Fixed pathing issue with NPM build when installing globally
+
+# 2.0.19
+  * Added support for fetching sources through `npm` for automated builds. To use, set `HIGHCHARTS_CDN` to `npm`.
+  * Added support for `pareto` charts
+  * Fixed issue with script concatination causing exporting errors when including certain modules
+
+# 2.0.18
+  * Added HIGHCHARTS_CDN variable support for build process
+
+# 2.0.17
+  * Added support for 7.1 charts
+  * Updated dependencies
+
 # 2.0.16
 
   * Added support for bullet charts

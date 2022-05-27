@@ -2,6 +2,29 @@
 
 Convert Highcharts.JS charts to static image files.
 
+# Current Status
+
+We are currently working on a refactor which amongst other things replaces PhantomJS with Puppeteer.
+Until then, maintainance of the PhantomJS based application is limited.
+
+Planned release for the new version (V3.0.0) is Q2 2022. 
+
+The work can be followed in the `enhancement/puppeteer` branch, but do note the branch is in constant flux (and thus not stable), and is not fully tested yet. There are also slightly worse performance in terms of latency currently which along with compatibility and general stability is our current focus. In addition to replacing PhantomJS, the next version also contains a slew of bugfixes and general enhancements, the latter especially to the error handling, configuration and setup systems, which should make installing, configuring, and running the server much more pleasant. 
+
+# Breaking changes in v2.1.0
+
+Version 2.1.0 has a couple of breaking changes:
+
+  * Log destinations must now exist before starting file logging
+  * The following options are now disabled by default:
+    - `callback`
+    - `resources`
+    - `customCode`
+
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when
+starting the server/CLI. Using this flag is not recommended, and should not be
+done unless the server is sandboxed and not reachable on the public internet, or if only using the CLI in a controlled manner (e.g. it's not possible for a user to change the configuration sent to it through a different system).
+
 ## What & Why
 
 This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files.
@@ -86,6 +109,7 @@ ln -s `which nodejs` /usr/bin/node
   * `--queueSize`: how many request can be stored in overflow count when there are not enough
   * `--listenToProcessExits`: set to 0 to skip attaching process.exit handlers. Note that disabling this may cause zombie processes!
   * `--globalOptions`: A JSON string with options to be passed to Highcharts.setOptions
+  * `--allowCodeExecution`: Set to 1 to allow execution of arbitrary code when exporting. Defaults to `0`, and is required for `callback`, `resources`, and `customCode` export settings. *Turning this on is not recommended unless running on a sandboxed server without access to the general internet, or if running well-defined exports using the CLI*
 
 **Server related options**
 
@@ -123,6 +147,7 @@ pull the version of your choosing from the Highcharts CDN and put them where the
 
 However, if you need to do this manually you can run `node build.js`.
 
+
 ### Using In Automated Deployments
 
 If you're deploying an application/service that depend on the export server
@@ -142,6 +167,17 @@ depending on your setup, it may be possible to set the env variable in your `pac
   }
 }
 ```
+
+*Library fetches*
+
+When fetching the built Highcharts library, the default behaviour is to
+fetch them from `code.highcharts.com`.
+
+In automated deployments, it's also possible to fetch using NPM instead.
+
+This is done by setting `HIGHCHARTS_VERSION` to `npm` in addition to setting
+the afformentioned `ACCEPT_HIGHCHARTS_LICENSE` to `YES`.
+
 
 #### Including Maps and/or Gantt support in automated deployments
 
@@ -181,28 +217,18 @@ The server accepts the following arguments:
   * `resources`: Additional resources.
   * `constr`: The constructor to use. Either `Chart` or `Stock`.
   * `b64`: Bool, set to true to get base64 back instead of binary.
-  * `async`: Get a download link instead of the file data.
+  * ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of Desember 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
   * `noDownload`: Bool, set to true to not send attachment headers on the response.
   * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
   * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
   * `dataOptions`: Passed to `Highcharts.data(..)`
   * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
 
-Note that the `b64` option overrides the `async` option.
-
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
 CORS is enabled for the server.
 
-It's recommended to run the server using [forever](https://github.com/foreverjs/forever) unless running in a managed environment such as AWS Elastic Beanstalk.
-
-### Running in Forever
-
-The easiest way to run in forever is to clone the node export server repo, and run `forever start --killSignal SIGINT ./bin/cli.js --enableServer 1` in the project folder.
-
-Remember to install forever first: `sudo npm install -g forever`.
-
-Please see the forever documentation for additional options (such as log destination).
+It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment such as AWS Elastic Beanstalk. Please refer to the pm2 documentation for details on how to set this up.
 
 ### AWS Lamba
 
