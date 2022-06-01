@@ -41,6 +41,9 @@ module.exports = (chartOptions, options, hcSources) => `
     </div>
 
     <script>
+      if (${options.customCode.customCode}) {
+        (${options.customCode.customCode})();
+      }
       ${jsTemplate(chartOptions, options)}
     </script>
   </body>
