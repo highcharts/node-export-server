@@ -33,7 +33,7 @@
     "generic-pool": "^3.8.2",
     "node-fetch": "^2.6.7",
     "prompts": "^2.4.2",
-    "puppeteer": "^14.1.1",
+    "puppeteer": "^14.4.0",
     "uuid": "^8.3.2"
   },
   "engines": {
