@@ -5,6 +5,8 @@ const exporter = require('./../../lib/index.js');
 const exportSettings = {
   export: {
     constr: 'chart',
+    type: 'png',
+    outfile: 'module_test.png',
     instr: {
       title: {
         text: 'My Chart'
@@ -24,6 +26,14 @@ const exportSettings = {
           'Nov',
           'Dec'
         ]
+      },
+      plotOptions: {
+        series: {
+          dataLabels: {
+            enabled: true,
+            allowOverlap: true
+          }
+        }
       },
       series: [
         {
