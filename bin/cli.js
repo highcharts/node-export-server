@@ -150,9 +150,10 @@ const start = async () => {
 
         // Perform an export
         main.startExport(options, (info, error) => {
-          // Throw an error
+          // Exit process when error
           if (error) {
-            throw error;
+            main.log(1, `[cli] - ${error.message}`);
+            process.exit(1);
           }
 
           const { outfile, type } = info.options.export;

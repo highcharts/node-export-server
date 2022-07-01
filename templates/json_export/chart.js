@@ -89,7 +89,7 @@ module.exports = (chartOptions, options) => `
   // The actual demo export
   Highcharts['${options.export.constr}' || 'chart'](
     'container',
-    ${JSON.stringify(chartOptions)},
+    ${options.export.strInj} || ${JSON.stringify(chartOptions)},
     ${options.customCode.callback}
   );
 `;
