@@ -36,7 +36,7 @@ const {
   pairArgumentValue
 } = require('../lib/utils');
 
-const { defaultConfig, nestedArgs } = require('../lib/schemas/config.js');
+const { defaultConfig } = require('../lib/schemas/config.js');
 
 // The main start function to start server or do the direct export
 const start = async () => {
@@ -54,7 +54,7 @@ const start = async () => {
   }
 
   // Parse provided arguments
-  options = pairArgumentValue(options, args, defaultConfig, nestedArgs);
+  options = pairArgumentValue(options, args, defaultConfig);
 
   // If all options correctly parsed
   if (options) {
