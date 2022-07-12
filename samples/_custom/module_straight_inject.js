@@ -18,7 +18,7 @@ const exportSettings = {
           dataLabels: {
             enabled: true,
             formatter: function () {
-              return `${this.series.name}${this.y}`;
+              return this.series.name + '' + this.y;
             }
           }
         }
