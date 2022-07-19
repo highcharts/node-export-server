@@ -36,14 +36,15 @@ module.exports = (chartOptions, options) => `
           borderWidth: 0,
           forExport: true
         },
-        credits: {
-          enabled: false
-        },
         exporting: {
           enabled: false
         },
-        caption: {
-          string: ''
+        plotOptions: {
+          series: {
+            label: {
+              enabled: false
+            }
+          }
         },
         /*
         Expects tooltip in userOptions when forExport is true.

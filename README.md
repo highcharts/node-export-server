@@ -112,7 +112,7 @@ _Available options:_
 - `--createConfig`: Allows to set options through a prompt and save in a provided config file. (defaults to `false`)
 - `--enableServer`: If set to true, starts a server on 0.0.0.0. (defaults to `false`)
 - `--host`: The hostname of the server. Also starts a server listening on the supplied hostname. (defaults to `0.0.0.0`)
-- `--port`: The port to use for the server. Defaults to 8080. (defaults to `8080`)
+- `--port`: The port to use for the server. Defaults to 7801. (defaults to `7801`)
 - `--enableSsl`: Enables the SSL protocol. (defaults to `false`)
 - `--sslForced`: If set to true, forces the server to only serve over HTTPS. (defaults to `false`)
 - `--sslPort`: The port on which to run the SSL server. (defaults to `443`)
@@ -247,7 +247,7 @@ The format, with its default values are as follows:
   "server": {
     "enable": false,
     "host": "0.0.0.0",
-    "port": 8080,
+    "port": 7801,
     "server": {
       "enable": {
         "enable": false
@@ -314,7 +314,7 @@ These are set as variables in your environment. On Linux, use e.g. `export`.
 - `HIGHCHARTS_ALLOW_FORCE_INJECT`: Allow injecting code directly. Has no effect when running as a server.
 - `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
 - `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
-- `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 8080.
+- `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
 - `HIGHCHARTS_SERVER_SSL_ENABLE`: Enables the SSL protocol.
 - `HIGHCHARTS_SERVER_SSL_FORCE`: If set to true, forces the server to only serve over HTTPS.
 - `HIGHCHARTS_SERVER_SSL_PORT`: The port on which to run the SSL server.
