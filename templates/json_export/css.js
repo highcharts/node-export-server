@@ -22,8 +22,8 @@ html, body {
   box-sizing: border-box;
 }
 
-#table-div, #sliders, #datatable, .highcharts-description, .highcharts-caption, #controls, .ld-row {
-  display:none;
+#table-div, #sliders, #datatable, #controls, .ld-row {
+  display: none;
   height: 0;
 }
 

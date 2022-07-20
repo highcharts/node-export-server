@@ -33,7 +33,6 @@ module.exports = (chartOptions, options) => `
       userOptions = merge(userOptions, {
         chart: {
           animation: false,
-          borderWidth: 0,
           forExport: true
         },
         exporting: {
