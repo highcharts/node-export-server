@@ -433,16 +433,15 @@ The server accepts the following arguments in a POST body:
 - `svg`: A string containing SVG to render
 - `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
 - `scale`: The scale factor. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
-- `width`: The chart width (overrides scale)
+- `height`: The chart height.
+- `width`: The chart width.
 - `callback`: Javascript to execute in the highcharts constructor.
 - `resources`: Additional resources.
-- `constr`: The constructor to use. Either `Chart` or `Stock`.
+- `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `async`: Get a download link instead of the file data.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
-<!-- - `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart. -->
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-<!-- - `dataOptions`: Passed to `Highcharts.data(..)` -->
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
 
 Note that the `b64` option overrides the `async` option.
@@ -600,36 +599,6 @@ The export server can also be used as a node module to simplify integrations:
   - `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
   - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
 - `killPool()`: kill the phantom processes
-
-<!-- ## Using Ajax in Injected Resources
-
-If you need to perform Ajax requests inside one of the resource scripts,
-set `asyncRendering` to true, and call `highexp.done()` in the Ajax return to process the chart.
-
-Example:
-
-    {
-      asyncRendering: true,
-      resources: {
-        files: 'myAjaxScript.js'
-      }
-    }
-
-myAjaxScript.js:
-
-    jQuery.ajax({
-      url: 'example.com',
-      success: function (data) {
-        ...
-        highexp.done();
-      },
-      error: function () {
-        highexp.done();
-      }
-    });
-
-If the Ajax call doesn't call `highexp.done()` within 60 seconds, the
-rendering will time out. -->
 
 # Performance Notice
 
