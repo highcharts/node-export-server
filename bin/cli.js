@@ -22,7 +22,8 @@ const {
   handleResources,
   printLogo,
   printUsage,
-  pairArgumentValue
+  pairArgumentValue,
+  toBoolean
 } = require('../lib/utils');
 
 const { defaultConfig } = require('../lib/schemas/config.js');
@@ -63,7 +64,7 @@ const start = async () => {
       // Process resources
       options.customCode.resources = handleResources(
         options.customCode.resources,
-        options.customCode.allowFileResources
+        toBoolean(options.customCode.allowFileResources)
       );
 
       // Perform batch exports
@@ -98,7 +99,7 @@ const start = async () => {
                       outfile: pair[1]
                     }
                   },
-                  (data, error) => {
+                  (info, error) => {
                     // Throw an error
                     if (error) {
                       throw error;
@@ -106,8 +107,8 @@ const start = async () => {
 
                     // Save the base64 from a buffer to a correct image file
                     writeFileSync(
-                      data.options.export.outfile,
-                      Buffer.from(data.result.data, 'base64')
+                      info.options.export.outfile,
+                      Buffer.from(info.result.data, 'base64')
                     );
 
                     resolve();
@@ -136,6 +137,12 @@ const start = async () => {
 
         // Use instr or its alias, options
         options.export.instr = options.export.instr || options.export.options;
+
+        // Need to get size early
+        options.export = {
+          ...options.export,
+          ...main.findChartSize(options)
+        };
 
         // Perform an export
         main.startExport(options, (info, error) => {

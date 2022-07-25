@@ -77,8 +77,8 @@ module.exports = (chartOptions, options) => `
 
   // Merge the globalOptions and themeOptions
   var mergedOptions = merge(
-    ${JSON.stringify(options.export.themeOptions)},
-    ${JSON.stringify(options.export.globalOptions)}
+    ${options.export.themeOptions},
+    ${options.export.globalOptions}
   );
 
   // Set global options
