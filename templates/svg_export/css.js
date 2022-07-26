@@ -22,7 +22,7 @@ html, body {
   box-sizing: border-box;
 }
 
-#table-div, #sliders, #datatable, .highcharts-description, .highcharts-caption, #controls, .ld-row {
+#table-div, #sliders, #datatable, #controls, .ld-row {
   display: none;
   height: 0;
 }
@@ -30,7 +30,6 @@ html, body {
 #chart-container {
   box-sizing: border-box;
   margin: 0;
-  max-height: 100vh;
   overflow: auto;
 }
 
@@ -38,7 +37,5 @@ html, body {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-
-#chart-container #container {}
 
 `;

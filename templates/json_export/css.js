@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 // @format
 
-module.exports = (chartOptions) => `
+module.exports = () => `
 
 html, body {
   margin: 0;
@@ -22,26 +22,20 @@ html, body {
   box-sizing: border-box;
 }
 
-#table-div, #sliders, #datatable, .highcharts-description, .highcharts-caption, #controls, .ld-row {
-  display:none;
+#table-div, #sliders, #datatable, #controls, .ld-row {
+  display: none;
   height: 0;
 }
 
 #chart-container {
   box-sizing: border-box;
   margin: 0;
-  max-width: ${chartOptions.chart.width}px;
-  max-height: 100vh;
   overflow: auto;
 }
 
 #chart-container > figure, div {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
-}
-
-#chart-container #container {
-  max-width: ${chartOptions.chart.width}px;
 }
 
 `;
