@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 // @format
 
-module.exports = (chartOptions) => `
+module.exports = () => `
 
 html, body {
   margin: 0;

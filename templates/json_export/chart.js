@@ -32,8 +32,7 @@ module.exports = (chartOptions, options) => `
       // Override userOptions with image friendly options
       userOptions = merge(userOptions, {
         chart: {
-          animation: false,
-          forExport: true
+          animation: false
         },
         exporting: {
           enabled: false

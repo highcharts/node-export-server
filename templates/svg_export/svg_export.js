@@ -32,4 +32,5 @@ module.exports = (chart) => `
     </div>
   </body>
 </html>
+
 `;

@@ -28,7 +28,7 @@ module.exports = (chartOptions, options, hcSources) => `
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Highcharts Export</title>
 
-    <style>${cssTemplate(chartOptions)}</style>
+    <style>${cssTemplate()}</style>
 
     <script>
       ${hcSources}
