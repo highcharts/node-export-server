@@ -1,29 +1,18 @@
-#!/usr/bin/env node
+/*******************************************************************************
 
-/*
 Highcharts Export Server
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2022, Highsoft
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+Licenced under the MIT licence.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Additionally a valid Highcharts license is required for use.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
+// @format
 
 const { writeFileSync } = require('fs');
 
@@ -33,7 +22,8 @@ const {
   handleResources,
   printLogo,
   printUsage,
-  pairArgumentValue
+  pairArgumentValue,
+  toBoolean
 } = require('../lib/utils');
 
 const { defaultConfig } = require('../lib/schemas/config.js');
@@ -74,7 +64,7 @@ const start = async () => {
       // Process resources
       options.customCode.resources = handleResources(
         options.customCode.resources,
-        options.customCode.allowFileResources
+        toBoolean(options.customCode.allowFileResources)
       );
 
       // Perform batch exports
@@ -109,7 +99,7 @@ const start = async () => {
                       outfile: pair[1]
                     }
                   },
-                  (data, error) => {
+                  (info, error) => {
                     // Throw an error
                     if (error) {
                       throw error;
@@ -117,8 +107,8 @@ const start = async () => {
 
                     // Save the base64 from a buffer to a correct image file
                     writeFileSync(
-                      data.options.export.outfile,
-                      Buffer.from(data.result.data, 'base64')
+                      info.options.export.outfile,
+                      Buffer.from(info.result.data, 'base64')
                     );
 
                     resolve();
@@ -148,11 +138,17 @@ const start = async () => {
         // Use instr or its alias, options
         options.export.instr = options.export.instr || options.export.options;
 
+        // Need to get size early
+        options.export = {
+          ...options.export,
+          ...main.findChartSize(options)
+        };
+
         // Perform an export
         main.startExport(options, (info, error) => {
           // Exit process when error
           if (error) {
-            main.log(1, `[cli] - ${error.message}`);
+            main.log(1, `[cli] ${error.message}`);
             process.exit(1);
           }
 

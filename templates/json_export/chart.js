@@ -32,18 +32,17 @@ module.exports = (chartOptions, options) => `
       // Override userOptions with image friendly options
       userOptions = merge(userOptions, {
         chart: {
-          animation: false,
-          borderWidth: 0,
-          forExport: true
-        },
-        credits: {
-          enabled: false
+          animation: false
         },
         exporting: {
           enabled: false
         },
-        caption: {
-          string: ''
+        plotOptions: {
+          series: {
+            label: {
+              enabled: false
+            }
+          }
         },
         /*
         Expects tooltip in userOptions when forExport is true.
@@ -77,8 +76,8 @@ module.exports = (chartOptions, options) => `
 
   // Merge the globalOptions and themeOptions
   var mergedOptions = merge(
-    ${JSON.stringify(options.export.themeOptions)},
-    ${JSON.stringify(options.export.globalOptions)}
+    ${options.export.themeOptions},
+    ${options.export.globalOptions}
   );
 
   // Set global options

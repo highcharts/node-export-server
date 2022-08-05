@@ -97,8 +97,8 @@ _Available options:_
 - `--type`: The format of the file to export to. Can be jpeg, png, pdf or svg. (defaults to `png`)
 - `--constr`: The constructor to use. Can be Chart, StockChart or MapChart. (defaults to `chart`)
 - `--scale`: The scale of the exported chart. Ranges between 1 and 5. (defaults to `1`)
-- `--height`: The height of the exported chart. Overrides the option in the chart settings. (defaults to `1200`)
-- `--width`: The width of the exported chart. Overrides the option in the chart settings. (defaults to `800`)
+- `--height`: The height of the exported chart. Overrides the option in the chart settings. (defaults to `600`)
+- `--width`: The width of the exported chart. Overrides the option in the chart settings. (defaults to `400`)
 - `--globalOptions`: A stringified JSON or a filename with options to be passed into the Highcharts.setOptions. (defaults to `false`)
 - `--themeOptions`: A stringified JSON or a filename with theme options to be passed into the Highcharts.setOptions. (defaults to `false`)
 - `--batch`: Starts a batch job. A string that contains input/output pairs: "in=out;in=out;..". (defaults to `false`)
@@ -112,7 +112,7 @@ _Available options:_
 - `--createConfig`: Allows to set options through a prompt and save in a provided config file. (defaults to `false`)
 - `--enableServer`: If set to true, starts a server on 0.0.0.0. (defaults to `false`)
 - `--host`: The hostname of the server. Also starts a server listening on the supplied hostname. (defaults to `0.0.0.0`)
-- `--port`: The port to use for the server. Defaults to 8080. (defaults to `8080`)
+- `--port`: The port to use for the server. Defaults to 7801. (defaults to `7801`)
 - `--enableSsl`: Enables the SSL protocol. (defaults to `false`)
 - `--sslForced`: If set to true, forces the server to only serve over HTTPS. (defaults to `false`)
 - `--sslPort`: The port on which to run the SSL server. (defaults to `443`)
@@ -247,7 +247,7 @@ The format, with its default values are as follows:
   "server": {
     "enable": false,
     "host": "0.0.0.0",
-    "port": 8080,
+    "port": 7801,
     "server": {
       "enable": {
         "enable": false
@@ -314,7 +314,7 @@ These are set as variables in your environment. On Linux, use e.g. `export`.
 - `HIGHCHARTS_ALLOW_FORCE_INJECT`: Allow injecting code directly. Has no effect when running as a server.
 - `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
 - `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
-- `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 8080.
+- `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
 - `HIGHCHARTS_SERVER_SSL_ENABLE`: Enables the SSL protocol.
 - `HIGHCHARTS_SERVER_SSL_FORCE`: If set to true, forces the server to only serve over HTTPS.
 - `HIGHCHARTS_SERVER_SSL_PORT`: The port on which to run the SSL server.
@@ -433,16 +433,15 @@ The server accepts the following arguments in a POST body:
 - `svg`: A string containing SVG to render
 - `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
 - `scale`: The scale factor. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
-- `width`: The chart width (overrides scale)
+- `height`: The chart height.
+- `width`: The chart width.
 - `callback`: Javascript to execute in the highcharts constructor.
 - `resources`: Additional resources.
-- `constr`: The constructor to use. Either `Chart` or `Stock`.
+- `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `async`: Get a download link instead of the file data.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
-<!-- - `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart. -->
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-<!-- - `dataOptions`: Passed to `Highcharts.data(..)` -->
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
 
 Note that the `b64` option overrides the `async` option.
@@ -600,36 +599,6 @@ The export server can also be used as a node module to simplify integrations:
   - `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
   - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
 - `killPool()`: kill the phantom processes
-
-<!-- ## Using Ajax in Injected Resources
-
-If you need to perform Ajax requests inside one of the resource scripts,
-set `asyncRendering` to true, and call `highexp.done()` in the Ajax return to process the chart.
-
-Example:
-
-    {
-      asyncRendering: true,
-      resources: {
-        files: 'myAjaxScript.js'
-      }
-    }
-
-myAjaxScript.js:
-
-    jQuery.ajax({
-      url: 'example.com',
-      success: function (data) {
-        ...
-        highexp.done();
-      },
-      error: function () {
-        highexp.done();
-      }
-    });
-
-If the Ajax call doesn't call `highexp.done()` within 60 seconds, the
-rendering will time out. -->
 
 # Performance Notice
 
