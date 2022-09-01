@@ -1,6 +1,6 @@
 // Include the exporter module
-const exporter = require('./../../lib/index.js');
-const { mapToNewConfig } = require('./../../lib/utils.js');
+const exporter = require('../../lib/index.js');
+const { mapToNewConfig } = require('../../lib/utils.js');
 
 // Export settings
 const exportSettings = {

@@ -30,7 +30,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 const testPath = __dirname;
 const fs = require('fs');
 const files = fs.readdirSync(testPath);
-const exporter = require('../lib/index.js');
+const exporter = require('../../lib/index.js');
 
 var funs = [];
 var fails = 0;

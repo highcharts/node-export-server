@@ -1,7 +1,7 @@
 const { writeFileSync } = require('fs');
 
 // Include the exporter module
-const exporter = require('./../../lib/index.js');
+const exporter = require('../../lib/index.js');
 
 // Export settings
 const exportSettings = {
@@ -18,7 +18,7 @@ const exportSettings = {
           dataLabels: {
             enabled: true,
             formatter: function () {
-              return this.series.name + '' + this.y;
+              return `${this.series.name}${this.y}`;
             }
           }
         }

@@ -8,7 +8,7 @@ const exportCharts = (charts, exportOptions) => {
   // If you "steal" this funciton, change the below to require('highcharts-export-server'),
   // and make sure that the export server is included as a dependency in your project,
   // or that it's installed globally (not recommended for module usage).
-  const exporter = require('./../../lib/index.js');
+  const exporter = require('../../lib/index.js');
 
   // If exportOptions is blank, default to an empty object
   exportOptions = exportOptions || {};

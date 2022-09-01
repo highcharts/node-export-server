@@ -1,62 +1,59 @@
-/*
+/*******************************************************************************
 
 Highcharts Export Server
 
-Copyright (c) 2016, Highsoft
+Copyright (c) 2016-2022, Highsoft
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+Licenced under the MIT licence.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+Additionally a valid Highcharts license is required for use.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+See LICENSE file in root for details.
 
-*/
+*******************************************************************************/
 
-const request = require('request');
+const fetch = require('node-fetch');
 
-var sum = 0,
-  count = 0,
-  options = {
-    url: 'http://127.0.0.1:7801',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      infile: {
-        title: { text: 'Steep Chart' },
-        xAxis: { categories: ['Jan', 'Feb', 'Mar'] },
-        series: [{ data: [29.9, 71.5, 106.4] }]
-      }
+// The request options
+const options = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    infile: {
+      title: {
+        text: 'Chart'
+      },
+      xAxis: {
+        categories: ['Jan', 'Feb', 'Mar']
+      },
+      series: [
+        {
+          data: [29.9, 71.5, 106.4]
+        }
+      ]
+    }
+  })
+};
+const requestsNumber = 10;
+
+const stressTest = (number) => {
+  const startTime = new Date().getTime();
+
+  // Perform a request
+  fetch('http://127.0.0.1:7801', options)
+    .then(() => {
+      const postTime = new Date().getTime() - startTime;
+      console.log(`${number} request is done, took ${postTime}ms`);
     })
-  };
-function doTest(number) {
-  var start = new Date().getTime();
+    .catch((error) => {
+      return console.log(`[${number}] request returned error: ${error}`);
+    });
+};
 
-  request.post(options, function (err, r, res) {
-    var t = new Date().getTime() - start;
-    sum += t;
-    if (err) return console.log(number, 'returned error', err);
-    count++;
-    console.log(number, 'done. took', t, 'ms');
-  });
-}
-
-setInterval(function () {
-  for (var i = 0; i < 9; i++) {
-    doTest(i);
+setInterval(() => {
+  for (let i = 1; i <= requestsNumber; i++) {
+    stressTest(i);
   }
 }, 100);

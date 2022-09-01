@@ -1,14 +1,13 @@
 node_modules/
+log/
+
 .DS_Store
-*.png
-out/
-*.log
-logs/
-charts/
-test.js
-
 .cache
+.env
+.vscode
 
-/style.css
-
-/phantom/style.css
+*.png
+*.pdf
+*.svg
+*.jpg
+*.log

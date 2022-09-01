@@ -1,25 +1,37 @@
-const { writeFileSync } = require('fs');
-
 // Include the exporter module
-const exporter = require('./../../lib/index.js');
+const exporter = require('../../lib/index.js');
 
 // Export settings
 const exportSettings = {
-  customCode: {
-    allowCodeExecution: true
-  },
   export: {
+    constr: 'chart',
+    type: 'png',
+    outfile: 'module_test.png',
     instr: {
       title: {
         text: 'My Chart'
+      },
+      xAxis: {
+        categories: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'Mar',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+        ]
       },
       plotOptions: {
         series: {
           dataLabels: {
             enabled: true,
-            formatter: function () {
-              return `${this.series.name}${this.y}`;
-            }
+            allowOverlap: true
           }
         }
       },
@@ -29,7 +41,7 @@ const exportSettings = {
           data: [1, 3, 2, 4]
         },
         {
-          type: 'column',
+          type: 'line',
           data: [5, 3, 4, 2]
         }
       ]
@@ -39,23 +51,15 @@ const exportSettings = {
 
 const start = async () => {
   // Init a pool for one export
-  await exporter.initPool(exportSettings);
+  await exporter.initPool();
 
   // Perform an export
   exporter.startExport(exportSettings, (info, error) => {
-    // Exit process when error
+    // Throw an error
     if (error) {
-      exporter.log(1, `[cli] ${error.message}`);
-      process.exit(1);
+      throw error;
     }
-
-    const { outfile, type } = info.options.export;
-
-    // Save the base64 from a buffer to a correct image file
-    writeFileSync(
-      outfile || 'chart.png',
-      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
-    );
+    console.log(info.data);
 
     // Kill the pool
     exporter.killPool();
