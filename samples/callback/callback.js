@@ -1,4 +1,4 @@
-(chart) => {
+function callback(chart) {
   chart.renderer
     .label(
       'This label is added in the callback.<br>Highcharts version ' +
@@ -17,4 +17,4 @@
       width: '100px'
     })
     .add();
-};
+}
