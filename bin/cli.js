@@ -12,8 +12,6 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-// @format
-
 const { writeFileSync } = require('fs');
 
 const main = require('../lib/index');
@@ -34,6 +32,18 @@ const start = async () => {
 
   // Set default values for server's options and returns them
   let options = initDefaultOptions(defaultConfig);
+
+  // Save the height from default options
+  if (options.export.height) {
+    options.export.defaultHeight = options.export.height;
+    options.export.height = false;
+  }
+
+  // Save the width from default options
+  if (options.export.width) {
+    options.export.defaultWidth = options.export.width;
+    options.export.width = false;
+  }
 
   // Print initial logo or text
   printLogo(options.other.noLogo);
@@ -137,12 +147,6 @@ const start = async () => {
 
         // Use instr or its alias, options
         options.export.instr = options.export.instr || options.export.options;
-
-        // Need to get size early
-        options.export = {
-          ...options.export,
-          ...main.findChartSize(options)
-        };
 
         // Perform an export
         main.startExport(options, (info, error) => {

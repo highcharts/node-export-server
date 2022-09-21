@@ -1,0 +1,13 @@
+{
+  "chart": {
+    "height": 400,
+    "width": 400
+  },
+  "exporting": {
+    "sourceHeight": 500,
+    "sourceWidth": 500
+  },
+  "subtitle": {
+    "text": "SUBTITLE"
+  }
+}

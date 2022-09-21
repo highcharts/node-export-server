@@ -12,28 +12,17 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-module.exports = () => `
-
-html, body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-#table-div, #sliders, #datatable, #controls, .ld-row {
-  display: none;
-  height: 0;
-}
+module.exports = (chart) =>
+  `
 
 #chart-container {
-  box-sizing: border-box;
-  margin: 0;
-  overflow: auto;
+  height: ${chart.height}px;
+  max-width: ${chart.width}px;
 }
 
-#chart-container > figure, div {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+#chart-container #container{
+  height: ${chart.height}px;
+  max-width: ${chart.width}px;
 }
 
-`;
+`.replace(/\s/g, '');

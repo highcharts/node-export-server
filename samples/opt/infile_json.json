@@ -8,12 +8,7 @@
     "sourceWidth": 700
   },
   "xAxis": {
-    "categories": ["Jan", "Feb"],
-    "labels": {
-      "formatter": function () {
-        return `${this.value}QWE`;
-      }
-    }
+    "categories": ["Jan", "Feb"]
   },
   "series": [
     {
