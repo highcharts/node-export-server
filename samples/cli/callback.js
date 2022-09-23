@@ -4,7 +4,7 @@ function callback(chart) {
       'This label is added in the callback.<br>Highcharts version ' +
         Highcharts.version,
       100,
-      100
+      150
     )
     .attr({
       fill: '#90ed7d',

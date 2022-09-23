@@ -1,32 +1,27 @@
 // Include the exporter module
 const exporter = require('../../lib/index.js');
+
+// Get the default options
+const { mergeConfigOptions } = require('../../lib/utils.js');
+const { initDefaultOptions } = require('../../lib/config');
+const { defaultConfig } = require('../../lib/schemas/config.js');
+
+// Utility for mapping old format of options to the new one
 const { mapToNewConfig } = require('../../lib/utils.js');
 
 // Export settings
 const exportSettings = {
   type: 'png',
   constr: 'chart',
-  outfile: 'module_test.png',
   async: true, // Will be removed as it is not supported anymore
+  logLevel: 1,
+  scale: 1,
   options: {
     title: {
       text: 'My Chart'
     },
     xAxis: {
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'Mar',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ]
+      categories: ['Jan', 'Feb', 'Mar', 'Apr']
     },
     plotOptions: {
       series: {
@@ -50,19 +45,28 @@ const exportSettings = {
 };
 
 const start = async () => {
+  // Gather options
+  const options = mergeConfigOptions(
+    initDefaultOptions(defaultConfig),
+    mapToNewConfig(exportSettings),
+    ['options']
+  );
+
   // Init a pool for one export
-  await exporter.initPool();
+  await exporter.initPool(options);
 
   // Perform an export
-  exporter.startExport(mapToNewConfig(exportSettings), (info, error) => {
+  exporter.startExport(options, (info, error) => {
     // Throw an error
     if (error) {
       throw error;
     }
-    console.log(info.data);
 
     // Kill the pool
     exporter.killPool();
+
+    // Display the results
+    console.log(info.data);
   });
 };
 

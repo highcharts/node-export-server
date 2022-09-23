@@ -79,5 +79,5 @@
       }
     }
   },
-  "customCode": "function () {Highcharts.setOptions({chart: {borderWidth:2, plotBackgroundColor: 'rgba(255, 255, 255, .9)', plotShadow: true, plotBorderWidth: 1, events: {render: function() {this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png', 170, 120, 20, 20).add();}}}});}"
+  "customCode": "function () {Highcharts.setOptions({chart: {borderWidth: 2, plotBackgroundColor: 'rgba(255, 255, 255, .9)', plotShadow: true, plotBorderWidth: 1, events: {render: function() {this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png', 170, 120, 20, 20).add();}}}});}"
 }

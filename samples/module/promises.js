@@ -1,3 +1,7 @@
+// Get the default options
+const { initDefaultOptions } = require('../../lib/config');
+const { defaultConfig } = require('../../lib/schemas/config.js');
+
 /**
  * Exports a set of charts.
  * @param {Array<Object>} charts - an array of the chart configurations to export
@@ -16,7 +20,7 @@ const exportCharts = (charts, exportOptions) => {
   let promises = [];
   let chartResults = [];
 
-  exporter.initPool();
+  exporter.initPool(initDefaultOptions(defaultConfig));
 
   charts.forEach((chart, i) => {
     promises.push(
@@ -25,7 +29,7 @@ const exportCharts = (charts, exportOptions) => {
         let exportData = Object.assign({}, exportOptions);
         exportData.options = chart;
 
-        exporter.export(exportData, (err, res) => {
+        exporter.startExport(exportData, (err, res) => {
           if (err) return reject(err);
 
           // Add the data to chartData

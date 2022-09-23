@@ -16,7 +16,7 @@ const spawn = require('child_process').exec;
 const { join } = require('path');
 const fs = require('fs');
 
-const { clearText } = require('./../../lib/utils.js');
+const { clearText } = require('../lib/utils.js');
 
 const testPath = join(__dirname, '..', 'options');
 const tempPath = join(__dirname, '..', '_temp');
