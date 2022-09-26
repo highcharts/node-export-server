@@ -6,8 +6,8 @@ log/
 .env
 .vscode
 
-*.png
-*.pdf
-*.svg
-*.jpg
-*.log
+**/*.png
+**/*.pdf
+**/*.svg
+**/*.jpeg
+**/*.log
