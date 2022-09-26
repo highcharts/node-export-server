@@ -19,10 +19,10 @@ const fs = require('fs');
 const { clearText } = require('../lib/utils.js');
 
 const testPath = join(__dirname, '..', 'options');
-const tempPath = join(__dirname, '..', '_temp');
+const tempPath = join(__dirname, '_temp');
 
 // Urls of Puppeteer and PhantomJS export servers
-const urls = ['http://127.0.0.1:7801' /*, 'http://127.0.0.1:7802'*/];
+const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Create temp folder if doesn't exist
 !fs.existsSync(tempPath) && fs.mkdirSync(tempPath);
