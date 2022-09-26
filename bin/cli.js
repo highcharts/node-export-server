@@ -118,7 +118,7 @@ const start = async () => {
                     // Save the base64 from a buffer to a correct image file
                     writeFileSync(
                       info.options.export.outfile,
-                      Buffer.from(info.result.data, 'base64')
+                      Buffer.from(info.data, 'base64')
                     );
 
                     resolve();

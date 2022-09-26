@@ -1,0 +1,12 @@
+{
+  "title": {
+    "text": "Batch no. 3"
+  },
+  "xAxis": {
+    "categories": ["Jan", "Feb", "Mar", "Apr"]
+  },
+  "series": [{
+    "type": "scatter",
+    "data": [1, 2, 3, 4]
+  }]
+}

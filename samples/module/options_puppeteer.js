@@ -8,7 +8,7 @@ const { mergeConfigOptions } = require('../../lib/utils.js');
 const { initDefaultOptions } = require('../../lib/config');
 const { defaultConfig } = require('../../lib/schemas/config.js');
 
-// Export settings
+// Export settings with new options structure (Puppeteer)
 const exportSettings = {
   export: {
     type: 'jpeg',
@@ -17,7 +17,7 @@ const exportSettings = {
     height: 800,
     width: 1200,
     scale: 2,
-    instr: {
+    options: {
       title: {
         text: 'My Chart'
       },
@@ -28,7 +28,10 @@ const exportSettings = {
         series: {
           dataLabels: {
             enabled: true,
-            allowOverlap: true
+            allowOverlap: true,
+            formatter: function () {
+              return `${this.series.name}${this.y}`;
+            }
           }
         }
       },
@@ -107,7 +110,7 @@ const start = async () => {
   const options = mergeConfigOptions(
     initDefaultOptions(defaultConfig),
     exportSettings,
-    ['instr', 'globalOptions', 'themeOptions', 'resources']
+    ['options', 'globalOptions', 'themeOptions', 'resources']
   );
 
   // Init a pool for one export

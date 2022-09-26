@@ -1,40 +1,38 @@
 // Get the default options
+const { mergeConfigOptions } = require('../../lib/utils.js');
 const { initDefaultOptions } = require('../../lib/config');
 const { defaultConfig } = require('../../lib/schemas/config.js');
 
-/**
- * Exports a set of charts.
- * @param {Array<Object>} charts - an array of the chart configurations to export
- * @param {Object} exportOptions? - the export options (filetype etc.) common for all charts
- * @returns {Promise}
- */
-const exportCharts = (charts, exportOptions) => {
-  // If you "steal" this funciton, change the below to require('highcharts-export-server'),
-  // and make sure that the export server is included as a dependency in your project,
-  // or that it's installed globally (not recommended for module usage).
+const exportCharts = async (charts, exportOptions = {}) => {
+  // Load main module for functions like initPool and startExport
   const exporter = require('../../lib/index.js');
 
-  // If exportOptions is blank, default to an empty object
-  exportOptions = exportOptions || {};
+  // Init the options
+  const allOptions = mergeConfigOptions(
+    initDefaultOptions(defaultConfig),
+    exportOptions
+  );
 
-  let promises = [];
-  let chartResults = [];
+  // Init the pool
+  await exporter.initPool(allOptions);
 
-  exporter.initPool(initDefaultOptions(defaultConfig));
+  const promises = [];
+  const chartResults = [];
 
-  charts.forEach((chart, i) => {
+  // Start exporting charts
+  charts.forEach((chart) => {
     promises.push(
       new Promise((resolve, reject) => {
-        // Use common option (e.g. filetype etc)
-        let exportData = Object.assign({}, exportOptions);
-        exportData.options = chart;
+        const settings = { ...allOptions };
+        settings.export.options = chart;
 
-        exporter.startExport(exportData, (err, res) => {
-          if (err) return reject(err);
+        exporter.startExport(settings, (info, error) => {
+          if (error) {
+            return reject(error);
+          }
 
-          // Add the data to chartData
-          chartResults.push(res.data);
-
+          // Add the data to the chartResults
+          chartResults.push(info.data);
           resolve();
         });
       })
@@ -46,30 +44,39 @@ const exportCharts = (charts, exportOptions) => {
       exporter.killPool();
       return Promise.resolve(chartResults);
     })
-    .catch((e) => {
+    .catch((error) => {
       exporter.killPool();
-      return Promise.reject(e);
+      return Promise.reject(error);
     });
 };
 
 // Export a couple of charts
-
-exportCharts([
-  {
-    title: {
-      text: 'Chart 1'
+exportCharts(
+  [
+    {
+      title: {
+        text: 'Chart 1'
+      }
+    },
+    {
+      title: {
+        text: 'Chart 2'
+      }
     }
-  },
+  ],
   {
-    title: {
-      text: 'Chart 2'
+    logging: {
+      level: 1
     }
   }
-])
+)
   .then((charts) => {
-    // Result of export is in charts, which is an array of base64 encoded files.
+    // Result of export is in charts, which is an array of base64 encoded files
+    charts.forEach((chart, index) => {
+      console.log(`${index}. ${chart}\n`);
+    });
     console.log('All done!');
   })
-  .catch((e) => {
-    console.log('Something went wrong:', e);
+  .catch((error) => {
+    console.log(`Something went wrong: ${error}`);
   });

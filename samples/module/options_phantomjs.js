@@ -9,7 +9,8 @@ const { defaultConfig } = require('../../lib/schemas/config.js');
 // Utility for mapping old format of options to the new one
 const { mapToNewConfig } = require('../../lib/utils.js');
 
-// Export settings
+// Export settings with the old options structure (PhantomJS)
+// Will be mapped appropriately to the new structure with the mapToNewConfig utility
 const exportSettings = {
   type: 'png',
   constr: 'chart',
