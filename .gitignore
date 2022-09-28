@@ -5,6 +5,9 @@ log/
 .cache
 .env
 .vscode
+.eslintcache
+
+tests/_temp
 
 **/*.png
 **/*.pdf

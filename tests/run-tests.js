@@ -24,7 +24,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
 
 (async () => {
   console.log(
-    'Highcharts Export Server Automagic Test Runner'.yellow,
+    'Highcharts Export Server Automatic Test Runner'.yellow,
     '\nLoads all JSON files from the ./test/files folder and runs them',
     '(results are stored in the ./test/results).\n'
   );
@@ -65,7 +65,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
           );
 
           // Create the results path if it doesn't exist yet
-          const resultsPath = join(__dirname, 'results');
+          const resultsPath = join(__dirname, '_results');
           !existsSync(resultsPath) && mkdirSync(resultsPath);
 
           // Prepare an outfile path

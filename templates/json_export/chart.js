@@ -28,7 +28,7 @@ const chart = {
 
 // When straight inject, the size is set through CSS only
 if (${options.export.strInj}) {
-  chart.height = '100%';
+  chart.height = null;
   chart.width = null;
 }
 

@@ -12,23 +12,35 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
+require('colors');
+
 const spawn = require('child_process').exec;
 const { join } = require('path');
 const fs = require('fs');
 
 const { clearText } = require('../lib/utils.js');
 
-const testPath = join(__dirname, '..', 'options');
 const tempPath = join(__dirname, '_temp');
+const testPath = join(__dirname, 'options');
+const newResultsPath = join(__dirname, '_results');
 
 // Urls of Puppeteer and PhantomJS export servers
 const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
-// Create temp folder if doesn't exist
-!fs.existsSync(tempPath) && fs.mkdirSync(tempPath);
+console.log(
+  'Highcharts Export Server Side By Side comparator'.yellow,
+  `\nPuppeteer: ${urls[0]}`.bold.green,
+  `\nPhantomJS: ${urls[1]}\n`.bold.blue
+);
+
+// Create results folder if doesn't exist
+!fs.existsSync(newResultsPath) && fs.mkdirSync(newResultsPath);
 
 // Start to read demos files
 fs.readdir(testPath, async (error, files) => {
+  // Remove from the previous call
+  fs.rmSync(tempPath, { recursive: true, force: true });
+
   for (const file of files) {
     try {
       // Read a file
@@ -42,73 +54,73 @@ fs.readdir(testPath, async (error, files) => {
       for (const [index, url] of urls.entries()) {
         // And all types
         for (const type of ['png', 'jpeg', 'svg', 'pdf']) {
-          // Temp folder path
-          const tempFile = join(tempPath, `${file}.${index}.${type}`);
+          // Results filename
+          const filename =
+            (index ? 'phantom_' : 'puppeteer_') +
+            `${file.replace('.json', '')}.${type}`;
+
+          // Results folder path
+          const resultsFile = join(newResultsPath, filename);
           const startDate = new Date().getTime();
 
-          if (file.indexOf('.json') > 0 || file.indexOf('.svg') > 0) {
-            const jsonData =
-              file.indexOf('.json') > 0 ? JSON.parse(content) : content;
-
-            let { infile, ...serverOptions } = jsonData;
-
-            // Check if there are extra body options or simply chart options
-            if (!infile) {
-              infile = jsonData;
-              serverOptions = [];
-            }
-
-            // Create payload
-            const payload = JSON.stringify({
-              type,
-              infile,
-              scale: 2,
-              allowCodeExecution: true,
-              callback:
-                "function(chart) {chart.renderer.label('This label is added in the callback', 100, 100).attr({fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}",
-              ...serverOptions
-            });
+          if (file.endsWith('.json')) {
+            const fileData = JSON.parse(content);
 
             // Complete the curl command
             let command = [
               'curl',
               '-H "Content-Type: application/json"',
-              '-X POST',
-              '-d',
+              '-X POST'
+            ];
+
+            let payload;
+            let { infile, svg } = fileData;
+
+            // Check if this is simply chart options or payload body
+            if (!infile && !svg) {
+              payload = JSON.stringify({
+                type,
+                infile: fileData,
+                scale: 2,
+                callback:
+                  "function(chart) {chart.renderer.label('This label is added in the callback', 100, 100).attr({fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}"
+              });
+
               // Stringify again for a correct format for both Unix and Windows
-              JSON.stringify(payload)
-            ]
-              .concat([url, '-o', tempFile])
-              .join(' ');
+              command.push('-d', JSON.stringify(payload));
+            } else {
+              // Create temp folder if doesn't exist
+              !fs.existsSync(tempPath) && fs.mkdirSync(tempPath);
+              const jsonFile = join(
+                tempPath,
+                `${file.replace('.json', '')}_${type}.json`
+              );
+
+              // Save with updated type
+              fs.writeFileSync(
+                jsonFile,
+                JSON.stringify({
+                  ...fileData,
+                  type
+                })
+              );
+
+              // Use the --data-binary if payload body found
+              command.push('--data-binary', `"@${jsonFile}"`);
+            }
+
+            // Complete the curl command
+            command = command.concat([url, '-o', resultsFile]).join(' ');
 
             // Launch command in a new process
             proc = spawn(command);
             proc.on('close', () => {
               const message = clearText(
-                `[${index}] done with file: ${file}, took
+                (index ? '[PhantomJS] ' : '[Puppeteer] ') +
+                  `Done with file: ${file}, took
                 ${new Date().getTime() - startDate}ms.`
               );
-              console.log(message);
-
-              // The old phantom stuff spits out base64, so we need to open the
-              // result and convert it
-              if (index === 1 && type !== 'svg' && type !== 'pdf') {
-                fs.readFile(tempFile, (error, res) => {
-                  if (error) {
-                    return console.log(error);
-                  }
-
-                  fs.writeFile(
-                    tempFile,
-                    Buffer.from(res.toString(), 'base64'),
-                    (error) => {
-                      if (error) {
-                        return console.log(error);
-                      }
-                    }
-                  );
-                });
-              }
+              console.log(index ? message.blue : message.green);
             });
           }
         }
