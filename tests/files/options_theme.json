@@ -2,6 +2,9 @@
   "export": {
     "constr": "chart",
     "options": {
+      "title": {
+        "text": "Theme from customCode file"
+      },
       "xAxis": {
         "categories": ["Jan", "Feb", "Mar", "Apr"]
       },
@@ -13,5 +16,8 @@
         "data": [5, 3, 4, 2]
       }]
     }
+  },
+  "customCode": {
+    "customCode": "./samples/cli/dark_unica_theme.js"
   }
 }

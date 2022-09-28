@@ -29,6 +29,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
     '(results are stored in the ./test/results).\n'
   );
 
+  let testCounter = 0;
   let failsCouter = 0;
 
   // Get files names
@@ -57,12 +58,20 @@ const { defaultConfig } = require('../lib/schemas/config.js');
           // Options from a file
           const fileOptions = require(join(__dirname, 'files', file));
 
-          // Get the content of a file and merge it into the default options
-          const options = mergeConfigOptions(
-            Object.assign({}, defaultOptions),
-            fileOptions,
-            ['options']
-          );
+          let options;
+          if (fileOptions.svg) {
+            options = initDefaultOptions(defaultConfig);
+            options.payload = {
+              svg: fileOptions.svg
+            };
+          } else {
+            // Get the content of a file and merge it into the default options
+            options = mergeConfigOptions(
+              initDefaultOptions(defaultConfig),
+              fileOptions,
+              ['options', 'resources']
+            );
+          }
 
           // Create the results path if it doesn't exist yet
           const resultsPath = join(__dirname, '_results');
@@ -101,17 +110,21 @@ const { defaultConfig } = require('../lib/schemas/config.js');
 
             return error ? reject(failsCouter) : resolve();
           });
-        }).catch(() => {
-          failsCouter++;
         })
+          .catch(() => {
+            failsCouter++;
+          })
+          .finally(() => {
+            testCounter++;
+          })
       )
   ).then(() => {
     console.log(
-      '\n---------------------------',
+      '\n-------------------------------',
       failsCouter
-        ? `\nAll done, ${failsCouter} error(s) found!`.red
-        : '\nAll done, errors not found!'.green,
-      '\n---------------------------'
+        ? `\n${testCounter} tests done, ${failsCouter} error(s) found!`.red
+        : `\n${testCounter} tests done, errors not found!`.green,
+      '\n-------------------------------'
     );
     exporter.killPool();
   });

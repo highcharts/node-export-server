@@ -1,6 +1,7 @@
 {
   "infile": {
     "chart": {
+      "styledMode": true,
       "type": "column"
     },
     "title": {

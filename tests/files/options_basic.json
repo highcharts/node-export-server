@@ -2,6 +2,9 @@
   "export": {
     "constr": "chart",
     "options": {
+      "title": {
+        "text": "Basic options"
+      },
       "xAxis": {
         "categories": ["Jan", "Feb", "Mar", "Apr"]
       },
@@ -12,11 +15,6 @@
         "type": "line",
         "data": [5, 3, 4, 2]
       }]
-    }
-  },
-  "customCode": {
-    "resources": {
-      "files": "http://code.highcharts.com/themes/dark-unica.js"
     }
   }
 }
