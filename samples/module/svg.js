@@ -12,7 +12,7 @@ const { defaultConfig } = require('../../lib/schemas/config.js');
 const exportSettings = {
   export: {
     type: 'png',
-    outfile: './samples/module/new_svg.png',
+    outfile: './samples/module/svg.png',
     scale: 2
   },
   payload: {

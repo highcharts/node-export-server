@@ -18,27 +18,35 @@ const exportSettings = {
   logLevel: 1,
   scale: 1,
   options: {
+    chart: {
+      type: 'column'
+    },
     title: {
-      text: 'My Chart'
+      text: 'PhantomJS options structure'
     },
     xAxis: {
       categories: ['Jan', 'Feb', 'Mar', 'Apr']
     },
-    plotOptions: {
-      series: {
-        dataLabels: {
-          enabled: true,
-          allowOverlap: true
+    yAxis: [
+      {
+        title: {
+          text: 'Primary axis'
+        }
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Secondary axis'
         }
       }
-    },
+    ],
     series: [
       {
-        type: 'line',
+        yAxis: 0,
         data: [1, 3, 2, 4]
       },
       {
-        type: 'line',
+        yAxis: 1,
         data: [5, 3, 4, 2]
       }
     ]

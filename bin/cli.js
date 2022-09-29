@@ -16,13 +16,7 @@ const { writeFileSync } = require('fs');
 
 const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
-const {
-  handleResources,
-  printLogo,
-  printUsage,
-  pairArgumentValue,
-  toBoolean
-} = require('../lib/utils');
+const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
 
 const { defaultConfig } = require('../lib/schemas/config.js');
 
@@ -32,18 +26,6 @@ const start = async () => {
 
   // Set default values for server's options and returns them
   let options = initDefaultOptions(defaultConfig);
-
-  // Save the height from default options
-  if (options.export.height) {
-    options.export.defaultHeight = options.export.height;
-    options.export.height = false;
-  }
-
-  // Save the width from default options
-  if (options.export.width) {
-    options.export.defaultWidth = options.export.width;
-    options.export.width = false;
-  }
 
   // Print initial logo or text
   printLogo(options.other.noLogo);
@@ -71,12 +53,6 @@ const start = async () => {
       // Run the server
       await main.startServer(options.server);
     } else {
-      // Process resources
-      options.customCode.resources = handleResources(
-        options.customCode.resources,
-        toBoolean(options.customCode.allowFileResources)
-      );
-
       // Perform batch exports
       if (options.export.batch) {
         const batchFunctions = [];

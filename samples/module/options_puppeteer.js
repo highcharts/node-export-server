@@ -13,35 +13,54 @@ const exportSettings = {
   export: {
     type: 'jpeg',
     constr: 'chart',
-    outfile: './samples/module/new_options.jpeg',
+    outfile: './samples/module/options_puppeteer.jpeg',
     height: 800,
     width: 1200,
     scale: 2,
     options: {
+      chart: {
+        styledMode: true,
+        type: 'column'
+      },
       title: {
-        text: 'My Chart'
+        text: 'Puppeteer options structure'
       },
       xAxis: {
         categories: ['Jan', 'Feb', 'Mar', 'Apr']
       },
+      yAxis: [
+        {
+          className: 'highcharts-color-0',
+          title: {
+            text: 'Primary axis'
+          }
+        },
+        {
+          className: 'highcharts-color-1',
+          opposite: true,
+          title: {
+            text: 'Secondary axis'
+          }
+        }
+      ],
       plotOptions: {
         series: {
           dataLabels: {
             enabled: true,
             allowOverlap: true,
             formatter: function () {
-              return `${this.series.name}${this.y}`;
+              return `${this.series.name}: ${this.y}`;
             }
           }
         }
       },
       series: [
         {
-          type: 'line',
+          yAxis: 0,
           data: [1, 3, 2, 4]
         },
         {
-          type: 'line',
+          yAxis: 1,
           data: [5, 3, 4, 2]
         }
       ]
@@ -99,8 +118,8 @@ const exportSettings = {
     callback: './samples/cli/callback.js',
     customCode: './samples/cli/custom_code.js',
     resources: {
-      js: "Highcharts.charts[0].update({title: {text: 'Resources title'}});",
-      css: '.highcharts-yaxis .highcharts-axis-line { stroke-width: 1px; stroke: #90ed7d; };'
+      js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
+      css: "@import 'https://code.highcharts.com/css/highcharts.css'; .highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 .highcharts-axis-line { stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 text { fill: #f7a35c; } .highcharts-color-1 { fill: #90ed7d; stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 .highcharts-axis-line { stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 text { fill: #90ed7d; } #renderer-callback-label .highcharts-label-box { fill: #90ed7d;}"
     }
   }
 };

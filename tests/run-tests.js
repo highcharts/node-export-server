@@ -32,8 +32,11 @@ const { defaultConfig } = require('../lib/schemas/config.js');
   let testCounter = 0;
   let failsCouter = 0;
 
+  // Test files path
+  const testFilesPath = join(__dirname, 'files', 'constructors');
+
   // Get files names
-  const files = readdirSync(join(__dirname, 'files'));
+  const files = readdirSync(testFilesPath);
 
   // Get the default options
   const defaultOptions = initDefaultOptions(defaultConfig);
@@ -56,7 +59,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
           const startTime = new Date().getTime();
 
           // Options from a file
-          const fileOptions = require(join(__dirname, 'files', file));
+          const fileOptions = require(join(testFilesPath, file));
 
           let options;
           if (fileOptions.svg) {
@@ -69,7 +72,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
             options = mergeConfigOptions(
               initDefaultOptions(defaultConfig),
               fileOptions,
-              ['options', 'resources']
+              ['options', 'resources', 'globalOptions', 'themeOptions']
             );
           }
 
@@ -80,7 +83,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
           // Prepare an outfile path
           options.export.outfile = join(
             resultsPath,
-            file.replace('.json', '.png')
+            file.replace('.json', `.${options.export?.type}` || '.png')
           );
 
           // Start the export process
@@ -104,7 +107,9 @@ const { defaultConfig } = require('../lib/schemas/config.js');
               // Save returned data to a correct image file if no error occured
               writeFileSync(
                 info.options.export.outfile,
-                Buffer.from(info.data, 'base64')
+                info.options?.export?.type !== 'svg'
+                  ? Buffer.from(info.data, 'base64')
+                  : info.data
               );
             }
 
