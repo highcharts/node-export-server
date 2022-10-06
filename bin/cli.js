@@ -136,7 +136,7 @@ const start = async () => {
 
           // Save the base64 from a buffer to a correct image file
           writeFileSync(
-            outfile,
+            outfile || `${chart}.${type}`,
             type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
           );
 

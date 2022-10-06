@@ -1,9 +1,9 @@
 {
   "export": {
-    "type": "jpeg",
+    "type": "png",
     "options": {
       "title": {
-        "text": "From options"
+        "text": "PNG"
       },
       "xAxis": {
         "categories": ["Jan", "Feb", "Mar", "Apr"]

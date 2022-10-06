@@ -17,14 +17,14 @@ require('colors');
 const { existsSync, mkdirSync, readdirSync, writeFileSync } = require('fs');
 const { join } = require('path');
 
-const exporter = require('../lib/index.js');
-const { mergeConfigOptions } = require('../lib/utils.js');
-const { initDefaultOptions } = require('../lib/config');
-const { defaultConfig } = require('../lib/schemas/config.js');
+const exporter = require('../../lib/index.js');
+const { mergeConfigOptions } = require('../../lib/utils.js');
+const { initDefaultOptions } = require('../../lib/config');
+const { defaultConfig } = require('../../lib/schemas/config.js');
 
 (async () => {
   console.log(
-    'Highcharts Export Server Automatic Test Runner'.yellow,
+    'Highcharts Export Server Node Test Runner'.yellow,
     '\nLoads all JSON files from the ./test/files folder and runs them',
     '(results are stored in the ./test/results).\n'
   );
@@ -33,7 +33,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
   let failsCouter = 0;
 
   // Test files path
-  const testFilesPath = join(__dirname, 'files', 'constructors');
+  const testFilesPath = join(__dirname, 'basic');
 
   // Get files names
   const files = readdirSync(testFilesPath);
@@ -83,7 +83,8 @@ const { defaultConfig } = require('../lib/schemas/config.js');
           // Prepare an outfile path
           options.export.outfile = join(
             resultsPath,
-            file.replace('.json', `.${options.export?.type}` || '.png')
+            options.export?.outfile ||
+              file.replace('.json', `.${options.export?.type || '.png'}`)
           );
 
           // Start the export process
@@ -96,10 +97,9 @@ const { defaultConfig } = require('../lib/schemas/config.js');
 
             // Information about the results and the time it took
             console.log(
-              '[Test runner]'.blue,
               error
-                ? `${message}, error: ${error}`.red
-                : `${message}, success.`.green
+                ? `[Fail] ${message}, error: ${error}`.red
+                : `[Success] ${message}, success.`.green
             );
 
             // Try to save to a file
@@ -113,7 +113,7 @@ const { defaultConfig } = require('../lib/schemas/config.js');
               );
             }
 
-            return error ? reject(failsCouter) : resolve();
+            return error ? reject() : resolve();
           });
         })
           .catch(() => {

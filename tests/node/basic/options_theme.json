@@ -18,6 +18,6 @@
     }
   },
   "customCode": {
-    "customCode": "./samples/cli/dark_unica_theme.js"
+    "customCode": "./samples/resources/dark_unica_theme.js"
   }
 }

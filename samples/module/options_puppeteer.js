@@ -115,8 +115,8 @@ const exportSettings = {
   customCode: {
     allowCodeExecution: true,
     allowFileResources: true,
-    callback: './samples/cli/callback.js',
-    customCode: './samples/cli/custom_code.js',
+    callback: './samples/resources/callback.js',
+    customCode: './samples/resources/custom_code.js',
     resources: {
       js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
       css: "@import 'https://code.highcharts.com/css/highcharts.css'; .highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 .highcharts-axis-line { stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 text { fill: #f7a35c; } .highcharts-color-1 { fill: #90ed7d; stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 .highcharts-axis-line { stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 text { fill: #90ed7d; } #renderer-callback-label .highcharts-label-box { fill: #90ed7d;}"
