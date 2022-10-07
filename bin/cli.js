@@ -12,19 +12,11 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-// @format
-
 const { writeFileSync } = require('fs');
 
 const main = require('../lib/index');
 const { initDefaultOptions, manualConfiguration } = require('../lib/config');
-const {
-  handleResources,
-  printLogo,
-  printUsage,
-  pairArgumentValue,
-  toBoolean
-} = require('../lib/utils');
+const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
 
 const { defaultConfig } = require('../lib/schemas/config.js');
 
@@ -61,12 +53,6 @@ const start = async () => {
       // Run the server
       await main.startServer(options.server);
     } else {
-      // Process resources
-      options.customCode.resources = handleResources(
-        options.customCode.resources,
-        toBoolean(options.customCode.allowFileResources)
-      );
-
       // Perform batch exports
       if (options.export.batch) {
         const batchFunctions = [];
@@ -108,7 +94,7 @@ const start = async () => {
                     // Save the base64 from a buffer to a correct image file
                     writeFileSync(
                       info.options.export.outfile,
-                      Buffer.from(info.result.data, 'base64')
+                      Buffer.from(info.data, 'base64')
                     );
 
                     resolve();
@@ -138,12 +124,6 @@ const start = async () => {
         // Use instr or its alias, options
         options.export.instr = options.export.instr || options.export.options;
 
-        // Need to get size early
-        options.export = {
-          ...options.export,
-          ...main.findChartSize(options)
-        };
-
         // Perform an export
         main.startExport(options, (info, error) => {
           // Exit process when error
@@ -156,7 +136,7 @@ const start = async () => {
 
           // Save the base64 from a buffer to a correct image file
           writeFileSync(
-            outfile,
+            outfile || `${chart}.${type}`,
             type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
           );
 

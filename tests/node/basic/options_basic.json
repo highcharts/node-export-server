@@ -1,0 +1,20 @@
+{
+  "export": {
+    "constr": "chart",
+    "options": {
+      "title": {
+        "text": "Basic options"
+      },
+      "xAxis": {
+        "categories": ["Jan", "Feb", "Mar", "Apr"]
+      },
+      "series": [{
+        "type": "line",
+        "data": [1, 3, 2, 4]
+      }, {
+        "type": "line",
+        "data": [5, 3, 4, 2]
+      }]
+    }
+  }
+}
