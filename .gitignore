@@ -8,6 +8,8 @@ tests/_temp
 .env
 .eslintcache
 
+tests/**/_results/
+
 **/*.png
 **/*.pdf
 **/*.svg
