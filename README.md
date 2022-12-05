@@ -86,61 +86,60 @@ There are three main ways of loading configurations:
 ## Command Line Arguments
 
 To supply command line arguments, add them as flags when running the application:
-`highcharts-export-server --flag1 value --flag2 value ....`
+`highcharts-export-server --flag1 value --flag2 value ...`
 
 _Available options:_
 
-- `--infile`: The input file name along with a type (jpeg, png, pdf or svg). It can be a correct JSON or SVG file. (defaults to `false`)
-- `--instr`: An input in a form of a stringified JSON or SVG file. Overrides the --infile. (defaults to `false`)
-- `--options`: An alias for the --instr option. (defaults to `false`)
-- `--outfile`: The output filename along with a type (jpeg, png, pdf or svg). Ignores the --type flag. (defaults to `false`)
-- `--type`: The format of the file to export to. Can be jpeg, png, pdf or svg. (defaults to `png`)
-- `--constr`: The constructor to use. Can be Chart, StockChart or MapChart. (defaults to `chart`)
-- `--scale`: The scale of the exported chart. Ranges between 1 and 5. (defaults to `1`)
-- `--height`: The height of the exported chart. Overrides the option in the chart settings. (defaults to `600`)
-- `--width`: The width of the exported chart. Overrides the option in the chart settings. (defaults to `400`)
-- `--globalOptions`: A stringified JSON or a filename with options to be passed into the Highcharts.setOptions. (defaults to `false`)
-- `--themeOptions`: A stringified JSON or a filename with theme options to be passed into the Highcharts.setOptions. (defaults to `false`)
-- `--batch`: Starts a batch job. A string that contains input/output pairs: "in=out;in=out;..". (defaults to `false`)
-- `--allowCodeExecution`: If set to true, allow for the execution of arbitrary code when exporting. (defaults to `false`)
-- `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server. (defaults to `true`)
-- `--allowForceInject`: Allow injecting code directly. Has no effect when running as a server. (defaults to `false`)
-- `--resources`: An additional resource in a form of stringified JSON. It can contains files, js and css sections. (defaults to `false`)
-- `--callback`: A JavaScript file with a function to run on construction. (defaults to `false`)
-- `--customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
-- `--loadConfig`: A file that contains a pre-defined config to use. (defaults to `false`)
-- `--createConfig`: Allows to set options through a prompt and save in a provided config file. (defaults to `false`)
-- `--enableServer`: If set to true, starts a server on 0.0.0.0. (defaults to `false`)
-- `--host`: The hostname of the server. Also starts a server listening on the supplied hostname. (defaults to `0.0.0.0`)
-- `--port`: The port to use for the server. Defaults to 7801. (defaults to `7801`)
-- `--enableSsl`: Enables the SSL protocol. (defaults to `false`)
-- `--sslForced`: If set to true, forces the server to only serve over HTTPS. (defaults to `false`)
-- `--sslPort`: The port on which to run the SSL server. (defaults to `443`)
-- `--certPath`: The path to the SSL certificate/key. (defaults to ``)
-- `--enableRateLimiting`: Enables rate limiting. (defaults to `false`)
-- `--maxRequests`: Max requests allowed in a one minute. (defaults to `10`)
-- `--skipKey`: Allows bypassing the rate limiter and should be provided with skipToken argument. (defaults to ``)
-- `--skipToken`: Allows bypassing the rate limiter and should be provided with skipKey argument. (defaults to ``)
-- `--initialWorkers`: The number of initial workers to spawn. (defaults to `4`)
-- `--maxWorkers`: The number of max workers to spawn. (defaults to `4`)
-- `--workLimit`: The pieces of work that can be performed before restarting process. (defaults to `60`)
-- `--queueSize`: The size of the request overflow queue. (defaults to `5`)
-- `--timeoutThreshold`: The number of seconds before timing out. (defaults to `30000`)
-- `--reaper`: Whether or not to evict workers after a certain time period (defaults to `true`)
-- `--benchmarking`: Enable benchmarking. (defaults to `true`)
-- `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers. (defaults to `true`)
-- `--logLevel`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose). (defaults to `4`)
-- `--logFile`: A name of a log file. The --logDest also needs to be set to enable file logging. (defaults to `highcharts-export-server.log`)
-- `--logDest`: The path to store log files. Also enables file logging. (defaults to `log/`)
-- `--enableUi`: Enables the UI for the export server. (defaults to `false`)
-- `--uiRoute`: The route to attach the UI to. (defaults to `/`)
-- `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text. (defaults to `false`)
+- `--infile`: The input file name along with a type (json or svg). It can be a correct JSON or SVG file (defaults to `false`).
+- `--instr`: An input in a form of a stringified JSON or SVG file. Overrides the --infile (defaults to `false`).
+- `--options`: An alias for the --instr option (defaults to `false`).
+- `--outfile`: The output filename along with a type (jpeg, png, pdf or svg). Ignores the --type flag (defaults to `false`).
+- `--type`: The format of the file to export to. Can be jpeg, png, pdf or svg (defaults to `png`).
+- `--constr`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart (defaults to `chart`).
+- `--scale`: The scale of the exported chart. Ranges between 1 and 5 (defaults to `1`).
+- `--height`: The height of the exported chart. Overrides the option in the chart settings (defaults to `600`).
+- `--width`: The width of the exported chart. Overrides the option in the chart settings (defaults to `400`).
+- `--globalOptions`: A stringified JSON or a filename with options to be passed into the Highcharts.setOptions (defaults to `false`).
+- `--themeOptions`: A stringified JSON or a filename with theme options to be passed into the Highcharts.setOptions (defaults to `false`).
+- `--batch`: Starts a batch job. A string that contains input/output pairs: "in=out;in=out;.." (defaults to `false`).
+- `--allowCodeExecution`: If set to true, allow for the execution of arbitrary code when exporting (defaults to `false`).
+- `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server (defaults to `true`).
+- `--resources`: An additional resource in a form of stringified JSON. It can contains files, js and css sections (defaults to `false`).
+- `--callback`: A JavaScript function to run on construction. Can be a function or a filename with the js extension (defaults to `false`).
+- `--customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension (defaults to `false`).
+- `--loadConfig`: A file that contains a pre-defined config to use (defaults to `false`).
+- `--createConfig`: Allows to set options through a prompt and save in a provided config file (defaults to `false`).
+- `--enableServer`: If set to true, starts a server on 0.0.0.0 (defaults to `false`).
+- `--host`: The hostname of the server. Also starts a server listening on the supplied hostname (defaults to `0.0.0.0`).
+- `--port`: The port to use for the server. Defaults to 7801 (defaults to `7801`).
+- `--enableSsl`: Enables the SSL protocol (defaults to `false`).
+- `--sslForced`: If set to true, forces the server to only serve over HTTPS (defaults to `false`).
+- `--sslPort`: The port on which to run the SSL server (defaults to `443`).
+- `--certPath`: The path to the SSL certificate/key (defaults to ``).
+- `--enableRateLimiting`: Enables rate limiting (defaults to `false`).
+- `--maxRequests`: Max requests allowed in a one minute (defaults to `10`).
+- `--skipKey`: Allows bypassing the rate limiter and should be provided with skipToken argument (defaults to ``).
+- `--skipToken`: Allows bypassing the rate limiter and should be provided with skipKey argument (defaults to ``).
+- `--initialWorkers`: The number of initial workers to spawn (defaults to `4`).
+- `--maxWorkers`: The number of max workers to spawn (defaults to `4`).
+- `--workLimit`: The pieces of work that can be performed before restarting process (defaults to `60`).
+- `--queueSize`: The size of the request overflow queue (defaults to `5`).
+- `--timeoutThreshold`: The number of seconds before timing out (defaults to `30000`).
+- `--reaper`: Whether or not to evict workers after a certain time period (defaults to `true`).
+- `--benchmarking`: Enable benchmarking (defaults to `true`).
+- `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers (defaults to `true`).
+- `--logLevel`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose) (defaults to `4`).
+- `--logFile`: A name of a log file. The --logDest also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
+- `--logDest`: The path to store log files. Also enables file logging (defaults to `log/`).
+- `--enableUi`: Enables the UI for the export server (defaults to `false`).
+- `--uiRoute`: The route to attach the UI to (defaults to `/`).
+- `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 
 ## Loading JSON Configs
 
-To load JSON configuration files, either start the export server with a `.hcexport` file in the current working directory, or load it by using the `--loadConfig <filepath>` option.
+The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more about it later), these options are used. Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option.
 
-The format, with its default values are as follows:
+The format, with its default values are as follows (the order of core scripts and moudles is recommended):
 
 ```
 {
@@ -150,75 +149,75 @@ The format, with its default values are as follows:
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
+    "coreScripts": [
+      "highcharts",
+      "highcharts-more",
+      "highcharts-3d"
+    ],
     "modules": [
-      "accessibility",
-      "annotations",
-      "annotations-advanced",
-      "arrow-symbols",
-      "boost",
-      "boost-canvas",
-      "broken-axis",
-      "bullet",
-      "coloraxis",
-      "current-date-indicator",
-      "cylinder",
-      "data",
-      "datagrouping",
-      "debugger",
-      "dependency-wheel",
-      "dotplot",
-      "drag-panes",
-      "draggable-points",
-      "drilldown",
-      "dumbbell",
+      "stock",
+      "map",
+      "gantt",
+      "exporting",
       "export-data",
-      "full-screen",
+      "parallel-coordinates",
+      "accessibility",
+      "annotations-advanced",
+      "boost-canvas",
+      "boost",
+      "data",
+      "draggable-points",
+      "static-scale",
+      "broken-axis",
+      "heatmap",
+      "tilemap",
+      "timeline",
+      "treemap",
+      "item-series",
+      "drilldown",
+      "histogram-bellcurve",
+      "bullet",
       "funnel",
       "funnel3d",
-      "gantt",
-      "grid-axis",
-      "heatmap",
-      "heikinashi",
-      "histogram-bellcurve",
-      "hollowcandlestick",
-      "item-series",
-      "lollipop",
-      "map",
-      "marker-clusters",
+      "pyramid3d",
       "networkgraph",
-      "no-data-to-display",
-      "oldie-polyfills",
-      "oldie",
-      "organization",
-      "overlapping-datalabels",
-      "parallel-coordinates",
       "pareto",
-      "pathfinder",
       "pattern-fill",
       "price-indicator",
-      "pyramid3d",
       "sankey",
+      "arc-diagram",
+      "dependency-wheel",
       "series-label",
       "solid-gauge",
       "sonification",
-      "static-scale",
       "stock-tools",
-      "stock",
       "streamgraph",
       "sunburst",
-      "tilemap",
-      "timeline",
-      "treegrid",
-      "treemap",
       "variable-pie",
       "variwide",
       "vector",
       "venn",
       "windbarb",
       "wordcloud",
-      "xrange"
+      "xrange",
+      "no-data-to-display",
+      "drag-panes",
+      "debugger",
+      "dumbbell",
+      "lollipop",
+      "cylinder",
+      "organization",
+      "dotplot",
+      "marker-clusters",
+      "hollowcandlestick",
+      "heikinashi"
     ],
-    "scripts": []
+    "indicators": [
+      "indicators-all"
+    ],
+    "scripts": [
+      "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"
+    ]
   },
   "export": {
     "infile": false,
@@ -227,8 +226,8 @@ The format, with its default values are as follows:
     "outfile": false,
     "type": "png",
     "constr": "chart",
-    "height": 1200,
-    "width": 800,
+    "height": 400,
+    "width": 600,
     "scale": 1,
     "globalOptions": false,
     "themeOptions": false,
@@ -237,9 +236,8 @@ The format, with its default values are as follows:
   "customCode": {
     "allowCodeExecution": false,
     "allowFileResources": true,
-    "allowForceInject": false,
-    "callback": false,
     "customCode": false,
+    "callback": false,
     "resources": false,
     "loadConfig": false,
     "createConfig": false
@@ -248,28 +246,17 @@ The format, with its default values are as follows:
     "enable": false,
     "host": "0.0.0.0",
     "port": 7801,
-    "server": {
-      "enable": {
-        "enable": false
-      },
-      "host": {
-        "host": false
-      },
-      "port": {
-        "port": false
-      },
-      "ssl": {
-        "enable": false,
-        "force": false,
-        "port": 443,
-        "certPath": ""
-      },
-      "rateLimiting": {
-        "enable": false,
-        "maxRequests": 10,
-        "skipKey": "",
-        "skipToken": ""
-      }
+    "ssl": {
+      "enable": false,
+      "force": false,
+      "port": 443,
+      "certPath": ""
+    },
+    "rateLimiting": {
+      "enable": false,
+      "maxRequests": 10,
+      "skipKey": "",
+      "skipToken": ""
     }
   },
   "pool": {
@@ -299,26 +286,27 @@ The format, with its default values are as follows:
 
 ## Environment Variables
 
-These are set as variables in your environment. On Linux, use e.g. `export`.
+These are set as variables in your environment. These take precedence over other options. On Linux, use e.g. `export`.
 
-- `HIGHCHARTS_VERSION`: Highcharts version to use.
-- `HIGHCHARTS_CDN`: The CDN URL of Highcharts scripts to use.
-- `HIGHCHARTS_MODULES`: Highcharts modules to fetch.
 - `EXPORT_DEFAULT_TYPE`: The format of the file to export to. Can be jpeg, png, pdf or svg.
-- `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be Chart, StockChart or MapChart.
+- `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart.
 - `EXPORT_DEFAULT_HEIGHT`: The height of the exported chart. Overrides the option in the chart settings.
 - `EXPORT_DEFAULT_WIDTH`: The width of the exported chart. Overrides the option in the chart settings.
 - `EXPORT_DEFAULT_SCALE`: The scale of the exported chart. Ranges between 1 and 5.
+- `HIGHCHARTS_VERSION`: Highcharts version to use.
+- `HIGHCHARTS_CDN`: The CDN URL of Highcharts scripts to use.
+- `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch.
+- `HIGHCHARTS_MODULES`: Highcharts modules to fetch.
+- `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch.
 - `HIGHCHARTS_ALLOW_CODE_EXECUTION`: If set to true, allow for the execution of arbitrary code when exporting.
 - `HIGHCHARTS_ALLOW_FILE_RESOURCES`: Allow injecting resources from the filesystem. Has no effect when running as a server.
-- `HIGHCHARTS_ALLOW_FORCE_INJECT`: Allow injecting code directly. Has no effect when running as a server.
 - `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
 - `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
 - `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
 - `HIGHCHARTS_SERVER_SSL_ENABLE`: Enables the SSL protocol.
 - `HIGHCHARTS_SERVER_SSL_FORCE`: If set to true, forces the server to only serve over HTTPS.
 - `HIGHCHARTS_SERVER_SSL_PORT`: The port on which to run the SSL server.
-- `HIGHCHARTS_SSL_CERT_PATH`: The path to the SSL certificate/key.
+- `HIGHCHARTS_SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key.
 - `HIGHCHARTS_RATE_LIMIT_ENABLE`: Enables rate limiting.
 - `HIGHCHARTS_RATE_LIMIT_MAX`: Max requests allowed in a one minute.
 - `HIGHCHARTS_RATE_LIMIT_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with skipToken argument.
@@ -337,6 +325,9 @@ These are set as variables in your environment. On Linux, use e.g. `export`.
 - `HIGHCHARTS_UI_ENABLE`: Enables the UI for the export server.
 - `HIGHCHARTS_UI_ROUTE`: The route to attach the UI to.
 - `HIGHCHARTS_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text.
+- `PROXY_SERVER_HOST`: The host of the proxy server to use if exists.
+- `PROXY_SERVER_PORT`: The port of the proxy server to use if exists.
+- `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use if exists.
 
 # Tips, Tricks & Notes
 
@@ -419,18 +410,13 @@ _Library fetches_
 When fetching the built Highcharts library, the default behaviour is to
 fetch them from `code.highcharts.com`.
 
-## Including Maps and/or Gantt support in automated deployments
-
-Use the environment variables `HIGHCHARTS_USE_MAPS` and `HIGHCHARTS_USE_GANTT`
-to enable support of either.
-
 ## HTTP Server
 
 The server accepts the following arguments in a POST body:
 
-- `infile`: A string containing JSON or SVG for the chart
-- `options`: Alias for `infile`
-- `svg`: A string containing SVG to render
+- `infile`: A string containing JSON or SVG for the chart.
+- `options`: Alias for `infile`.
+- `svg`: A string containing SVG to render.
 - `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
 - `scale`: The scale factor. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `height`: The chart height.
@@ -439,12 +425,10 @@ The server accepts the following arguments in a POST body:
 - `resources`: Additional resources.
 - `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
-- `async`: Get a download link instead of the file data.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
+- `themeOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
-
-Note that the `b64` option overrides the `async` option.
 
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
