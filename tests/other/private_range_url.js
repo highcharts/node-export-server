@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 require('colors');
 
-const { isPrivateRangeUrlFound } = require('./../../lib/utils.js');
+const { isPrivateRangeUrlFound } = require('../../lib/utils.js');
 
 // Test message
 console.log(

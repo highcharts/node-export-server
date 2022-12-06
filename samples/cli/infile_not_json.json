@@ -5,6 +5,7 @@
       "formatter": function () {
         return `Label - ${this.value}`;
       }
+    }
   },
   "series": [{
     "type": "line",
