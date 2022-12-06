@@ -1,31 +1,53 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Highcharts Export Server</title>
-</head>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://www.highcharts.com/demo/static/favicon.ico"
+    />
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,400italic" type="text/css">
-<link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,400italic"
+      type="text/css"
+    />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
 
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/codemirror.css"/>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/codemirror.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/mode/javascript/javascript.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/mode/css/css.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/codemirror.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/codemirror.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/mode/javascript/javascript.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.20.2/mode/css/css.min.js"
+    ></script>
 
-<script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </head>
 
-<body>
-
+  <body>
     <div class="page box-size">
-        <div class="panel-container main-panel box-size">
-            <div class="panel">
-                <h1>Highcharts Export Server</h1>
-                This page allows you to experiment with different options for the export server.
+      <div class="panel-container main-panel box-size">
+        <div class="panel">
+          <h1>Highcharts Export Server</h1>
+          This page allows you to experiment with different options for the
+          export server.
 
-                <label>Options</label>
-                <div class="info">Your Highcharts configuration object.</div>
-                <div class="error" id="error"></div>
-                <textarea id="options" class="codeinput box-size">
+          <label>Options</label>
+          <div class="info">Your Highcharts configuration object.</div>
+          <div class="error" id="error"></div>
+          <textarea id="options" class="codeinput box-size">
 {
     "xAxis": {
         "categories": [
@@ -54,53 +76,61 @@
         }
     ]
 }
-</textarea>
+</textarea
+          >
 
-                <label>Image file format</label>
-                <select id="format" class="box-size">
-                    <option>image/png</option>
-                    <option>image/jpeg</option>
-                    <option>image/svg+xml</option>
-                    <option>application/pdf</option>
-                </select>
+          <label>Image file format</label>
+          <select id="format" class="box-size">
+            <option>image/png</option>
+            <option>image/jpeg</option>
+            <option>image/svg+xml</option>
+            <option>application/pdf</option>
+          </select>
 
-                <label>Width</label>
-                <div class="info box-size">The exact pixel width of the exported image. Defaults to chart.width or 600px. Maximum width is 2000px.</div>
-                <input type="number" class="box-size" id="width"/>
+          <label>Width</label>
+          <div class="info box-size">
+            The exact pixel width of the exported image. Defaults to chart.width
+            or 600px. Maximum width is 2000px.
+          </div>
+          <input type="number" class="box-size" id="width" />
 
-                <label>Scale</label>
-                <div class="info box-size">A scaling factor for a higher image resolution. Maximum scaling is set to 4x. Remember that the width parameter has a higher precedence over scaling.</div>
-                <input type="number" id="scale" class="box-size"/>
+          <label>Scale</label>
+          <div class="info box-size">
+            A scaling factor for a higher image resolution. Maximum scaling is
+            set to 4x. Remember that the width parameter has a higher precedence
+            over scaling.
+          </div>
+          <input type="number" id="scale" class="box-size" />
 
-                <label>Constructor</label>
-                <div class="info box-size">Either Chart or StockChart depending on what product you use.</div>
-                <select id="constr">
-                    <option>Chart</option>
-                    <option>StockChart</option>
-                </select>
-
-
-            </div>
+          <label>Constructor</label>
+          <div class="info box-size">
+            Either Chart or StockChart depending on what product you use.
+          </div>
+          <select id="constr">
+            <option>Chart</option>
+            <option>StockChart</option>
+          </select>
         </div>
+      </div>
 
-
-        <div class="panel-container chart-panel box-size">
-            <div class="panel" style="pointer-events:auto;">
-                <h1>Result Preview</h1>
-                <div id="preview-container" class="preview-container"><div class="info">Click the Preview button to see a preview.</div></div>
-            </div>
+      <div class="panel-container chart-panel box-size">
+        <div class="panel" style="pointer-events: auto">
+          <h1>Result Preview</h1>
+          <div id="preview-container" class="preview-container">
+            <div class="info">Click the Preview button to see a preview.</div>
+          </div>
         </div>
+      </div>
 
-        <div class="buttons">
-            <button id="preview" class="button">PREVIEW</button>
-            <button id="download" class="button">DOWNLOAD</button>
-        </div>
-
+      <div class="buttons">
+        <button id="preview" class="button">PREVIEW</button>
+        <button id="download" class="button">DOWNLOAD</button>
+      </div>
     </div>
 
     <div class="header"></div>
-</body>
-<script>
-highexp.init();
-</script>
+  </body>
+  <script>
+    highexp.init();
+  </script>
 </html>
