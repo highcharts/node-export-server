@@ -27,8 +27,6 @@
   },
   "type": "png",
   "scale": 2,
-  "width": 800,
-  "height": 800,
   "callback": "function callback(chart) {chart.renderer.label('This label is added in the callback.<br>Highcharts version ' + Highcharts.version,100,100).attr({fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}",
   "resources": {
     "js": "Highcharts.charts[0].update({title: {text: 'Resources title'}});",

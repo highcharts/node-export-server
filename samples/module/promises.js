@@ -56,12 +56,22 @@ exportCharts(
     {
       title: {
         text: 'Chart 1'
-      }
+      },
+      series: [
+        {
+          data: [1, 2, 3]
+        }
+      ]
     },
     {
       title: {
         text: 'Chart 2'
-      }
+      },
+      series: [
+        {
+          data: [3, 2, 1]
+        }
+      ]
     }
   ],
   {
