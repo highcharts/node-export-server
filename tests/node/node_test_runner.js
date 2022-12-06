@@ -75,6 +75,8 @@ const files = readdirSync(scenariosPath);
           let options;
           if (fileOptions.svg) {
             options = initDefaultOptions(defaultConfig);
+            options.export.type = fileOptions.type || options.export.type;
+            options.export.scale = fileOptions.scale || options.export.scale;
             options.payload = {
               svg: fileOptions.svg
             };

@@ -29,6 +29,7 @@ html, body {
   box-sizing: border-box;
   margin: 0;
   overflow: auto;
+  font-size: 0;
 }
 
 #chart-container > figure, div {
