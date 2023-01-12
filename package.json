@@ -18,13 +18,13 @@
   "license": "MIT",
   "dependencies": {
     "async": "2.1.4",
-    "body-parser": "1.16.0",
+    "body-parser": "1.20.1",
     "colors": "*",
     "cors": "2.8.1",
     "express": "4.16.0",
     "express-form-data": "2.0.0",
     "express-rate-limit": "2.6.0",
-    "phantomjs-prebuilt": "2.1.14",
+    "phantomjs-prebuilt": "2.1.16",
     "prompt": "*",
     "request": "*",
     "uuid": "3.0.1"
