@@ -47,7 +47,7 @@ const options = {
 
 const url = 'http://127.0.0.1:7801';
 const requestsNumber = 10;
-const interval = 1000;
+const interval = 100;
 
 const stressTest = (number) => {
   const startTime = new Date().getTime();
