@@ -49,28 +49,27 @@ const url = 'http://127.0.0.1:7801';
 const requestsNumber = 10;
 const interval = 100;
 
-const stressTest = (number) => {
-  const startTime = new Date().getTime();
+const stressTest = () => {
+  for (let i = 1; i <= requestsNumber; i++) {
+    const startTime = new Date().getTime();
 
-  // Perform a request
-  fetch(url, options)
-    .then(() => {
-      const postTime = new Date().getTime() - startTime;
-      console.log(`${number} request is done, took ${postTime}ms`);
-    })
-    .catch((error) => {
-      return console.log(`[${number}] request returned error: ${error}`);
-    });
+    // Perform a request
+    fetch(url, options)
+      .then(() => {
+        const postTime = new Date().getTime() - startTime;
+        console.log(`${i} request is done, took ${postTime}ms`);
+      })
+      .catch((error) => {
+        return console.log(`[${i}] request returned error: ${error}`);
+      });
+  }
 };
 
 // Perform a health check before continuing
 fetch(`${url}/health`)
   .then(() => {
-    setInterval(() => {
-      for (let i = 1; i <= requestsNumber; i++) {
-        stressTest(i);
-      }
-    }, interval);
+    stressTest();
+    setInterval(stressTest, interval);
   })
   .catch((error) => {
     if (error.code === 'ECONNREFUSED') {
