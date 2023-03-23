@@ -204,7 +204,7 @@ function embed(version, scripts, out, fn, optionals) {
         version = version.trim();
     }
 
-    if (version && parseInt(version[0]) < 5 && version[0] !== 'c')  {
+    if (version && parseInt(version.split('.')[0]) < 5 && version[0] !== 'c')  {
         scripts = scripts.concat(cdnLegacy);
     }
 
