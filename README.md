@@ -366,7 +366,7 @@ from which the cli tool was ran, it will use the `resources.json` file.
 
 The export server utilizes a pool of _workers_, where one worker is a
 Puppeteer process responsible for converting charts. The pool size
-can be set with the `--workers` switch, and should be tweaked to fit the hardware
+can be set with the `--initialWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware
 on which you're running the server. It's recommended that you start with the default (8),
 and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/http/stress-test.js` script can be used
 to test the server. It fires batches of 10 requests every 10ms, and expects the
@@ -375,8 +375,8 @@ server to be running on port 8081.
 Each of the workers has a maximum number of requests it can
 handle before it restarts itself to keep everything responsive.
 This number is 60 by default, and can be tweaked with
-`--workLimit`. As with `--workers`, this number should also be tweaked to fit your
-use case.
+`--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should
+also be tweaked to fit your use case.
 
 ## Setup: Injecting the Highcharts dependency
 
@@ -579,7 +579,7 @@ The export server can also be used as a node module to simplify integrations:
 - `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
   - `maxWorkers` (default 25) - max count of worker processes
   - `initialWorkers` (default 5) - initial worker process count
-  - `workLimit` (default 50) - how many task can be performed by a worker process before it's automatically restarted
+  - `workLimit` (default 60) - how many task can be performed by a worker process before it's automatically restarted
   - `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
   - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
 - `killPool()`: kill the phantom processes
