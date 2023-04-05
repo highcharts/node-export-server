@@ -21,7 +21,7 @@ const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
 const { defaultConfig } = require('../lib/schemas/config.js');
 
 /**
- * The main start function to start server or do the direct export
+ * The main start function to start the server or do the direct export
  */
 const start = async () => {
   const args = process.argv;
