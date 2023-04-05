@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -80,6 +80,7 @@ Promise.all(
             const startDate = new Date().getTime();
 
             // Launch command in a new process
+            // eslint-disable-next-line no-global-assign
             process = spawn(cliCommand);
 
             // Close event for a process
@@ -104,7 +105,7 @@ Promise.all(
               resolve();
             });
           } catch (error) {
-            throw error;
+            console.log(`Error thrown: ${error}`);
           }
         })
     )

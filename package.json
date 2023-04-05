@@ -12,6 +12,7 @@
   "scripts": {
     "install": "node install.js",
     "start": "node bin/cli.js --enableServer 1",
+    "lint": "eslint ./",
     "cli-tests": "node tests/cli/cli_test_runner.js",
     "http-tests": "node tests/http/http_test_runner.js",
     "node-tests": "node tests/node/node_test_runner.js"
@@ -19,11 +20,12 @@
   "main": "lib/index.js",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.20.0",
-    "eslint-config-prettier": "^6.11.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "husky": "^4.3.8",
-    "lint-staged": "^10.5.4",
-    "prettier": "^2.1.1"
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7"
   },
   "dependencies": {
     "body-parser": "^1.19.2",

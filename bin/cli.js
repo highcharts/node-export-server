@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -20,7 +20,9 @@ const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
 
 const { defaultConfig } = require('../lib/schemas/config.js');
 
-// The main start function to start server or do the direct export
+/**
+ * The main start function to start server or do the direct export
+ */
 const start = async () => {
   const args = process.argv;
 
@@ -136,7 +138,7 @@ const start = async () => {
 
           // Save the base64 from a buffer to a correct image file
           writeFileSync(
-            outfile || `${chart}.${type}`,
+            outfile || `chart.${type}`,
             type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
           );
 
