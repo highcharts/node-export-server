@@ -12,16 +12,15 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-const cssTemplate = require('./css.js');
-const cssSizeTemplate = require('./css_size.js');
+import cssTemplate from './css.js';
+import cssSizeTemplate from './css_size.js';
 
-const jsTemplate = require('./chart.js');
+import jsTemplate from './chart.js';
 
 /**
  * This template is used when doing config based exports.
- * @TODO: Add option to use CDN
  */
-module.exports = (chartOptions, options, hcSources) => `
+export default (chartOptions, options, hcSources) => `
 <!DOCTYPE html>
 <html lang='en-US'>
   <head>

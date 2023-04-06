@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import 'colors';
 
-const { isPrivateRangeUrlFound } = require('../../lib/utils.js');
+import { isPrivateRangeUrlFound } from '../../lib/utils.js';
 
 // Test message
 console.log(

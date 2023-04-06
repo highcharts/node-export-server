@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-module.exports = () => `
+export default () => `
 
 html, body {
   margin: 0;

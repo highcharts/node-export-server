@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-module.exports = (chart) =>
+export default (chart) =>
   `
 
 #chart-container {

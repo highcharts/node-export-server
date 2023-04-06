@@ -18,7 +18,7 @@ See LICENSE file in root for details.
  * based on configurations.
  *
  */
-module.exports = (chartOptions, options) => `
+export default (chartOptions, options) => `
 const merge = Highcharts.merge;
 
 // By default animation is disabled

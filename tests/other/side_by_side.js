@@ -12,15 +12,17 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import fetch from 'node-fetch';
+import { exec as spawn } from 'child_process';
+import { existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
 
-const fetch = require('node-fetch');
-const spawn = require('child_process').exec;
-const { existsSync, mkdirSync } = require('fs');
-const { join } = require('path');
+import 'colors';
+
+import { __dirname } from '../../lib/utils.js';
 
 // Results paths
-const resultsPath = join(__dirname, '_results');
+const resultsPath = join(__dirname, 'tests', 'other', '_results');
 
 // Create results folder for CLI exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);

@@ -12,14 +12,14 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import { exec as spawn } from 'child_process';
+import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
+import fetch from 'node-fetch';
+import { join } from 'path';
 
-const fetch = require('node-fetch');
-const spawn = require('child_process').exec;
-const { existsSync, mkdirSync, readdirSync, readFileSync } = require('fs');
-const { join } = require('path');
+import 'colors';
 
-const { clearText } = require('../../lib/utils.js');
+import { __dirname, clearText } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -32,8 +32,8 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, '_results');
-const scenariosPath = join(__dirname, 'scenarios');
+const resultsPath = join(__dirname, 'tests', 'http', '_results');
+const scenariosPath = join(__dirname, 'tests', 'http', 'scenarios');
 
 // Create results folder for HTTP exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);

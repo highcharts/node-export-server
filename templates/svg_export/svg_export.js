@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-const cssTemplate = require('./css.js');
+import cssTemplate from './css.js';
 
-module.exports = (chart) => `
+export default (chart) => `
 <!DOCTYPE html>
 <html lang='en-US'>
   <head>

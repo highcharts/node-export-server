@@ -12,11 +12,13 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import { exec as spawn } from 'child_process';
+import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
 
-const spawn = require('child_process').exec;
-const { existsSync, mkdirSync, readdirSync, readFileSync } = require('fs');
-const { join } = require('path');
+import 'colors';
+
+import { __dirname } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -27,8 +29,8 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, '_results');
-const scenariosPath = join(__dirname, 'scenarios');
+const resultsPath = join(__dirname, 'tests', 'cli', '_results');
+const scenariosPath = join(__dirname, 'tests', 'cli', 'scenarios');
 
 // Create results folder for CLI exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);

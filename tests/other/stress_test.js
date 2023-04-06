@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import fetch from 'node-fetch';
 
-const fetch = require('node-fetch');
+import 'colors';
 
 // Test message
 console.log(

@@ -1,5 +1,6 @@
 {
   "name": "highcharts-export-server",
+  "type": "module",
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^4.3.8",
     "lint-staged": "^13.2.0",
