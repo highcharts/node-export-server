@@ -42,14 +42,14 @@ const highexp = {};
       r.send(JSON.stringify(data));
     }
 
-    function toStructure(async) {
+    function toStructure(b64) {
       return {
         infile: optionsCM.getValue(),
         width: width.value.length ? width.value : false,
         scale: scale.value.length ? scale.value : false,
         constr: constr.value,
         type: format.value,
-        b64: async
+        b64
       };
     }
 
@@ -64,14 +64,12 @@ const highexp = {};
           const embed = document.createElement('embed');
           embed.className = 'box-size';
 
-          if (
-            format.value === 'image/png' ||
-            format.value === 'image/jpeg' ||
-            format.value === 'image/svg+xml'
-          ) {
+          if (format.value === 'image/png' || format.value === 'image/jpeg') {
             preview.innerHTML =
               '<img src="data:' + format.value + ';base64,' + data + '"/>';
-          } else {
+          } else if (format.value === 'image/svg+xml') {
+            preview.innerHTML = data;
+          } else if (format.value === 'application/pdf') {
             preview.innerHTML = '';
             try {
               embed.src = 'data:application/pdf;base64,' + data;
