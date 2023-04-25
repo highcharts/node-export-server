@@ -19,6 +19,7 @@ See LICENSE file in root for details.
  *
  */
 module.exports = (chartOptions, options) => `
+
 const merge = Highcharts.merge;
 
 // By default animation is disabled
@@ -33,7 +34,9 @@ if (${options.export.strInj}) {
 }
 
 window.isRenderComplete = false;
+
 Highcharts.animObject = function () { return { duration: 0 }; };
+
 Highcharts.wrap(
   Highcharts.Chart.prototype,
   'init',
@@ -73,13 +76,14 @@ Highcharts.wrap(
   }
 );
 
-Highcharts.wrap(
-  Highcharts.Series.prototype,
-  'init',
-  function (proceed, chart, options) {
-    proceed.apply(this, [chart, options]);
-  }
-);
+// Highcharts.wrap(
+//   Highcharts.Series.prototype,
+//   'init',
+//   function (proceed, chart, options) {
+//     proceed.apply(this, [chart, options]);
+//   }
+// );
+
 
 // Merge the globalOptions and themeOptions
 const mergedOptions = merge(
@@ -92,7 +96,6 @@ if (mergedOptions !== {}) {
   Highcharts.setOptions(mergedOptions);
 }
 
-// The actual demo export
 Highcharts['${options.export.constr}' || 'chart'](
   'container',
   ${options.export.strInj} || ${JSON.stringify(chartOptions)},

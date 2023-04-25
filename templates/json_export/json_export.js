@@ -30,9 +30,6 @@ module.exports = (chartOptions, options, hcSources) => `
 
     <style>${cssTemplate()}</style>
 
-    <script>
-      ${hcSources}
-    </script>
 
   </head>
   <body>
@@ -41,19 +38,21 @@ module.exports = (chartOptions, options, hcSources) => `
     </div>
 
     <script>
-      // Trigger custom code
-      if (${options.customCode.customCode}) {
-        (${options.customCode.customCode})();
-      }
+      function triggerExport() {
+        // Trigger custom code
+        if (${options.customCode.customCode}) {
+          (${options.customCode.customCode})();
+        }
 
-      // When straight inject, the size is set through CSS only
-      if (${options.export.strInj}) {
-        const style = document.createElement('style');
-        style.textContent = '${cssSizeTemplate(chartOptions.chart)}';
-        document.head.appendChild(style);
-      }
+        // When straight inject, the size is set through CSS only
+        if (${options.export.strInj}) {
+          const style = document.createElement('style');
+          style.textContent = '${cssSizeTemplate(chartOptions.chart)}';
+          document.head.appendChild(style);
+        }
 
-      ${jsTemplate(chartOptions, options)}
+        ${jsTemplate(chartOptions, options)}
+      }
     </script>
   </body>
 </html>
