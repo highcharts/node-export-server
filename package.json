@@ -14,7 +14,7 @@
   },
   "scripts": {
     "install": "node install.js",
-    "start": "node bin/cli.js --enableServer 1 --logLevel 4",
+    "start": "node bin/cli.js --enableServer 1 --logLevel 3",
     "lint": "eslint ./",
     "cli-tests": "node tests/cli/cli_test_runner.js",
     "http-tests": "node tests/http/http_test_runner.js",
