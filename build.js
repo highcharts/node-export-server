@@ -214,7 +214,7 @@ function embed(version, scripts, out, fn, optionals) {
 
         let nversion = version;
 
-        if (nversion.indexOf('11') === 0) {
+        if (nversion && (nversion || '').indexOf('11') === 0) {
           nversion += '/es5/';
         }
 
