@@ -212,10 +212,16 @@ function embed(version, scripts, out, fn, optionals) {
         let scriptOriginal = script;
         let fullURL = '';
 
+        let nversion = version;
+
+        if (nversion.indexOf('11') === 0) {
+          nversion += '/es5/';
+        }
+
         if (version !== 'latest' && version && !useNPM) {
-            script = script.replace('{{version}}', version);
+            script = script.replace('{{version}}', nversion);
         } else {
-            script = script.replace('{{version}}/', '');
+            script = script.replace('{{version}}/', version.indexOf('11') === 0 ? 'es5/' : '');
         }
 
         // Allow using full URLs in the include arrays
