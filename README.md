@@ -137,9 +137,9 @@ _Available options:_
 
 ## Loading JSON Configs
 
-The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more about it later), these options are used. Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option.
+The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more on`.env` and environment variables below), these options are used. Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option.
 
-The format, with its default values are as follows (the order of core scripts and moudles is recommended):
+The format, with its default values are as follows (using the below ordering of core scripts and modules is recommended):
 
 ```
 {
@@ -286,7 +286,7 @@ The format, with its default values are as follows (the order of core scripts an
 
 ## Environment Variables
 
-These are set as variables in your environment. These take precedence over other options. On Linux, use e.g. `export`.
+These are set as variables in your environment. They take precedence over other options. On Linux, use e.g. `export`.
 
 - `EXPORT_DEFAULT_TYPE`: The format of the file to export to. Can be jpeg, png, pdf or svg.
 - `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart.
@@ -346,8 +346,8 @@ when displaying the chart in your web page.
 ## Note about process.exit listeners
 
 The export server attaches event listeners to process.exit. This is to
-make sure that all the phantom processes are properly killed off when the
-application is terminated.
+make sure that there are no memory leaks or zombie processes if the
+application is unexpectedly terminated
 
 Listeners are also attached to uncaught exceptions - if one appears,
 the entire pool is killed, and the application terminated.
@@ -364,13 +364,11 @@ from which the cli tool was ran, it will use the `resources.json` file.
 
 ## Note on Worker Count & Work Limit
 
-The export server utilizes a pool of _workers_, where one worker is a
-Puppeteer process responsible for converting charts. The pool size
-can be set with the `--initialWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware
-on which you're running the server. It's recommended that you start with the default (8),
-and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/http/stress-test.js` script can be used
-to test the server. It fires batches of 10 requests every 10ms, and expects the
-server to be running on port 8081.
+The export server utilizes a pool of _workers_, where each worker is a
+Puppeteer process responsible for the actual chart rasterization. The pool size
+can be set with the `--initialWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware on which you're running the server. 
+
+It's recommended that you start with the default (6), and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/other/stress-test.js` script can be used to test the server. It fires batches of 10 requests every 10ms, and expects the server to be running on port 7801.
 
 Each of the workers has a maximum number of requests it can
 handle before it restarts itself to keep everything responsive.
@@ -384,9 +382,8 @@ In order to use the export server, Highcharts.js needs to be injected
 into the export template.
 
 Since version 3.0.0 Highcharts is fetched in a Just-In-Time manner,
-which makes it easier to switch configurations. It is no longer required to
-explicitly accept the license - but the export server still requires a valid
-Highcharts license to be used.
+which makes it easy to switch configurations. It is no longer required to
+explicitly accept the license as in older versions - __but the export server still requires a valid Highcharts license to be used__.
 
 ## Using In Automated Deployments
 
@@ -434,7 +431,7 @@ It responds to `application/json`, `multipart/form-data`, and URL encoded reques
 
 CORS is enabled for the server.
 
-It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment such as AWS Elastic Beanstalk. Please refer to the pm2 documentation for details on how to set this up.
+It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment/container. Please refer to the pm2 documentation for details on how to set this up.
 
 ## AWS Lamba
 
@@ -452,13 +449,13 @@ Note that the certificate files needs to be named as such:
 
 The system requirements largely depend on your use case.
 
-It's largely CPU and memory bound, so when using in heavy-traffic situations,
+The application is largely CPU and memory bound, so when using in heavy-traffic situations,
 it needs a fairly beefy server. It's recommended that the server has at least 1GB
 of memory regardless of traffic, and more than one core.
 
 ## Installing Fonts
 
-Does your Linux server not have Arial or Calibri? PhantomJS uses the system installed fonts to render pages. Therefore the Highcharts Export Server requires fonts to be properly installed on the system in order to use them to render charts.
+Does your Linux server not have Arial or Calibri? Puppeteer uses the system installed fonts to render pages. Therefore the Highcharts Export Server requires fonts to be properly installed on the system in order to use them to render charts.
 
 Note that the default font-family config in Highcharts is `"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif"`.
 
@@ -495,7 +492,7 @@ Download them, and follow the above instructions for your OS.
 
 ## Server Test
 
-Run the below in a terminal after running `highcharts-export-server --enableServer 1`.
+Run the below in a terminal after running `highcharts-export-server --enableServer 1`:
 
     # Generate a chart and save it to mychart.png
     curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
@@ -530,7 +527,7 @@ The export server can also be used as a node module to simplify integrations:
         }
     };
 
-    //Set up a pool of PhantomJS workers
+    //Set up a pool of workers
     exporter.initPool();
 
     //Perform an export
