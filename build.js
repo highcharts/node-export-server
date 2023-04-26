@@ -205,7 +205,7 @@ function embed(version, scripts, out, fn, optionals) {
     }
 
     if (version && parseInt(version[0]) < 5 && version[0] !== 'c')  {
-        scripts = scripts.concat(cdnLegacy);
+        // scripts = scripts.concat(cdnLegacy);
     }
 
     scripts.forEach(function (script) {
