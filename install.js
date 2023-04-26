@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,17 +12,14 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-const packageVersion = require(__dirname + '/package.json').version;
-
-require('colors');
+import 'colors';
 
 console.log(
   `
-Highcharts Export Server V${packageVersion}
+Highcharts Export Server V${process.env.npm_package_version}
 
 ${
-  'This software requires a valid Highcharts license for commercial use.'.bold
-    .yellow
+  'This software requires a valid Highcharts license for commercial use.'.yellow
 }
 
 If you do not have a licence, one can be gotten here:

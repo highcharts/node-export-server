@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,14 +12,14 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import { exec as spawn } from 'child_process';
+import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
+import fetch from 'node-fetch';
+import { join } from 'path';
 
-const fetch = require('node-fetch');
-const spawn = require('child_process').exec;
-const { existsSync, mkdirSync, readdirSync, readFileSync } = require('fs');
-const { join } = require('path');
+import 'colors';
 
-const { clearText } = require('../../lib/utils.js');
+import { __dirname, clearText } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -32,8 +32,8 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, '_results');
-const scenariosPath = join(__dirname, 'scenarios');
+const resultsPath = join(__dirname, 'tests', 'http', '_results');
+const scenariosPath = join(__dirname, 'tests', 'http', 'scenarios');
 
 // Create results folder for HTTP exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);
@@ -101,6 +101,7 @@ fetch(`${url}/health`)
                 const startDate = new Date().getTime();
 
                 // Launch command in a new process
+                // eslint-disable-next-line no-global-assign
                 process = spawn(command);
 
                 // Close event for a process
@@ -125,7 +126,7 @@ fetch(`${url}/health`)
                   resolve();
                 });
               } catch (error) {
-                throw error;
+                console.log(`Error thrown: ${error}`);
               }
             })
         )

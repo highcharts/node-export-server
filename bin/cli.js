@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,15 +12,16 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-const { writeFileSync } = require('fs');
+import { writeFileSync } from 'fs';
 
-const main = require('../lib/index');
-const { initDefaultOptions, manualConfiguration } = require('../lib/config');
-const { printLogo, printUsage, pairArgumentValue } = require('../lib/utils');
+import main from '../lib/index.js';
+import { initDefaultOptions, manualConfiguration } from '../lib/config.js';
+import { printLogo, printUsage, pairArgumentValue } from '../lib/utils.js';
+import { defaultConfig } from '../lib/schemas/config.js';
 
-const { defaultConfig } = require('../lib/schemas/config.js');
-
-// The main start function to start server or do the direct export
+/**
+ * The main start function to start the server or do the direct export
+ */
 const start = async () => {
   const args = process.argv;
 
@@ -36,7 +37,7 @@ const start = async () => {
   }
 
   // Parse provided arguments
-  options = pairArgumentValue(options, args, defaultConfig);
+  options = await pairArgumentValue(options, args, defaultConfig);
 
   // If all options correctly parsed
   if (options) {
@@ -136,7 +137,7 @@ const start = async () => {
 
           // Save the base64 from a buffer to a correct image file
           writeFileSync(
-            outfile || `${chart}.${type}`,
+            outfile || `chart.${type}`,
             type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
           );
 

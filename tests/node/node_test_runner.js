@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,21 +12,21 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
-
-const {
+import {
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
   writeFileSync
-} = require('fs');
-const { join } = require('path');
+} from 'fs';
+import { join } from 'path';
 
-const exporter = require('../../lib/index.js');
-const { mergeConfigOptions } = require('../../lib/utils.js');
-const { initDefaultOptions } = require('../../lib/config');
-const { defaultConfig } = require('../../lib/schemas/config.js');
+import 'colors';
+
+import { initDefaultOptions } from '../../lib/config.js';
+import main from '../../lib/index.js';
+import { __dirname, mergeConfigOptions } from '../../lib/utils.js';
+import { defaultConfig } from '../../lib/schemas/config.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
@@ -37,8 +37,8 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, '_results');
-const scenariosPath = join(__dirname, 'scenarios');
+const resultsPath = join(__dirname, 'tests', 'node', '_results');
+const scenariosPath = join(__dirname, 'tests', 'node', 'scenarios');
 
 // Create results folder for HTTP exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);
@@ -55,7 +55,7 @@ const files = readdirSync(scenariosPath);
   defaultOptions.pool.queueSize = files.length;
 
   // Init pool with the default options
-  await exporter.initPool(defaultOptions);
+  await main.initPool(defaultOptions);
 
   let testCounter = 0;
   let failsCouter = 0;
@@ -100,7 +100,7 @@ const files = readdirSync(scenariosPath);
           const startTime = new Date().getTime();
 
           // Start the export process
-          exporter.startExport(options, (info, error) => {
+          main.startExport(options, (info, error) => {
             // Set the end time
             const endTime = new Date().getTime();
 
@@ -143,6 +143,6 @@ const files = readdirSync(scenariosPath);
         : `\n${testCounter} tests done, errors not found!`.green,
       '\n--------------------------------'
     );
-    exporter.killPool();
+    main.killPool();
   });
 })();

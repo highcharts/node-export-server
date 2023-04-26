@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-unused-vars
 function callback(chart) {
   chart.renderer
     .label(
       'This label is added in the callback.<br>Highcharts version ' +
+        // eslint-disable-next-line no-undef
         Highcharts.version,
       100,
       100

@@ -1,12 +1,11 @@
-const { writeFileSync } = require('fs');
+import { writeFileSync } from 'fs';
 
 // Include the exporter module
-const exporter = require('../../lib/index.js');
-
+import main from '../../lib/index.js';
 // Get the default options
-const { mergeConfigOptions } = require('../../lib/utils.js');
-const { initDefaultOptions } = require('../../lib/config');
-const { defaultConfig } = require('../../lib/schemas/config.js');
+import { mergeConfigOptions } from '../../lib/utils.js';
+import { initDefaultOptions } from '../../lib/config.js';
+import { defaultConfig } from '../../lib/schemas/config.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -29,10 +28,10 @@ const start = async () => {
   );
 
   // Init a pool for one export
-  await exporter.initPool(options);
+  await main.initPool(options);
 
   // Perform an export
-  exporter.startExport(options, (info, error) => {
+  main.startExport(options, (info, error) => {
     // Exit process when error
     if (error) {
       process.exit(1);
@@ -47,7 +46,7 @@ const start = async () => {
     );
 
     // Kill the pool
-    exporter.killPool();
+    main.killPool();
   });
 };
 

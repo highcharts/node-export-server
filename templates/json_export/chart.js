@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,8 +18,12 @@ See LICENSE file in root for details.
  * based on configurations.
  *
  */
+<<<<<<< HEAD
 module.exports = (chartOptions, options) => `
 
+=======
+export default (chartOptions, options) => `
+>>>>>>> origin/fix/es-modules-and-various-fixes
 const merge = Highcharts.merge;
 
 // By default animation is disabled
