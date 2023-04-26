@@ -221,7 +221,7 @@ function embed(version, scripts, out, fn, optionals) {
         if (version !== 'latest' && version && !useNPM) {
             script = script.replace('{{version}}', nversion);
         } else {
-            script = script.replace('{{version}}/', version.indexOf('11') === 0 ? 'es5/' : '');
+            script = script.replace('{{version}}/', version === 'latest' ? 'es5/' : '');
         }
 
         // Allow using full URLs in the include arrays
