@@ -1,13 +1,10 @@
 // Include the exporter module
-const exporter = require('../../lib/index.js');
-
+import main from '../../lib/index.js';
 // Get the default options
-const { mergeConfigOptions } = require('../../lib/utils.js');
-const { initDefaultOptions } = require('../../lib/config');
-const { defaultConfig } = require('../../lib/schemas/config.js');
-
+import { initDefaultOptions } from '../../lib/config.js';
 // Utility for mapping old format of options to the new one
-const { mapToNewConfig } = require('../../lib/utils.js');
+import { mapToNewConfig, mergeConfigOptions } from '../../lib/utils.js';
+import { defaultConfig } from '../../lib/schemas/config.js';
 
 // Export settings with the old options structure (PhantomJS)
 // Will be mapped appropriately to the new structure with the mapToNewConfig utility
@@ -57,22 +54,22 @@ const start = async () => {
   // Gather options
   const options = mergeConfigOptions(
     initDefaultOptions(defaultConfig),
-    mapToNewConfig(exportSettings),
+    await mapToNewConfig(exportSettings),
     ['options']
   );
 
   // Init a pool for one export
-  await exporter.initPool(options);
+  await main.initPool(options);
 
   // Perform an export
-  exporter.startExport(options, (info, error) => {
+  main.startExport(options, (info, error) => {
     // Throw an error
     if (error) {
       throw error;
     }
 
     // Kill the pool
-    exporter.killPool();
+    main.killPool();
 
     // Display the results
     console.log(info.data);

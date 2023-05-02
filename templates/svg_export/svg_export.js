@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-const cssTemplate = require('./css.js');
+import cssTemplate from './css.js';
 
-module.exports = (chart) => `
+export default (chart) => `
 <!DOCTYPE html>
 <html lang='en-US'>
   <head>

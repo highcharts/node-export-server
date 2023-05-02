@@ -1,33 +1,31 @@
-var highexp = {};
+/* eslint-disable no-undef */
+const highexp = {};
 
 (function () {
   highexp.init = function () {
-    var options = document.getElementById('options'),
-      format = document.getElementById('format'),
-      width = document.getElementById('width'),
-      scale = document.getElementById('scale'),
-      constr = document.getElementById('constr'),
-      error = document.getElementById('error'),
-      btnPreview = document.getElementById('preview'),
-      btnDownload = document.getElementById('download'),
-      preview = document.getElementById('preview-container'),
-      optionsCM,
-      callbackCM,
-      cssCM,
-      jsCm,
-      mime = {
-        'image/png': 'png',
-        'image/jpeg': 'jpg',
-        'image/svg+xml': 'xml',
-        'application/pdf': 'pdf'
-      };
-    optionsCM = CodeMirror.fromTextArea(options, {
+    const options = document.getElementById('options');
+    const format = document.getElementById('format');
+    const width = document.getElementById('width');
+    const scale = document.getElementById('scale');
+    const constr = document.getElementById('constr');
+    const btnPreview = document.getElementById('preview');
+    const btnDownload = document.getElementById('download');
+    const preview = document.getElementById('preview-container');
+
+    const mime = {
+      'image/png': 'png',
+      'image/jpeg': 'jpg',
+      'image/svg+xml': 'xml',
+      'application/pdf': 'pdf'
+    };
+
+    const optionsCM = CodeMirror.fromTextArea(options, {
       lineNumbers: true,
       mode: 'javascript'
     });
 
     function ajax(url, data, yes, no) {
-      var r = new XMLHttpRequest();
+      const r = new XMLHttpRequest();
       r.open('post', url, true);
       r.setRequestHeader('Content-Type', 'application/json');
       r.onreadystatechange = function () {
@@ -44,37 +42,34 @@ var highexp = {};
       r.send(JSON.stringify(data));
     }
 
-    function toStructure(async) {
+    function toStructure(b64) {
       return {
         infile: optionsCM.getValue(),
         width: width.value.length ? width.value : false,
         scale: scale.value.length ? scale.value : false,
         constr: constr.value,
         type: format.value,
-        b64: async
+        b64
       };
     }
 
     btnPreview.onclick = function () {
       preview.innerHTML =
-        '<div class="info">Processing chart, please wait..</div>';
+        '<div class="info">Processing chart, please wait...</div>';
 
       ajax(
         '/',
         toStructure(true),
         function (data) {
-          var embed = document.createElement('embed');
+          const embed = document.createElement('embed');
           embed.className = 'box-size';
 
-          if (
-            format.value === 'image/png' ||
-            format.value === 'image/jpeg' ||
-            format.value === 'image/svg+xml'
-          ) {
+          if (format.value === 'image/png' || format.value === 'image/jpeg') {
             preview.innerHTML =
               '<img src="data:' + format.value + ';base64,' + data + '"/>';
-          } else {
-            // if (format.value === 'pdf') {
+          } else if (format.value === 'image/svg+xml') {
+            preview.innerHTML = data;
+          } else if (format.value === 'application/pdf') {
             preview.innerHTML = '';
             try {
               embed.src = 'data:application/pdf;base64,' + data;
@@ -105,7 +100,7 @@ var highexp = {};
         '/',
         toStructure(true),
         function (data) {
-          var l = document.createElement('a');
+          const l = document.createElement('a');
           l.download = 'chart.' + mime[format.value];
           l.href = 'data:' + format.value + ';base64,' + data;
           document.body.appendChild(l);

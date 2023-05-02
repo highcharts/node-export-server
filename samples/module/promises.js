@@ -1,12 +1,11 @@
 // Get the default options
-const { mergeConfigOptions } = require('../../lib/utils.js');
-const { initDefaultOptions } = require('../../lib/config');
-const { defaultConfig } = require('../../lib/schemas/config.js');
+import { initDefaultOptions } from '../../lib/config.js';
+import { mergeConfigOptions } from '../../lib/utils.js';
+import { defaultConfig } from '../../lib/schemas/config.js';
+// Load main module for functions like initPool and startExport
+import exporter from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
-  // Load main module for functions like initPool and startExport
-  const exporter = require('../../lib/index.js');
-
   // Init the options
   const allOptions = mergeConfigOptions(
     initDefaultOptions(defaultConfig),

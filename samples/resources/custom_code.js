@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 Highcharts.setOptions({
   chart: {
     events: {

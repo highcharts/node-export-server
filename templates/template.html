@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang='en-US'>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Highcharts Export</title>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #table-div, #sliders, #datatable, #controls, .ld-row {
+        display: none;
+        height: 0;
+      }
+
+      #chart-container {
+        box-sizing: border-box;
+        margin: 0;
+        overflow: auto;
+      }
+
+      #chart-container > figure, div {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+  </style>
+
+  </head>
+  <body>
+    <div id="chart-container">
+      <div id="container"></div>
+    </div>
+  </body>
+
+    <script>
+
+      /** Called when initing the page */
+      function setupHighcharts() {
+        Highcharts.animObject = function () { return { duration: 0 }; };
+      }
+
+      /** Create the actual chart */
+      function createChart(chartOptions, options) {
+
+        const merge = Highcharts.merge;
+
+        // By default animation is disabled
+        const chart = {
+          animation: false
+        };
+
+        // When straight inject, the size is set through CSS only
+        if (options.export.strInj) {
+          chart.height =chartOptions.chart.height;
+          chart.width = null;
+        }
+
+        // NOTE: Is this used for anything useful??
+        window.isRenderComplete = false;
+
+        Highcharts.wrap(
+          Highcharts.Chart.prototype,
+          'init',
+          function (proceed, userOptions, cb) {
+            // Override userOptions with image friendly options
+            userOptions = merge(userOptions, {
+              chart,
+              exporting: {
+                enabled: false
+              },
+              plotOptions: {
+                series: {
+                  label: {
+                    enabled: false
+                  }
+                }
+              },
+              /*
+              Expects tooltip in userOptions when forExport is true.
+              https://github.com/highcharts/highcharts/blob/3ad430a353b8056b9e764aa4e5cd6828aa479db2/js/parts/Chart.js#L241
+              */
+              tooltip: {}
+            });
+
+            (userOptions.series || []).forEach(function (series) {
+              series.animation = false;
+            });
+
+            // Add flag to know if chart render has been called.
+            if (!window.onHighchartsRender) {
+              window.onHighchartsRender = Highcharts.addEvent(
+                this, 'render', () => { window.isRenderComplete = true; }
+              );
+            }
+
+            proceed.apply(this, [userOptions, cb]);
+          }
+        );
+
+        Highcharts.wrap(
+          Highcharts.Series.prototype,
+          'init',
+          function (proceed, chart, options) {
+            proceed.apply(this, [chart, options]);
+          } 
+        );
+
+        // Merge the globalOptions and themeOptions
+        const mergedOptions = merge(
+          options.export.themeOptions || {},
+          options.export.globalOptions || {}
+        );
+
+        // Set global options
+        if (mergedOptions !== {}) {
+          Highcharts.setOptions(mergedOptions);
+        }
+
+        Highcharts[options.export.constr || 'chart'](
+          'container',
+          options.export.strInj ||chartOptions,
+          options.customCode.callback ? 
+            new Function(options.customCode.callback) : undefined
+        );
+      }
+
+      function triggerExport(chart, exportOptions) {
+        // Clear previous state
+        document.body.innerHTML = `
+          <div id="chart-container">
+            <div id="container"></div>
+          </div>
+        `;
+
+        // Trigger custom code
+        if (exportOptions.customCode.customCode) {
+          eval(exportOptions.customCode.customCode);
+        }
+
+        // When straight inject, the size is set through CSS only
+        let injCSS = false;
+
+        if (exportOptions.export.strInj) {
+          const injCSS = document.createElement('style');
+
+          injCSS .textContent = `
+            #chart-container {
+              height: ${chart.height}px;
+              max-width: ${chart.width}px;
+            }
+
+            #chart-container #container{
+              height: ${chart.height}px;
+              max-width: ${chart.width}px;
+            }
+          `;
+
+          document.head.appendChild(injCSS );
+        }
+
+        createChart(chart, exportOptions);
+
+        // Remove the injected CSS
+        if (injCSS) {
+          document.head.removeChild(injCSS);
+        }
+        
+
+      }
+    </script>
+</html>
+

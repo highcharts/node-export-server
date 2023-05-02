@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import fetch from 'node-fetch';
 
-const fetch = require('node-fetch');
+import 'colors';
 
 // Test message
 console.log(

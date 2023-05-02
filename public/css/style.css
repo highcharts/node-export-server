@@ -4,8 +4,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   background: #f5f5f5;
 }
 
@@ -35,7 +34,7 @@ input {
   padding-bottom: 5px;
   text-align: center;
   font-size: 20px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
   background: #4caf50;
   color: #242424;
   border-radius: 4px;
@@ -100,8 +99,7 @@ button:active {
   width: 100%;
   top: 0px;
   left: 0px;
-
-  background-image: url('../img/logo.svg');
+  background-image: url("../img/logo.svg");
   background-position: left center;
   background-size: auto 100%;
   background-repeat: no-repeat;

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 (function (a) {
   'object' === typeof module && module.exports
     ? ((a['default'] = a), (module.exports = a))
@@ -10,6 +11,7 @@
     : a('undefined' !== typeof Highcharts ? Highcharts : void 0);
 })(function (a) {
   function b(a, c, b, d) {
+    // eslint-disable-next-line no-prototype-builtins
     a.hasOwnProperty(c) ||
       ((a[c] = d.apply(null, b)),
       'function' === typeof CustomEvent &&

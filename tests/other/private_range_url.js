@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2022, Highsoft
+Copyright (c) 2016-2023, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,9 +12,9 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-require('colors');
+import 'colors';
 
-const { isPrivateRangeUrlFound } = require('../../lib/utils.js');
+import { isPrivateRangeUrlFound } from '../../lib/utils.js';
 
 // Test message
 console.log(
@@ -51,7 +51,7 @@ const ipAddresses = [
     const url = `${protocol}${ip}`;
     console.log(
       `${url} - ` +
-        (isPrivateRangeUrlFound(`xlink:href=\"${url}"`)
+        (isPrivateRangeUrlFound(`xlink:href="${url}"`)
           ? 'private IP'.red
           : 'public IP'.green)
     );
