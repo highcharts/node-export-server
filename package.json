@@ -43,7 +43,7 @@
     "https-proxy-agent": "^5.0.1",
     "node-fetch": "^3.3.1",
     "prompts": "^2.4.2",
-    "puppeteer": "^19.8.5",
+    "puppeteer": "^19.11.1",
     "uuid": "^9.0.0"
   },
   "engines": {
