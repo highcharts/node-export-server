@@ -49,11 +49,7 @@
   "engines": {
     "node": ">=16.14.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
+
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
     "*.{js,css,md}": "npx prettier --write"
