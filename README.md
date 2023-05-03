@@ -601,6 +601,25 @@ for each of the input files to process:
 
 Other switches can be combined with this switch.
 
+
+# Switching HC version at runtime
+
+If `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change-hc-version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
+
+A sample request to change the version to 10.3.3 is as follows:
+
+```
+curl -H 'hc-auth: <YOUR AUTH TOKEN>' -X POST <SERVER URL>/change-hc-version/10.3.3
+```
+
+e.g.
+
+```
+curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change-hc-version/10.3.3
+```
+
+This is useful to e.g. upgrade to the latest HC version without downtime.
+
 # License
 
 [MIT](LICENSE). Note that a valid Highcharts License is also required to do exports.
