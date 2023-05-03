@@ -14,8 +14,8 @@
   },
   "scripts": {
     "install": "node install.js",
-    "prestart": "node node_modules/puppeteer/install.js",
-    "start": "node bin/cli.js --enableServer 1 --logLevel 3",
+    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
+    "start": "node bin/cli.js --enableServer 1 --logLevel 4",
     "lint": "eslint ./",
     "cli-tests": "node tests/cli/cli_test_runner.js",
     "http-tests": "node tests/http/http_test_runner.js",
