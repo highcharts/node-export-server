@@ -14,10 +14,11 @@
   },
   "scripts": {
     "install": "node install.js",
-    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
+    "prestart": "rm -rf tmp || if exist .\\tmp rmdir .\\tmp /s /q && node node_modules/puppeteer/install.js",
     "start": "node bin/cli.js --enableServer 1 --logLevel 4",
     "lint": "eslint ./",
     "cli-tests": "node tests/cli/cli_test_runner.js",
+    "cli-tests-single": "node tests/cli/cli_test_runner_single.js",
     "http-tests": "node tests/http/http_test_runner.js",
     "node-tests": "node tests/node/node_test_runner.js",
     "prepare": "husky install"
