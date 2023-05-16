@@ -14,6 +14,7 @@ module.exports = {
   ],
   plugins: ['import', 'prettier'],
   rules: {
+    'no-unused-vars': 'off',
     'import/no-cycle': 2,
     'prettier/prettier': [
       'error',

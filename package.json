@@ -20,7 +20,6 @@
     "cli-tests": "node tests/cli/cli_test_runner.js",
     "cli-tests-single": "node tests/cli/cli_test_runner_single.js",
     "http-tests": "node tests/http/http_test_runner.js",
-    "http-tests-single": "node tests/http/http_test_runner_single.js",
     "node-tests": "node tests/node/node_test_runner.js",
     "node-tests-single": "node tests/node/node_test_runner_single.js",
     "prepare": "husky install"
