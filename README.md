@@ -175,7 +175,7 @@ fetch them from `code.highcharts.com`.
 
 In automated deployments, it's also possible to fetch using NPM instead.
 
-This is done by setting `HIGHCHARTS_VERSION` to `npm` in addition to setting
+This is done by setting `HIGHCHARTS_CDN` to `npm` in addition to setting
 the afformentioned `ACCEPT_HIGHCHARTS_LICENSE` to `YES`.
 
 
