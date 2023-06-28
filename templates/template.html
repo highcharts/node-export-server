@@ -37,8 +37,40 @@
   <script>
     /** Called when initing the page */
     function setupHighcharts() {
+      // Create a separate object for the potential setOptions usages in oreder to
+      // prevent from polluting other exports that can happen on the same page
+      Highcharts.setOptionsObj = Highcharts.merge(
+        false,
+        {},
+        Highcharts.defaultOptions
+      );
+
       Highcharts.animObject = function () {
         return { duration: 0 };
+      };
+
+      // Replace the default setOptions to prevent from modyfications
+      // of the default options
+      Highcharts.setOptions = function(options) {
+        // Copy in the default options
+        Highcharts.merge(true, Highcharts.setOptionsObj, options);
+
+        // Update the time object
+        if (options.time || options.global) {
+          if (Highcharts.time) {
+            Highcharts.time.update(
+              Highcharts.merge(
+                Highcharts.defaultOptions.global,
+                Highcharts.defaultOptions.time,
+                options.global,
+                options.time
+              )
+            );
+          } else {
+            Highcharts.time = Highcharts.defaultTime;
+          }
+        }
+        return Highcharts.defaultOptions;
       };
     }
 
@@ -118,6 +150,7 @@
         false,
         JSON.parse(options.export.themeOptions),
         JSON.parse(options.export.globalOptions),
+        Highcharts.setOptionsObj,
         userOptions
       );
 
