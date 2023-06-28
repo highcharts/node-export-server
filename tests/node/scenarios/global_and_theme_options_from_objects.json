@@ -34,7 +34,7 @@
     "globalOptions": {
       "chart": {
         "borderWidth": 2,
-        "plotBackgroundColor": "rgba(255, 255, 255, .9)",
+        "plotBackgroundColor": "rgba(61, 255, 61, .9)",
         "plotShadow": true,
         "plotBorderWidth": 1
       },

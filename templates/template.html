@@ -3,7 +3,6 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Highcharts Export</title>
-
     <style>
       html, body {
         margin: 0;
@@ -26,9 +25,9 @@
         margin-top: 0 !important;
         margin-bottom: 0 !important;
       }
-  </style>
-
+    </style>
   </head>
+
   <body>
     <div id="chart-container">
       <div id="container"></div>
@@ -108,20 +107,19 @@
         }
       );
 
-      // Merge the globalOptions and themeOptions
-      const mergedOptions = merge(
-        JSON.parse(options.export.themeOptions) || {},
-        JSON.parse(options.export.globalOptions) || {}
-      );
-
-      // Set global options
-      if (mergedOptions !== {}) {
-        Highcharts.setOptions(mergedOptions);
-      }
-
-      const finalOptions = options.export.strInj
+      // Get the user options
+      const userOptions = options.export.strInj
         ? JSON.parse(options.export.strInj)
         : chartOptions;
+
+      // Merge the globalOptions, themeOptions, options from the wrapped
+      // setOptions function and user options to create the final options object
+      const finalOptions = merge(
+        false,
+        JSON.parse(options.export.themeOptions),
+        JSON.parse(options.export.globalOptions),
+        userOptions
+      );
 
       const finalCallback = options.customCode.callback
         ? new Function(`return ${options.customCode.callback}`)()
@@ -156,7 +154,7 @@
       if (exportOptions.export.strInj) {
         const injCSS = document.createElement('style');
 
-        injCSS .textContent = `
+        injCSS.textContent = `
           #chart-container {
             height: ${chart.height}px;
             max-width: ${chart.width}px;
@@ -178,6 +176,5 @@
         document.head.removeChild(injCSS);
       }
     }
-
   </script>
 </html>
