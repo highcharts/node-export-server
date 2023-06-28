@@ -35,7 +35,7 @@
     "allowCodeExecution": true,
     "allowFileResources": true,
     "resources": {
-      "css": "@import 'https://code.highcharts.com/css/themes/grid-light.css';"
+      "css": "@import 'https://code.highcharts.com/css/themes/dark-unica.css';"
     }
   }
 }

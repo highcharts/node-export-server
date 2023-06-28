@@ -28,7 +28,7 @@
   "devDependencies": {
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
@@ -52,7 +52,6 @@
   "engines": {
     "node": ">=16.14.0"
   },
-
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
     "*.{js,css,md}": "npx prettier --write"
