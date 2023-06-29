@@ -36,7 +36,7 @@
     "customCode": "Highcharts.setOptions({chart:{events:{render:function (){this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png',100,75,20,20).add();}}}});",
     "resources": {
       "js": "Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources object, js section'}}});",
-      "css": ".highcharts-yaxis .highcharts-axis-line{stroke-width:2px;stroke:#FF0000}"
+      "css": ".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#FF0000}"
     }
   }
 }
