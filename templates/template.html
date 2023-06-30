@@ -90,7 +90,7 @@
       // When straight inject, the size is set through CSS only
       if (options.export.strInj) {
         chart.height = chartOptions.chart.height;
-        chart.width = null;
+        chart.width = chartOptions.chart.width;
       }
 
       // NOTE: Is this used for anything useful??
@@ -102,7 +102,6 @@
         function (proceed, userOptions, cb) {
           // Override userOptions with image friendly options
           userOptions = merge(userOptions, {
-            chart,
             exporting: {
               enabled: false
             },
@@ -155,7 +154,9 @@
         JSON.parse(options.export.themeOptions),
         JSON.parse(options.export.globalOptions),
         /// Highcharts.setOptionsObj,
-        userOptions
+        userOptions,
+        // Placed it here instead in the init because of the size issues
+        { chart }
       );
 
       const finalCallback = options.customCode.callback
