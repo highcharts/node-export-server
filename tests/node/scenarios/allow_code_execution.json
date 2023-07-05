@@ -32,13 +32,11 @@
   },
   "customCode": {
     "allowCodeExecution": true,
-    "allowFileResources": true,
-    "callback": "function callback(chart) {chart.renderer.label('This label is added in the callback.<br>Highcharts version ' + Highcharts.version,100,100).attr({id:'renderer-callback-label',fill:'#90ed7d',padding:10,r:10,zIndex:10}).css({color:'black',width:'100px'}).add();}",
+    "callback": "function callback(chart){chart.renderer.label('This label is added in the stringified callback.<br>Highcharts version '+Highcharts.version,100,100).attr({id:'renderer-callback-label',fill:'#90ed7d',padding:10,r:10,zIndex:10}).css({color:'black',width:'100px'}).add();}",
     "customCode": "Highcharts.setOptions({chart:{events:{render:function (){this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png',100,75,20,20).add();}}}});",
     "resources": {
-      "js": "Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources file, js section'}}});",
-      "css": ".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#FF0000;}",
-      "files": ["./samples/resources/resources_file_1.js", "./samples/resources/resources_file_2.js"]
+      "js": "Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources object, js section'}}});",
+      "css": ".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#FF0000}"
     }
   }
 }
