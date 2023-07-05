@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.0.0-beta1",
   "main": "lib/index.js",
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
