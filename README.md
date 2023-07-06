@@ -2,14 +2,17 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# Current Status
+# Puppeteer Version Information
 
 We are currently working on a refactor which amongst other things replaces PhantomJS with Puppeteer.
 Until then, maintainance of the PhantomJS based application is limited.
 
-Planned release for the new version (V3.0.0) is Q3 2023. 
+Planned release for the new version (V3.0.0) is Q3 2023.
 
-The work can be followed in the `enhancement/puppeteer` branch, but do note the branch is in constant flux (and thus not stable), and is not fully tested yet. There are also slightly worse performance in terms of latency currently which along with compatibility and general stability is our current focus. In addition to replacing PhantomJS, the next version also contains a slew of bugfixes and general enhancements, the latter especially to the error handling, configuration and setup systems, which should make installing, configuring, and running the server much more pleasant. 
+The work can be followed in the `enhancement/puppeteer` branch.
+The Beta package for V3.0.0 can be through NPM with:
+
+`npm i highcharts-export-server@3.0.0-beta.1`
 
 # Breaking changes in v2.1.0
 
