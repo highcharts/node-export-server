@@ -125,7 +125,7 @@ _Available options:_
 - `--workLimit`: The pieces of work that can be performed before restarting process (defaults to `60`).
 - `--queueSize`: The size of the request overflow queue (defaults to `5`).
 - `--timeoutThreshold`: The number of milliseconds before timing out (defaults to `30000`).
-- `--acquireTimeout`: The number of milliseconds to wait for aquiring a resource (defaults to `3000`).
+- `--acquireTimeout`: The number of milliseconds to wait for acquiring a resource (defaults to `3000`).
 - `--reaper`: Whether or not to evict workers after a certain time period (defaults to `true`).
 - `--benchmarking`: Enable benchmarking (defaults to `true`).
 - `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers (defaults to `true`).
@@ -318,7 +318,7 @@ These are set as variables in your environment. They take precedence over other 
 - `HIGHCHARTS_POOL_WORK_LIMIT`: The pieces of work that can be performed before restarting process.
 - `HIGHCHARTS_POOL_QUEUE_SIZE`: The size of the request overflow queue.
 - `HIGHCHARTS_POOL_TIMEOUT`: The number of milliseconds before timing out.
-- `HIGHCHARTS_POOL_ACQUIRE_TIMEOUT`: The number of milliseconds to wait for aquiring a resource.
+- `HIGHCHARTS_POOL_ACQUIRE_TIMEOUT`: The number of milliseconds to wait for acquiring a resource.
 - `HIGHCHARTS_POOL_ENABLE_REAPER`: Whether or not to evict workers after a certain time period.
 - `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking.
 - `HIGHCHARTS_POOL_LISTEN_TO_PROCESS_EXITS`: Set to false in order to skip attaching process.exit handlers.
@@ -436,7 +436,7 @@ CORS is enabled for the server.
 
 It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment/container. Please refer to the pm2 documentation for details on how to set this up.
 
-## AWS Lamba
+## AWS Lambda
 
 See [this](https://github.com/highcharts/node-export-server/issues/81) issue.
 
@@ -582,7 +582,7 @@ The export server can also be used as a node module to simplify integrations:
   - `workLimit` (default 60) - how many task can be performed by a worker process before it's automatically restarted
   - `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
   - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
-  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource aquire, in milliseconds
+  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds
 - `killPool()`: kill the phantom processes
 
 # Performance Notice
