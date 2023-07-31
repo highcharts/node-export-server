@@ -1,6 +1,6 @@
 {
   "export": {
     "infile": "./samples/cli/infile_json.json",
-    "outfile": "custom_outfile.png"
+    "outfile": "outfile_custom.png"
   }
 }

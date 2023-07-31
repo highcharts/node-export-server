@@ -6,7 +6,7 @@
         "type": "column"
       },
       "title": {
-        "text": "Styling axes (Raw CSS)"
+        "text": "Styling axes (Raw CSS with the default CSS file)"
       },
       "yAxis": [{
         "className": "highcharts-color-0",

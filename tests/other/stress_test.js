@@ -45,9 +45,9 @@ const options = {
   })
 };
 
-const url = 'http://127.0.0.1:7801';
-const requestsNumber = 10;
-const interval = 1000;
+const url = 'http://127.0.0.1:7801/';
+const requestsNumber = 1;
+const interval = 150;
 
 const stressTest = () => {
   for (let i = 1; i <= requestsNumber; i++) {

@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "3.0.0",
+  "version": "3.0.0-beta.1",
   "main": "lib/index.js",
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
@@ -15,41 +15,43 @@
   "scripts": {
     "install": "node install.js",
     "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
-    "start": "node bin/cli.js --enableServer 1 --logLevel 4",
+    "start": "node bin/cli.js --enableServer 1 --logLevel 2",
     "lint": "eslint ./",
     "cli-tests": "node tests/cli/cli_test_runner.js",
+    "cli-tests-single": "node tests/cli/cli_test_runner_single.js",
     "http-tests": "node tests/http/http_test_runner.js",
+    "http-tests-single": "node tests/http/http_test_runner_single.js",
     "node-tests": "node tests/node/node_test_runner.js",
+    "node-tests-single": "node tests/node/node_test_runner_single.js",
     "prepare": "husky install"
   },
   "devDependencies": {
-    "eslint": "^8.37.0",
+    "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.1",
-    "prettier": "^2.8.7"
+    "lint-staged": "^13.2.3",
+    "prettier": "^2.8.8"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
     "colors": "1.4.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-form-data": "^2.0.22",
     "express-rate-limit": "^6.7.0",
     "generic-pool": "^3.9.0",
-    "https-proxy-agent": "^5.0.1",
+    "https-proxy-agent": "^7.0.0",
     "node-fetch": "^3.3.1",
     "prompts": "^2.4.2",
-    "puppeteer": "^19.11.1",
+    "puppeteer": "^20.7.4",
     "uuid": "^9.0.0"
   },
   "engines": {
     "node": ">=16.14.0"
   },
-
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
     "*.{js,css,md}": "npx prettier --write"

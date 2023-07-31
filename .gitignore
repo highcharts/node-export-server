@@ -1,6 +1,7 @@
 node_modules/
 log/
 tests/_temp
+tmp/
 
 .DS_Store
 .cache
