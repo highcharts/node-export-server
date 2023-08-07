@@ -504,48 +504,46 @@ Run the below in a terminal after running `highcharts-export-server --enableServ
 
 The export server can also be used as a node module to simplify integrations:
 
-    //Include the exporter module
+    // Import the Export Server module
     const exporter = require('highcharts-export-server');
 
-    //Export settings
-    var exportSettings = {
-        type: 'png',
-        options: {
-            title: {
-                text: 'My Chart'
-            },
-            xAxis: {
-                categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            },
-            series: [
-                {
-                    type: 'line',
-                    data: [1, 3, 2, 4]
-                },
-                {
-                    type: 'line',
-                    data: [5, 3, 4, 2]
-                }
-            ]
+    // Initialize export settings with your chart's config
+    // Export settings correspond to the available CLI arguments described above.
+    const exportSettings = {
+        export: {
+          type: 'png',
+          options: {
+              title: {
+                  text: 'My Chart'
+              },
+              xAxis: {
+                  categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+              },
+              series: [
+                  {
+                      type: 'line',
+                      data: [1, 3, 2, 4]
+                  },
+                  {
+                      type: 'line',
+                      data: [5, 3, 4, 2]
+                  }
+              ]
+          }
         }
     };
 
-    //Set up a pool of workers
+    // Initialize a pool of workers
     exporter.initPool();
 
-    //Perform an export
-    /*
-        Export settings corresponds to the available CLI arguments described
-        above.
-    */
+    // Perform an export
     exporter.export(exportSettings, function (err, res) {
-        //The export result is now in res.
-        //If the output is not PDF or SVG, it will be base64 encoded (res.data).
-        //If the output is a PDF or SVG, it will contain a filename (res.filename).
+        // The export result is now in res.
+        // If the output is not PDF or SVG, it will be base64 encoded (res.data).
+        // If the output is a PDF or SVG, it will contain a filename (res.filename).
 
-        //Kill the pool when we're done with it, and exit the application
-        exporter.killPool();
-        process.exit(1);
+        // The pool is automatically killed unless you set listenToProcessExits to 0 
+        // in which case you can call exporter.killPool();
     });
 
 ## Node.js API Reference
