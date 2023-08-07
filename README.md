@@ -511,25 +511,25 @@ The export server can also be used as a node module to simplify integrations:
     // Export settings correspond to the available CLI arguments described above.
     const exportSettings = {
         export: {
-          type: 'png',
-          options: {
-              title: {
-                  text: 'My Chart'
-              },
-              xAxis: {
-                  categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-              },
-              series: [
-                  {
-                      type: 'line',
-                      data: [1, 3, 2, 4]
-                  },
-                  {
-                      type: 'line',
-                      data: [5, 3, 4, 2]
-                  }
-              ]
-          }
+            type: 'png',
+            options: {
+                title: {
+                    text: 'My Chart'
+                },
+                xAxis: {
+                    categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                },
+                series: [
+                    {
+                        type: 'line',
+                        data: [1, 3, 2, 4]
+                    },
+                    {
+                        type: 'line',
+                        data: [5, 3, 4, 2]
+                    }
+                ]
+            }
         }
     };
 
@@ -537,7 +537,7 @@ The export server can also be used as a node module to simplify integrations:
     exporter.initPool();
 
     // Perform an export
-    exporter.export(exportSettings, function (err, res) {
+    exporter.startExport(exportSettings, function (err, res) {
         // The export result is now in res.
         // If the output is not PDF or SVG, it will be base64 encoded (res.data).
         // If the output is a PDF or SVG, it will contain a filename (res.filename).
