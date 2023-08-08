@@ -542,6 +542,7 @@ The export server can also be used as a node module to simplify integrations:
         // If the output is not PDF or SVG, it will be base64 encoded (res.data).
         // If the output is a PDF or SVG, it will contain a filename (res.filename).
 
+        // Kill the pool when we're done with it.
         exporter.killPool();
     });
 
