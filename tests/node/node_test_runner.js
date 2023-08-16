@@ -26,8 +26,6 @@ import 'colors';
 import main from '../../lib/index.js';
 import { __dirname } from '../../lib/utils.js';
 
-import chart from '../../lib/chart.js';
-
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
   '\nThis tool simulates node module execution by using selected'.green,
