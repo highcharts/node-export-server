@@ -23,10 +23,10 @@ import { join } from 'path';
 
 import 'colors';
 
-import { initDefaultOptions } from '../../lib/config.js';
 import main from '../../lib/index.js';
-import { __dirname, mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
+import { __dirname } from '../../lib/utils.js';
+
+import chart from '../../lib/chart.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
