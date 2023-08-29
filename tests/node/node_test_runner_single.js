@@ -21,6 +21,7 @@ import { initDefaultOptions } from '../../lib/config.js';
 import main from '../../lib/index.js';
 import { __dirname, mergeConfigOptions } from '../../lib/utils.js';
 import { defaultConfig } from '../../lib/schemas/config.js';
+import { log } from '../../lib/logger.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
@@ -40,14 +41,13 @@ const resultsPath = join(__dirname, 'tests', 'node', '_results');
 const file = process.argv[2];
 
 (async () => {
-  // Get the default options
-  const defaultOptions = initDefaultOptions(defaultConfig);
 
-  // Disable export server logging
-  defaultOptions.logging.level = 0;
-
-  // Init pool with the default options
-  await main.initPool(defaultOptions);
+  // Init pool without logging
+  await main.initPool({
+    logging: {
+        level: 4
+    }
+  });
 
   // Check if file even exists and if it is a JSON
   if (existsSync(file) && file.endsWith('.json')) {
@@ -58,30 +58,13 @@ const file = process.argv[2];
         // Options from a file
         const fileOptions = JSON.parse(readFileSync(file));
 
-        let options;
-        if (fileOptions.svg) {
-          options = initDefaultOptions(defaultConfig);
-          options.export.type = fileOptions.type || options.export.type;
-          options.export.scale = fileOptions.scale || options.export.scale;
-          options.payload = {
-            svg: fileOptions.svg
-          };
-        } else {
-          // Get the content of a file and merge it into the default options
-          options = mergeConfigOptions(
-            initDefaultOptions(defaultConfig),
-            fileOptions,
-            ['options', 'resources', 'globalOptions', 'themeOptions']
-          );
-        }
-
         // Prepare an outfile path
-        options.export.outfile = join(
+        fileOptions.export.outfile = join(
           resultsPath,
-          options.export?.outfile ||
+          fileOptions.export?.outfile ||
             basename(file).replace(
               '.json',
-              `.${options.export?.type || '.png'}`
+              `.${fileOptions.export?.type || '.png'}`
             )
         );
 
@@ -89,7 +72,7 @@ const file = process.argv[2];
         const startTime = new Date().getTime();
 
         // Start the export process
-        main.startExport(options, (info, error) => {
+        main.startExport(fileOptions, (info, error) => {
           // Create a message
           let endMessage = `Node module from file: ${file}, took: ${
             new Date().getTime() - startTime
@@ -124,5 +107,8 @@ const file = process.argv[2];
         console.log(message);
         process.exit(1);
       });
+  } else {
+    log(1, 'The test does not exist. Please give a full path starting from ./tests');
+    main.killPool();
   }
 })();

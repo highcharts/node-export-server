@@ -23,10 +23,8 @@ import { join } from 'path';
 
 import 'colors';
 
-import { initDefaultOptions } from '../../lib/config.js';
 import main from '../../lib/index.js';
-import { __dirname, mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
+import { __dirname } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
@@ -47,15 +45,15 @@ const scenariosPath = join(__dirname, 'tests', 'node', 'scenarios');
 const files = readdirSync(scenariosPath);
 
 (async () => {
-  // Get the default options
-  const defaultOptions = initDefaultOptions(defaultConfig);
-
-  // Disable export server logging
-  defaultOptions.logging.level = 0;
-  defaultOptions.pool.queueSize = files.length;
-
-  // Init pool with the default options
-  await main.initPool(defaultOptions);
+  // Initialize pool with disabled logging
+  await main.initPool({
+    logging: {
+      level: 0
+    },
+    pool: {
+      queueSize: files.length
+    }
+  });
 
   let testCounter = 0;
   let failsCouter = 0;
@@ -72,35 +70,11 @@ const files = readdirSync(scenariosPath);
             readFileSync(join(scenariosPath, file))
           );
 
-          let options;
-          if (fileOptions.svg) {
-            options = initDefaultOptions(defaultConfig);
-            options.export.type = fileOptions.type || options.export.type;
-            options.export.scale = fileOptions.scale || options.export.scale;
-            options.payload = {
-              svg: fileOptions.svg
-            };
-          } else {
-            // Get the content of a file and merge it into the default options
-            options = mergeConfigOptions(
-              initDefaultOptions(defaultConfig),
-              fileOptions,
-              ['options', 'resources', 'globalOptions', 'themeOptions']
-            );
-          }
-
-          // Prepare an outfile path
-          options.export.outfile = join(
-            resultsPath,
-            options.export?.outfile ||
-              file.replace('.json', `.${options.export?.type || '.png'}`)
-          );
-
           // The start date of a startExport function run
           const startTime = new Date().getTime();
 
           // Start the export process
-          main.startExport(options, (info, error) => {
+          main.startExport(fileOptions, (info, error) => {
             // Set the end time
             const endTime = new Date().getTime();
 
