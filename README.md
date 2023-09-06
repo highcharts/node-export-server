@@ -12,7 +12,11 @@ Planned release for the new version (V3.0.0) is Q3 2023.
 The work can be followed in the `enhancement/puppeteer` branch.
 The Beta package for V3.0.0 can be through NPM with:
 
-`npm i highcharts-export-server@3.0.0-beta.1`
+`npm i highcharts-export-server@3.0.0-beta.2`
+
+We've also deployed the `enhancement/puppeteer` branch on our dev server which is accessible via this link: https://export-dev.highcharts.com/
+
+**Demo** with Highcharts: https://jsfiddle.net/BlackLabel/yhprobmv/
 
 # Breaking changes in v2.1.0
 
