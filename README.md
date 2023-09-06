@@ -14,10 +14,6 @@ The Beta package for V3.0.0 can be through NPM with:
 
 `npm i highcharts-export-server@3.0.0-beta.2`
 
-We've also deployed the `enhancement/puppeteer` branch on our dev server which is accessible via this link: https://export-dev.highcharts.com/
-
-**Demo** with Highcharts: https://jsfiddle.net/BlackLabel/yhprobmv/
-
 # Breaking changes in v2.1.0
 
 Version 2.1.0 has a couple of breaking changes:
