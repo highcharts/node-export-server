@@ -78,7 +78,7 @@ const file = process.argv[2];
             new Date().getTime() - startTime
           }ms`;
 
-          const failMessage = `[Fail] ${endMessage}, error: ${error}`.red;
+          const failMessage = `[Fail] ${endMessage}, error: ${JSON.stringify(error)}`.red;
           const successMessage = `[Success] ${endMessage}.`.green;
 
           // Try to save to a file
