@@ -12,7 +12,17 @@ Planned release for the new version (V3.0.0) is Q3 2023.
 The work can be followed in the `enhancement/puppeteer` branch.
 The Beta package for V3.0.0 can be through NPM with:
 
-`npm i highcharts-export-server@3.0.0-beta.1`
+`npm i highcharts-export-server@3.0.0-beta.2`
+
+## V3.0 Release Update (14 Sep 23)
+
+**[We have a blocking issue (#412)](https://github.com/highcharts/node-export-server/issues/412) keeping us from doing a full release.**
+
+The issue is related to a memory leak occuring in certain situations. We've been unable to reproduce this in our end, but have several users experiencing the problem in the `beta.1` and `beta.2` releases.
+
+As this is quite severe for those impacted, we are holding back the full release until it's sorted out.
+
+**If you are experiencing this issue, and you are willing to help us test a few builds, we'd very much like to hear from you!** Please contact us at support@highcharts.com.
 
 # Breaking changes in v2.1.0
 
