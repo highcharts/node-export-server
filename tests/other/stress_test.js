@@ -29,6 +29,7 @@ const options = {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
+    type: 'svg',
     infile: {
       title: {
         text: 'Chart'
@@ -55,9 +56,10 @@ const stressTest = () => {
 
     // Perform a request
     fetch(url, options)
-      .then(() => {
+      .then(async (res) => {
         const postTime = new Date().getTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
+        console.log(`---\n${await res.text()}\n---`);
       })
       .catch((error) => {
         return console.log(`[${i}] request returned error: ${error}`);
