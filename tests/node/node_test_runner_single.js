@@ -17,11 +17,9 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import { initDefaultOptions } from '../../lib/config.js';
 import main from '../../lib/index.js';
-import { __dirname, mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
 import { log } from '../../lib/logger.js';
+import { __dirname } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
@@ -40,75 +38,87 @@ const resultsPath = join(__dirname, 'tests', 'node', '_results');
 // Get the file's name
 const file = process.argv[2];
 
-(async () => {
+// Create a promise for the export
+const exportChart = () => {
+  const promise = new Promise((resolve, reject) => {
+    try {
+      console.log('[Test runner]'.blue, `Processing test ${file}.`);
 
-  // Init pool without logging
+      // Options from a file
+      const fileOptions = JSON.parse(readFileSync(file));
+
+      // Prepare an outfile path
+      fileOptions.export.outfile = join(
+        resultsPath,
+        fileOptions.export?.outfile ||
+          basename(file).replace(
+            '.json',
+            `.${fileOptions.export?.type || 'png'}`
+          )
+      );
+
+      // The start date of a startExport function run
+      const startTime = new Date().getTime();
+  
+      // Start the export process
+      main.startExport(fileOptions, (info, error) => {
+        // Create a message
+        let endMessage = `Node module from file: ${file}, took: ${
+          new Date().getTime() - startTime
+        }ms`;
+
+        // Try to save to a file
+        if (!error) {
+          // Save returned data to a correct image file if no error occured
+          writeFileSync(
+            info.options.export.outfile,
+            info.options?.export?.type !== 'svg'
+              ? Buffer.from(info.data, 'base64')
+              : info.data
+          );
+        } else {
+          // Information about the error and the time it took
+          console.log(
+            `[Fail] ${endMessage}, error: ${JSON.stringify(error)}`.red
+          );
+          return reject();
+        }
+
+        // Information about the results and the time it took
+        console.log(`[Success] ${endMessage}.`.green);
+        return resolve();
+      });
+    } catch (error) {
+      return reject(`Error thrown: ${error}`);
+    }
+  });
+
+  return promise;
+};
+
+(async () => {
+  // Init pool with one worker and without logging
   await main.initPool({
+    pool: {
+      initialWorkers: 1,
+      maxWorkers: 1
+    },
     logging: {
-        level: 4
+      level: 0
     }
   });
 
   // Check if file even exists and if it is a JSON
   if (existsSync(file) && file.endsWith('.json')) {
-    new Promise((resolve, reject) => {
-      try {
-        console.log('[Test runner]'.blue, `Processing test ${file}.`);
-
-        // Options from a file
-        const fileOptions = JSON.parse(readFileSync(file));
-
-        // Prepare an outfile path
-        fileOptions.export.outfile = join(
-          resultsPath,
-          fileOptions.export?.outfile ||
-            basename(file).replace(
-              '.json',
-              `.${fileOptions.export?.type || '.png'}`
-            )
-        );
-
-        // The start date of a startExport function run
-        const startTime = new Date().getTime();
-
-        // Start the export process
-        main.startExport(fileOptions, (info, error) => {
-          // Create a message
-          let endMessage = `Node module from file: ${file}, took: ${
-            new Date().getTime() - startTime
-          }ms`;
-
-          const failMessage = `[Fail] ${endMessage}, error: ${JSON.stringify(error)}`.red;
-          const successMessage = `[Success] ${endMessage}.`.green;
-
-          // Try to save to a file
-          if (!error) {
-            // Save returned data to a correct image file if no error occured
-            writeFileSync(
-              info.options.export.outfile,
-              info.options?.export?.type !== 'svg'
-                ? Buffer.from(info.data, 'base64')
-                : info.data
-            );
-          }
-
-          // Information about the results and the time it took
-          return error ? reject(failMessage) : resolve(successMessage);
-        });
-      } catch (error) {
-        reject(`Error thrown: ${error}`);
-      }
-    })
-      .then((message) => {
-        console.log(message);
-        process.exit(0);
-      })
-      .catch((message) => {
-        console.log(message);
-        process.exit(1);
-      });
+    try {
+      // Start the export
+      await exportChart();
+      process.exit(0);
+    } catch (error) {
+      process.exit(1);
+    }
   } else {
     log(1, 'The test does not exist. Please give a full path starting from ./tests');
-    main.killPool();
+    await main.killPool();
   }
 })();
