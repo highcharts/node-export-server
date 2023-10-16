@@ -12,7 +12,13 @@ Planned release for the new version (V3.0.0) is Q3 2023.
 The work can be followed in the `enhancement/puppeteer` branch.
 The Beta package for V3.0.0 can be through NPM with:
 
-`npm i highcharts-export-server@3.0.0-beta.2`
+`npm i highcharts-export-server@3.0.0-rc.2`
+
+## V3.0 Release Update (16 Oct 23)
+
+The blocking issue described below is currently fixed, but unconfirmed.
+
+The latest RC on NPM is `3.0.0-rc.2`, which contains fixes related to request timeouts, memory issues, and general stability.
 
 ## V3.0 Release Update (14 Sep 23)
 
