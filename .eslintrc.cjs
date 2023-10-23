@@ -1,27 +1,42 @@
 module.exports = {
-  env: {
-    es2021: true,
-    node: true
-  },
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module'
-  },
-  extends: [
-    'eslint:recommended',
-    'plugin:import/recommended',
-    'plugin:prettier/recommended'
-  ],
-  plugins: ['import', 'prettier'],
-  rules: {
-    'no-unused-vars': 'off',
-    'import/no-cycle': 2,
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        trailingComma: 'none'
-      }
-    ]
-  }
+	'env': {
+		'browser': true,
+		'es2021': true
+	},
+	'extends': 'eslint:recommended',
+	'overrides': [
+		{
+			'env': {
+				'node': true
+			},
+			'files': [
+				'.eslintrc.{js,cjs}'
+			],
+			'parserOptions': {
+				'sourceType': 'script'
+			}
+		}
+	],
+	'parserOptions': {
+		'ecmaVersion': 'latest',
+		'sourceType': 'module'
+	},
+	'rules': {
+		'indent': [
+			'error',
+			'tab'
+		],
+		'linebreak-style': [
+			'error',
+			'windows'
+		],
+		'quotes': [
+			'error',
+			'single'
+		],
+		'semi': [
+			'error',
+			'always'
+		]
+	}
 };
