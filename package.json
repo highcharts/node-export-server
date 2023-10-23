@@ -7,8 +7,8 @@
   "main": "dist/index.esm.js",
   "exports": {
     ".": {
-        "import": "./dist/index.esm.js",
-        "require": "./dist/index.cjs"
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs"
     }
   },
   "repository": {
@@ -45,6 +45,7 @@
     "rollup-plugin-eslint": "^7.0.0"
   },
   "dependencies": {
+    "axios": "^1.5.1",
     "body-parser": "^1.20.2",
     "colors": "1.4.0",
     "cors": "^2.8.5",
@@ -53,7 +54,6 @@
     "express-rate-limit": "^6.8.1",
     "https-proxy-agent": "^7.0.1",
     "multer": "1.4.5-lts.1",
-    "node-fetch": "^3.3.2",
     "prompts": "^2.4.2",
     "puppeteer": "^21.1.1",
     "tarn": "^3.0.2",

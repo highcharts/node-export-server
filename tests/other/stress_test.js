@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 import 'colors';
 
@@ -55,7 +55,7 @@ const stressTest = () => {
     const startTime = new Date().getTime();
 
     // Perform a request
-    fetch(url, options)
+    axios.get(url, options)
       .then(async (res) => {
         const postTime = new Date().getTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
@@ -68,7 +68,7 @@ const stressTest = () => {
 };
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+axios.get(`${url}/health`)
   .then(() => {
     stressTest();
     setInterval(stressTest, interval);

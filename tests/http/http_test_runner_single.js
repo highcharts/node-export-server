@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync, readFileSync } from 'fs';
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { basename, join } from 'path';
 
 import 'colors';
@@ -44,7 +44,7 @@ const file = process.argv[2];
 const url = 'http://127.0.0.1:7801';
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+axios.get(`${url}/health`)
   .then(() => {
     process.setMaxListeners(0);
 

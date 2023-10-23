@@ -1,5 +1,7 @@
+// rollup plugin for minifying the code
 import terser from '@rollup/plugin-terser';
 
+// exporting the rollup config
 export default {
     input: 'lib/index.js',
     output: [{
@@ -9,8 +11,7 @@ export default {
         file: 'dist/index.cjs',
         format: 'cjs'
     }],
-    sourceMap: 'inline',
     plugins: [
-        terser() // for minifying
+        terser()
     ]
 };
