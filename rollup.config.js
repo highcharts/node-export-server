@@ -3,7 +3,7 @@ import terser from '@rollup/plugin-terser';
 export default {
     input: 'lib/index.js',
     output: [{
-        file: 'dist/index.js',
+        file: 'dist/index.esm.js',
         format: 'es'
     }, {
         file: 'dist/index.cjs',

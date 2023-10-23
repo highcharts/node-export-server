@@ -4,7 +4,13 @@
   "license": "MIT",
   "type": "module",
   "version": "3.0.0-rc.1",
-  "main": "lib/index.js",
+  "main": "dist/index.esm.js",
+  "exports": {
+    ".": {
+        "import": "./dist/index.esm.js",
+        "require": "./dist/indes.cjs"
+    }
+  },
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
