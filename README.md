@@ -2,20 +2,6 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# Breaking changes in v2.1.0
-
-Version 2.1.0 has a couple of breaking changes:
-
-- Log destinations must now exist before starting file logging
-- The following options are now disabled by default:
-  - `callback`
-  - `resources`
-  - `customCode`
-
-Disabled options can be enabled by adding the `--allowCodeExecution` flag when
-starting the server/CLI. Using this flag is not recommended, and should not be
-done unless the server is sandboxed and not reachable on the public internet, or if only using the CLI in a controlled manner (e.g. it's not possible for a user to change the configuration sent to it through a different system).
-
 # What & Why
 
 This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files.
@@ -546,11 +532,14 @@ The export server can also be used as a node module to simplify integrations:
         exporter.killPool();
     });
 
+## CommonJS support
+This package supports both CommonJS and ES modules.
+
 ## Node.js API Reference
 
 **highcharts-export-server module**
 
-**Functions**
+### Functions
 
 - `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
 - `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
