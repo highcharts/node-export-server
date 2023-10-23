@@ -8,7 +8,7 @@
   "exports": {
     ".": {
         "import": "./dist/index.esm.js",
-        "require": "./dist/indes.cjs"
+        "require": "./dist/index.cjs"
     }
   },
   "repository": {
