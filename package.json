@@ -63,7 +63,6 @@
     "node": ">=16.14.0"
   },
   "lint-staged": {
-    "*.js": "npx eslint --cache --fix",
-    "*.{js,css,md}": "npx prettier --write"
+    "*.js": "eslint --cache --fix"
   }
 }

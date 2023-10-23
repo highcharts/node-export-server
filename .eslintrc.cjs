@@ -1,6 +1,6 @@
 module.exports = {
 	'env': {
-		'browser': true,
+		'node': true,
 		'es2021': true
 	},
 	'extends': 'eslint:recommended',
@@ -22,10 +22,6 @@ module.exports = {
 		'sourceType': 'module'
 	},
 	'rules': {
-		'indent': [
-			'error',
-			'tab'
-		],
 		'linebreak-style': [
 			'error',
 			'windows'
@@ -38,5 +34,5 @@ module.exports = {
 			'error',
 			'always'
 		]
-	}
+    }
 };
