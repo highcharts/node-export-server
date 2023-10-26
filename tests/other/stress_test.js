@@ -12,8 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import axios from 'axios';
-
+import { post } from '../../lib/fetch.js';
 import 'colors';
 
 // Test message
@@ -23,27 +22,19 @@ console.log(
 );
 
 // The request options
-const options = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    type: 'svg',
-    infile: {
-      title: {
-        text: 'Chart'
-      },
-      xAxis: {
-        categories: ['Jan', 'Feb', 'Mar']
-      },
-      series: [
-        {
-          data: [29.9, 71.5, 106.4]
-        }
-      ]
-    }
-  })
+const requestBody = {
+  type: 'svg',
+  infile: {
+    title: {
+      text: 'Chart'
+    },
+    xAxis: {
+      categories: ['Jan', 'Feb', 'Mar']
+    },
+    series: [{
+      data: [29.9, 71.5, 106.4]
+    }]
+  }
 };
 
 const url = 'http://127.0.0.1:7801/';
@@ -55,11 +46,11 @@ const stressTest = () => {
     const startTime = new Date().getTime();
 
     // Perform a request
-    axios.get(url, options)
+    post(url, requestBody)
       .then(async (res) => {
         const postTime = new Date().getTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
-        console.log(`---\n${await res.text()}\n---`);
+        console.log(`---\n${await res.text}\n---`);
       })
       .catch((error) => {
         return console.log(`[${i}] request returned error: ${error}`);

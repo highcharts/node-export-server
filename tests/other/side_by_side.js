@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import axios from 'axios';
+import fetch from '../../lib/fetch.js';
 import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
@@ -41,7 +41,7 @@ try {
   // Run for both servers
   for (const [index, url] of urls.entries()) {
     // Perform a health check before continuing
-    axios.get(`${url}/health`)
+    fetch(`${url}/health`)
       .then(() => {
         // And all types
         for (const type of ['png', 'jpeg', 'svg', 'pdf']) {
