@@ -30,11 +30,13 @@ The HTTP server can either be ran stand-alone and integrate with your other appl
 
 To do latter, add:
 
-    {
-      exporting: {
-        url: "<IP to the self-hosted export server>"
-      }
-    }
+```
+{
+  exporting: {
+    url: "<IP to the self-hosted export server>"
+  }
+}
+```
 
 to the chart options when creating your charts.
 
@@ -46,13 +48,17 @@ First, make sure you have node.js installed. Go to [nodejs.org](https://nodejs.o
 
 After node.js is installed, install the export server by opening a terminal and typing:
 
-    npm install highcharts-export-server -g
+```
+npm install highcharts-export-server -g
+```
 
 OR:
 
-    git clone https://github.com/highcharts/node-export-server
-    npm install
-    npm link
+```
+git clone https://github.com/highcharts/node-export-server
+npm install
+npm link
+```
 
 Note: depending on how you installed Node, you may have to create a symlink from `nodejs` to `node`. Example on Linux:
 
@@ -62,7 +68,9 @@ ln -s `which nodejs` /usr/bin/node
 
 # Running
 
-    highcharts-export-server <arguments>
+```
+highcharts-export-server <arguments>
+```
 
 # Configuration
 
@@ -77,7 +85,7 @@ There are four main ways of loading configurations:
 
 ## Loading Default JSON Config
 
-The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more on`.env` and environment variables below), these options are used.
+The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more on `.env` and environment variables below), these options are used.
 
 The format, with its default values are as follows (using the below ordering of core scripts and modules is recommended):
 
@@ -205,7 +213,7 @@ The format, with its default values are as follows (using the below ordering of 
     "maxWorkers": 8,
     "workLimit": 40,
     "queueSize": 5,
-    "timeoutThreshold": 30000,
+    "timeoutThreshold": 5000,
     "acquireTimeout": 5000,
     "reaper": true,
     "benchmarking": false,
@@ -262,6 +270,9 @@ These are set as variables in your environment. They take precedence over option
 ### Server rate limiting config
 - `HIGHCHARTS_RATE_LIMIT_ENABLE`: Enables rate limiting.
 - `HIGHCHARTS_RATE_LIMIT_MAX`: Max requests allowed in a one minute.
+- `HIGHCHARTS_RATE_LIMIT_WINDOW`: The time window in minutes for rate limiting.
+- `HIGHCHARTS_RATE_LIMIT_DELAY`: The amount to delay each successive request before hitting the max.
+- `HIGHCHARTS_RATE_LIMIT_TRUST_PROXY`: Set this to true if behind a load balancer.
 - `HIGHCHARTS_RATE_LIMIT_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with skipToken argument.
 - `HIGHCHARTS_RATE_LIMIT_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with skipKey argument.
 
@@ -334,8 +345,8 @@ _Available options:_
 - `--maxWorkers`: The number of max workers to spawn (defaults to `4`).
 - `--workLimit`: The pieces of work that can be performed before restarting process (defaults to `60`).
 - `--queueSize`: The size of the request overflow queue (defaults to `5`).
-- `--timeoutThreshold`: The number of milliseconds before timing out (defaults to `30000`).
-- `--acquireTimeout`: The number of milliseconds to wait for acquiring a resource (defaults to `3000`).
+- `--timeoutThreshold`: The number of milliseconds before timing out (defaults to `5000`).
+- `--acquireTimeout`: The number of milliseconds to wait for acquiring a resource (defaults to `5000`).
 - `--reaper`: Whether or not to evict workers after a certain time period (defaults to `true`).
 - `--benchmarking`: Enable benchmarking (defaults to `true`).
 - `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers (defaults to `true`).
@@ -449,7 +460,7 @@ It's recommended to run the server using [pm2](https://www.npmjs.com/package/pm2
 
 ## SSL
 
-To enable ssl support, add `--sslPath <path to key/crt>` when running the server. Note that the certificate files needs to be named as such:
+To enable SSL support, add `--certPath <path to key/crt>` when running the server. Note that the certificate files needs to be named as such:
 
 - `server.crt`
 - `server.key`
@@ -500,54 +511,57 @@ Download them, and follow the above instructions for your OS.
 
 Run the below in a terminal after running `highcharts-export-server --enableServer 1`:
 
-    # Generate a chart and save it to mychart.png
-    curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
+```
+# Generate a chart and save it to mychart.png
+curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Steep Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o mychart.png
+```
 
 # Using as a Node.js Module
 
 The export server can also be used as a node module to simplify integrations:
 
-    // Import the Export Server module
-    const exporter = require('highcharts-export-server');
+```
+// Import the Export Server module
+const exporter = require('highcharts-export-server');
 
-    // Initialize export settings with your chart's config
-    // Export settings correspond to the available CLI arguments described above.
-    const exportSettings = {
-        export: {
-            type: 'png',
-            options: {
-                title: {
-                    text: 'My Chart'
-                },
-                xAxis: {
-                    categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                },
-                series: [
-                    {
-                        type: 'line',
-                        data: [1, 3, 2, 4]
-                    },
-                    {
-                        type: 'line',
-                        data: [5, 3, 4, 2]
-                    }
-                ]
-            }
+// Initialize export settings with your chart's config
+// Export settings correspond to the available CLI arguments described above.
+const exportSettings = {
+  export: {
+    type: 'png',
+    options: {
+      title: {
+        text: 'My Chart'
+      },
+      xAxis: {
+        categories: ["Jan", "Feb", "Mar", "Apr"]
+      },
+      series: [
+        {
+          type: 'line',
+          data: [1, 3, 2, 4]
+        },
+        {
+          type: 'line',
+          data: [5, 3, 4, 2]
         }
-    };
+      ]
+    }
+  }
+};
 
-    // Initialize a pool of workers
-    await exporter.initPool();
+// Initialize a pool of workers
+await exporter.initPool();
 
-    // Perform an export
-    exporter.startExport(exportSettings, function (res, err) {
-        // The export result is now in res.
-        // If the output is not PDF or SVG, it will be base64 encoded (res.data).
-        // If the output is a PDF or SVG, it will contain a filename (res.filename).
+// Perform an export
+exporter.startExport(exportSettings, function (res, err) {
+  // The export result is now in res.
+  // It will be base64 encoded (res.data).
 
-        // Kill the pool when we're done with it.
-        exporter.killPool();
-    });
+  // Kill the pool when we're done with it.
+  exporter.killPool();
+});
+```
 
 ## Node.js API Reference
 
@@ -555,57 +569,52 @@ The export server can also be used as a node module to simplify integrations:
 
 **Functions**
 
-- `log(level, ...)`: log something. Level is a number from 1-4. Args are joined by whitespace to form the message.
-- `logLevel(level)`: set the current log level: `0`: disabled, `1`: errors, `2`: warnings, `3`: notices, `4`: verbose
-- `enableFileLogging(path, name)`: enable logging to file. `path` is the path to log to, `name` is the filename to log to
-- `export(exportOptions, fn)`: do an export. `exportOptions` uses the same attribute names as the CLI switch names. `fn` is called when the export is completed, with an object as the second argument containing the the filename attribute.
-- `startServer(port, sslPort, sslPath)`: start an http server on the given port. `sslPath` is the path to the server key/certificate (must be named server.key/server.crt)
-- `server` - the server instance
-  - `enableRateLimiting(options)` - enable rate limiting on the POST path
-    - `max` - the maximum amount of requests before rate limiting kicks in
-    - `window` - the time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
-    - `delay` - the amount to delay each successive request before hitting the max
-    - `trustProxy` - set this to true if behind a load balancer
+- `log(level, ...)`: Log something. Level is a number from 1 to 4. Args are joined by whitespace to form the message.
+
+- `startExport(settings, endCallback)`: Start an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an object as the first argument containing the base64 respresentation of a chart.
+
+- `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+
+- `server` - The server instance:
+  - `start(serverConfig)` - The same as `startServer` from above.
+  - `getExpress()` - Return the express module instance.
+  - `getApp()` - Return the app instance.
+  - `use(path, ...middlewares)` - Add a middleware to the server.
+  - `get(path, ...middlewares)` - Add a get middleware to the server.
+  - `post(path, ...middlewares)` - Add a post middleware to the server.
+  - `enableRateLimiting(options)` - Enable rate limiting on the POST path.
+    - `maxRequests` - The maximum amount of requests before rate limiting kicks in.
+    - `window` - The time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
+    - `delay` - The amount to delay each successive request before hitting the max.
+    - `trustProxy` - Set this to true if behind a load balancer
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
-  - `app()` - returns the express app
-  - `express()` - return the express module instance
-  - `useFilter(when, fn)` - attach a filter to the POST route. Returning false in the callback will terminate the request.
-    - `when` - either `beforeRequest` or `afterRequest`
-    - `fn` - the function to call
-      - `req` - the request object
-      - `res` - the result object
-      - `data` - the request data
-      - `id` - the request ID
-      - `uniqueid` - the unique id for the request (used for temporary file names)
-- `initPool(config)`: init the phantom pool - must be done prior to exporting. `config` is an object as such:
-  - `maxWorkers` (default 25) - max count of worker processes
-  - `initialWorkers` (default 5) - initial worker process count
-  - `workLimit` (default 60) - how many task can be performed by a worker process before it's automatically restarted
-  - `queueSize` (default 5) - how many request can be stored in overflow count when there are not enough workers to handle all requests
-  - `timeoutThreshold` (default 3500) - the maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted
-  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds
-- `killPool()`: kill the phantom processes
+
+- `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
+  - `initialWorkers` (default 4) - Initial worker process count.
+  - `maxWorkers` (default 8) - Max worker processes count.
+  - `workLimit` (default 40) - How many task can be performed by a worker process before it's automatically restarted.
+  - `timeoutThreshold` (default 3500) - The maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted.
+  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds.
+  - `benchmarking` (default false) - Enable benchmarking.
+  - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
+
+- `killPool()`: Kill the pool of resources (Puppeteer browser's pages).
 
 # Performance Notice
 
-In cases of batch exports, it's faster to use the HTTP server than the CLI.
-This is due to the overhead of starting Puppeteer for each job when using the CLI.
+In cases of batch exports, it's faster to use the HTTP server than the CLI. This is due to the overhead of starting Puppeteer for each job when using the CLI.
 
-As a concrete example, running the CLI with [testcharts/basic.json](testcharts/basic.json)
-as the input and converting to PNG averages about 449ms.
-Posting the same configuration to the HTTP server averages less than 100ms.
+As a concrete example, running the CLI with [testcharts/basic.json](testcharts/basic.json) as the input and converting to PNG averages about 449ms. Posting the same configuration to the HTTP server averages less than 100ms.
 
-So it's better to write a bash script that starts the server and then
-performs a set of POSTS to it through e.g. curl if not wanting to host the
-export server as a service.
+So it's better to write a bash script that starts the server and then performs a set of POSTS to it through e.g. curl if not wanting to host the export server as a service.
 
-Alternatively, you can use the `--batch` switch if the output format is the same
-for each of the input files to process:
+Alternatively, you can use the `--batch` switch if the output format is the same for each of the input files to process:
 
-    highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;.."
+```
+highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;.."
+```
 
 Other switches can be combined with this switch.
-
 
 # Switching HC version at runtime
 
