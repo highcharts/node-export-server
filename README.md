@@ -6,7 +6,7 @@ Convert Highcharts.JS charts to static image files.
 
 Version 2.1.0 has a couple of breaking changes:
 
-- Log destinations must now exist before starting file logging
+- Log destinations must now exist before starting file logging.
 - The following options are now disabled by default:
   - `callback`
   - `resources`
@@ -76,10 +76,10 @@ highcharts-export-server <arguments>
 
 There are four main ways of loading configurations:
 
-- By loading default options from the `lib/schemas/config.js` file
-- By providing environment variables
-- By passing command line arguments
-- By loading a custom JSON file
+- By loading default options from the `lib/schemas/config.js` file.
+- By providing environment variables.
+- By passing command line arguments.
+- By loading a custom JSON file.
 
 ...or any combination of the four. In this case, the options from the later step take precedence (config file -> envs -> cli arguments -> json).
 
@@ -369,23 +369,23 @@ The `width` argument is mostly to set a zoom factor rather than an absolute widt
 
 If you need to set the _height_ of the chart, it can be done in two ways:
 
-- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height)
-- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight)
+- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
+- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
 
 The latter is prefered, as it lets you set a separate sizing when exporting and when displaying the chart in your web page.
 
 Like previously mentioned, there are multiple ways to set and prioritize options, and the `height`, `width` and `scale` are no exceptions here. The priority goes like this:
 
-1. Options from the `export` section of the provided options (CLI, JSON, etc.)
-2. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts options
-3. The `height` and `width` from the `chart` section of chart's Highcharts options
-4. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts global options, if provided
-5. The `height` and `width` from the `chart` section of chart's Highcharts global options, if provided
-6. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`)
+1. Options from the `export` section of the provided options (CLI, JSON, etc.).
+2. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts options.
+3. The `height` and `width` from the `chart` section of chart's Highcharts options.
+4. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts global options, if provided.
+5. The `height` and `width` from the `chart` section of chart's Highcharts global options, if provided.
+6. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`).
 
 ## Note about process.exit listeners
 
-The export server attaches event listeners to process.exit. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated
+The export server attaches event listeners to process.exit. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
 Listeners are also attached to uncaught exceptions - if one appears, the entire pool is killed, and the application terminated.
 
@@ -403,8 +403,7 @@ The export server utilizes a pool of _workers_, where each worker is a Puppeteer
 
 It's recommended that you start with the default (4), and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/other/stress-test.js` script can be used to test the server and expects the server to be running on port 7801.
 
-Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive.
-This number is 60 by default, and can be tweaked with `--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value.
+Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value.
 
 ## Setup: Injecting the Highcharts dependency
 
@@ -481,7 +480,7 @@ Fonts are installed differently depending on your system. Please follow the belo
 
 ### OS X
 
-Install your desired fonts with the Font Book app, or place it in /Library/Fonts/ (system) or ~/Library/Fonts/ (user)
+Install your desired fonts with the Font Book app, or place it in /Library/Fonts/ (system) or ~/Library/Fonts/ (user).
 
 ### Linux
 
@@ -503,7 +502,7 @@ copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 
 ### Google fonts
 
-If you need Google Fonts in your custom installation, they can be had here: https://github.com/google/fonts
+If you need Google Fonts in your custom installation, they can be had here: https://github.com/google/fonts.
 
 Download them, and follow the above instructions for your OS.
 
@@ -571,9 +570,12 @@ exporter.startExport(exportSettings, function (res, err) {
 
 - `log(level, ...)`: Log something. Level is a number from 1 to 4. Args are joined by whitespace to form the message.
 
+
 - `startExport(settings, endCallback)`: Start an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an object as the first argument containing the base64 respresentation of a chart.
 
+
 - `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+
 
 - `server` - The server instance:
   - `start(serverConfig)` - The same as `startServer` from above.
@@ -586,8 +588,9 @@ exporter.startExport(exportSettings, function (res, err) {
     - `maxRequests` - The maximum amount of requests before rate limiting kicks in.
     - `window` - The time window in minutes for rate limiting. Example: setting `window` to `1` and `max` to `30` will allow a maximum of 30 requests within one minute.
     - `delay` - The amount to delay each successive request before hitting the max.
-    - `trustProxy` - Set this to true if behind a load balancer
+    - `trustProxy` - Set this to true if behind a load balancer.
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
+
 
 - `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
   - `initialWorkers` (default 4) - Initial worker process count.
@@ -597,6 +600,7 @@ exporter.startExport(exportSettings, function (res, err) {
   - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds.
   - `benchmarking` (default false) - Enable benchmarking.
   - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
+
 
 - `killPool()`: Kill the pool of resources (Puppeteer browser's pages).
 
@@ -611,7 +615,7 @@ So it's better to write a bash script that starts the server and then performs a
 Alternatively, you can use the `--batch` switch if the output format is the same for each of the input files to process:
 
 ```
-highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;.."
+highcharts-export-server --batch "infile1.json=outfile1.png;infile2.json=outfile2.png;..."
 ```
 
 Other switches can be combined with this switch.
