@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { post } from '../../lib/fetch.js';
+import { fetch, post } from '../../lib/fetch.js';
 import 'colors';
 
 // Test message
@@ -59,7 +59,7 @@ const stressTest = () => {
 };
 
 // Perform a health check before continuing
-axios.get(`${url}/health`)
+fetch(`${url}/health`)
   .then(() => {
     stressTest();
     setInterval(stressTest, interval);
