@@ -51,7 +51,6 @@ const url = 'http://127.0.0.1:7801';
 // Perform a health check before continuing
 fetch(`${url}/health`)
   .then(() => {
-    console.log('STARTING!');
     process.setMaxListeners(0);
     Promise.all(
       files

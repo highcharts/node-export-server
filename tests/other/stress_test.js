@@ -50,7 +50,7 @@ const stressTest = () => {
       .then(async (res) => {
         const postTime = new Date().getTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
-        console.log(`---\n${await res.text}\n---`);
+        console.log(`---\n${res.text}\n---`);
       })
       .catch((error) => {
         return console.log(`[${i}] request returned error: ${error}`);
