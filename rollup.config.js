@@ -6,10 +6,12 @@ export default {
     input: 'lib/index.js',
     output: [{
         file: 'dist/index.esm.js',
-        format: 'es'
+        format: 'es',
+        sourcemap: true
     }, {
         file: 'dist/index.cjs',
-        format: 'cjs'
+        format: 'cjs',
+        sourcemap: 'inline'
     }],
     plugins: [
         terser()
