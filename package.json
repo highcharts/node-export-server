@@ -4,7 +4,13 @@
   "license": "MIT",
   "type": "module",
   "version": "3.0.0-rc.1",
-  "main": "lib/index.js",
+  "main": "dist/index.esm.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
@@ -23,16 +29,19 @@
     "http-tests-single": "node tests/http/http_test_runner_single.js",
     "node-tests": "node tests/node/node_test_runner.js",
     "node-tests-single": "node tests/node/node_test_runner_single.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "rollup -c"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
-    "prettier": "^3.0.0"
+    "prettier": "^3.0.0",
+    "rollup": "^3.29.4"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -43,7 +52,6 @@
     "express-rate-limit": "^6.8.1",
     "https-proxy-agent": "^7.0.1",
     "multer": "1.4.5-lts.1",
-    "node-fetch": "^3.3.2",
     "prompts": "^2.4.2",
     "puppeteer": "^21.1.1",
     "tarn": "^3.0.2",

@@ -562,11 +562,14 @@ exporter.startExport(exportSettings, function (res, err) {
 });
 ```
 
+## CommonJS support
+This package supports both CommonJS and ES modules.
+
 ## Node.js API Reference
 
 **highcharts-export-server module**
 
-**Functions**
+### Functions
 
 - `log(level, ...)`: Log something. Level is a number from 1 to 4. Args are joined by whitespace to form the message.
 
