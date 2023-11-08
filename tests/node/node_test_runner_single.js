@@ -59,7 +59,7 @@ const exportChart = () => {
 
       // The start date of a startExport function run
       const startTime = new Date().getTime();
-  
+
       // Start the export process
       main.startExport(fileOptions, (info, error) => {
         // Create a message
@@ -118,7 +118,10 @@ const exportChart = () => {
       process.exit(1);
     }
   } else {
-    log(1, 'The test does not exist. Please give a full path starting from ./tests');
+    log(
+      1,
+      'The test does not exist. Please give a full path starting from ./tests'
+    );
     await main.killPool();
   }
 })();

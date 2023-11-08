@@ -31,9 +31,11 @@ const requestBody = {
     xAxis: {
       categories: ['Jan', 'Feb', 'Mar']
     },
-    series: [{
-      data: [29.9, 71.5, 106.4]
-    }]
+    series: [
+      {
+        data: [29.9, 71.5, 106.4]
+      }
+    ]
   }
 };
 

@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
-import fetch from '../../lib/fetch.js';
+import { fetch } from '../../lib/fetch.js';
 import { join } from 'path';
 
 import 'colors';

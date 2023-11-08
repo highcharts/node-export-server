@@ -51,9 +51,7 @@ const exportChart = (file) => {
       console.log('[Test runner]'.blue, `Processing test ${file}.`);
 
       // Options from a file
-      const fileOptions = JSON.parse(
-        readFileSync(join(scenariosPath, file))
-      );
+      const fileOptions = JSON.parse(readFileSync(join(scenariosPath, file)));
 
       // Prepare an outfile path
       fileOptions.export.outfile = join(
@@ -126,7 +124,10 @@ const exportChart = (file) => {
             // Start the export
             await exportChart(file);
           } catch (error) {
-            console.log(`[ERROR] Error while exporting chart from the ${file}, ${error}`.red);
+            console.log(
+              `[ERROR] Error while exporting chart from the ${file}, ${error}`
+                .red
+            );
             failsCouter++;
           }
           testCounter++;

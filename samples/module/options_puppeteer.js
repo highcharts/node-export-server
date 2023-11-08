@@ -1,11 +1,7 @@
 import { writeFileSync } from 'fs';
 
-// Include the exporter module
 import main from '../../lib/index.js';
-// Get the default options
-import { initDefaultOptions } from '../../lib/config.js';
-import { mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
+import { mergeConfigOptions, setOptions } from '../../lib/config.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -124,12 +120,16 @@ const exportSettings = {
 };
 
 const start = async () => {
+  // Set the new options
+  const initOptions = setOptions();
+
   // Gather options
-  const options = mergeConfigOptions(
-    initDefaultOptions(defaultConfig),
-    exportSettings,
-    ['options', 'globalOptions', 'themeOptions', 'resources']
-  );
+  const options = mergeConfigOptions(initOptions, exportSettings, [
+    'options',
+    'globalOptions',
+    'themeOptions',
+    'resources'
+  ]);
 
   // Init a pool for one export
   await main.initPool(options);

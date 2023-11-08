@@ -1,16 +1,12 @@
-// Get the default options
-import { initDefaultOptions } from '../../lib/config.js';
-import { mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
-// Load main module for functions like initPool and startExport
 import exporter from '../../lib/index.js';
+import { mergeConfigOptions, setOptions } from '../../lib/config.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
+  // Set the new options
+  const initOptions = setOptions();
+
   // Init the options
-  const allOptions = mergeConfigOptions(
-    initDefaultOptions(defaultConfig),
-    exportOptions
-  );
+  const allOptions = mergeConfigOptions(initOptions, exportOptions);
 
   // Init the pool
   await exporter.initPool(allOptions);

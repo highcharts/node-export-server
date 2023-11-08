@@ -15,35 +15,37 @@ See LICENSE file in root for details.
 import { writeFileSync } from 'fs';
 
 import main from '../lib/index.js';
-import { initDefaultOptions, manualConfiguration } from '../lib/config.js';
-import { printLogo, printUsage, pairArgumentValue } from '../lib/utils.js';
-import { defaultConfig } from '../lib/schemas/config.js';
+
+import { setOptions, manualConfig } from '../lib/config.js';
+import { printLogo, printUsage } from '../lib/utils.js';
 
 /**
  * The main start function to start the server or do the direct export
  */
 const start = async () => {
+  // Get the CLI arguments
   const args = process.argv;
-
-  // Set default values for server's options and returns them
-  let options = initDefaultOptions(defaultConfig);
-
-  // Print initial logo or text
-  printLogo(options.other.noLogo);
 
   // Print the usage information if no arguments supplied
   if (args.length <= 2) {
-    return printUsage(defaultConfig);
+    return printUsage();
   }
 
-  // Parse provided arguments
-  options = await pairArgumentValue(options, args, defaultConfig);
+  // Set the options, keeping the priority order of setting values:
+  // 1. Options from the lib/schemas/config.js file
+  // 2. Options from a custom JSON file (loaded by the --loadConfig argument)
+  // 3. Options from the environment variables (the .env file)
+  // 4. Options from the CLI
+  const options = setOptions(args);
 
   // If all options correctly parsed
   if (options) {
+    // Print initial logo or text
+    printLogo(options.other.noLogo);
+
     // In this case we want to prepare config manually
     if (options.customCode.createConfig) {
-      return manualConfiguration(options.customCode.createConfig);
+      return manualConfig(options.customCode.createConfig);
     }
 
     // Start server
