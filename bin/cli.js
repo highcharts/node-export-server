@@ -12,8 +12,6 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { writeFileSync } from 'fs';
-
 import main from '../lib/index.js';
 
 import { setOptions, manualConfig } from '../lib/config.js';
@@ -58,8 +56,6 @@ const start = async () => {
     } else {
       // Perform batch exports
       if (options.export.batch) {
-        const batchFunctions = [];
-
         // If not set explicitly, use default option for batch exports
         if (!args.includes('--initialWorkers', '--maxWorkers')) {
           options.pool = {
@@ -73,45 +69,8 @@ const start = async () => {
         // Init a pool for the batch exports
         await main.initPool(options);
 
-        // Split and pair the --batch arguments
-        for (let pair of options.export.batch.split(';')) {
-          pair = pair.split('=');
-          if (pair.length === 2) {
-            batchFunctions.push(
-              new Promise((resolve) => {
-                main.startExport(
-                  {
-                    ...options,
-                    export: {
-                      ...options.export,
-                      infile: pair[0],
-                      outfile: pair[1]
-                    }
-                  },
-                  (info, error) => {
-                    // Throw an error
-                    if (error) {
-                      throw error;
-                    }
-
-                    // Save the base64 from a buffer to a correct image file
-                    writeFileSync(
-                      info.options.export.outfile,
-                      Buffer.from(info.data, 'base64')
-                    );
-
-                    resolve();
-                  }
-                );
-              })
-            );
-          }
-        }
-
-        // Kill the pool after all exports are done
-        Promise.all(batchFunctions).then(() => {
-          main.killPool();
-        });
+        // Start batch exports
+        await main.batchExport(options);
       } else {
         // No need for multiple workers in case of a single CLI export
         options.pool = {
@@ -124,28 +83,8 @@ const start = async () => {
         // Init a pool for one export
         await main.initPool(options);
 
-        // Use instr or its alias, options
-        options.export.instr = options.export.instr || options.export.options;
-
-        // Perform an export
-        main.startExport(options, (info, error) => {
-          // Exit process when error
-          if (error) {
-            main.log(1, `[cli] ${error.message}`);
-            process.exit(1);
-          }
-
-          const { outfile, type } = info.options.export;
-
-          // Save the base64 from a buffer to a correct image file
-          writeFileSync(
-            outfile || `chart.${type}`,
-            type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
-          );
-
-          // Kill the pool
-          main.killPool();
-        });
+        // Start a single export
+        main.singleExport(options);
       }
     }
   }
