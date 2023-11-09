@@ -2,47 +2,43 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# Puppeteer Version Information
+# Note on the repository layout
 
-We are currently working on a refactor which amongst other things replaces PhantomJS with Puppeteer.
-Until then, maintainance of the PhantomJS based application is limited.
+The latest stable release can be found in the `stable` branch.
 
-Planned release for the new version (V3.0.0) is Q3 2023.
+# V3.0
 
-The work can be followed in the `enhancement/puppeteer` branch.
-The Beta package for V3.0.0 can be through NPM with:
+Version 3.0 which uses Puppeteer as the back-end is now live. 
 
-`npm i highcharts-export-server@3.0.0-rc.2`
+**Note that V3.0 is currently only in the `stable` branch!**
 
-## V3.0 Release Update (16 Oct 23)
+## Upgrade notes for V3.0
 
-The blocking issue described below is currently fixed, but unconfirmed.
+V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
 
-The latest RC on NPM is `3.0.0-rc.2`, which contains fixes related to request timeouts, memory issues, and general stability.
+The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
-## V3.0 Release Update (14 Sep 23)
+One important note is that the export server now requires `node v16.14.0` or highe
 
-**[We have a blocking issue (#412)](https://github.com/highcharts/node-export-server/issues/412) keeping us from doing a full release.**
+## V3.0 Changelog
 
-The issue is related to a memory leak occuring in certain situations. We've been unable to reproduce this in our end, but have several users experiencing the problem in the `beta.1` and `beta.2` releases.
+_Fixes and enhancements:_
 
-As this is quite severe for those impacted, we are holding back the full release until it's sorted out.
+- Replaced PhantomJS with Puppeteer
+- Updated the config handling system to optionally load JSON files, and improved environment var loading
+- Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
+- The install step no longer requires interaction when installing
+- Replaced the custom worker pool system with `tarn`
+- Error messages are now sent back to the client instead of being displayed in rasterized output
+- Updated NPM dependencies, removed deprecated and uneccessary dependencies
+- Lots of smaller bugfixes and tweaks
 
-**If you are experiencing this issue, and you are willing to help us test a few builds, we'd very much like to hear from you!** Please contact us at support@highcharts.com.
+_New Features:_
 
-# Breaking changes in v2.1.0
+- Added `/health` route to server to display basic server information
+- Added a UI served on `/` to perform exports from JSON configurations in browser
 
-Version 2.1.0 has a couple of breaking changes:
-
-  * Log destinations must now exist before starting file logging
-  * The following options are now disabled by default:
-    - `callback`
-    - `resources`
-    - `customCode`
-
-Disabled options can be enabled by adding the `--allowCodeExecution` flag when
-starting the server/CLI. Using this flag is not recommended, and should not be
-done unless the server is sandboxed and not reachable on the public internet, or if only using the CLI in a controlled manner (e.g. it's not possible for a user to change the configuration sent to it through a different system).
+The full change log for all versions can be viewed [here](CHANGELOG.md).
 
 ## What & Why
 
