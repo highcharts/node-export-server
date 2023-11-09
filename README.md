@@ -2,11 +2,33 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# Upgrade notes for V3.0
+# V3.0 Notes
+
+## Upgrade notes for V3.0
 
 V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
+
+## Changelog
+
+_Fixes and enhancements:_
+
+- Replaced PhantomJS with Puppeteer
+- Updated the config handling system to optionally load JSON files, and improved environment var loading
+- Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
+- The install step no longer requires interaction when installing
+- Replaced the custom worker pool system with `tarn`
+- Error messages are now sent back to the client instead of being displayed in rasterized output
+- Updated NPM dependencies, removed deprecated and uneccessary dependencies
+- Lots of smaller bugfixes and tweaks
+
+_New Features:_
+
+- Added `/health` route to server to display basic server information
+- Added a UI served on `/` to perform exports from JSON configurations in browser
+
+The full change log for all versions can be viewed [here](CHANGELOG.md).
 
 # What & Why
 
