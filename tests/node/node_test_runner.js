@@ -105,9 +105,6 @@ const exportChart = (file) => {
   const options = exporter.setOptions({
     logging: {
       level: 0
-    },
-    pool: {
-      maxWorkers: files.length
     }
   });
 
