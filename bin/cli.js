@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 import main from '../lib/index.js';
 
-import { setOptions, manualConfig } from '../lib/config.js';
+import { manualConfig } from '../lib/config.js';
 import { printLogo, printUsage } from '../lib/utils.js';
 
 /**
@@ -34,7 +34,7 @@ const start = async () => {
   // 2. Options from a custom JSON file (loaded by the --loadConfig argument)
   // 3. Options from the environment variables (the .env file)
   // 4. Options from the CLI
-  const options = setOptions(args);
+  const options = main.setOptions(null, args);
 
   // If all options correctly parsed
   if (options) {
@@ -70,7 +70,7 @@ const start = async () => {
         await main.initPool(options);
 
         // Start batch exports
-        await main.batchExport(options);
+        main.batchExport(options);
       } else {
         // No need for multiple workers in case of a single CLI export
         options.pool = {

@@ -1,7 +1,4 @@
-import { writeFileSync } from 'fs';
-
-import main from '../../lib/index.js';
-import { mergeConfigOptions, setOptions } from '../../lib/config.js';
+import exporter from '../../lib/index.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -121,36 +118,24 @@ const exportSettings = {
 
 const start = async () => {
   // Set the new options
-  const initOptions = setOptions();
-
-  // Gather options
-  const options = mergeConfigOptions(initOptions, exportSettings, [
-    'options',
-    'globalOptions',
-    'themeOptions',
-    'resources'
-  ]);
+  const options = exporter.setOptions(exportSettings);
 
   // Init a pool for one export
-  await main.initPool(options);
+  await exporter.initPool(options);
 
   // Perform an export
-  main.startExport(options, (info, error) => {
-    // Exit process when error
+  exporter.startExport(options, (info, error) => {
+    // Exit process and display error
     if (error) {
+      exporter.log(1, error);
       process.exit(1);
     }
 
-    const { outfile, type } = info.options.export;
-
-    // Save the base64 from a buffer to a correct image file
-    writeFileSync(
-      outfile,
-      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
-    );
+    // Display the results
+    exporter.log(4, info.data);
 
     // Kill the pool
-    main.killPool();
+    exporter.killPool();
   });
 };
 

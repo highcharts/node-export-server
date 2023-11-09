@@ -17,7 +17,7 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import main from '../../lib/index.js';
+import exporter from '../../lib/index.js';
 import { log } from '../../lib/logger.js';
 import { __dirname } from '../../lib/utils.js';
 
@@ -61,7 +61,7 @@ const exportChart = () => {
       const startTime = new Date().getTime();
 
       // Start the export process
-      main.startExport(fileOptions, (info, error) => {
+      exporter.startExport(fileOptions, (info, error) => {
         // Create a message
         let endMessage = `Node module from file: ${file}, took: ${
           new Date().getTime() - startTime
@@ -98,7 +98,7 @@ const exportChart = () => {
 
 (async () => {
   // Init pool with one worker and without logging
-  await main.initPool({
+  await exporter.initPool({
     pool: {
       initialWorkers: 1,
       maxWorkers: 1
@@ -122,6 +122,6 @@ const exportChart = () => {
       1,
       'The test does not exist. Please give a full path starting from ./tests'
     );
-    await main.killPool();
+    await exporter.killPool();
   }
 })();

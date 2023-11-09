@@ -1,10 +1,6 @@
 import { writeFileSync } from 'fs';
 
-// Load main module for functions like initPool and startExport
 import exporter from '../../lib/index.js';
-
-// Get the default options
-import { mergeConfigOptions, setOptions } from '../../lib/config.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -20,18 +16,16 @@ const exportSettings = {
 
 const start = async () => {
   // Set the new options
-  const initOptions = setOptions();
-
-  // Gather options
-  const options = mergeConfigOptions(initOptions, exportSettings, ['payload']);
+  const options = exporter.setOptions(exportSettings);
 
   // Init a pool for one export
   await exporter.initPool(options);
 
   // Perform an export
   exporter.startExport(options, (info, error) => {
-    // Exit process when error
+    // Exit process and display error
     if (error) {
+      exporter.log(1, error);
       process.exit(1);
     }
 

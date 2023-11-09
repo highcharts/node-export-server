@@ -23,7 +23,7 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import main from '../../lib/index.js';
+import exporter from '../../lib/index.js';
 import { __dirname } from '../../lib/utils.js';
 
 console.log(
@@ -67,7 +67,7 @@ const exportChart = (file) => {
       const startTime = new Date().getTime();
 
       // Start the export process
-      main.startExport(fileOptions, (info, error) => {
+      exporter.startExport(fileOptions, (info, error) => {
         // Set the end time
         const endTime = new Date().getTime();
 
@@ -101,15 +101,18 @@ const exportChart = (file) => {
 };
 
 (async () => {
-  // Initialize pool with disabled logging
-  await main.initPool({
+  // Set options
+  const options = exporter.setOptions({
     logging: {
       level: 0
     },
     pool: {
-      max: files.length
+      maxWorkers: files.length
     }
   });
+
+  // Initialize pool with disabled logging
+  await exporter.initPool(options);
 
   let testCounter = 0;
   let failsCouter = 0;
@@ -146,5 +149,5 @@ const exportChart = (file) => {
       : `\n${testCounter} tests done, errors not found!`.green,
     '\n--------------------------------'
   );
-  await main.killPool();
+  await exporter.killPool();
 })();

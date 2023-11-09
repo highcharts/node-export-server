@@ -1,15 +1,11 @@
 import exporter from '../../lib/index.js';
-import { mergeConfigOptions, setOptions } from '../../lib/config.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
   // Set the new options
-  const initOptions = setOptions();
-
-  // Init the options
-  const allOptions = mergeConfigOptions(initOptions, exportOptions);
+  const options = exporter.setOptions(exportOptions);
 
   // Init the pool
-  await exporter.initPool(allOptions);
+  await exporter.initPool(options);
 
   const promises = [];
   const chartResults = [];
@@ -18,7 +14,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
   charts.forEach((chart) => {
     promises.push(
       new Promise((resolve, reject) => {
-        const settings = { ...allOptions };
+        const settings = { ...options };
         settings.export.options = chart;
 
         exporter.startExport(settings, (info, error) => {
@@ -71,17 +67,17 @@ exportCharts(
   ],
   {
     logging: {
-      level: 1
+      level: 4
     }
   }
 )
   .then((charts) => {
     // Result of export is in charts, which is an array of base64 encoded files
     charts.forEach((chart, index) => {
-      console.log(`${index}. ${chart}\n`);
+      exporter.log(4, `${index}. ${chart}\n`);
     });
-    console.log('All done!');
+    exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    console.log(`Something went wrong: ${error}`);
+    exporter.log(4, `Something went wrong: ${error}`);
   });
