@@ -1,3 +1,9 @@
+# 3.0.1
+
+Fixes:
+
+- Added missing shebang in `cli.js`
+
 # 3.0.0
 
 _Fixes and enhancements:_
