@@ -6,9 +6,9 @@ _Fixes and enhancements:_
 - Updated the config handling system to optionally load JSON files, and improved environment var loading
 - Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
 - The install step no longer requires interaction when installing
-- Replaced the worker pool system with `generic-pool`
+- Replaced the custom worker pool system with `tarn`
 - Error messages are now sent back to the client instead of being displayed in rasterized output
-- Updated NPM dependencies
+- Updated NPM dependencies, removed deprecated and uneccessary dependencies
 
 _New Features:_
 
