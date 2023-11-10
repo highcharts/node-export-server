@@ -2,17 +2,11 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# Breaking changes in v2.1.0
+# Upgrade notes for V3.0
 
-Version 2.1.0 has a couple of breaking changes:
+V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
 
-- Log destinations must now exist before starting file logging.
-- The following options are now disabled by default:
-  - `callback`
-  - `resources`
-  - `customCode`
-
-Disabled options can be enabled by adding the `--allowCodeExecution` flag when starting the server/CLI. Using this flag is not recommended, and should not be done unless the server is sandboxed and not reachable on the public internet, or if only using the CLI in a controlled manner (e.g. it's not possible for a user to change the configuration sent to it through a different system).
+The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
 # What & Why
 
