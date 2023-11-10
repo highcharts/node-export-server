@@ -105,7 +105,7 @@ const exportSettings = {
     }
   },
   customCode: {
-    allowCodeExecution: true,
+    allowCodeExecution: false,
     allowFileResources: true,
     callback: './samples/resources/callback.js',
     customCode: './samples/resources/custom_code.js',
@@ -127,7 +127,7 @@ const start = async () => {
   exporter.startExport(options, (info, error) => {
     // Exit process and display error
     if (error) {
-      exporter.log(1, error);
+      exporter.log(1, error.message);
       process.exit(1);
     }
 

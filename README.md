@@ -77,11 +77,11 @@ highcharts-export-server <arguments>
 There are four main ways of loading configurations:
 
 - By loading default options from the `lib/schemas/config.js` file.
+- By loading a custom JSON file.
 - By providing environment variables.
 - By passing command line arguments.
-- By loading a custom JSON file.
 
-...or any combination of the four. In this case, the options from the later step take precedence (config file -> envs -> cli arguments -> json).
+...or any combination of the four. In this case, the options from the later step take precedence (config file -> custom json -> envs -> cli arguments).
 
 ## Loading Default JSON Config
 
@@ -234,6 +234,10 @@ The format, with its default values are as follows (using the below ordering of 
 }
 ```
 
+## Loading Custom JSON Config
+
+Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option. Such a JSON can be created manually or through a prompt called by the `--createConfig` option.
+
 ## Environment Variables
 
 These are set as variables in your environment. They take precedence over options from the `lib/schemas/config.js` file. On Linux, use e.g. `export`.
@@ -356,10 +360,6 @@ _Available options:_
 - `--enableUi`: Enables the UI for the export server (defaults to `false`).
 - `--uiRoute`: The route to attach the UI to (defaults to `/`).
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
-
-## Loading Custom JSON Config
-
-Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option. Such a JSON can be created manually or through a prompt called by the `--createConfig` option.
 
 # Tips, Tricks & Notes
 
@@ -549,8 +549,11 @@ const exportSettings = {
   }
 };
 
+// Set the new options and merge it with the default options
+const options = exporter.setOptions(exportSettings);
+
 // Initialize a pool of workers
-await exporter.initPool();
+await exporter.initPool(options);
 
 // Perform an export
 exporter.startExport(exportSettings, function (res, err) {
@@ -573,15 +576,16 @@ This package supports both CommonJS and ES modules.
 
 - `log(level, ...)`: Log something. Level is a number from 1 to 4. Args are joined by whitespace to form the message.
 
+- `mapToNewConfig(oldOptions)`: Maps the old options structure (for the PhantomJS server) to the new config structure.
+
+- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority (more in the Configuration section). It accepts optional userOptions and with args from the CLI.
 
 - `startExport(settings, endCallback)`: Start an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an object as the first argument containing the base64 respresentation of a chart.
 
-
 - `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
 
-
 - `server` - The server instance:
-  - `start(serverConfig)` - The same as `startServer` from above.
+  - `startServer(serverConfig)` - The same as `startServer` from above.
   - `getExpress()` - Return the express module instance.
   - `getApp()` - Return the app instance.
   - `use(path, ...middlewares)` - Add a middleware to the server.
@@ -594,7 +598,6 @@ This package supports both CommonJS and ES modules.
     - `trustProxy` - Set this to true if behind a load balancer.
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
 
-
 - `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
   - `initialWorkers` (default 4) - Initial worker process count.
   - `maxWorkers` (default 8) - Max worker processes count.
@@ -603,7 +606,6 @@ This package supports both CommonJS and ES modules.
   - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds.
   - `benchmarking` (default false) - Enable benchmarking.
   - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
-
 
 - `killPool()`: Kill the pool of resources (Puppeteer browser's pages).
 
@@ -625,18 +627,18 @@ Other switches can be combined with this switch.
 
 # Switching HC version at runtime
 
-If `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change-hc-version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
+If `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change_hc_version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
 
 A sample request to change the version to 10.3.3 is as follows:
 
 ```
-curl -H 'hc-auth: <YOUR AUTH TOKEN>' -X POST <SERVER URL>/change-hc-version/10.3.3
+curl -H 'hc-auth: <YOUR AUTH TOKEN>' -X POST <SERVER URL>/change_hc_version/10.3.3
 ```
 
 e.g.
 
 ```
-curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change-hc-version/10.3.3
+curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change_hc_version/10.3.3
 ```
 
 This is useful to e.g. upgrade to the latest HC version without downtime.

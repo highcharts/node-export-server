@@ -97,8 +97,8 @@ const exportChart = () => {
 };
 
 (async () => {
-  // Init pool with one worker and without logging
-  await exporter.initPool({
+  // Set options
+  const options = exporter.setOptions({
     pool: {
       initialWorkers: 1,
       maxWorkers: 1
@@ -107,6 +107,9 @@ const exportChart = () => {
       level: 0
     }
   });
+
+  // Initialize pool with disabled logging
+  await exporter.initPool(options);
 
   // Check if file even exists and if it is a JSON
   if (existsSync(file) && file.endsWith('.json')) {
