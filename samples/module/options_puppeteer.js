@@ -8,7 +8,7 @@ const exportSettings = {
     outfile: './samples/module/options_puppeteer.jpeg',
     height: 800,
     width: 1200,
-    scale: 2,
+    scale: 1,
     options: {
       chart: {
         styledMode: true,
@@ -105,7 +105,7 @@ const exportSettings = {
     }
   },
   customCode: {
-    allowCodeExecution: false,
+    allowCodeExecution: true,
     allowFileResources: true,
     callback: './samples/resources/callback.js',
     customCode: './samples/resources/custom_code.js',
