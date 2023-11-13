@@ -1,11 +1,4 @@
-import { writeFileSync } from 'fs';
-
-// Include the exporter module
-import main from '../../lib/index.js';
-// Get the default options
-import { initDefaultOptions } from '../../lib/config.js';
-import { mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
+import exporter from '../../lib/index.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -15,7 +8,7 @@ const exportSettings = {
     outfile: './samples/module/options_puppeteer.jpeg',
     height: 800,
     width: 1200,
-    scale: 2,
+    scale: 1,
     options: {
       chart: {
         styledMode: true,
@@ -124,33 +117,25 @@ const exportSettings = {
 };
 
 const start = async () => {
-  // Gather options
-  const options = mergeConfigOptions(
-    initDefaultOptions(defaultConfig),
-    exportSettings,
-    ['options', 'globalOptions', 'themeOptions', 'resources']
-  );
+  // Set the new options
+  const options = exporter.setOptions(exportSettings);
 
   // Init a pool for one export
-  await main.initPool(options);
+  await exporter.initPool(options);
 
   // Perform an export
-  main.startExport(options, (info, error) => {
-    // Exit process when error
+  exporter.startExport(options, (info, error) => {
+    // Exit process and display error
     if (error) {
+      exporter.log(1, error.message);
       process.exit(1);
     }
 
-    const { outfile, type } = info.options.export;
-
-    // Save the base64 from a buffer to a correct image file
-    writeFileSync(
-      outfile,
-      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
-    );
+    // Display the results
+    exporter.log(4, info.data);
 
     // Kill the pool
-    main.killPool();
+    exporter.killPool();
   });
 };
 

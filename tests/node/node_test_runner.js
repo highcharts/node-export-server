@@ -23,7 +23,7 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import main from '../../lib/index.js';
+import exporter from '../../lib/index.js';
 import { __dirname } from '../../lib/utils.js';
 
 console.log(
@@ -51,9 +51,7 @@ const exportChart = (file) => {
       console.log('[Test runner]'.blue, `Processing test ${file}.`);
 
       // Options from a file
-      const fileOptions = JSON.parse(
-        readFileSync(join(scenariosPath, file))
-      );
+      const fileOptions = JSON.parse(readFileSync(join(scenariosPath, file)));
 
       // Prepare an outfile path
       fileOptions.export.outfile = join(
@@ -69,7 +67,7 @@ const exportChart = (file) => {
       const startTime = new Date().getTime();
 
       // Start the export process
-      main.startExport(fileOptions, (info, error) => {
+      exporter.startExport(fileOptions, (info, error) => {
         // Set the end time
         const endTime = new Date().getTime();
 
@@ -103,15 +101,15 @@ const exportChart = (file) => {
 };
 
 (async () => {
-  // Initialize pool with disabled logging
-  await main.initPool({
+  // Set options
+  const options = exporter.setOptions({
     logging: {
       level: 0
-    },
-    pool: {
-      max: files.length
     }
   });
+
+  // Initialize pool with disabled logging
+  await exporter.initPool(options);
 
   let testCounter = 0;
   let failsCouter = 0;
@@ -126,7 +124,10 @@ const exportChart = (file) => {
             // Start the export
             await exportChart(file);
           } catch (error) {
-            console.log(`[ERROR] Error while exporting chart from the ${file}, ${error}`.red);
+            console.log(
+              `[ERROR] Error while exporting chart from the ${file}, ${error}`
+                .red
+            );
             failsCouter++;
           }
           testCounter++;
@@ -145,5 +146,5 @@ const exportChart = (file) => {
       : `\n${testCounter} tests done, errors not found!`.green,
     '\n--------------------------------'
   );
-  await main.killPool();
+  await exporter.killPool();
 })();

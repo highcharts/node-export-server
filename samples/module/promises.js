@@ -1,19 +1,11 @@
-// Get the default options
-import { initDefaultOptions } from '../../lib/config.js';
-import { mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
-// Load main module for functions like initPool and startExport
 import exporter from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
-  // Init the options
-  const allOptions = mergeConfigOptions(
-    initDefaultOptions(defaultConfig),
-    exportOptions
-  );
+  // Set the new options
+  const options = exporter.setOptions(exportOptions);
 
   // Init the pool
-  await exporter.initPool(allOptions);
+  await exporter.initPool(options);
 
   const promises = [];
   const chartResults = [];
@@ -22,7 +14,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
   charts.forEach((chart) => {
     promises.push(
       new Promise((resolve, reject) => {
-        const settings = { ...allOptions };
+        const settings = { ...options };
         settings.export.options = chart;
 
         exporter.startExport(settings, (info, error) => {
@@ -75,17 +67,17 @@ exportCharts(
   ],
   {
     logging: {
-      level: 1
+      level: 4
     }
   }
 )
   .then((charts) => {
     // Result of export is in charts, which is an array of base64 encoded files
     charts.forEach((chart, index) => {
-      console.log(`${index}. ${chart}\n`);
+      exporter.log(4, `${index}. ${chart}\n`);
     });
-    console.log('All done!');
+    exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    console.log(`Something went wrong: ${error}`);
+    exporter.log(4, `Something went wrong: ${error}`);
   });

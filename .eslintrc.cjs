@@ -20,7 +20,10 @@ module.exports = {
       'error',
       {
         singleQuote: true,
-        trailingComma: 'none'
+        trailingComma: 'none',
+        semi: true,
+        tabWidth: 2,
+        endOfLine: require('os').EOL === '\r\n' ? 'crlf' : 'lf'
       }
     ]
   }
