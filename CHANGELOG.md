@@ -1,3 +1,19 @@
+# 3.0.2
+
+FIXES:
+
+- Changed the priority of loading options to: config -> custom JSON -> envs -> CLI.
+- Corrected the The unhandledRejection error, message: Protocol error: Connection closed. Most likely the page has been closed, an error related to closing the browser earlier than closing each of an active page.
+- Refactored the way options are set (the setOptions function).
+- Corrected straight inject with JS functions in chart's options (e.g. formatter), when the allowCodeExecution is set to true.
+- Organized code into two separate functions (singleExport and batchExport).
+- Corrected reseting global options for Highcharts between each export.
+- Corrections for the linter.
+- Samples and tests corrections.
+- Added sample for the loadConfig option.
+- Updated Readme.
+- Other small fixes.
+
 # 3.0.1
 
 Fixes:
