@@ -1,3 +1,5 @@
+import { writeFileSync } from 'fs';
+
 import exporter from '../../lib/index.js';
 
 // Export settings with the old options structure (PhantomJS)
@@ -5,6 +7,7 @@ import exporter from '../../lib/index.js';
 const exportSettings = {
   type: 'png',
   constr: 'chart',
+  outfile: './samples/module/options_phantom.jpeg',
   async: true, // Will be removed as it is not supported anymore
   logLevel: 4,
   scale: 1,
@@ -61,9 +64,13 @@ const start = async () => {
       exporter.log(1, error.message);
       process.exit(1);
     }
+    const { outfile, type } = info.options.export;
 
-    // Display the results
-    exporter.log(4, info.data);
+    // Save the base64 from a buffer to a correct image file
+    writeFileSync(
+      outfile,
+      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
+    );
 
     // Kill the pool
     exporter.killPool();

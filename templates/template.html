@@ -116,7 +116,6 @@
       const finalOptions = merge(
         false,
         JSON.parse(options.export.themeOptions),
-        JSON.parse(options.export.globalOptions),
         userOptions,
         // Placed it here instead in the init because of the size issues
         { chart }
@@ -126,29 +125,30 @@
         ? new Function(`return ${options.customCode.callback}`)()
         : undefined;
 
+      // Set the global options if exist
+      Highcharts.setOptions(JSON.parse(options.export.globalOptions));
+
       Highcharts[options.export.constr || 'chart'](
         'container',
         finalOptions,
         finalCallback
       );
 
-      if (options.customCode.allowCodeExecution) {
-        // Get the current global options
-        const defaultOptions = Highcharts.getOptions();
+      // Get the current global options
+      const defaultOptions = Highcharts.getOptions();
 
-        // Clear it just in case (e.g. the setOptions was used in the customCode)
-        for (const prop in defaultOptions) {
-          if (typeof defaultOptions[prop] !== 'function') {
-            delete defaultOptions[prop];
-          }
+      // Clear it just in case (e.g. the setOptions was used in the customCode)
+      for (const prop in defaultOptions) {
+        if (typeof defaultOptions[prop] !== 'function') {
+          delete defaultOptions[prop];
         }
-
-        // Set the default options back
-        Highcharts.setOptions(Highcharts.setOptionsObj);
-
-        // Empty the custom global options object
-        Highcharts.setOptionsObj = {};
       }
+
+      // Set the default options back
+      Highcharts.setOptions(Highcharts.setOptionsObj);
+
+      // Empty the custom global options object
+      Highcharts.setOptionsObj = {};
     }
 
     function triggerExport(chartOptions, exportOptions) {
@@ -164,13 +164,11 @@
 
       // Create a separate object for a potential setOptions usages in order to
       // prevent from polluting other exports that can happen on the same page
-      if (exportOptions.customCode.allowCodeExecution) {
-        Highcharts.setOptionsObj = Highcharts.merge(
-          false,
-          {},
-          Highcharts.getOptions()
-        );
-      }
+      Highcharts.setOptionsObj = Highcharts.merge(
+        false,
+        {},
+        Highcharts.getOptions()
+      );
 
       // Trigger custom code
       if (exportOptions.customCode.customCode) {
