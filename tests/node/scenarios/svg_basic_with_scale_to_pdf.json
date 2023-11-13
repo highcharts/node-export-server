@@ -3,6 +3,6 @@
   "type": "pdf",
   "scale": 2,
   "export": {
-    "outfile": "svg_basic_with_scale_to_pdf.png"
+    "outfile": "svg_basic_with_scale_to_pdf.pdf"
   }
 }

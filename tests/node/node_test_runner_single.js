@@ -17,7 +17,7 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import main from '../../lib/index.js';
+import exporter from '../../lib/index.js';
 import { log } from '../../lib/logger.js';
 import { __dirname } from '../../lib/utils.js';
 
@@ -59,9 +59,9 @@ const exportChart = () => {
 
       // The start date of a startExport function run
       const startTime = new Date().getTime();
-  
+
       // Start the export process
-      main.startExport(fileOptions, (info, error) => {
+      exporter.startExport(fileOptions, (info, error) => {
         // Create a message
         let endMessage = `Node module from file: ${file}, took: ${
           new Date().getTime() - startTime
@@ -97,8 +97,8 @@ const exportChart = () => {
 };
 
 (async () => {
-  // Init pool with one worker and without logging
-  await main.initPool({
+  // Set options
+  const options = exporter.setOptions({
     pool: {
       initialWorkers: 1,
       maxWorkers: 1
@@ -107,6 +107,9 @@ const exportChart = () => {
       level: 0
     }
   });
+
+  // Initialize pool with disabled logging
+  await exporter.initPool(options);
 
   // Check if file even exists and if it is a JSON
   if (existsSync(file) && file.endsWith('.json')) {
@@ -118,7 +121,10 @@ const exportChart = () => {
       process.exit(1);
     }
   } else {
-    log(1, 'The test does not exist. Please give a full path starting from ./tests');
-    await main.killPool();
+    log(
+      1,
+      'The test does not exist. Please give a full path starting from ./tests'
+    );
+    await exporter.killPool();
   }
 })();

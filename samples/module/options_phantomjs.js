@@ -1,10 +1,4 @@
-// Include the exporter module
-import main from '../../lib/index.js';
-// Get the default options
-import { initDefaultOptions } from '../../lib/config.js';
-// Utility for mapping old format of options to the new one
-import { mapToNewConfig, mergeConfigOptions } from '../../lib/utils.js';
-import { defaultConfig } from '../../lib/schemas/config.js';
+import exporter from '../../lib/index.js';
 
 // Export settings with the old options structure (PhantomJS)
 // Will be mapped appropriately to the new structure with the mapToNewConfig utility
@@ -12,7 +6,7 @@ const exportSettings = {
   type: 'png',
   constr: 'chart',
   async: true, // Will be removed as it is not supported anymore
-  logLevel: 1,
+  logLevel: 4,
   scale: 1,
   options: {
     chart: {
@@ -51,28 +45,28 @@ const exportSettings = {
 };
 
 const start = async () => {
-  // Gather options
-  const options = mergeConfigOptions(
-    initDefaultOptions(defaultConfig),
-    await mapToNewConfig(exportSettings),
-    ['options']
-  );
+  // Map to fit the new options structure
+  const mappedOptions = exporter.mapToNewConfig(exportSettings);
+
+  // Set the new options
+  const options = exporter.setOptions(mappedOptions);
 
   // Init a pool for one export
-  await main.initPool(options);
+  await exporter.initPool(options);
 
   // Perform an export
-  main.startExport(options, (info, error) => {
-    // Throw an error
+  exporter.startExport(options, (info, error) => {
+    // Exit process and display error
     if (error) {
-      throw error;
+      exporter.log(1, error.message);
+      process.exit(1);
     }
 
-    // Kill the pool
-    main.killPool();
-
     // Display the results
-    console.log(info.data);
+    exporter.log(4, info.data);
+
+    // Kill the pool
+    exporter.killPool();
   });
 };
 
