@@ -175,33 +175,8 @@
         new Function(exportOptions.customCode.customCode)();
       }
 
-      // When straight inject, the size is set through CSS only
-      let injCSS = false;
-
-      if (exportOptions.export.strInj) {
-        const injCSS = document.createElement('style');
-
-        injCSS.textContent = `
-          #chart-container {
-            height: ${chart.height}px;
-            max-width: ${chart.width}px;
-          }
-
-          #chart-container #container{
-            height: ${chart.height}px;
-            max-width: ${chart.width}px;
-          }
-        `;
-
-        document.head.appendChild(injCSS);
-      }
-
+      // Create a chart
       createChart(chartOptions, exportOptions);
-
-      // Remove the injected CSS
-      if (injCSS) {
-        document.head.removeChild(injCSS);
-      }
     }
   </script>
 </html>
