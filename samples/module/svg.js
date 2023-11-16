@@ -25,10 +25,9 @@ const start = async () => {
   exporter.startExport(options, (info, error) => {
     // Exit process and display error
     if (error) {
-      exporter.log(1, error);
+      exporter.log(1, error.message);
       process.exit(1);
     }
-
     const { outfile, type } = info.options.export;
 
     // Save the base64 from a buffer to a correct image file

@@ -1,7 +1,13 @@
+import { writeFileSync } from 'fs';
+
 import exporter from '../../lib/index.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
+  pool: {
+    initialWorkers: 1,
+    maxWorkers: 1
+  },
   export: {
     type: 'jpeg',
     constr: 'chart',
@@ -11,7 +17,6 @@ const exportSettings = {
     scale: 1,
     options: {
       chart: {
-        styledMode: true,
         type: 'column'
       },
       title: {
@@ -111,7 +116,7 @@ const exportSettings = {
     customCode: './samples/resources/custom_code.js',
     resources: {
       js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
-      css: "@import 'https://code.highcharts.com/css/highcharts.css'; .highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 .highcharts-axis-line { stroke: #f7a35c; } .highcharts-axis.highcharts-color-0 text { fill: #f7a35c; } .highcharts-color-1 { fill: #90ed7d; stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 .highcharts-axis-line { stroke: #90ed7d; } .highcharts-axis.highcharts-color-1 text { fill: #90ed7d; } #renderer-callback-label .highcharts-label-box { fill: #90ed7d;}"
+      css: '.highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; }'
     }
   }
 };
@@ -130,9 +135,13 @@ const start = async () => {
       exporter.log(1, error.message);
       process.exit(1);
     }
+    const { outfile, type } = info.options.export;
 
-    // Display the results
-    exporter.log(4, info.data);
+    // Save the base64 from a buffer to a correct image file
+    writeFileSync(
+      outfile,
+      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
+    );
 
     // Kill the pool
     exporter.killPool();

@@ -1,3 +1,5 @@
+import { writeFileSync } from 'fs';
+
 import exporter from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
@@ -74,10 +76,14 @@ exportCharts(
   .then((charts) => {
     // Result of export is in charts, which is an array of base64 encoded files
     charts.forEach((chart, index) => {
-      exporter.log(4, `${index}. ${chart}\n`);
+      // Save the base64 from a buffer to a correct image file
+      writeFileSync(
+        `./samples/module/promise_${index + 1}.jpeg`,
+        Buffer.from(chart, 'base64')
+      );
     });
     exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    exporter.log(4, `Something went wrong: ${error}`);
+    exporter.log(4, `Something went wrong: ${error.message}`);
   });
