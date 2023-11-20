@@ -1,3 +1,11 @@
+# 3.0.3
+
+Fixes:
+
+- Fixed an issue with height and width for CSS (#419)
+- Fixed `globalOptions` (#434)
+- Other smaller fixes
+
 # 3.0.2
 
 FIXES:
