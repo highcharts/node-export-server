@@ -274,7 +274,7 @@ These are set as variables in your environment. They take precedence over option
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch.
 - `HIGHCHARTS_MODULES`: Highcharts modules to fetch.
 - `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch.
-- `HIGHCHARTS_FORCE_FETCH`: Should re-fetch all the scripts after each server re-run.
+- `HIGHCHARTS_FORCE_FETCH`: Should refetch all the scripts after each server rerun.
 
 ### Custom code config
 - `HIGHCHARTS_ALLOW_CODE_EXECUTION`: If set to true, allow for the execution of arbitrary code when exporting.
