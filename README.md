@@ -265,7 +265,7 @@ These are set as variables in your environment. They take precedence over option
 - `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart.
 - `EXPORT_DEFAULT_HEIGHT`: The height of the exported chart. Overrides the option in the chart settings.
 - `EXPORT_DEFAULT_WIDTH`: The width of the exported chart. Overrides the option in the chart settings.
-- `EXPORT_DEFAULT_SCALE`: The scale of the exported chart. Ranges between 1 and 5.
+- `EXPORT_DEFAULT_SCALE`: The scale of the exported chart. Ranges between 0.1 and 5.0.
 
 ### Highcharts config
 - `HIGHCHARTS_VERSION`: Highcharts version to use.
@@ -341,7 +341,7 @@ _Available options:_
 - `--constr`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart (defaults to `chart`).
 - `--height`: The height of the exported chart. Overrides the option in the chart settings (defaults to `600`).
 - `--width`: The width of the exported chart. Overrides the option in the chart settings (defaults to `400`).
-- `--scale`: The scale of the exported chart. Ranges between 1 and 5 (defaults to `1`).
+- `--scale`: The scale of the exported chart. Ranges between 0.1 and 5.0 (defaults to `1`).
 - `--globalOptions`: A stringified JSON or a filename with options to be passed into the Highcharts.setOptions (defaults to `false`).
 - `--themeOptions`: A stringified JSON or a filename with theme options to be passed into the Highcharts.setOptions (defaults to `false`).
 - `--batch`: Starts a batch job. A string that contains input/output pairs: "in=out;in=out;.." (defaults to `false`).
