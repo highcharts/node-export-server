@@ -1,28 +1,26 @@
 module.exports = {
   env: {
+    browser: true,
     es2021: true,
     node: true
   },
+  root: true,
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
+  plugins: ['import', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:import/recommended',
     'plugin:prettier/recommended'
   ],
-  plugins: ['import', 'prettier'],
   rules: {
     'no-unused-vars': 'off',
     'import/no-cycle': 2,
     'prettier/prettier': [
       'error',
       {
-        singleQuote: true,
-        trailingComma: 'none',
-        semi: true,
-        tabWidth: 2,
         endOfLine: require('os').EOL === '\r\n' ? 'crlf' : 'lf'
       }
     ]

@@ -307,7 +307,7 @@ These are set as variables in your environment. They take precedence over option
 - `HIGHCHARTS_POOL_QUEUE_SIZE`: The size of the request overflow queue.
 - `HIGHCHARTS_POOL_TIMEOUT`: The number of milliseconds before timing out.
 - `HIGHCHARTS_POOL_ACQUIRE_TIMEOUT`: The number of milliseconds to wait for acquiring a resource.
-- `HIGHCHARTS_POOL_ENABLE_REAPER`: Whether or not to evict workers after a certain time period.
+- `HIGHCHARTS_POOL_REAPER_ENABLE`: Whether or not to evict workers after a certain time period.
 - `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking.
 - `HIGHCHARTS_POOL_LISTEN_TO_PROCESS_EXITS`: Set to false in order to skip attaching process.exit handlers.
 
