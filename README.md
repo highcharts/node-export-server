@@ -602,10 +602,10 @@ This package supports both CommonJS and ES modules.
 
 - `startExport(settings, endCallback)`: Start an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an object as the first argument containing the base64 respresentation of a chart.
 
-- `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+- `startServer({serverConfig, uiConfig})`: Start an http server on the given port. The `serverConfig` object contains all server and `uiConfig` object contains all ui related properties (see the `server` and `ui` section in the `lib/schemas/config.js` file for a reference).
 
 - `server` - The server instance:
-  - `startServer(serverConfig)` - The same as `startServer` from above.
+  - `startServer({serverConfig, uiConfig})` - The same as `startServer` from above.
   - `getExpress()` - Return the express module instance.
   - `getApp()` - Return the app instance.
   - `use(path, ...middlewares)` - Add a middleware to the server.
