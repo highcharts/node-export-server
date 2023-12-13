@@ -53,7 +53,10 @@ const start = async () => {
       await main.initPool(options);
 
       // Run the server
-      await main.startServer(options.server);
+      await main.startServer({
+        serverConfig: options.server,
+        uiConfig: options.ui,
+      });
     } else {
       // Perform batch exports
       if (options.export.batch) {

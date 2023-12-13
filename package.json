@@ -20,7 +20,7 @@
   },
   "scripts": {
     "install": "node install.js",
-    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
+    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.mjs",
     "start": "node bin/cli.js --enableServer 1 --logLevel 2",
     "lint": "eslint ./ --fix",
     "cli-tests": "node tests/cli/cli_test_runner.js",
