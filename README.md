@@ -2,7 +2,6 @@
 
 Convert Highcharts.JS charts to static image files.
 
-# V3.0 Notes
 
 ## Upgrade notes for V3.0
 
@@ -10,7 +9,7 @@ V3 should be a drop in replacement for V2 in most cases. However, due to changin
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
-One important note is that the export server now requires `node v16.14.0` or higher.
+One important note is that the export server now requires `node v16.14.0` or highe
 
 ## Changelog
 
@@ -389,8 +388,8 @@ The `width` argument is mostly to set a zoom factor rather than an absolute widt
 
 If you need to set the _height_ of the chart, it can be done in two ways:
 
-- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
-- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
+This is done by setting `HIGHCHARTS_CDN` to `npm` in addition to setting
+the afformentioned `ACCEPT_HIGHCHARTS_LICENSE` to `YES`.
 
 The latter is prefered, as it lets you set a separate sizing when exporting and when displaying the chart in your web page.
 
@@ -419,9 +418,26 @@ If `--resources` is not set, and a file `resources.json` exist in the folder fro
 
 ## Note on Worker Count & Work Limit
 
-The export server utilizes a pool of _workers_, where each worker is a Puppeteer process (browser instance's page) responsible for the actual chart rasterization. The pool size can be set with the `--initialWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware on which you're running the server. 
+The server accepts the following arguments:
 
-It's recommended that you start with the default (4), and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The `tests/other/stress-test.js` script can be used to test the server and expects the server to be running on port 7801.
+  * `infile`: A string containing JSON or SVG for the chart
+  * `options`: Alias for `infile`
+  * `svg`: A string containing SVG to render
+  * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
+  * `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
+  * `width`: The chart width (overrides scale)
+  * `callback`: Javascript to execute in the highcharts constructor.
+  * `resources`: Additional resources.
+  * `constr`: The constructor to use. Either `Chart` or `Stock`.
+  * `b64`: Bool, set to true to get base64 back instead of binary.
+  * ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of Desember 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
+  * `noDownload`: Bool, set to true to not send attachment headers on the response.
+  * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
+  * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
+  * `dataOptions`: Passed to `Highcharts.data(..)`
+  * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
+
+It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
 Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value.
 
