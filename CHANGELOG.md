@@ -1,3 +1,7 @@
+# 3.0.4
+
+- Fixed and issue with reading `resources.json` during exports
+
 # 3.0.3
 
 Fixes:
