@@ -87,63 +87,7 @@ const start = async () => {
         // Start a single export
         main.singleExport(options);
       }
-==== BASE ====
-    });
-  } catch (e) {
-    console.log("unable to load options from file:", e);
-    return;
-  }
-}
-
-main.logLevel(options.logLevel);
-
-if (options.logDest) {
-  main.enableFileLogging(
-    options.logDest,
-    options.logFile || "highcharts-export-server.log"
-  );
-}
-
-if (options.enableServer || (options.host && options.host.length)) {
-  main.initPool({
-    listenToProcessExits: options.listenToProcessExits,
-    initialWorkers: options.workers || 0,
-    maxWorkers: options.workers || 4,
-    workLimit: options.workLimit,
-    queueSize: options.queueSize
-  });
-
-  if (
-    options.rateLimit &&
-    options.rateLimit !== 0 &&
-    options.rateLimit !== false
-  ) {
-    main.server.enableRateLimiting({
-      max: options.rateLimit,
-      skipKey: options.skipKey,
-      skipToken: options.skipToken
-    });
-  }
-
-  main.startServer(
-    options.port,
-    options.sslPort,
-    options.sslPath,
-    function (srv) {},
-    options.sslOnly,
-    options.tmpdir,
-    options.host,
-    options.allowCodeExecution
-  );
-} else {
-  options.async = true;
-
-  //Try to load resources from file.
-  if (!options.resources) {
-    try {
-      options.resources = JSON.parse(fs.readFileSync("resources.json", "utf8"));
-    } catch (e) {}
-==== BASE ====
+    }
   }
 };
 
