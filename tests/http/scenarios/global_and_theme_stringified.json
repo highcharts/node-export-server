@@ -1,0 +1,19 @@
+{
+  "options": {
+    "title": {
+      "text": "The default value of the 'allowFileResources' allows stringified 'globalOptions' and 'themeOptions'"
+    },
+    "xAxis": {
+      "categories": ["Jan", "Feb", "Mar", "Apr"]
+    },
+    "series":[{
+      "type": "column",
+      "data": [5, 6, 7, 8]
+    }, {
+      "type": "line",
+      "data": [1, 2, 3, 4]
+    }]
+  },
+  "globalOptions": "{\"chart\":{\"borderWidth\":2,\"plotBackgroundColor\":\"rgba(61,61,255,.9)\",\"plotShadow\":true,\"plotBorderWidth\":1},\"subtitle\":{\"text\":\"Global options subtitle\"}}",
+  "themeOptions": "{\"colors\":[\"#058DC7\",\"#50B432\",\"#ED561B\",\"#DDDF00\",\"#24CBE5\",\"#64E572\",\"#FF9655\",\"#FFF263\",\"#6AF9C4\"],\"chart\":{\"backgroundColor\":{\"linearGradient\":[0,0,500,500],\"stops\":[[0,\"rgb(255,255,255)\"],[1,\"rgb(240,240,255)\"]]}},\"title\":{\"style\":{\"color\":\"#000\",\"font\":\"bold 16px Trebuchet MS, Verdana, sans-serif\"}},\"subtitle\":{\"text\":\"Theme options subtitle\",\"style\":{\"color\":\"#666666\",\"font\":\"bold 12px Trebuchet MS, Verdana, sans-serif\"}},\"legend\":{\"itemStyle\":{\"font\":\"9pt Trebuchet MS, Verdana, sans-serif\",\"color\":\"black\"}}}"
+}

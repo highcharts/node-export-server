@@ -1,0 +1,11 @@
+{
+  "chart": {
+    "borderWidth": 2,
+    "plotBackgroundColor": "rgba(255, 61, 61, .9)",
+    "plotShadow": true,
+    "plotBorderWidth": 1
+  },
+  "subtitle": {
+    "text": "Global options subtitle"
+  }
+}

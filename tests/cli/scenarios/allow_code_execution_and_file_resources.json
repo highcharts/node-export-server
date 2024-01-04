@@ -1,0 +1,8 @@
+{
+  "instr": "{\"title\":{\"text\":\"Allow code execution and file resources\"},\"xAxis\":{\"categories\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"]},\"series\":[{\"type\":\"column\",\"data\":[5,6,7,8]},{\"type\":\"line\",\"data\":[1,2,3,4]}]}",
+  "allowCodeExecution": true,
+  "allowFileResources": true,
+  "callback": "./samples/resources/callback.js",
+  "customCode": "Highcharts.setOptions({chart:{events:{render:function (){this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png',100,75,20,20).add();}}}});",
+  "resources": "{\"js\":\"Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources object, js section'}}});\",\"css\":\".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#FF0000;}\",\"files\":[\"./samples/resources/resources_file_1.js\",\"./samples/resources/resources_file_2.js\"]}"
+}

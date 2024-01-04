@@ -1,0 +1,163 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  background: #f5f5f5;
+}
+
+label {
+  display: block;
+  padding-bottom: 5px;
+  padding-top: 2em;
+  clear: both;
+}
+
+input {
+  width: 100%;
+  font-size: 20px;
+  outline: none;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.button {
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 10px;
+  float: right;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Source Sans Pro", sans-serif;
+  background: #4caf50;
+  color: #242424;
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid #eee;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}
+
+button:hover {
+  background: #43a047;
+  color: #fafafa;
+}
+
+button:active {
+  background: #e8f5e9;
+  color: #242424;
+}
+
+.info {
+  padding-top: 2px;
+  padding-bottom: 10px;
+  font-size: 0.8em;
+  color: gray;
+}
+
+.preview-container {
+  pointer-events: auto !important;
+  min-height: 400px;
+}
+
+.preview-container img {
+  width: 100%;
+}
+
+.codeinput {
+  width: 100%;
+  height: 100px;
+  outline: none;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.box-size {
+  box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+}
+
+.page {
+  padding-top: 60px;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  background: #252530;
+  height: 60px;
+  position: fixed;
+  z-index: 2000;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background-image: url("../img/logo.svg");
+  background-position: left center;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+
+.buttons {
+  position: fixed;
+  width: 60%;
+  left: 0px;
+  bottom: 10px;
+}
+
+.panel-container {
+  float: left;
+  padding: 50px;
+  padding-bottom: 100px;
+}
+
+.panel {
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.main-panel {
+  width: 60%;
+  height: 100%;
+  padding-right: 25px;
+  padding-left: 25px;
+}
+
+.chart-panel {
+  position: absolute;
+  top: 60px;
+  left: 60%;
+  width: 40%;
+  height: 50%;
+  pointer-events: none;
+  padding-left: 25px;
+}
+
+.chart-frame {
+  position: absolute;
+  right: 0px;
+  top: 60px;
+  height: 100%;
+  width: 25%;
+}
+
+h1 {
+  margin-top: 0px;
+  display: block;
+  font-size: 2em;
+  -webkit-margin-after: 0.67em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  font-weight: bold;
+}

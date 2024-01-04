@@ -1,0 +1,4 @@
+{
+  "instr": "{\"title\":{\"text\":\"Outfile JPEG\"},\"xAxis\":{\"categories\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"]},\"series\":[{\"type\":\"column\",\"data\":[5,6,7,8]},{\"type\":\"line\",\"data\":[1,2,3,4]}]}",
+  "outfile": "outfile_custom.jpeg"
+}

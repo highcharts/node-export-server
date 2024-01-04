@@ -1,0 +1,5 @@
+{
+  "export": {
+    "instr": "{\"title\":{\"text\":\"From instr\"},\"xAxis\":{\"categories\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\"]},\"series\":[{\"type\":\"column\",\"data\":[5,6,7,8]},{\"type\":\"line\",\"data\":[1,2,3,4]}]}"
+  }
+}

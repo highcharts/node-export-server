@@ -1,0 +1,5 @@
+{
+  "js": "Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources file, js section'}}});",
+  "css": ".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#00FF00;}",
+  "files": ["./samples/resources/resources_file_1.js", "./samples/resources/resources_file_2.js"]
+}

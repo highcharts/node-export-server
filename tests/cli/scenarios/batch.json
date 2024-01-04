@@ -1,0 +1,3 @@
+{
+  "batch": "./samples/batch/batch_1.json=./tests/cli/_results/batch_1.png;./samples/batch/batch_2.json=./tests/cli/_results/batch_2.png;./samples/batch/batch_3.json=./tests/cli/_results/batch_3.png;"
+}

@@ -1,13 +1,18 @@
 node_modules/
-.DS_Store
-*.png
-out/
+log/
+tests/_temp
 tmp/
-*.log
-logs/
-charts/
-test.js
 
-/style.css
+.DS_Store
+.cache
+.vscode
+.env
+.eslintcache
 
-/phantom/style.css
+tests/**/_results/
+
+**/*.png
+**/*.pdf
+**/*.svg
+**/*.jpeg
+**/*.log
