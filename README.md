@@ -9,7 +9,7 @@ V3 should be a drop in replacement for V2 in most cases. However, due to changin
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
-One important note is that the export server now requires `node v16.14.0` or highe
+One important note is that the export server now requires `node v16.14.0` or higher.
 
 ## Changelog
 
