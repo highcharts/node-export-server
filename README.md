@@ -5,7 +5,7 @@ Convert Highcharts.JS charts to static image files.
 
 ## Upgrade notes for V3.0
 
-V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
+V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
@@ -353,6 +353,7 @@ The server accepts the following arguments in a POST body:
 - `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
+- `filename`: If `noDownload == false`, the file will be downloaded with the `${filename}.${type}`.
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `themeOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
