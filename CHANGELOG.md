@@ -1,3 +1,8 @@
+# 3.0.5
+
+- Fixed an issue with transparent backgrounds in PNG exports (#463)
+- Fixed an issue with missing `filename` property (https://github.com/highcharts/highcharts/issues/20370)
+
 # 3.0.4
 
 - Fixed and issue with reading `resources.json` during exports
