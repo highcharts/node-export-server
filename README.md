@@ -5,11 +5,11 @@ Convert Highcharts.JS charts to static image files.
 
 ## Upgrade notes for V3.0
 
-V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
+V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
-One important note is that the export server now requires `node v16.14.0` or highe
+One important note is that the export server now requires `node v16.14.0` or higher.
 
 ## Changelog
 
@@ -17,7 +17,7 @@ _Fixes and enhancements:_
 
 - Replaced PhantomJS with Puppeteer
 - Updated the config handling system to optionally load JSON files, and improved environment var loading
-- Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
+- Rewrote the HC caching system: it's now easier to include custom modules/dependency lists in your own deployments
 - The install step no longer requires interaction when installing
 - Replaced the custom worker pool system with `tarn`
 - Error messages are now sent back to the client instead of being displayed in rasterized output
@@ -276,7 +276,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 
 The export server attaches event listeners to process.exit. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
-Listeners are also attached to uncaught exceptions - if one appears, the entire pool is killed, and the application terminated.
+Listeners are also attached to handle uncaught exceptions. If an exception occurs, the entire pool is terminated, and the application is shut down.
 
 If you do not want this behavior, start the server with `--listenToProcessExits 0`.
 
@@ -353,6 +353,7 @@ The server accepts the following arguments in a POST body:
 - `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
+- `filename`: If `noDownload == false`, the file will be downloaded with the `${filename}.${type}` name.
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `themeOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
