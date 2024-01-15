@@ -58,12 +58,11 @@ const start = async () => {
       // Perform batch exports
       if (options.export.batch) {
         // If not set explicitly, use default option for batch exports
-        if (!args.includes('--initialWorkers', '--maxWorkers')) {
+        if (!args.includes('--minWorkers', '--maxWorkers')) {
           options.pool = {
             ...options.pool,
-            initialWorkers: 5,
-            maxWorkers: 25,
-            reaper: false
+            minWorkers: 5,
+            maxWorkers: 25
           };
         }
 
@@ -76,9 +75,8 @@ const start = async () => {
         // No need for multiple workers in case of a single CLI export
         options.pool = {
           ...options.pool,
-          initialWorkers: 1,
-          maxWorkers: 1,
-          reaper: false
+          minWorkers: 1,
+          maxWorkers: 1
         };
 
         // Init a pool for one export

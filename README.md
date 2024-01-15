@@ -2,7 +2,6 @@
 
 Convert Highcharts.JS charts to static image files.
 
-
 ## Upgrade notes for V3.0
 
 V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.
@@ -227,13 +226,14 @@ The format, with its default values are as follows (using the below ordering of 
     }
   },
   "pool": {
-    "initialWorkers": 4,
+    "minWorkers": 4,
     "maxWorkers": 8,
     "workLimit": 40,
-    "queueSize": 5,
-    "timeoutThreshold": 5000,
     "acquireTimeout": 5000,
-    "reaper": true,
+    "createTimeout": 5000,
+    "destroyTimeout": 5000,
+    "idleTimeout": 30000,
+    "reaperInterval": 1000,
     "benchmarking": false,
     "listenToProcessExits": true
   },
@@ -252,7 +252,7 @@ The format, with its default values are as follows (using the below ordering of 
 }
 ```
 
-*Library fetches*
+_Library fetches_
 
 The `width` argument is mostly to set a zoom factor rather than an absolute width.
 
@@ -290,32 +290,32 @@ If `--resources` is not set, and a file `resources.json` exist in the folder fro
 
 The server accepts the following arguments:
 
-  * `infile`: A string containing JSON or SVG for the chart
-  * `options`: Alias for `infile`
-  * `svg`: A string containing SVG to render
-  * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
-  * `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
-  * `width`: The chart width (overrides scale)
-  * `callback`: Javascript to execute in the highcharts constructor.
-  * `resources`: Additional resources.
-  * `constr`: The constructor to use. Either `Chart` or `Stock`.
-  * `b64`: Bool, set to true to get base64 back instead of binary.
-  * ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of Desember 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
-  * `noDownload`: Bool, set to true to not send attachment headers on the response.
-  * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
-  * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-  * `dataOptions`: Passed to `Highcharts.data(..)`
-  * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
+- `infile`: A string containing JSON or SVG for the chart
+- `options`: Alias for `infile`
+- `svg`: A string containing SVG to render
+- `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
+- `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
+- `width`: The chart width (overrides scale)
+- `callback`: Javascript to execute in the highcharts constructor.
+- `resources`: Additional resources.
+- `constr`: The constructor to use. Either `Chart` or `Stock`.
+- `b64`: Bool, set to true to get base64 back instead of binary.
+- ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of December 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
+- `noDownload`: Bool, set to true to not send attachment headers on the response.
+- `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
+- `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
+- `dataOptions`: Passed to `Highcharts.data(..)`
+- `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
 
 It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
 
-Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value.
+Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--minWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value. Lastly, the `--createTimeout` and `--destroyTimeout` options are similar to the `--acquireTimeout` but for resource's create and destroy actions.
 
 ## Setup: Injecting the Highcharts dependency
 
 In order to use the export server, Highcharts.js needs to be injected into the export template.
 
-Since version 3.0.0 Highcharts is fetched in a Just-In-Time manner, which makes it easy to switch configurations. It is no longer required to explicitly accept the license as in older versions - __but the export server still requires a valid Highcharts license to be used__.
+Since version 3.0.0 Highcharts is fetched in a Just-In-Time manner, which makes it easy to switch configurations. It is no longer required to explicitly accept the license as in older versions - **but the export server still requires a valid Highcharts license to be used**.
 
 ## Using In Automated Deployments
 
@@ -473,6 +473,7 @@ exporter.startExport(exportSettings, function (res, err) {
 ```
 
 ## CommonJS support
+
 This package supports both CommonJS and ES modules.
 
 ## Node.js API Reference
@@ -492,6 +493,7 @@ This package supports both CommonJS and ES modules.
 - `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
 
 - `server` - The server instance:
+
   - `startServer(serverConfig)` - The same as `startServer` from above.
   - `getExpress()` - Return the express module instance.
   - `getApp()` - Return the app instance.
@@ -506,11 +508,15 @@ This package supports both CommonJS and ES modules.
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
 
 - `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
-  - `initialWorkers` (default 4) - Initial worker process count.
+
+  - `minWorkers` (default 4) - Min and initial worker process count.
   - `maxWorkers` (default 8) - Max worker processes count.
   - `workLimit` (default 40) - How many task can be performed by a worker process before it's automatically restarted.
-  - `timeoutThreshold` (default 3500) - The maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted.
-  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds.
+
+  - `acquireTimeout` (default 5000) - the maximum allowed time for each resource acquire, in milliseconds.
+  - `createTimeout` (default 5000) - the maximum allowed time for each resource create, in milliseconds.
+  - `destroyTimeout` (default 5000) - the maximum allowed time for each resource destroy, in milliseconds.
+  - `idleTimeout` (default 30000) - the maximum allowed time after an idle resource is destroyed, in milliseconds.
   - `benchmarking` (default false) - Enable benchmarking.
   - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
 
