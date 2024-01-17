@@ -1,16 +1,21 @@
-<!DOCTYPE html>
-<html lang='en-US'>
+<!doctype html>
+<html lang="en-US">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Highcharts Export</title>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
 
-      #table-div, #sliders, #datatable, #controls, .ld-row {
+      #table-div,
+      #sliders,
+      #datatable,
+      #controls,
+      .ld-row {
         display: none;
         height: 0;
       }
@@ -21,7 +26,8 @@
         overflow: auto;
       }
 
-      #chart-container > figure, div {
+      #chart-container > figure,
+      div {
         margin-top: 0 !important;
         margin-bottom: 0 !important;
       }
@@ -89,9 +95,13 @@
 
           // Add flag to know if chart render has been called.
           if (!window.onHighchartsRender) {
-            window.onHighchartsRender = Highcharts.addEvent(this, 'render', () => {
-              window.isRenderComplete = true;
-            });
+            window.onHighchartsRender = Highcharts.addEvent(
+              this,
+              'render',
+              () => {
+                window.isRenderComplete = true;
+              }
+            );
           }
 
           proceed.apply(this, [userOptions, cb]);
@@ -154,13 +164,6 @@
     function triggerExport(chartOptions, exportOptions) {
       // Get the chart section of options
       const { chart } = chartOptions;
-
-      // Clear previous state
-      document.body.innerHTML = `
-        <div id="chart-container">
-          <div id="container"></div>
-        </div>
-      `;
 
       // Create a separate object for a potential setOptions usages in order to
       // prevent from polluting other exports that can happen on the same page
