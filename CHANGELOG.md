@@ -1,3 +1,21 @@
+# 3.1.0
+
+- Fixed an issue with SVG base 64 exports
+- Fixed several bugs with the worker pool
+- Changed name of the `initialWorkers` option to the `minWorkers`
+- Fixed hanging the server on start when initial resources (pages) couldn't be created
+- Fixed clearing page after the export
+- Removed the `queueSize` option, which doesn't have an equivalent in `tarn` resource pool
+- Removed the `timeoutThreshold` option and added the `idleTimeout` option in its place
+- Removed the `reaper` options, as tarn doesn't allow to enable/disable idle resources checking
+- Added `createTimeout` and `destroyTimeout` options for the resource pool
+- Added the `reaperInterval` option to set the interval for checking idle resources to destroy
+- Added the `createRetryInterval` option to set how long to idle after failed resource creation before trying again
+- Added the `rasterizationTimeout` option for setting the wait time for an image to be created
+- Updated the `.env.sample` file with new environment variables corresponding to above options
+- Updated the README file
+- Other small fixes
+
 # 3.0.5
 
 - Fixed an issue with transparent backgrounds in PNG exports (#463)
@@ -19,17 +37,17 @@ Fixes:
 
 FIXES:
 
-- Changed the priority of loading options to: config -> custom JSON -> envs -> CLI.
-- Corrected the The unhandledRejection error, message: Protocol error: Connection closed. Most likely the page has been closed, an error related to closing the browser earlier than closing each of an active page.
-- Refactored the way options are set (the setOptions function).
-- Corrected straight inject with JS functions in chart's options (e.g. formatter), when the allowCodeExecution is set to true.
-- Organized code into two separate functions (singleExport and batchExport).
-- Corrected reseting global options for Highcharts between each export.
-- Corrections for the linter.
-- Samples and tests corrections.
-- Added sample for the loadConfig option.
-- Updated Readme.
-- Other small fixes.
+- Changed the priority of loading options to: config -> custom JSON -> envs -> CLI
+- Corrected the The unhandledRejection error, message: Protocol error: Connection closed. Most likely the page has been closed, an error related to closing the browser earlier than closing each of an active page
+- Refactored the way options are set (the setOptions function)
+- Corrected straight inject with JS functions in chart's options (e.g. formatter), when the allowCodeExecution is set to true
+- Organized code into two separate functions (singleExport and batchExport)
+- Corrected reseting global options for Highcharts between each export
+- Corrections for the linter
+- Samples and tests corrections
+- Added sample for the loadConfig option
+- Updated Readme
+- Other small fixes
 
 # 3.0.1
 
@@ -73,10 +91,10 @@ done unless the server is sandboxed and not reachable on the public internet.
 
 _Changelog_
 
-- Added the `--allowCodeExecution` flag which is now required to be set when exporting pure JavaScript, using additional external resources, or using callback when running in server mode.
+- Added the `--allowCodeExecution` flag which is now required to be set when exporting pure JavaScript, using additional external resources, or using callback when running in server mode
 - Removed the `mkdirp` dependency
 - SVG exporting will now block JavaScript entirely
-- Added the `navigationLocked` flag to the Phantom page, which blocks e.g. `<iframe>` and page redirects.
+- Added the `navigationLocked` flag to the Phantom page, which blocks e.g. `<iframe>` and page redirects
 
 # 2.0.30
 
@@ -210,7 +228,7 @@ _Changelog_
 
 # 2.0.0
 
-- Fixed Phantom cleanup: instead of reaping every 2.5s, workers are checked for timeout when other work is posted.
+- Fixed Phantom cleanup: instead of reaping every 2.5s, workers are checked for timeout when other work is posted
 - Added additional error handlers to
   - `hhtp(s)Server`, `process`
 - Worker busy check before restarting

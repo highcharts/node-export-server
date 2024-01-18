@@ -5,7 +5,7 @@ import exporter from '../../lib/index.js';
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
   pool: {
-    initialWorkers: 1,
+    minWorkers: 1,
     maxWorkers: 1
   },
   export: {
