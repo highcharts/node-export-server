@@ -2,10 +2,9 @@
 
 Convert Highcharts.JS charts to static image files.
 
-
 ## Upgrade notes for V3.0
 
-V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.   
+V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.
 
 The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
 
@@ -17,7 +16,7 @@ _Fixes and enhancements:_
 
 - Replaced PhantomJS with Puppeteer
 - Updated the config handling system to optionally load JSON files, and improved environment var loading
-- Rewrote the HC caching system: it's now easier to include custom modules/depdencey lists in your own deployments
+- Rewrote the HC caching system: it's now easier to include custom modules/dependency lists in your own deployments
 - The install step no longer requires interaction when installing
 - Replaced the custom worker pool system with `tarn`
 - Error messages are now sent back to the client instead of being displayed in rasterized output
@@ -114,6 +113,7 @@ The format, with its default values are as follows (using the below ordering of 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
+    "forceFetch": false,
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -138,6 +138,7 @@ The format, with its default values are as follows (using the below ordering of 
       "tilemap",
       "timeline",
       "treemap",
+      "treegraph",
       "item-series",
       "drilldown",
       "histogram-bellcurve",
@@ -183,8 +184,7 @@ The format, with its default values are as follows (using the below ordering of 
     ],
     "scripts": [
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
-    ],
-    "forceFetch": false
+    ]
   },
   "export": {
     "infile": false,
@@ -227,13 +227,14 @@ The format, with its default values are as follows (using the below ordering of 
     }
   },
   "pool": {
-    "initialWorkers": 4,
+    "minWorkers": 4,
     "maxWorkers": 8,
     "workLimit": 40,
-    "queueSize": 5,
-    "timeoutThreshold": 5000,
     "acquireTimeout": 5000,
-    "reaper": true,
+    "createTimeout": 5000,
+    "destroyTimeout": 5000,
+    "idleTimeout": 30000,
+    "reaperInterval": 1000,
     "benchmarking": false,
     "listenToProcessExits": true
   },
@@ -261,36 +262,43 @@ Loading an additional JSON configuration file can be done by using the `--loadCo
 These are set as variables in your environment. They take precedence over options from the `lib/schemas/config.js` file. On Linux, use e.g. `export`.
 
 ### Export config
+
 - `EXPORT_DEFAULT_TYPE`: The format of the file to export to. Can be jpeg, png, pdf or svg.
 - `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart.
 - `EXPORT_DEFAULT_HEIGHT`: The height of the exported chart. Overrides the option in the chart settings.
 - `EXPORT_DEFAULT_WIDTH`: The width of the exported chart. Overrides the option in the chart settings.
 - `EXPORT_DEFAULT_SCALE`: The scale of the exported chart. Ranges between 0.1 and 5.0.
+- `EXPORT_RASTERIZATION_TIMEOUT`: The number of milliseconds to wait for rendering a webpage.
 
 ### Highcharts config
+
 - `HIGHCHARTS_VERSION`: Highcharts version to use.
 - `HIGHCHARTS_CDN`: The CDN URL of Highcharts scripts to use.
+- `HIGHCHARTS_FORCE_FETCH`: Should refetch all the scripts after each server rerun.
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch.
 - `HIGHCHARTS_MODULES`: Highcharts modules to fetch.
 - `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch.
-- `HIGHCHARTS_FORCE_FETCH`: Should refetch all the scripts after each server rerun.
 
 ### Custom code config
+
 - `HIGHCHARTS_ALLOW_CODE_EXECUTION`: If set to true, allow for the execution of arbitrary code when exporting.
 - `HIGHCHARTS_ALLOW_FILE_RESOURCES`: Allow injecting resources from the filesystem. Has no effect when running as a server.
 
 ### Server config
+
 - `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
 - `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
 - `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
 
 ### Server SSL config
+
 - `HIGHCHARTS_SERVER_SSL_ENABLE`: Enables the SSL protocol.
 - `HIGHCHARTS_SERVER_SSL_FORCE`: If set to true, forces the server to only serve over HTTPS.
 - `HIGHCHARTS_SERVER_SSL_PORT`: The port on which to run the SSL server.
 - `HIGHCHARTS_SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key.
 
 ### Server rate limiting config
+
 - `HIGHCHARTS_RATE_LIMIT_ENABLE`: Enables rate limiting.
 - `HIGHCHARTS_RATE_LIMIT_MAX`: Max requests allowed in a one minute.
 - `HIGHCHARTS_RATE_LIMIT_WINDOW`: The time window in minutes for rate limiting.
@@ -300,29 +308,36 @@ These are set as variables in your environment. They take precedence over option
 - `HIGHCHARTS_RATE_LIMIT_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with skipKey argument.
 
 ### Pool config
+
 - `HIGHCHARTS_POOL_MIN_WORKERS`: The number of initial workers to spawn.
 - `HIGHCHARTS_POOL_MAX_WORKERS`: The number of max workers to spawn.
 - `HIGHCHARTS_POOL_WORK_LIMIT`: The pieces of work that can be performed before restarting process.
-- `HIGHCHARTS_POOL_QUEUE_SIZE`: The size of the request overflow queue.
-- `HIGHCHARTS_POOL_TIMEOUT`: The number of milliseconds before timing out.
 - `HIGHCHARTS_POOL_ACQUIRE_TIMEOUT`: The number of milliseconds to wait for acquiring a resource.
-- `HIGHCHARTS_POOL_REAPER_ENABLE`: Whether or not to evict workers after a certain time period.
+- `HIGHCHARTS_POOL_CREATE_TIMEOUT`: The number of milliseconds to wait for creating a resource.
+- `HIGHCHARTS_POOL_DESTROY_TIMEOUT`: The number of milliseconds to wait for destroying a resource.
+- `HIGHCHARTS_POOL_IDLE_TIMEOUT`: The number of milliseconds after an idle resource is destroyed.
+- `HIGHCHARTS_POOL_CREATE_RETRY_INTERVAL`: The number of milliseconds after the create process is retried in case of fail.
+- `HIGHCHARTS_POOL_REAPER_INTERVAL`: The number of milliseconds after the check for idle resources to destroy is triggered.
 - `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking.
 - `HIGHCHARTS_POOL_LISTEN_TO_PROCESS_EXITS`: Set to false in order to skip attaching process.exit handlers.
 
 ### Logging config
+
 - `HIGHCHARTS_LOG_LEVEL`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose).
 - `HIGHCHARTS_LOG_FILE`: A name of a log file. The --logDest also needs to be set to enable file logging.
 - `HIGHCHARTS_LOG_DEST`: The path to store log files. Also enables file logging.
 
 ### UI config
+
 - `HIGHCHARTS_UI_ENABLE`: Enables the UI for the export server.
 - `HIGHCHARTS_UI_ROUTE`: The route to attach the UI to.
 
 ### Other config
+
 - `HIGHCHARTS_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text.
 
 ### Proxy config
+
 - `PROXY_SERVER_HOST`: The host of the proxy server to use if exists.
 - `PROXY_SERVER_PORT`: The port of the proxy server to use if exists.
 - `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use if exists.
@@ -346,6 +361,7 @@ _Available options:_
 - `--globalOptions`: A stringified JSON or a filename with options to be passed into the Highcharts.setOptions (defaults to `false`).
 - `--themeOptions`: A stringified JSON or a filename with theme options to be passed into the Highcharts.setOptions (defaults to `false`).
 - `--batch`: Starts a batch job. A string that contains input/output pairs: "in=out;in=out;.." (defaults to `false`).
+- `--rasterizationTimeout`: The number of milliseconds to wait for rendering a webpage (defaults to `1500`).
 - `--allowCodeExecution`: If set to true, allow for the execution of arbitrary code when exporting (defaults to `false`).
 - `--allowFileResources`: Allow injecting resources from the filesystem. Has no effect when running as a server (defaults to `true`).
 - `--customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension (defaults to `false`).
@@ -364,13 +380,15 @@ _Available options:_
 - `--maxRequests`: Max requests allowed in a one minute (defaults to `10`).
 - `--skipKey`: Allows bypassing the rate limiter and should be provided with skipToken argument (defaults to ``).
 - `--skipToken`: Allows bypassing the rate limiter and should be provided with skipKey argument (defaults to ``).
-- `--initialWorkers`: The number of initial workers to spawn (defaults to `4`).
-- `--maxWorkers`: The number of max workers to spawn (defaults to `4`).
-- `--workLimit`: The pieces of work that can be performed before restarting process (defaults to `60`).
-- `--queueSize`: The size of the request overflow queue (defaults to `5`).
-- `--timeoutThreshold`: The number of milliseconds before timing out (defaults to `5000`).
+- `--minWorkers`: The number of initial workers to spawn (defaults to `4`).
+- `--maxWorkers`: The number of max workers to spawn (defaults to `8`).
+- `--workLimit`: The pieces of work that can be performed before restarting process (defaults to `40`).
 - `--acquireTimeout`: The number of milliseconds to wait for acquiring a resource (defaults to `5000`).
-- `--reaper`: Whether or not to evict workers after a certain time period (defaults to `true`).
+- `--createTimeout`: The number of milliseconds to wait for creating a resource (defaults to `5000`).
+- `--destroyTimeout`: The number of milliseconds to wait for destroying a resource (defaults to `5000`).
+- `--idleTimeout`: The number of milliseconds after an idle resource is destroyed (defaults to `30000`).
+- `--createRetryInterval`: The number of milliseconds after the create process is retried in case of fail (defaults to `200`).
+- `--reaperInterval`: The number of milliseconds after the check for idle resources to destroy is triggered (defaults to `1000`).
 - `--benchmarking`: Enable benchmarking (defaults to `true`).
 - `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers (defaults to `true`).
 - `--logLevel`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose) (defaults to `4`).
@@ -388,8 +406,8 @@ The `width` argument is mostly to set a zoom factor rather than an absolute widt
 
 If you need to set the _height_ of the chart, it can be done in two ways:
 
-This is done by setting `HIGHCHARTS_CDN` to `npm` in addition to setting
-the afformentioned `ACCEPT_HIGHCHARTS_LICENSE` to `YES`.
+- Set it in the chart config under [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
+- Set it in the chart config under [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
 
 The latter is prefered, as it lets you set a separate sizing when exporting and when displaying the chart in your web page.
 
@@ -406,7 +424,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 
 The export server attaches event listeners to process.exit. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
-Listeners are also attached to uncaught exceptions - if one appears, the entire pool is killed, and the application terminated.
+Listeners are also attached to handle uncaught exceptions. If an exception occurs, the entire pool is terminated, and the application is shut down.
 
 If you do not want this behavior, start the server with `--listenToProcessExits 0`.
 
@@ -418,34 +436,17 @@ If `--resources` is not set, and a file `resources.json` exist in the folder fro
 
 ## Note on Worker Count & Work Limit
 
-The server accepts the following arguments:
+The export server utilizes a pool of workers, where each worker is a Puppeteer process (browser instance's page) responsible for the actual chart rasterization. The pool size can be set with the --initialWorkers and --maxWorkers options, and should be tweaked to fit the hardware on which you're running the server.
 
-  * `infile`: A string containing JSON or SVG for the chart
-  * `options`: Alias for `infile`
-  * `svg`: A string containing SVG to render
-  * `type`: The format: `png`, `jpeg`, `pdf`, `svg`. Mimetypes can also be used.
-  * `scale`: The scale factor. Use it to improve resolution in PNG and JPG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
-  * `width`: The chart width (overrides scale)
-  * `callback`: Javascript to execute in the highcharts constructor.
-  * `resources`: Additional resources.
-  * `constr`: The constructor to use. Either `Chart` or `Stock`.
-  * `b64`: Bool, set to true to get base64 back instead of binary.
-  * ~~`async`: Get a download link instead of the file data. Note that the `b64` option overrides the `async` option.~~ This option is deprecated and will be removed as of Desember 1st 2021. Read the [announcement article on how to replace async](https://www.highcharts.com/docs/export-module/deprecated-async-option).
-  * `noDownload`: Bool, set to true to not send attachment headers on the response.
-  * `asyncRendering`: Wait for the included scripts to call `highexp.done()` before rendering the chart.
-  * `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
-  * `dataOptions`: Passed to `Highcharts.data(..)`
-  * `customCode`: When `dataOptions` is supplied, this is a function to be called with the after applying the data options. Its only argument is the complete options object which will be passed to the Highcharts constructor on return.
+It's recommended that you start with the default (4), and work your way up (or down if 8 is too many for your setup, and things are unstable) gradually. The tests/other/stress-test.js script can be used to test the server and expects the server to be running on port 7801.
 
-It responds to `application/json`, `multipart/form-data`, and URL encoded requests.
-
-Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--initialWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value.
+Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is 40 by default, and can be tweaked with `--workLimit`. As with `--minWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with 5000 as a default value. Lastly, the `--createTimeout` and `--destroyTimeout` options are similar to the `--acquireTimeout` but for resource's create and destroy actions.
 
 ## Setup: Injecting the Highcharts dependency
 
 In order to use the export server, Highcharts.js needs to be injected into the export template.
 
-Since version 3.0.0 Highcharts is fetched in a Just-In-Time manner, which makes it easy to switch configurations. It is no longer required to explicitly accept the license as in older versions - __but the export server still requires a valid Highcharts license to be used__.
+Since version 3.0.0 Highcharts is fetched in a Just-In-Time manner, which makes it easy to switch configurations. It is no longer required to explicitly accept the license as in older versions - **but the export server still requires a valid Highcharts license to be used**.
 
 ## Using In Automated Deployments
 
@@ -483,6 +484,7 @@ The server accepts the following arguments in a POST body:
 - `constr`: The constructor to use. Either `chart`, `stockChart`, `mapChart` or `ganttChart`.
 - `b64`: Bool, set to true to get base64 back instead of binary.
 - `noDownload`: Bool, set to true to not send attachment headers on the response.
+- `filename`: If `noDownload == false`, the file will be downloaded with the `${filename}.${type}` name.
 - `globalOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `themeOptions`: A JSON object with options to be passed to `Highcharts.setOptions`.
 - `customCode`: Custom code to be called before chart initialization. Can be a function, a code that will be wrapped within a function or a filename with the js extension.
@@ -602,6 +604,7 @@ exporter.startExport(exportSettings, function (res, err) {
 ```
 
 ## CommonJS support
+
 This package supports both CommonJS and ES modules.
 
 ## Node.js API Reference
@@ -621,6 +624,7 @@ This package supports both CommonJS and ES modules.
 - `startServer(serverConfig)`: Start an http server on the given port. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
 
 - `server` - The server instance:
+
   - `startServer(serverConfig)` - The same as `startServer` from above.
   - `getExpress()` - Return the express module instance.
   - `getApp()` - Return the app instance.
@@ -635,11 +639,16 @@ This package supports both CommonJS and ES modules.
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
 
 - `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
-  - `initialWorkers` (default 4) - Initial worker process count.
+
+  - `minWorkers` (default 4) - Min and initial worker process count.
   - `maxWorkers` (default 8) - Max worker processes count.
   - `workLimit` (default 40) - How many task can be performed by a worker process before it's automatically restarted.
-  - `timeoutThreshold` (default 3500) - The maximum allowed time for each export job execution, in milliseconds. If a worker has been executing a job for longer than this period, it will be restarted.
-  - `acquireTimeout` (default 3000) - the maximum allowed time for each resource acquire, in milliseconds.
+  - `acquireTimeout` (default 5000) - The maximum allowed time for each resource acquire, in milliseconds.
+  - `createTimeout` (default 5000) - The maximum allowed time for each resource create, in milliseconds.
+  - `destroyTimeout` (default 5000) - The maximum allowed time for each resource destroy, in milliseconds.
+  - `idleTimeout` (default 30000) - The maximum allowed time after an idle resource is destroyed, in milliseconds.
+  - `createRetryInterval` (default 200) - The number of milliseconds after the create process is retried in case of fail.
+  - `reaperInterval` (default 1000) - The number of milliseconds after the check for idle resources to destroy is triggered.
   - `benchmarking` (default false) - Enable benchmarking.
   - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
 

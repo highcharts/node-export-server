@@ -100,7 +100,7 @@ const exportChart = () => {
   // Set options
   const options = exporter.setOptions({
     pool: {
-      initialWorkers: 1,
+      minWorkers: 1,
       maxWorkers: 1
     },
     logging: {
