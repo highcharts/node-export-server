@@ -1,5 +1,7 @@
 # 3.1.0
 
+- Fixed an issue with SVG base 64 exports
+- Fixed several bugs with the worker pool
 - Changed name of the `initialWorkers` option to the `minWorkers`
 - Fixed hanging the server on start when initial resources (pages) couldn't be created
 - Fixed clearing page after the export
