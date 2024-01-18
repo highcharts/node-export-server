@@ -30,4 +30,4 @@ jobs:
         git config --local user.name "GitHub Action"
         git add dist/
         git commit -m "Build the dist files after merge."
-        git push
+        git push -f
