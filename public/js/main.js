@@ -68,7 +68,8 @@ const highexp = {};
             preview.innerHTML =
               '<img src="data:' + format.value + ';base64,' + data + '"/>';
           } else if (format.value === 'image/svg+xml') {
-            preview.innerHTML = data;
+            preview.innerHTML =
+              '<img src="data:image/svg+xml;base64,' + data + '"/>';
           } else if (format.value === 'application/pdf') {
             preview.innerHTML = '';
             try {
