@@ -4,6 +4,7 @@
 - Fixed an issue with setting `minWorkers` and `maxWorkers` as CLI arguments
 - Fixed issues with page resets between exports causing exceptions
 - Fixed an issue with width settings causing bad exports if set to a percentage or a `px` suffixed width
+- Fixed an issue with SVG exports in the UI
 
 # 3.1.0
 
