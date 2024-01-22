@@ -1,3 +1,10 @@
+# 3.1.1
+
+- Version number is now correct in splash and `/health` when running as a node module
+- Fixed an issue with setting `minWorkers` and `maxWorkers` as CLI arguments
+- Fixed issues with page resets between exports causing exceptions
+- Fixed an issue with width settings causing bad exports if set to a percentage or a `px` suffixed width
+
 # 3.1.0
 
 - Fixed an issue with SVG base 64 exports
