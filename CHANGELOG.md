@@ -1,3 +1,8 @@
+# 3.1.2
+
+- Fixed `multer` related error: 'Field value too long'.
+- Removed unnecessary separate `body-parser` package (already implemented in Express v4.16+).
+
 # 3.1.1
 
 - Version number is now correct in splash and `/health` when running as a node module
