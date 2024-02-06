@@ -25,7 +25,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
           }
 
           // Add the data to the chartResults
-          chartResults.push(info.data);
+          chartResults.push(info.result);
           resolve();
         });
       })

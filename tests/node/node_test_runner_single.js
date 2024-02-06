@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2023, Highsoft
+Copyright (c) 2016-2024, Highsoft
 
 Licenced under the MIT licence.
 
@@ -73,8 +73,8 @@ const exportChart = () => {
           writeFileSync(
             info.options.export.outfile,
             info.options?.export?.type !== 'svg'
-              ? Buffer.from(info.data, 'base64')
-              : info.data
+              ? Buffer.from(info.result, 'base64')
+              : info.result
           );
         } else {
           // Information about the error and the time it took

@@ -261,6 +261,9 @@ Loading an additional JSON configuration file can be done by using the `--loadCo
 
 These are set as variables in your environment. They take precedence over options from the `lib/schemas/config.js` file. On Linux, use e.g. `export`.
 
+### Node environment
+- `NODE_ENV`: The type of Node environment. Can be development or production.
+
 ### Export config
 
 - `EXPORT_DEFAULT_TYPE`: The format of the file to export to. Can be jpeg, png, pdf or svg.

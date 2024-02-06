@@ -1,3 +1,5 @@
+# 3.2.0
+
 # 3.1.1
 
 - Version number is now correct in splash and `/health` when running as a node module

@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2023, Highsoft
+Copyright (c) 2016-2024, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,9 +18,7 @@ console.log(
   `
 Highcharts Export Server V${process.env.npm_package_version}
 
-${
-  'This software requires a valid Highcharts license for commercial use.'.yellow
-}
+${'This software requires a valid Highcharts license for commercial use.'.yellow}
 
 If you do not have a licence, one can be gotten here:
 https://shop.highsoft.com/

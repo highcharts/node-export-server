@@ -3,12 +3,12 @@
   'object' === typeof module && module.exports
     ? ((a['default'] = a), (module.exports = a))
     : 'function' === typeof define && define.amd
-    ? define('highcharts/themes/dark-unica', ['highcharts'], function (b) {
-        a(b);
-        a.Highcharts = b;
-        return a;
-      })
-    : a('undefined' !== typeof Highcharts ? Highcharts : void 0);
+      ? define('highcharts/themes/dark-unica', ['highcharts'], function (b) {
+          a(b);
+          a.Highcharts = b;
+          return a;
+        })
+      : a('undefined' !== typeof Highcharts ? Highcharts : void 0);
 })(function (a) {
   function b(a, c, b, d) {
     // eslint-disable-next-line no-prototype-builtins
