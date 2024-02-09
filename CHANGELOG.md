@@ -1,4 +1,7 @@
-# 3.2.0
+# 4.0.0
+
+- Fixed `multer` related error: 'Field value too long'.
+- Removed unnecessary separate `body-parser` package (already implemented in Express v4.16+).
 
 # 3.1.1
 
