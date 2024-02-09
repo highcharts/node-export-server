@@ -7,7 +7,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
   const options = exporter.setOptions(exportOptions);
 
   // Init the pool
-  await exporter.initPool(options);
+  await exporter.initExport(options);
 
   const promises = [];
   const chartResults = [];
@@ -25,7 +25,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
           }
 
           // Add the data to the chartResults
-          chartResults.push(info.data);
+          chartResults.push(info.result);
           resolve();
         });
       })
@@ -33,12 +33,12 @@ const exportCharts = async (charts, exportOptions = {}) => {
   });
 
   return Promise.all(promises)
-    .then(() => {
-      exporter.killPool();
+    .then(async () => {
+      await exporter.killPool();
       return Promise.resolve(chartResults);
     })
-    .catch((error) => {
-      exporter.killPool();
+    .catch(async (error) => {
+      await exporter.killPool();
       return Promise.reject(error);
     });
 };

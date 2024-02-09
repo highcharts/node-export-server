@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2023, Highsoft
+Copyright (c) 2016-2024, Highsoft
 
 Licenced under the MIT licence.
 
@@ -24,7 +24,7 @@ import { __dirname } from '../../lib/utils.js';
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
   '\nThis tool simulates node module execution by using selected'.green,
-  'functions (initPool and startExport) of Highcharts Export Server.'.green,
+  'functions (initExport and startExport) of Highcharts Export Server.'.green,
   '\nLoads a specified JSON file and runs it'.green,
   '(results are stored in the ./test/node/_results).\n'.green
 );
@@ -73,8 +73,8 @@ const exportChart = () => {
           writeFileSync(
             info.options.export.outfile,
             info.options?.export?.type !== 'svg'
-              ? Buffer.from(info.data, 'base64')
-              : info.data
+              ? Buffer.from(info.result, 'base64')
+              : info.result
           );
         } else {
           // Information about the error and the time it took
@@ -109,7 +109,7 @@ const exportChart = () => {
   });
 
   // Initialize pool with disabled logging
-  await exporter.initPool(options);
+  await exporter.initExport(options);
 
   // Check if file even exists and if it is a JSON
   if (existsSync(file) && file.endsWith('.json')) {
