@@ -321,7 +321,7 @@ These are set as variables in your environment. They take precedence over option
 - `HIGHCHARTS_POOL_IDLE_TIMEOUT`: The number of milliseconds after an idle resource is destroyed.
 - `HIGHCHARTS_POOL_CREATE_RETRY_INTERVAL`: The number of milliseconds after the create process is retried in case of fail.
 - `HIGHCHARTS_POOL_REAPER_INTERVAL`: The number of milliseconds after the check for idle resources to destroy is triggered.
-- `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking.
+- `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking for pool of resources.
 - `HIGHCHARTS_POOL_LISTEN_TO_PROCESS_EXITS`: Set to false in order to skip attaching process.exit handlers.
 
 ### Logging config
@@ -392,7 +392,7 @@ _Available options:_
 - `--idleTimeout`: The number of milliseconds after an idle resource is destroyed (defaults to `30000`).
 - `--createRetryInterval`: The number of milliseconds after the create process is retried in case of fail (defaults to `200`).
 - `--reaperInterval`: The number of milliseconds after the check for idle resources to destroy is triggered (defaults to `1000`).
-- `--benchmarking`: Enable benchmarking (defaults to `true`).
+- `--benchmarking`: Enable benchmarking for pool of resources (defaults to `false`).
 - `--listenToProcessExits`: Set to false in order to skip attaching process.exit handlers (defaults to `true`).
 - `--logLevel`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose) (defaults to `4`).
 - `--logFile`: A name of a log file. The --logDest also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
@@ -593,16 +593,16 @@ const exportSettings = {
 // Set the new options and merge it with the default options
 const options = exporter.setOptions(exportSettings);
 
-// Initialize a pool of workers
-await exporter.initPool(options);
+// Must initialize exporting before being able to export charts
+await exporter.initExport(options);
 
 // Perform an export
-exporter.startExport(exportSettings, function (res, err) {
+exporter.startExport(exportSettings, async (info, error)) => {
   // The export result is now in res.
-  // It will be base64 encoded (res.data).
+  // It will be base64 encoded (info.data).
 
   // Kill the pool when we're done with it.
-  exporter.killPool();
+  await exporter.killPool();
 });
 ```
 
@@ -641,7 +641,7 @@ This package supports both CommonJS and ES modules.
     - `trustProxy` - Set this to true if behind a load balancer.
     - `skipKey`/`skipToken` - key/token pair that allows bypassing the rate limiter. On requests, these should be sent as such: `?key=<key>&access_token=<token>`.
 
-- `initPool(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
+- `initExport(options)`: Init the pool of Puppeteer browser's pages - must be done prior to exporting. The `options` is an object that contains all options with, among others, the `pool` section which is required to successfuly init the pool:
 
   - `minWorkers` (default 4) - Min and initial worker process count.
   - `maxWorkers` (default 8) - Max worker processes count.
@@ -652,7 +652,7 @@ This package supports both CommonJS and ES modules.
   - `idleTimeout` (default 30000) - The maximum allowed time after an idle resource is destroyed, in milliseconds.
   - `createRetryInterval` (default 200) - The number of milliseconds after the create process is retried in case of fail.
   - `reaperInterval` (default 1000) - The number of milliseconds after the check for idle resources to destroy is triggered.
-  - `benchmarking` (default false) - Enable benchmarking.
+  - `benchmarking` (default false) - Enable benchmarking for pool of resources.
   - `listenToProcessExits` (default true) - Set to false in order to skip attaching process.exit handlers.
 
 - `killPool()`: Kill the pool of resources (Puppeteer browser's pages).

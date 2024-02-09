@@ -15,8 +15,7 @@ See LICENSE file in root for details.
 
 import main from '../lib/index.js';
 
-import { manualConfig } from '../lib/config.js';
-import { printLogo, printUsage } from '../lib/utils.js';
+import ExportError from '../lib/errors/ExportError.js';
 
 /**
  * The main start function to start the server or do the direct export
@@ -28,7 +27,7 @@ const start = async () => {
 
     // Print the usage information if no arguments supplied
     if (args.length <= 2) {
-      return printUsage();
+      return main.printUsage();
     }
 
     // Set the options, keeping the priority order of setting values:
@@ -41,17 +40,17 @@ const start = async () => {
     // If all options correctly parsed
     if (options) {
       // Print initial logo or text
-      printLogo(options.other.noLogo);
+      main.printLogo(options.other.noLogo);
 
       // In this case we want to prepare config manually
       if (options.customCode.createConfig) {
-        return await manualConfig(options.customCode.createConfig);
+        return await main.manualConfig(options.customCode.createConfig);
       }
 
       // Start server
       if (options.server.enable) {
-        // Init a pool for the server and send options
-        await main.initPool(options);
+        // Init the export mechanism for the server configuration
+        await main.initExport(options);
 
         // Run the server
         await main.startServer(options.server);
@@ -62,16 +61,16 @@ const start = async () => {
           if (!args.includes('--minWorkers', '--maxWorkers')) {
             options.pool = {
               ...options.pool,
-              minWorkers: 5,
+              minWorkers: 2,
               maxWorkers: 25
             };
           }
 
           // Init a pool for the batch exports
-          await main.initPool(options);
+          await main.initExport(options);
 
           // Start batch exports
-          main.batchExport(options);
+          await main.batchExport(options);
         } else {
           // No need for multiple workers in case of a single CLI export
           options.pool = {
@@ -81,16 +80,21 @@ const start = async () => {
           };
 
           // Init a pool for one export
-          await main.initPool(options);
+          await main.initExport(options);
 
           // Start a single export
           await main.singleExport(options);
         }
       }
+    } else {
+      throw new ExportError('[cli] No valid options provided.');
     }
   } catch (error) {
+    // Log the error with stack
     main.logWithStack(1, error);
-    process.exit(1);
+
+    // Kill pool and close browser if exist
+    await main.killPool();
   }
 };
 

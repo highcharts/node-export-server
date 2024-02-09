@@ -55,10 +55,10 @@ const start = async () => {
   const options = exporter.setOptions(mappedOptions);
 
   // Init a pool for one export
-  await exporter.initPool(options);
+  await exporter.initExport(options);
 
   // Perform an export
-  exporter.startExport(options, (info, error) => {
+  await exporter.startExport(options, async (info, error) => {
     // Exit process and display error
     if (error) {
       exporter.log(1, error.message);
@@ -73,7 +73,7 @@ const start = async () => {
     );
 
     // Kill the pool
-    exporter.killPool();
+    await exporter.killPool();
   });
 };
 

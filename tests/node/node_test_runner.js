@@ -29,7 +29,7 @@ import { __dirname } from '../../lib/utils.js';
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow,
   '\nThis tool simulates node module execution by using selected'.green,
-  'functions (initPool and startExport) of Highcharts Export Server.'.green,
+  'functions (initExport and startExport) of Highcharts Export Server.'.green,
   '\nLoads all JSON files from the ./tests/node folder and runs them'.green,
   '(results are stored in the ./test/node/_results).\n'.green
 );
@@ -109,7 +109,7 @@ const exportChart = (file) => {
   });
 
   // Initialize pool with disabled logging
-  await exporter.initPool(options);
+  await exporter.initExport(options);
 
   let testCounter = 0;
   let failsCouter = 0;
