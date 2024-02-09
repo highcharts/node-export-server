@@ -18,7 +18,11 @@ import main from '../lib/index.js';
 import ExportError from '../lib/errors/ExportError.js';
 
 /**
- * The main start function to start the server or do the direct export
+ * The primary function to initiate the server or perform the direct export.
+ *
+ * @throws {ExportError} Throws an ExportError if no valid options are provided.
+ * @throws {Error} Throws an Error if an unexpected error occurs during
+ * execution.
  */
 const start = async () => {
   try {

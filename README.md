@@ -4,35 +4,19 @@ Convert Highcharts.JS charts to static image files.
 
 ## Upgrade notes for V3.0
 
-V3 should be a drop in replacement for V2 in most cases. However, due to changing out the browser back-end part, the various tweaks related to process handling (e.g. worker counts and so on) may have different effects than they did previously.
+In most cases, V3 should serve as a drop-in replacement for V2. However, due to changes in the browser back-end part, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
 
-The API for when using the server as a node module has changed significantly, but a compatibility layer has been created to address this. It is however recommended to change to the new API described below, as the compatibility layer is likely to be deprecated at some point in the future.
+Significant changes have been made to the API for using the server as a Node module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It's worth noting that the compatibility layer may be deprecated at some point in the future.
 
-One important note is that the export server now requires `node v16.14.0` or higher.
+An important note is that the export server now requires `node v16.14.0`` or a higher version.
 
 ## Changelog
-
-_Fixes and enhancements:_
-
-- Replaced PhantomJS with Puppeteer
-- Updated the config handling system to optionally load JSON files, and improved environment var loading
-- Rewrote the HC caching system: it's now easier to include custom modules/dependency lists in your own deployments
-- The install step no longer requires interaction when installing
-- Replaced the custom worker pool system with `tarn`
-- Error messages are now sent back to the client instead of being displayed in rasterized output
-- Updated NPM dependencies, removed deprecated and uneccessary dependencies
-- Lots of smaller bugfixes and tweaks
-
-_New Features:_
-
-- Added `/health` route to server to display basic server information
-- Added a UI served on `/` to perform exports from JSON configurations in browser
 
 The full change log for all versions can be viewed [here](CHANGELOG.md).
 
 # What & Why
 
-This is a node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files. It supports PNG, JPEG, SVG, and PDF output; and the input can be either SVG, or JSON-formatted chart options.
+This is a Node.js application/service that converts [Highcharts.JS](http://highcharts.com) charts to static image files. It supports PNG, JPEG, SVG, and PDF output. The input can be either SVG or JSON-formatted chart options.
 
 The application can be used either as a CLI (Command Line Interface), as an HTTP server, or as a node.js module.
 
@@ -101,9 +85,9 @@ There are four main ways of loading configurations:
 
 ## Loading Default JSON Config
 
-The below JSON presents the default config that resides in the `lib/schemas/config.js` file. If no `.env` file is found (more on `.env` and environment variables below), these options are used.
+The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no .env file is found (more details on .env and environment variables below), these options will be used.
 
-The format, with its default values are as follows (using the below ordering of core scripts and modules is recommended):
+The format, along with its default values, is as follows (using the recommended ordering of core scripts and modules below):
 
 ```
 {
@@ -113,7 +97,6 @@ The format, with its default values are as follows (using the below ordering of 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
-    "forceFetch": false,
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -184,7 +167,8 @@ The format, with its default values are as follows (using the below ordering of 
     ],
     "scripts": [
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"
-    ]
+    ],
+    "forceFetch": false
   },
   "export": {
     "infile": false,
@@ -198,11 +182,12 @@ The format, with its default values are as follows (using the below ordering of 
     "scale": 1,
     "globalOptions": false,
     "themeOptions": false,
-    "batch": false
+    "batch": false,
+    "rasterizationTimeout": 1500
   },
   "customCode": {
     "allowCodeExecution": false,
-    "allowFileResources": true,
+    "allowFileResources": false,
     "customCode": false,
     "callback": false,
     "resources": false,
@@ -222,6 +207,9 @@ The format, with its default values are as follows (using the below ordering of 
     "rateLimiting": {
       "enable": false,
       "maxRequests": 10,
+      "window": 1,
+      "delay": 0,
+      "trustProxy": false,
       "skipKey": "",
       "skipToken": ""
     }
@@ -234,6 +222,7 @@ The format, with its default values are as follows (using the below ordering of 
     "createTimeout": 5000,
     "destroyTimeout": 5000,
     "idleTimeout": 30000,
+    "createRetryInterval": 200,
     "reaperInterval": 1000,
     "benchmarking": false,
     "listenToProcessExits": true
@@ -255,95 +244,95 @@ The format, with its default values are as follows (using the below ordering of 
 
 ## Loading Custom JSON Config
 
-Loading an additional JSON configuration file can be done by using the `--loadConfig <filepath>` option. Such a JSON can be created manually or through a prompt called by the `--createConfig` option.
+To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can be either created manually or generated through a prompt triggered by the `--createConfig` option.
 
 ## Environment Variables
 
 These are set as variables in your environment. They take precedence over options from the `lib/schemas/config.js` file. On Linux, use e.g. `export`.
 
 ### Node environment
-- `NODE_ENV`: The type of Node environment. Can be development or production.
+- `NODE_ENV`: The type of Node environment. The value controls whether to include the error's stack in a response or not. Can be `development` or `production` (defaults to `development`).
 
 ### Export config
 
-- `EXPORT_DEFAULT_TYPE`: The format of the file to export to. Can be jpeg, png, pdf or svg.
-- `EXPORT_DEFAULT_CONSTR`: The constructor to use. Can be chart, stockChart, mapChart or ganttChart.
-- `EXPORT_DEFAULT_HEIGHT`: The height of the exported chart. Overrides the option in the chart settings.
-- `EXPORT_DEFAULT_WIDTH`: The width of the exported chart. Overrides the option in the chart settings.
-- `EXPORT_DEFAULT_SCALE`: The scale of the exported chart. Ranges between 0.1 and 5.0.
-- `EXPORT_RASTERIZATION_TIMEOUT`: The number of milliseconds to wait for rendering a webpage.
+- `EXPORT_TYPE`: The format of the file to export to. Can be `jpeg`, `png`, `pdf` or `svg` (defaults to `png`).
+- `EXPORT_CONSTR`: The constructor to use. Can be `chart`, `stockChart`, `mapChart` or `ganttChart` (defaults to `chart`).
+- `EXPORT_DEFAULT_HEIGHT`: The default height of the exported chart. Used when not found any value set (defaults to `400`).
+- `EXPORT_DEFAULT_WIDTH`: The default width of the exported chart. Used when not found any value set (defaults to `600`).
+- `EXPORT_DEFAULT_SCALE`: The default scale of the exported chart. Ranges between `0.1` and `5.0` (defaults to `1`).
+- `EXPORT_RASTERIZATION_TIMEOUT`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
 ### Highcharts config
 
-- `HIGHCHARTS_VERSION`: Highcharts version to use.
-- `HIGHCHARTS_CDN`: The CDN URL of Highcharts scripts to use.
-- `HIGHCHARTS_FORCE_FETCH`: Should refetch all the scripts after each server rerun.
+- `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
+- `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch.
 - `HIGHCHARTS_MODULES`: Highcharts modules to fetch.
 - `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch.
+- `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 
 ### Custom code config
 
-- `HIGHCHARTS_ALLOW_CODE_EXECUTION`: If set to true, allow for the execution of arbitrary code when exporting.
-- `HIGHCHARTS_ALLOW_FILE_RESOURCES`: Allow injecting resources from the filesystem. Has no effect when running as a server.
+- `CUSTOM_CODE_ALLOW_CODE_EXECUTION`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
+- `CUSTOM_CODE_ALLOW_FILE_RESOURCES`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 
 ### Server config
 
-- `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
-- `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
-- `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
+- `SERVER_ENABLE`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
+- `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
+- `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 
 ### Server SSL config
 
-- `HIGHCHARTS_SERVER_SSL_ENABLE`: Enables the SSL protocol.
-- `HIGHCHARTS_SERVER_SSL_FORCE`: If set to true, forces the server to only serve over HTTPS.
-- `HIGHCHARTS_SERVER_SSL_PORT`: The port on which to run the SSL server.
-- `HIGHCHARTS_SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key.
+- `SERVER_SSL_ENABLE`: If set to true, enables the SSL protocol (defaults to `false`).
+- `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
+- `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
+- `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file.
 
 ### Server rate limiting config
 
-- `HIGHCHARTS_RATE_LIMIT_ENABLE`: Enables rate limiting.
-- `HIGHCHARTS_RATE_LIMIT_MAX`: Max requests allowed in a one minute.
-- `HIGHCHARTS_RATE_LIMIT_WINDOW`: The time window in minutes for rate limiting.
-- `HIGHCHARTS_RATE_LIMIT_DELAY`: The amount to delay each successive request before hitting the max.
-- `HIGHCHARTS_RATE_LIMIT_TRUST_PROXY`: Set this to true if behind a load balancer.
-- `HIGHCHARTS_RATE_LIMIT_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with skipToken argument.
-- `HIGHCHARTS_RATE_LIMIT_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with skipKey argument.
+- `RATE_LIMITING_ENABLE`: Enables rate limiting for the server (defaults to `false`).
+- `RATE_LIMITING_MAX_REQUESTS`: The maximum number of requests allowed in one minute (defaults to `10`).
+- `RATE_LIMITING_WINDOW`: The time window, in minutes, for rate limiting (defaults to `1`).
+- `RATE_LIMITING_DELAY`: The delay duration for each successive request before reaching the maximum limit (defaults to `0`).
+- `RATE_LIMITING_TRUST_PROXY`: Set this to true if the server is behind a load balancer (defaults to `false`).
+- `RATE_LIMITING_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with the `skipToken` argument.
+- `RATE_LIMITING_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with the `skipKey` argument.
 
 ### Pool config
 
-- `HIGHCHARTS_POOL_MIN_WORKERS`: The number of initial workers to spawn.
-- `HIGHCHARTS_POOL_MAX_WORKERS`: The number of max workers to spawn.
-- `HIGHCHARTS_POOL_WORK_LIMIT`: The pieces of work that can be performed before restarting process.
-- `HIGHCHARTS_POOL_ACQUIRE_TIMEOUT`: The number of milliseconds to wait for acquiring a resource.
-- `HIGHCHARTS_POOL_CREATE_TIMEOUT`: The number of milliseconds to wait for creating a resource.
-- `HIGHCHARTS_POOL_DESTROY_TIMEOUT`: The number of milliseconds to wait for destroying a resource.
-- `HIGHCHARTS_POOL_IDLE_TIMEOUT`: The number of milliseconds after an idle resource is destroyed.
-- `HIGHCHARTS_POOL_CREATE_RETRY_INTERVAL`: The number of milliseconds after the create process is retried in case of fail.
-- `HIGHCHARTS_POOL_REAPER_INTERVAL`: The number of milliseconds after the check for idle resources to destroy is triggered.
-- `HIGHCHARTS_POOL_BENCHMARKING`: Enable benchmarking for pool of resources.
-- `HIGHCHARTS_POOL_LISTEN_TO_PROCESS_EXITS`: Set to false in order to skip attaching process.exit handlers.
+- `POOL_MIN_WORKERS`: The number of minimum and initial pool workers to spawn (defaults to `4`).
+- `POOL_MAX_WORKERS`: The number of maximum pool workers to spawn (defaults to `8`).
+- `POOL_WORK_LIMIT`: The number of work pieces that can be performed before restarting the process (defaults to `40`).
+- `POOL_ACQUIRE_TIMEOUT`: The duration, in milliseconds, to wait for acquiring a resource (defaults to `5000`).
+- `POOL_CREATE_TIMEOUT`: The duration, in milliseconds, to wait for creating a resource (defaults to `5000`).
+- `POOL_DESTROY_TIMEOUT`: The duration, in milliseconds, to wait for destroying a resource (defaults to `5000`).
+- `POOL_IDLE_TIMEOUT`: The duration, in milliseconds, after which an idle resource is destroyed (defaults to `30000`).
+- `POOL_CREATE_RETRY_INTERVAL`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
+- `POOL_REAPER_INTERVAL`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
+- `POOL_BENCHMARKING`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
+- `POOL_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 
 ### Logging config
 
-- `HIGHCHARTS_LOG_LEVEL`: The log level (0: silent, 1: error, 2: warning, 3: notice, 4: verbose).
-- `HIGHCHARTS_LOG_FILE`: A name of a log file. The --logDest also needs to be set to enable file logging.
-- `HIGHCHARTS_LOG_DEST`: The path to store log files. Also enables file logging.
+- `LOGGING_LEVEL`: The logging level to be used. Can be `0` - silent, `1` - error, `2` - warning, `3` - notice or `4` - verbose (defaults to `4`).
+- `LOGGING_FILE`: The name of a log file. The `logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
+- `LOGGING_DEST`: The path to store log files. This also enables file logging (defaults to `log/`).
 
 ### UI config
 
-- `HIGHCHARTS_UI_ENABLE`: Enables the UI for the export server.
-- `HIGHCHARTS_UI_ROUTE`: The route to attach the UI to.
+- `UI_ENABLE`: Enables or disables the user interface (UI) for the export server (defaults to `true`).
+- `UI_ROUTE`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
 
 ### Other config
 
-- `HIGHCHARTS_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text.
+- `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text.
 
 ### Proxy config
 
-- `PROXY_SERVER_HOST`: The host of the proxy server to use if exists.
-- `PROXY_SERVER_PORT`: The port of the proxy server to use if exists.
-- `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use if exists.
+- `PROXY_SERVER_HOST`: The host of the proxy server to use, if it exists.
+- `PROXY_SERVER_PORT`: The port of the proxy server to use, if it exists.
+- `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use, if it exists.
 
 ## Command Line Arguments
 
@@ -425,7 +414,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 
 ## Note about process.exit listeners
 
-The export server attaches event listeners to process.exit. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
+The export server attaches event listeners to `process.exit`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
 Listeners are also attached to handle uncaught exceptions. If an exception occurs, the entire pool is terminated, and the application is shut down.
 
@@ -597,8 +586,8 @@ const options = exporter.setOptions(exportSettings);
 await exporter.initExport(options);
 
 // Perform an export
-exporter.startExport(exportSettings, async (info, error)) => {
-  // The export result is now in res.
+await exporter.startExport(exportSettings, async (info, error) => {
+  // The export result is now in info.
   // It will be base64 encoded (info.data).
 
   // Kill the pool when we're done with it.
