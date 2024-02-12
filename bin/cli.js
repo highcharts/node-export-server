@@ -99,6 +99,9 @@ const start = async () => {
 
     // Kill pool and close browser if exist
     await main.killPool();
+
+    // End process with an error code
+    process.exit(1);
   }
 };
 

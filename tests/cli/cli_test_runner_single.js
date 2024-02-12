@@ -39,66 +39,56 @@ const file = process.argv[2];
 
 // Check if file even exists and if it is a JSON
 if (existsSync(file) && file.endsWith('.json')) {
-  new Promise((resolve, reject) => {
-    try {
-      console.log('[Test runner]'.blue, `Processing test ${file}.`);
+  try {
+    console.log('[Test runner]'.blue, `Processing test ${file}.`);
 
-      // Read a CLI file
-      const cliJson = JSON.parse(readFileSync(file));
+    // Read a CLI file
+    const cliJson = JSON.parse(readFileSync(file));
 
-      // No need for that when doing export through the --batch option
-      if (!cliJson.batch) {
-        // If needed, prepare default outfile
-        cliJson.outfile = join(
-          resultsPath,
-          cliJson.outfile ||
-            basename(file).replace('.json', `.${cliJson.type || 'png'}`)
-        );
-      }
-
-      // Complete the CLI command
-      let cliCommand = [];
-
-      // Check if run in debug mode
-      cliCommand.push('node', './bin/cli.js');
-
-      // Cycle through commands with value
-      for (const [argument, value] of Object.entries(cliJson)) {
-        cliCommand.push(`--${argument}`, JSON.stringify(value));
-      }
-
-      // Complete the CLI command
-      cliCommand = cliCommand.join(' ');
-
-      // The start date of a CLI command
-      const startDate = new Date().getTime();
-
-      // Launch command in a new process
-      // eslint-disable-next-line no-global-assign
-      process = spawn(cliCommand);
-
-      // Close event for a process
-      process.on('exit', (code) => {
-        const endMessage = `CLI command from file: ${file}, took ${
-          new Date().getTime() - startDate
-        }ms.`;
-
-        // If code is 1, it means that export server thrown an error
-        if (code) {
-          return reject(`[Fail] ${endMessage}`.red);
-        }
-
-        resolve(`[Success] ${endMessage}`.green);
-      });
-    } catch (error) {
-      console.log(`Error thrown: ${error}`);
-      reject();
+    // No need for that when doing export through the --batch option
+    if (!cliJson.batch) {
+      // If needed, prepare default outfile
+      cliJson.outfile = join(
+        resultsPath,
+        cliJson.outfile ||
+          basename(file).replace('.json', `.${cliJson.type || 'png'}`)
+      );
     }
-  })
-    .then((message) => {
-      console.log(message);
-    })
-    .catch((message) => {
-      console.log(message);
+
+    // Complete the CLI command
+    let cliCommand = [];
+
+    // Check if run in debug mode
+    cliCommand.push('node', './bin/cli.js');
+
+    // Cycle through commands with value
+    for (const [argument, value] of Object.entries(cliJson)) {
+      cliCommand.push(`--${argument}`, JSON.stringify(value));
+    }
+
+    // Complete the CLI command
+    cliCommand = cliCommand.join(' ');
+
+    // The start date of a CLI command
+    const startDate = new Date().getTime();
+
+    // Launch command in a new process
+    spawn(cliCommand);
+
+    // Close event for a process
+    process.on('exit', (code) => {
+      const endMessage = `CLI command from file: ${file}, took ${
+        new Date().getTime() - startDate
+      }ms.`;
+
+      // If code is 1, it means that export server thrown an error
+      if (code === 1) {
+        return console.error(`[Fail] ${endMessage}`.red);
+      }
+
+      console.log(`[Success] ${endMessage}`.green);
     });
+  } catch (error) {
+    console.error(error);
+  }
 }

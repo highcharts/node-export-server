@@ -46,76 +46,57 @@ const url = 'http://127.0.0.1:7801';
 // Perform a health check before continuing
 fetch(`${url}/health`)
   .then(() => {
-    process.setMaxListeners(0);
-
     // Check if file even exists and if it is a JSON
     if (existsSync(file) && file.endsWith('.json')) {
-      new Promise((resolve, reject) => {
-        try {
-          console.log('[Test runner]'.blue, `Processing test ${file}.`);
+      try {
+        console.log('[Test runner]'.blue, `Processing test ${file}.`);
 
-          // Read a payload file
-          const payload = clearText(
-            readFileSync(file).toString(),
-            /\s\s+/g,
-            ''
-          );
+        // Read a payload file
+        const payload = clearText(readFileSync(file).toString(), /\s\s+/g, '');
 
-          const parsedJPayload = JSON.parse(payload);
+        const parsedJPayload = JSON.parse(payload);
 
-          // Results folder path
-          const resultsFile = join(
-            resultsPath,
-            basename(file).replace(
-              '.json',
-              `.${parsedJPayload.b64 ? 'txt' : parsedJPayload.type || 'png'}`
-            )
-          );
+        // Results folder path
+        const resultsFile = join(
+          resultsPath,
+          basename(file).replace(
+            '.json',
+            `.${parsedJPayload.b64 ? 'txt' : parsedJPayload.type || 'png'}`
+          )
+        );
 
-          // Complete the curl command
-          let command = [
-            'curl',
-            '-H "Content-Type: application/json"',
-            '-X POST'
-          ];
+        // Complete the curl command
+        let command = [
+          'curl',
+          '-H "Content-Type: application/json"',
+          '-X POST'
+        ];
 
-          // Use the --data-binary to get payload body from a file
-          command.push('--data-binary', `"@${file}"`);
+        // Use the --data-binary to get payload body from a file
+        command.push('--data-binary', `"@${file}"`);
 
-          // Complete the curl command
-          command = command.concat([url, '-o', resultsFile]).join(' ');
+        // Complete the curl command
+        command = command.concat([url, '-o', resultsFile]).join(' ');
 
-          // The start date of a POST request
-          const startDate = new Date().getTime();
+        // The start date of a POST request
+        const startDate = new Date().getTime();
 
-          // Launch command in a new process
-          // eslint-disable-next-line no-global-assign
-          process = spawn(command);
+        // Launch command in a new process
+        spawn(command, (error) => {
+          const endMessage = `HTTP request with a payload from file: ${file}, took ${
+            new Date().getTime() - startDate
+          }ms.`;
 
-          // Close event for a process
-          process.on('exit', (code) => {
-            const endMessage = `HTTP request with a payload from file: ${file}, took ${
-              new Date().getTime() - startDate
-            }ms.`;
+          // If code is 1, it means that export server thrown an error
+          if (error) {
+            return console.error(`[Fail] ${endMessage}`.red);
+          }
 
-            // If code is 1, it means that export server thrown an error
-            if (code) {
-              return reject(`[Fail] ${endMessage}`.red);
-            }
-
-            resolve(`[Success] ${endMessage}`.green);
-          });
-        } catch (error) {
-          console.log(`Error thrown: ${error}`);
-          reject();
-        }
-      })
-        .then((message) => {
-          console.log(message);
-        })
-        .catch((message) => {
-          console.log(message);
+          console.log(`[Success] ${endMessage}`.green);
         });
+      } catch (error) {
+        console.error(error);
+      }
     }
   })
   .catch((error) => {
