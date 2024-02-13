@@ -22,7 +22,7 @@ import { __dirname } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
-  'Highcharts Export Server CLI Test Runner'.yellow,
+  'Highcharts Export Server CLI Test Runner'.yellow.bold.underline,
   '\nThis tool simulates the CLI commands to Highcharts Export Server.'.green,
   '\nLoads a specified JSON file and runs it'.green,
   '(results are stored in the ./tests/cli/_results).\n'.green

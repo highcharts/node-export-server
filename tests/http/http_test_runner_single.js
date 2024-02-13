@@ -12,33 +12,23 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { exec as spawn } from 'child_process';
-import { existsSync, mkdirSync, readFileSync } from 'fs';
-import { fetch } from '../../lib/fetch.js';
+import { createWriteStream, existsSync, mkdirSync, readFileSync } from 'fs';
+import http from 'http';
 import { basename, join } from 'path';
 
 import 'colors';
 
+import { fetch } from '../../lib/fetch.js';
 import { __dirname, clearText } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
-  'Highcharts Export Server HTTP Requests Test Runner'.yellow,
-  '\nThis tool simulates POST requests (via Curl) to'.green,
-  'Highcharts Export Server.'.green,
+  'Highcharts Export Server HTTP Requests Test Runner'.yellow.bold.underline,
+  '\nThis tool simulates POST requests to Highcharts Export Server.'.green,
   '\nThe server needs to be started before running this test.'.green,
   '\nLoads a specified JSON file and runs it'.green,
   '(results are stored in the ./tests/http/_results).\n'.green
 );
-
-// Results and scenarios paths
-const resultsPath = join(__dirname, 'tests', 'http', '_results');
-
-// Create results folder for HTTP exports if doesn't exist
-!existsSync(resultsPath) && mkdirSync(resultsPath);
-
-// Get the file's name
-const file = process.argv[2];
 
 // Url of Puppeteer export server
 const url = 'http://127.0.0.1:7801';
@@ -46,6 +36,15 @@ const url = 'http://127.0.0.1:7801';
 // Perform a health check before continuing
 fetch(`${url}/health`)
   .then(() => {
+    // Results path
+    const resultsPath = join(__dirname, 'tests', 'http', '_results');
+
+    // Create results folder for HTTP exports if it doesn't exist
+    !existsSync(resultsPath) && mkdirSync(resultsPath);
+
+    // Get the file's name
+    const file = process.argv[2];
+
     // Check if file even exists and if it is a JSON
     if (existsSync(file) && file.endsWith('.json')) {
       try {
@@ -53,7 +52,6 @@ fetch(`${url}/health`)
 
         // Read a payload file
         const payload = clearText(readFileSync(file).toString(), /\s\s+/g, '');
-
         const parsedJPayload = JSON.parse(payload);
 
         // Results folder path
@@ -65,35 +63,44 @@ fetch(`${url}/health`)
           )
         );
 
-        // Complete the curl command
-        let command = [
-          'curl',
-          '-H "Content-Type: application/json"',
-          '-X POST'
-        ];
-
-        // Use the --data-binary to get payload body from a file
-        command.push('--data-binary', `"@${file}"`);
-
-        // Complete the curl command
-        command = command.concat([url, '-o', resultsFile]).join(' ');
-
         // The start date of a POST request
         const startDate = new Date().getTime();
+        const request = http.request(
+          url,
+          {
+            path: '/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          },
+          (response) => {
+            const fileStream = createWriteStream(resultsFile);
 
-        // Launch command in a new process
-        spawn(command, (error) => {
-          const endMessage = `HTTP request with a payload from file: ${file}, took ${
-            new Date().getTime() - startDate
-          }ms.`;
+            // A chunk of data has been received
+            response.on('data', (chunk) => {
+              fileStream.write(chunk);
+            });
 
-          // If code is 1, it means that export server thrown an error
-          if (error) {
-            return console.error(`[Fail] ${endMessage}`.red);
+            // The whole response has been received
+            response.on('end', () => {
+              fileStream.end();
+
+              const endMessage = `HTTP request with a payload from file: ${file}, took ${
+                new Date().getTime() - startDate
+              }ms.`;
+
+              // Based on received status code check if requests failed
+              if (response.statusCode >= 400) {
+                console.log(`[Fail] ${endMessage}`.red);
+              } else {
+                console.log(`[Success] ${endMessage}`.green);
+              }
+            });
           }
-
-          console.log(`[Success] ${endMessage}`.green);
-        });
+        );
+        request.write(payload);
+        request.end();
       } catch (error) {
         console.error(error);
       }
