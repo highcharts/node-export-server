@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "main": "dist/index.esm.js",
   "exports": {
     ".": {
@@ -30,16 +30,19 @@
     "node-tests": "node tests/node/node_test_runner.js",
     "node-tests-single": "node tests/node/node_test_runner_single.js",
     "prepare": "husky install",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "unit:test": "mocha \"tests/unit/**/*.test.js\""
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "chai": "^5.1.0",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.9.0",
     "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.3",
+    "mocha": "^10.3.0",
     "prettier": "^3.0.0",
     "rollup": "^3.29.4"
   },

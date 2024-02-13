@@ -13,6 +13,14 @@ module.exports = {
     'plugin:prettier/recommended'
   ],
   plugins: ['import', 'prettier'],
+  overrides: [
+    {
+      files: ['/**/*.test.js'],
+      env: {
+        mocha: true
+      }
+    }
+  ],
   rules: {
     'no-unused-vars': 'off',
     'import/no-cycle': 2,
