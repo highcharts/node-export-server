@@ -58,7 +58,7 @@ const start = async () => {
   await exporter.initExport(options);
 
   // Perform an export
-  await exporter.startExport(options, async (info, error) => {
+  await exporter.startExport(options, async (error, info) => {
     // Exit process and display error
     if (error) {
       exporter.log(1, error.message);

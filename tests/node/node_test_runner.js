@@ -28,7 +28,7 @@ import { __dirname } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates node module execution by using selected'.green,
+  '\nThis tool simulates NodeJS module execution by using selected'.green,
   'functions (initExport and startExport) of Highcharts Export Server.'.green,
   '\nLoads all JSON files from the ./tests/node folder and runs them'.green,
   '(results are stored in the ./test/node/_results).\n'.green
@@ -61,7 +61,7 @@ console.log(
     exporter.setLogLevel(0);
 
     let testCounter = 0;
-    let failsCouter = 0;
+    let failsCounter = 0;
 
     // Await all exports
     Promise.all(
@@ -92,7 +92,7 @@ console.log(
 
               // Start the export process
               exporter
-                .startExport(fileOptions, (info, error) => {
+                .startExport(fileOptions, (error, info) => {
                   // Throw an error
                   if (error) {
                     throw error;
@@ -123,7 +123,7 @@ console.log(
                   exporter.setLogLevel(1);
                   exporter.logWithStack(1, error);
                   exporter.setLogLevel(0);
-                  failsCouter++;
+                  failsCounter++;
                 })
                 .finally(() => {
                   testCounter++;
@@ -135,8 +135,8 @@ console.log(
       // Summarize the run and kill the pool
       console.log(
         '\n--------------------------------',
-        failsCouter
-          ? `\n${testCounter} tests done, ${failsCouter} error(s) found!`.red
+        failsCounter
+          ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
           : `\n${testCounter} tests done, errors not found!`.green,
         '\n--------------------------------'
       );

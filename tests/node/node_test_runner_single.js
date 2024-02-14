@@ -18,7 +18,6 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter from '../../lib/index.js';
-import { log } from '../../lib/logger.js';
 import { __dirname } from '../../lib/utils.js';
 
 console.log(
@@ -78,7 +77,7 @@ console.log(
 
       try {
         // Start the export process
-        await exporter.startExport(fileOptions, async (info, error) => {
+        await exporter.startExport(fileOptions, async (error, info) => {
           // Throw an error
           if (error) {
             throw error;
@@ -111,8 +110,7 @@ console.log(
       // Kill the pool
       await exporter.killPool();
     } else {
-      log(
-        1,
+      console.log(
         'The test does not exist. Please give a full path starting from ./tests.'
       );
     }

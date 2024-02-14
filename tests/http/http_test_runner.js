@@ -54,7 +54,7 @@ fetch(`${url}/health`)
 
     // Tests counters
     let testCounter = 0;
-    let failsCouter = 0;
+    let failsCounter = 0;
 
     // Disable event listeners limiter
     process.setMaxListeners(0);
@@ -115,7 +115,7 @@ fetch(`${url}/health`)
 
                     // Based on received status code check if requests failed
                     if (response.statusCode >= 400) {
-                      failsCouter++;
+                      failsCounter++;
                       console.log(`[Fail] ${endMessage}`.red);
                     } else {
                       testCounter++;
@@ -135,8 +135,8 @@ fetch(`${url}/health`)
     ).then(() => {
       console.log(
         '\n--------------------------------',
-        failsCouter
-          ? `\n${testCounter} tests done, ${failsCouter} error(s) found!`.red
+        failsCounter
+          ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
           : `\n${testCounter} tests done, errors not found!`.green,
         '\n--------------------------------'
       );

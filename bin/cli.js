@@ -31,6 +31,10 @@ const start = async () => {
 
     // Print the usage information if no arguments supplied
     if (args.length <= 2) {
+      main.log(
+        2,
+        '[cli] The number of provided arguments is too small. Please refer to the section below.'
+      );
       return main.printUsage();
     }
 
@@ -91,7 +95,9 @@ const start = async () => {
         }
       }
     } else {
-      throw new ExportError('[cli] No valid options provided.');
+      throw new ExportError(
+        '[cli] No valid options provided. Please check your input and try again.'
+      );
     }
   } catch (error) {
     // Log the error with stack

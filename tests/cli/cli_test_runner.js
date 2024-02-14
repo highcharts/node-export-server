@@ -29,8 +29,9 @@ console.log(
   'Highcharts Export Server CLI Test Runner'.yellow.bold.underline,
   '\nThis tool simulates the CLI commands sent to Highcharts Export Server.'
     .green,
-  '\nLoads all JSON files from the ./tests/cli folder and runs them'.green,
-  'sequentially.\nThe results are stored in the ./tests/cli/_results.\n'.green
+  '\nLoads all JSON files from the ./tests/cli folder and runs them sequentially.'
+    .green,
+  '\nThe results are stored in the ./tests/cli/_results.\n'.green
 );
 
 // Results and scenarios paths
@@ -45,7 +46,7 @@ const files = readdirSync(scenariosPath);
 
 // Tests counters
 let testCounter = 0;
-let failsCouter = 0;
+let failsCounter = 0;
 
 for (const file of files.filter((file) => file.endsWith('.json'))) {
   // For a separate CLI command trigger
@@ -87,7 +88,7 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
         // Launch command as a new child process
         await spawn(cliCommand);
       } catch (error) {
-        failsCouter++;
+        failsCounter++;
         didFail = true;
       }
       testCounter++;
@@ -109,8 +110,8 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
 // Display the results in numbers
 console.log(
   '--------------------------------',
-  failsCouter
-    ? `\n${testCounter} tests done, ${failsCouter} error(s) found!`.red
+  failsCounter
+    ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
     : `\n${testCounter} tests done, errors not found!`.green,
   '\n--------------------------------'
 );

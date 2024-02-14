@@ -19,7 +19,7 @@ import { isPrivateRangeUrlFound } from '../../lib/utils.js';
 // Test message
 console.log(
   'The isPrivateRangeUrlFound utility test'.yellow,
-  `\nIt checks multiple IPs and find which are public and private.\n`.green
+  `\nIt checks multiple IPs and finds which are public and private.\n`.green
 );
 
 // IP adresses to test

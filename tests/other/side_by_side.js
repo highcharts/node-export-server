@@ -32,7 +32,7 @@ const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message
 console.log(
-  'Highcharts Export Server Side By Side comparator'.yellow,
+  'Highcharts Export Server side by side comparator'.yellow,
   `\nPuppeteer: ${urls[0]}`.green,
   `\nPhantomJS: ${urls[1]}\n`.blue
 );
@@ -119,5 +119,5 @@ try {
       });
   }
 } catch (error) {
-  console.log(`Error thrown: ${error}`);
+  console.error(error);
 }

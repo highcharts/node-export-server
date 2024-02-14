@@ -19,7 +19,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
         const settings = { ...options };
         settings.export.options = chart;
 
-        exporter.startExport(settings, (info, error) => {
+        exporter.startExport(settings, (error, info) => {
           if (error) {
             return reject(error);
           }
