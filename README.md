@@ -38,7 +38,7 @@ To implement the latter, include the following configuration in your chart optio
 }
 ```
 
-For systems that generate automatic reports, using the Export Server as a Node.js module is a great fit - especially if your report generator is also written in Node.js. Check [here](https://github.com/highcharts/node-export-server#using-as-a-nodejs-module) for examples.
+For systems that generate automatic reports, using the Export Server as a Node.js module is a great fit - especially if your report generator is also written in Node.js. Check [here](https://github.com/highcharts/node-export-server#nodejs-module) for examples.
 
 # Install
 
@@ -257,11 +257,11 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
-### NODE ENVIRONMENT CONFIG
+### Node Environment Config
 
 - `NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `development`).
 
-### HIGHCHARTS CONFIG
+### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
@@ -271,7 +271,7 @@ These variables are set in your environment and take precedence over options fro
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 
-### EXPORT CONFIG
+### Export Config
 
 - `EXPORT_TYPE`: The format of the file to export to. Can be _jpeg_, _png_, _pdf_ or _svg_ (defaults to `png`).
 - `EXPORT_CONSTR`: The constructor to use. Can be _chart_, _stockChart_, _mapChart_ or _ganttChart_ (defaults to `chart`).
@@ -280,25 +280,25 @@ These variables are set in your environment and take precedence over options fro
 - `EXPORT_DEFAULT_SCALE`: The default scale of the exported chart. Ranges between _0.1_ and _5.0_ (defaults to `1`).
 - `EXPORT_RASTERIZATION_TIMEOUT`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
-### CUSTOM CODE CONFIG
+### Custom Code Config
 
 - `CUSTOM_CODE_ALLOW_CODE_EXECUTION`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
 - `CUSTOM_CODE_ALLOW_FILE_RESOURCES`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 
-### SERVER CONFIG
+### Server Config
 
 - `SERVER_ENABLE`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 
-### SERVER SSL CONFIG
+### Server SSL Config
 
 - `SERVER_SSL_ENABLE`: Enables or disables the SSL protocol (defaults to `false`).
 - `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
 - `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
 - `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
 
-### SERVER RATE LIMITING CONFIG
+### Server Rate Limiting Config
 
 - `SERVER_RATE_LIMITING_ENABLE`: Enables rate limiting for the server (defaults to `false`).
 - `SERVER_RATE_LIMITING_MAX_REQUESTS`: The maximum number of requests allowed in one minute (defaults to `10`).
@@ -308,7 +308,7 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_RATE_LIMITING_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with the _skipToken_ argument (defaults to ``).
 - `SERVER_RATE_LIMITING_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with the _skipKey_ argument (defaults to ``).
 
-### POOL CONFIG
+### Pool Config
 
 - `POOL_MIN_WORKERS`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `POOL_MAX_WORKERS`: The number of maximum pool workers to spawn (defaults to `8`).
@@ -322,22 +322,22 @@ These variables are set in your environment and take precedence over options fro
 - `POOL_BENCHMARKING`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
 - `POOL_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 
-### LOGGING CONFIG
+### Logging Config
 
 - `LOGGING_LEVEL`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice or _4_ - verbose (defaults to `4`).
 - `LOGGING_FILE`: The name of a log file. The _logDest_ option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `LOGGING_DEST`: The path to store log files. This also enables file logging (defaults to `log/`).
 
-### UI CONFIG
+### UI Config
 
 - `UI_ENABLE`: Enables or disables the user interface (UI) for the Export Server (defaults to `true`).
 - `UI_ROUTE`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
 
-### OTHER CONFIG
+### Other Config
 
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 
-### PROXY CONFIG
+### Proxy Config
 
 - `PROXY_SERVER_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
 - `PROXY_SERVER_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
@@ -463,7 +463,7 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
   - `/`: An endpoint to perform exports through the user interface the server allows it.
   - `/health`: An endpoint for outputting basic statistics for the server.
 
-# Switching Highcharts Version at Runtime
+## Switching Highcharts Version at Runtime
 
 If the `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change_hc_version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
 
