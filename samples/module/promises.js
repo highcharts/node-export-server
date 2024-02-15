@@ -68,6 +68,10 @@ exportCharts(
     }
   ],
   {
+    pool: {
+      minWorkers: 2,
+      maxWorkers: 2
+    },
     logging: {
       level: 4
     }
@@ -85,5 +89,5 @@ exportCharts(
     exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    exporter.log(4, `Something went wrong: ${error.message}`);
+    exporter.logWithStack(4, error, 'Something went wrong!');
   });
