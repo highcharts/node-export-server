@@ -611,7 +611,7 @@ This package supports both CommonJS and ES modules.
 
 ## Note about Deprecated Options
 
-At some point during the transition process from the `PhantomJS` solution, certain options were deprecated. Here is a list of options that will no longer work with the server based on `Puppeteer`:
+At some point during the transition process from the `PhantomJS` solution, certain options were deprecated. Here is a list of options that no longer work with the server based on `Puppeteer`:
 
 - `async`
 - `asyncRendering`
@@ -622,14 +622,12 @@ At some point during the transition process from the `PhantomJS` solution, certa
 Additionally, some options are now named differently due to the new structure and categorization. Here is a list of old names and their corresponding new names (`old name` -> `new name`):
 
 - `fromFile` -> `loadConfig`
-- `sslOnly` -> `force`
+- `sslOnly` -> `force` or `sslForced`
 - `sslPath` -> `certPath`
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
 
-The best approach here would be to change the old name respectivaly to the new ones but you do not have to do it manually as there is this utility function called `mapToNewConfig` which can easily transfer the old-structured options to the new format. For an example, refer to `./samples/module/options_phantomjs.js` file.
-
-If you depend on the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/options_phantomjs.js` file.
+If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/options_phantomjs.js` file.
 
 ## Note about Chart Size
 
