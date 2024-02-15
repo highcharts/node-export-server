@@ -607,6 +607,10 @@ This package supports both CommonJS and ES modules.
 
 - `printUsage()`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
 
+# Examples
+
+Samples and tests for every mentioned export method can be found in the `./samples` and `./tests` folders. Detailed descriptions are available in their corresponding sections on the [Wiki](https://github.com/highcharts/node-export-server/wiki).
+
 # Tips, Tricks & Notes
 
 ## Note about Deprecated Options
