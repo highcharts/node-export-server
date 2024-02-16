@@ -89,5 +89,5 @@ exportCharts(
     exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    exporter.logWithStack(4, error, 'Something went wrong!');
+    exporter.logWithStack(1, error, 'Something went wrong!');
   });

@@ -191,7 +191,7 @@ The format, along with its default values, is as follows (using the recommended 
     "batch": false,
     "rasterizationTimeout": 1500
   },
-  "customCode": {
+  "customLogic": {
     "allowCodeExecution": false,
     "allowFileResources": false,
     "customCode": false,
@@ -204,6 +204,7 @@ The format, along with its default values, is as follows (using the recommended 
     "enable": false,
     "host": "0.0.0.0",
     "port": 7801,
+    "benchmarking": false,
     "ssl": {
       "enable": false,
       "force": false,
@@ -279,16 +280,17 @@ These variables are set in your environment and take precedence over options fro
 - `EXPORT_DEFAULT_SCALE`: The default scale of the exported chart. Ranges between _0.1_ and _5.0_ (defaults to `1`).
 - `EXPORT_RASTERIZATION_TIMEOUT`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
-### Custom Code Config
+### Custom Logic Config
 
-- `CUSTOM_CODE_ALLOW_CODE_EXECUTION`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
-- `CUSTOM_CODE_ALLOW_FILE_RESOURCES`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
+- `CUSTOM_LOGIC_ALLOW_CODE_EXECUTION`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
+- `CUSTOM_LOGIC_ALLOW_FILE_RESOURCES`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 
 ### Server Config
 
 - `SERVER_ENABLE`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
+- `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 
 ### Server SSL Config
 
@@ -318,12 +320,12 @@ These variables are set in your environment and take precedence over options fro
 - `POOL_IDLE_TIMEOUT`: The duration, in milliseconds, after which an idle resource is destroyed (defaults to `30000`).
 - `POOL_CREATE_RETRY_INTERVAL`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `POOL_REAPER_INTERVAL`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
-- `POOL_BENCHMARKING`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
+- `POOL_BENCHMARKING`: Indicates whether to show statistics for the pool of resources or not (defaults to `false`).
 - `POOL_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 
 ### Logging Config
 
-- `LOGGING_LEVEL`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice or _4_ - verbose (defaults to `4`).
+- `LOGGING_LEVEL`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice, _4_ - verbose or _5_ benchmark (defaults to `4`).
 - `LOGGING_FILE`: The name of a log file. The _logDest_ option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `LOGGING_DEST`: The path to store log files. This also enables file logging (defaults to `log/`).
 
@@ -372,6 +374,7 @@ _Available options:_
 - `--enableServer`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
+- `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
 - `--sslForced`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
 - `--sslPort`: The port on which to run the SSL server (defaults to `443`).
@@ -392,9 +395,9 @@ _Available options:_
 - `--idleTimeout`: The duration, in milliseconds, after which an idle resource is destroyed (defaults to `30000`).
 - `--createRetryInterval`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `--reaperInterval`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
-- `--benchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
+- `--poolBenchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
 - `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
-- `--logLevel`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice or _4_ - verbose (defaults to `4`).
+- `--logLevel`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice, _4_ - verbose or _5_ - benchmark (defaults to `4`).
 - `--logFile`: The name of a log file. The `--logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `--logDest`: The path to store log files. This also enables file logging (defaults to `log/`).
 - `--enableUi`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
@@ -589,7 +592,7 @@ This package supports both CommonJS and ES modules.
   - `{Error} error`: The error object.
   - `{string} customMessage`: An optional custom message to be logged along with the error.
 
-- `setLogLevel`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose).
+- `setLogLevel`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
   - `{number} newLevel`: The new log level to be set.
 
 - `enableFileLogging`: Enables file logging with the specified destination and log file.

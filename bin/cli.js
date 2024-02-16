@@ -51,8 +51,8 @@ const start = async () => {
       main.printLogo(options.other.noLogo);
 
       // In this case we want to prepare config manually
-      if (options.customCode.createConfig) {
-        return await main.manualConfig(options.customCode.createConfig);
+      if (options.customLogic.createConfig) {
+        return await main.manualConfig(options.customLogic.createConfig);
       }
 
       // Start server

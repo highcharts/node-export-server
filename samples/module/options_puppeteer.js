@@ -109,7 +109,7 @@ const exportSettings = {
       }
     }
   },
-  customCode: {
+  customLogic: {
     allowCodeExecution: true,
     allowFileResources: true,
     callback: './samples/resources/callback.js',
