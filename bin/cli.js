@@ -52,7 +52,7 @@ const start = async () => {
 
       // In this case we want to prepare config manually
       if (options.customLogic.createConfig) {
-        return await main.manualConfig(options.customLogic.createConfig);
+        return main.manualConfig(options.customLogic.createConfig);
       }
 
       // Start server
