@@ -1,3 +1,7 @@
+# 4.0.0
+
+- Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
+
 # 3.1.1
 
 - Version number is now correct in splash and `/health` when running as a node module

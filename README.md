@@ -114,6 +114,7 @@ The format, with its default values are as follows (using the below ordering of 
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
     "forceFetch": false,
+    "cachePath": ".cache",
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -289,6 +290,7 @@ These are set as variables in your environment. They take precedence over option
 - `HIGHCHARTS_SERVER_ENABLE`: If set to true, starts a server on 0.0.0.0.
 - `HIGHCHARTS_SERVER_HOST`: The hostname of the server. Also starts a server listening on the supplied hostname.
 - `HIGHCHARTS_SERVER_PORT`: The port to use for the server. Defaults to 7801.
+- `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed. Defaults to `.cache`.
 
 ### Server SSL config
 
