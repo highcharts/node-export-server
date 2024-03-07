@@ -9,6 +9,7 @@ _Enhancements:_
 - Changed the `customCode` section of options to `customLogic` in order to avoid confusion with the existing `customCode` property within.
 - Changed the names of environment variables for a better representation of their roles (refer to all envs in the README's `Environment Variables` section).
 - Added new environment variables (`NODE_ENV`, `HIGHCHARTS_ADMIN_TOKEN`, and `SERVER_BENCHMARKING`) to the `.env.sample` file, along with their descriptions in the README.
+- Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
 - Added several new functions to the `highcharts-export-server` module, including `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
 - Added a new `initLogging` function where the `setLogLevel` and `enableFileLogging` logic are consolidated into one place.
 - Added a new utility function, `isObjectEmpty`.

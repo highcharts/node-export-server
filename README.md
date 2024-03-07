@@ -97,6 +97,7 @@ The format, along with its default values, is as follows (using the recommended 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
+    "forceFetch": false,
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -174,7 +175,8 @@ The format, along with its default values, is as follows (using the recommended 
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"
     ],
-    "forceFetch": false
+    "forceFetch": false,
+    "cachePath": ".cache"
   },
   "export": {
     "infile": false,
@@ -269,6 +271,7 @@ These variables are set in your environment and take precedence over options fro
 - `HIGHCHARTS_MODULES`: Highcharts modules to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch (defaults to ``).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
+- `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 
 ### Export Config
