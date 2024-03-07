@@ -9,31 +9,38 @@
         "min": 0,
         "max": 12
       },
-      "series": [{
-        "name": "Project 1",
-        "data": [{
-          "name": "Start prototype",
-          "start": 1,
-          "end": 7,
-          "completed": 0.25
-        }, {
-          "name": "Test prototype",
-          "start": 9,
-          "end": 11
-        }, {
-          "name": "Develop",
-          "start": 3,
-          "end": 8,
-          "completed": {
-            "amount": 0.12,
-            "fill": "#fa0"
-          }
-        }, {
-          "name": "Run acceptance tests",
-          "start": 6,
-          "end": 9
-        }]
-      }]
+      "series": [
+        {
+          "name": "Project 1",
+          "data": [
+            {
+              "name": "Start prototype",
+              "start": 1,
+              "end": 7,
+              "completed": 0.25
+            },
+            {
+              "name": "Test prototype",
+              "start": 9,
+              "end": 11
+            },
+            {
+              "name": "Develop",
+              "start": 3,
+              "end": 8,
+              "completed": {
+                "amount": 0.12,
+                "fill": "#fa0"
+              }
+            },
+            {
+              "name": "Run acceptance tests",
+              "start": 6,
+              "end": 9
+            }
+          ]
+        }
+      ]
     }
   }
 }

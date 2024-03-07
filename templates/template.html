@@ -131,8 +131,8 @@
         { chart }
       );
 
-      const finalCallback = options.customCode.callback
-        ? new Function(`return ${options.customCode.callback}`)()
+      const finalCallback = options.customLogic.callback
+        ? new Function(`return ${options.customLogic.callback}`)()
         : undefined;
 
       // Set the global options if exist
@@ -174,8 +174,8 @@
       );
 
       // Trigger custom code
-      if (exportOptions.customCode.customCode) {
-        new Function(exportOptions.customCode.customCode)();
+      if (exportOptions.customLogic.customCode) {
+        new Function(exportOptions.customLogic.customCode)();
       }
 
       // Create a chart
