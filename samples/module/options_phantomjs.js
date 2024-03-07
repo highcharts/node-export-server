@@ -8,9 +8,9 @@ const exportSettings = {
   type: 'png',
   constr: 'chart',
   outfile: './samples/module/options_phantom.jpeg',
-  async: true, // Will be removed as it is not supported anymore
   logLevel: 4,
   scale: 1,
+  workers: 1,
   options: {
     chart: {
       type: 'column'
@@ -48,33 +48,40 @@ const exportSettings = {
 };
 
 const start = async () => {
-  // Map to fit the new options structure
-  const mappedOptions = exporter.mapToNewConfig(exportSettings);
+  try {
+    // Map to fit the new options structure
+    const mappedOptions = exporter.mapToNewConfig(exportSettings);
 
-  // Set the new options
-  const options = exporter.setOptions(mappedOptions);
+    // Set the new options
+    const options = exporter.setOptions(mappedOptions);
 
-  // Init a pool for one export
-  await exporter.initPool(options);
+    // Init a pool for one export
+    await exporter.initExport(options);
 
-  // Perform an export
-  exporter.startExport(options, (info, error) => {
-    // Exit process and display error
-    if (error) {
-      exporter.log(1, error.message);
-      process.exit(1);
-    }
-    const { outfile, type } = info.options.export;
+    // Perform an export
+    await exporter.startExport(options, async (error, info) => {
+      // Exit process and display error
+      if (error) {
+        throw error;
+      }
+      const { outfile, type } = info.options.export;
 
-    // Save the base64 from a buffer to a correct image file
-    writeFileSync(
-      outfile,
-      type !== 'svg' ? Buffer.from(info.data, 'base64') : info.data
-    );
+      // Save the base64 from a buffer to a correct image file
+      writeFileSync(
+        outfile,
+        type !== 'svg' ? Buffer.from(info.result, 'base64') : info.result
+      );
 
-    // Kill the pool
-    exporter.killPool();
-  });
+      // Kill the pool
+      await exporter.killPool();
+    });
+  } catch (error) {
+    // Log the error with stack
+    exporter.logWithStack(1, error);
+
+    // End process with an error code
+    process.exit(1);
+  }
 };
 
 start();
