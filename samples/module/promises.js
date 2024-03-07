@@ -7,7 +7,7 @@ const exportCharts = async (charts, exportOptions = {}) => {
   const options = exporter.setOptions(exportOptions);
 
   // Init the pool
-  await exporter.initPool(options);
+  await exporter.initExport(options);
 
   const promises = [];
   const chartResults = [];
@@ -19,13 +19,13 @@ const exportCharts = async (charts, exportOptions = {}) => {
         const settings = { ...options };
         settings.export.options = chart;
 
-        exporter.startExport(settings, (info, error) => {
+        exporter.startExport(settings, (error, info) => {
           if (error) {
             return reject(error);
           }
 
           // Add the data to the chartResults
-          chartResults.push(info.data);
+          chartResults.push(info.result);
           resolve();
         });
       })
@@ -33,12 +33,12 @@ const exportCharts = async (charts, exportOptions = {}) => {
   });
 
   return Promise.all(promises)
-    .then(() => {
-      exporter.killPool();
+    .then(async () => {
+      await exporter.killPool();
       return Promise.resolve(chartResults);
     })
-    .catch((error) => {
-      exporter.killPool();
+    .catch(async (error) => {
+      await exporter.killPool();
       return Promise.reject(error);
     });
 };
@@ -68,6 +68,10 @@ exportCharts(
     }
   ],
   {
+    pool: {
+      minWorkers: 2,
+      maxWorkers: 2
+    },
     logging: {
       level: 4
     }
@@ -85,5 +89,5 @@ exportCharts(
     exporter.log(4, 'All done!');
   })
   .catch((error) => {
-    exporter.log(4, `Something went wrong: ${error.message}`);
+    exporter.logWithStack(1, error, 'Something went wrong!');
   });

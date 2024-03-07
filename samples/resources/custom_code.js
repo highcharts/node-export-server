@@ -6,8 +6,8 @@ Highcharts.setOptions({
         this.renderer
           .image(
             'https://www.highcharts.com/samples/graphics/sun.png',
-            100,
             75,
+            50,
             20,
             20
           )
