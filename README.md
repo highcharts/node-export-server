@@ -97,7 +97,6 @@ The format, along with its default values, is as follows (using the recommended 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
-    "forceFetch": false,
     "coreScripts": [
       "highcharts",
       "highcharts-more",
