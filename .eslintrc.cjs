@@ -16,7 +16,7 @@ module.exports = {
     'plugin:prettier/recommended'
   ],
   rules: {
-    'no-unused-vars': 'off',
+    'no-unused-vars': 0,
     'import/no-cycle': 2,
     'prettier/prettier': [
       'error',

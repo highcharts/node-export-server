@@ -4,8 +4,8 @@ function callback(chart) {
       'This label is added in the callback.<br>Highcharts version ' +
         // eslint-disable-next-line no-undef
         Highcharts.version,
-      100,
-      100
+      75,
+      75
     )
     .attr({
       id: 'renderer-callback-label',
