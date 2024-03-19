@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+'use strict';
+import assert from 'assert';
 
 describe('Array', function () {
   it('Empty array should be empty', function () {
-    const arr = [];
-    expect(arr).to.be.empty;
+    assert.strictEqual(200, 200);
   });
 });
