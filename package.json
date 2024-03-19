@@ -32,13 +32,9 @@
     "node-tests-single": "node tests/node/node_test_runner_single.js",
     "prepare": "husky install",
     "build": "rollup -c",
-    "unit:test": "mocha --require @babel/register \"tests/unit/**/*.test.js\""
+    "unit:test": "mocha \"tests/unit/**/*.test.js\""
   },
   "devDependencies": {
-    "@babel/cli": "^7.24.1",
-    "@babel/core": "^7.24.1",
-    "@babel/preset-env": "^7.24.1",
-    "@babel/register": "^7.23.7",
     "@rollup/plugin-terser": "^0.4.4",
     "chai": "^5.1.0",
     "eslint": "^8.57.0",
