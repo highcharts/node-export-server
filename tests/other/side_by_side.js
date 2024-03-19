@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2023, Highsoft
+Copyright (c) 2016-2024, Highsoft
 
 Licenced under the MIT licence.
 
@@ -32,7 +32,7 @@ const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message
 console.log(
-  'Highcharts Export Server Side By Side comparator'.yellow,
+  'Highcharts Export Server side by side comparator'.yellow,
   `\nPuppeteer: ${urls[0]}`.green,
   `\nPhantomJS: ${urls[1]}\n`.blue
 );
@@ -76,7 +76,7 @@ try {
             type,
             scale: 2,
             callback:
-              "function callback(chart) {chart.renderer.label('This label is added in the callback', 100, 100).attr({id: 'renderer-callback-label', fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}"
+              "function callback(chart){chart.renderer.label('This label is added in the callback',75,75).attr({id:'renderer-callback-label',fill:'#90ed7d',padding:10,r:10,zIndex:10}).css({color:'black',width:'100px'}).add();}"
           });
 
           // Complete the curl command
@@ -119,5 +119,5 @@ try {
       });
   }
 } catch (error) {
-  console.log(`Error thrown: ${error}`);
+  console.error(error);
 }
