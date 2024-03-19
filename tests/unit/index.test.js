@@ -1,10 +1,8 @@
-'use strict';
-import assert from 'assert';
-import { expect } from 'chai';
+describe('Simple Variable Comparison', () => {
+  it('should compare two variables for equality', () => {
+    const variable1 = 42;
+    const variable2 = 42;
 
-describe('Array', function () {
-  it('Empty array should be empty', function () {
-    const arr = [];
-    expect(arr).to.be.empty;
+    expect(variable1).toBe(variable2);
   });
 });
