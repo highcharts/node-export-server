@@ -1,4 +1,4 @@
-name: Unit tests of the server
+name: Unit tests
 
 on:
   pull_request:
@@ -19,9 +19,6 @@ jobs:
 
       - name: 'Install dependencies'
         run: npm ci
-
-      - name: 'Build the project with rollup'
-        run: npm run build --if-present
 
       - name: Run unit tests
         run: npm run unit:test

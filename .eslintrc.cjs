@@ -15,10 +15,9 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:prettier/recommended'
   ],
-  plugins: ['import', 'prettier'],
   overrides: [
     {
-      files: ['/**/*.test.js'],
+      files: ['**/*.test.js'],
       env: {
         mocha: true
       }

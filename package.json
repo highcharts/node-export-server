@@ -22,6 +22,7 @@
     "install": "node install.js",
     "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
     "start": "node bin/cli.js --enableServer 1 --logLevel 2",
+    "eslint-check": "eslint ./",
     "lint": "eslint ./ --fix",
     "cli-tests": "node tests/cli/cli_test_runner.js",
     "cli-tests-single": "node tests/cli/cli_test_runner_single.js",
