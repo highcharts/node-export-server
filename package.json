@@ -32,7 +32,7 @@
     "node-tests-single": "node tests/node/node_test_runner_single.js",
     "prepare": "husky install",
     "build": "rollup -c",
-    "unit:test": "jest"
+    "unit:test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
