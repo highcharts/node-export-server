@@ -1,4 +1,4 @@
-name: Lint Code Base
+name: ESLint check
 
 on: [ pull_request ]
 
