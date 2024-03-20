@@ -20,7 +20,7 @@
   },
   "scripts": {
     "install": "node install.js",
-    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.js",
+    "prestart": "rm -rf tmp && node node_modules/puppeteer/install.mjs",
     "start": "node bin/cli.js --enableServer 1 --logLevel 2",
     "lint": "eslint ./ --fix",
     "cli-tests": "node tests/cli/cli_test_runner.js",
@@ -29,7 +29,7 @@
     "http-tests-single": "node tests/http/http_test_runner_single.js",
     "node-tests": "node tests/node/node_test_runner.js",
     "node-tests-single": "node tests/node/node_test_runner_single.js",
-    "prepare": "husky install",
+    "prepare": "husky install || true",
     "build": "rollup -c"
   },
   "devDependencies": {
