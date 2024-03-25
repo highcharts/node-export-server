@@ -60,7 +60,7 @@
     "uuid": "^9.0.1"
   },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18.0.0"
   },
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
