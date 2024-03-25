@@ -15,6 +15,14 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:prettier/recommended'
   ],
+  overrides: [
+    {
+      files: ['*.test.js', '*.spec.js'],
+      env: {
+        jest: true
+      }
+    }
+  ],
   rules: {
     'no-unused-vars': 0,
     'import/no-cycle': 2,
