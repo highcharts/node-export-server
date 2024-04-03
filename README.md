@@ -8,7 +8,7 @@ In most cases, v3 should serve as a drop-in replacement for v2. However, due to 
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
 
-An important note is that the Export Server now requires `Node.js v16.14.0` or a higher version.
+An important note is that the Export Server now requires `Node.js v18.12.0` or a higher version.
 
 ## Changelog
 
@@ -42,7 +42,7 @@ For systems that generate automatic reports, using the Export Server as a Node.j
 
 # Install
 
-First, make sure you have Node.js installed. If not, visit [nodejs.org](https://nodejs.org/en/download/), download and install Node.js for your platform.
+First, make sure you have Node.js installed. If not, visit [nodejs.org](https://nodejs.org/en/download/), download and install Node.js for your platform. For compatibility reasons, version `18.12.0` or higher is required.
 
 Once Node.js is installed, proceed to install the Export Server by opening a terminal and typing:
 
