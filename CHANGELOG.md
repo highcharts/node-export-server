@@ -26,6 +26,7 @@ _Enhancements:_
 - Corrected samples, test scenarios, and test runners.
 - Removed unnecessary separate `body-parser` package (already implemented in Express v4.16+).
 - Bumped versions of most packages, with an update for the deprecated `Puppeteer` v21.1.1.
+- Added `mapChart` and `ganttChart` constructors in the exporting UI (#503).
 - Added missing Highcharts modules to stay up-to-date with the latest updates.
 - Added missing JSDoc descriptions.
 - Revamped all log messages, error messages, prompt messages, and info for improved clarity of information.
@@ -35,6 +36,8 @@ _Enhancements:_
 _Fixes:_
 
 - Fixed `multer` related error: 'Field value too long'.
+- Fixed the SSL handshake error (#307).
+- Fixed missing background color transparency (#492).
 - Fixed type compatibility issues in the `pairArgumentValue` function, arising from CLI string arguments.
 - Fixed the 'httpsProxyAgent is not a constructor' issue with the `https-proxy-agent` module.
 - Fixed the issue of being unable to run both HTTP and HTTPS servers simultaneously.
