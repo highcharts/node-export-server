@@ -5,6 +5,9 @@
   "type": "module",
   "version": "4.0.0",
   "main": "./dist/index.esm.js",
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.esm.js",
@@ -57,9 +60,6 @@
     "puppeteer": "^22.6.2",
     "tarn": "^3.0.2",
     "uuid": "^9.0.1"
-  },
-  "engines": {
-    "node": ">=16.14.0"
   },
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
