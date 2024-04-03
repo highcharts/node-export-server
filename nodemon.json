@@ -1,0 +1,7 @@
+{
+  "verbose": true,
+  "restartable": "rs",
+  "ext": ".ts,.js,.json",
+  "watch": ["bin/", "lib/"],
+  "ignore": ["node_modules/**/node_modules"]
+}
