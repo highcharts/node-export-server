@@ -6,8 +6,10 @@ _Enhancements:_
 - Improved overall error handling by adding a main try-catch block to correctly capture and log errors occurring throughout the code.
 - Introduced two new types of custom errors: `ExportError` for functionality-related errors and `HttpError` for server-related errors.
 - Introduced a new error logging mechanism with stack tracing using new function called `logWithStack`.
+- Added unit tests for certain parts of the code.
 - Changed the `customCode` section of options to `customLogic` in order to avoid confusion with the existing `customCode` property within.
 - Changed the names of environment variables for a better representation of their roles (refer to all envs in the README's `Environment Variables` section).
+- Added a moving average indicator for the exporting success rate ratio.
 - Added new environment variables (`NODE_ENV`, `HIGHCHARTS_ADMIN_TOKEN`, and `SERVER_BENCHMARKING`) to the `.env.sample` file, along with their descriptions in the README.
 - Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
 - Added several new functions to the `highcharts-export-server` module, including `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
