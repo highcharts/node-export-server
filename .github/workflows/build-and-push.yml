@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - stable
+      - master
 
 jobs:
   build-and-push:
