@@ -9,8 +9,10 @@ _Enhancements:_
 - Added unit tests for certain parts of the code.
 - Changed the `customCode` section of options to `customLogic` in order to avoid confusion with the existing `customCode` property within.
 - Changed the names of environment variables for a better representation of their roles (refer to all envs in the README's `Environment Variables` section).
+- Added parsing of envs based on `zod` package.
+- Added a new section to the server configuration options, `proxy`, along with corresponding environment variables.
 - Added a moving average indicator for the exporting success rate ratio.
-- Added new environment variables (`NODE_ENV`, `HIGHCHARTS_ADMIN_TOKEN`, and `SERVER_BENCHMARKING`) to the `.env.sample` file, along with their descriptions in the README.
+- Added new environment variables (`HIGHCHARTS_ADMIN_TOKEN`, `SERVER_BENCHMARKING`, and `OTHER_NODE_ENV`) to the `.env.sample` file, along with their descriptions in the README.
 - Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
 - Added several new functions to the `highcharts-export-server` module, including `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
 - Added a new `initLogging` function where the `setLogLevel` and `enableFileLogging` logic are consolidated into one place.
@@ -18,6 +20,8 @@ _Enhancements:_
 - Added a new logging level (`5`) for benchmarking logs.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
 - Reordered the `error` and `info` arguments in the callback of the `startExport` function.
+- Renamed the `HIGHCHARTS_CORE_SCRIPTS` environment variable to `HIGHCHARTS_CORE`.
+- Renamed the `scripts` property of the config options to `customScripts`.
 - Renamed the `initPool` function to `initExport` in the main module.
 - Renamed the `init` function to `initPool` in the pool module.
 - Replaced the temporary benchmark module with a simpler server benchmark for evaluating export time.

@@ -97,7 +97,7 @@ The format, along with its default values, is as follows (using the recommended 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
-    "coreScripts": [
+    "core": [
       "highcharts",
       "highcharts-more",
       "highcharts-3d"
@@ -170,7 +170,7 @@ The format, along with its default values, is as follows (using the recommended 
     "indicators": [
       "indicators-all"
     ],
-    "scripts": [
+    "customScripts": [
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"
     ],
@@ -206,11 +206,10 @@ The format, along with its default values, is as follows (using the recommended 
     "host": "0.0.0.0",
     "port": 7801,
     "benchmarking": false,
-    "ssl": {
-      "enable": false,
-      "force": false,
-      "port": 443,
-      "certPath": ""
+    "proxy": {
+      "host": "",
+      "port": 8080,
+      "timeout": 5000
     },
     "rateLimiting": {
       "enable": false,
@@ -220,6 +219,12 @@ The format, along with its default values, is as follows (using the recommended 
       "trustProxy": false,
       "skipKey": "",
       "skipToken": ""
+    },
+    "ssl": {
+      "enable": false,
+      "force": false,
+      "port": 443,
+      "certPath": ""
     }
   },
   "pool": {
@@ -258,15 +263,11 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
-### Node Environment Config
-
-- `NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `development`).
-
 ### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
-- `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
+- `HIGHCHARTS_CORE`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULES`: Highcharts modules to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch (defaults to ``).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
@@ -294,12 +295,11 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 
-### Server SSL Config
+### Server Proxy Config
 
-- `SERVER_SSL_ENABLE`: Enables or disables the SSL protocol (defaults to `false`).
-- `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
-- `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
-- `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
+- `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ### Server Rate Limiting Config
 
@@ -310,6 +310,13 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_RATE_LIMITING_TRUST_PROXY`: Set this to true if the server is behind a load balancer (defaults to `false`).
 - `SERVER_RATE_LIMITING_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with the _skipToken_ argument (defaults to ``).
 - `SERVER_RATE_LIMITING_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with the _skipKey_ argument (defaults to ``).
+
+### Server SSL Config
+
+- `SERVER_SSL_ENABLE`: Enables or disables the SSL protocol (defaults to `false`).
+- `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
+- `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
+- `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
 
 ### Pool Config
 
@@ -338,13 +345,8 @@ These variables are set in your environment and take precedence over options fro
 
 ### Other Config
 
+- `OTHER_NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `production`).
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
-
-### Proxy Config
-
-- `PROXY_SERVER_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
-- `PROXY_SERVER_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
-- `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ## Command Line Arguments
 
