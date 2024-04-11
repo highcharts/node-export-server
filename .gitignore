@@ -13,6 +13,8 @@ cert/
 
 tests/**/_results/
 
+resources.json
+
 **/*.png
 **/*.pdf
 **/*.svg
