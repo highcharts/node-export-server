@@ -87,7 +87,7 @@ There are four main ways of loading configurations:
 
 The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used.
 
-The format, along with its default values, is as follows (using the recommended ordering of core scripts and modules below):
+The format, along with its default values, is as follows (using the recommended ordering of core and module scripts below):
 
 ```
 {
@@ -97,12 +97,12 @@ The format, along with its default values, is as follows (using the recommended 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
-    "core": [
+    "coreScripts": [
       "highcharts",
       "highcharts-more",
       "highcharts-3d"
     ],
-    "modules": [
+    "moduleScripts": [
       "stock",
       "map",
       "gantt",
@@ -167,7 +167,7 @@ The format, along with its default values, is as follows (using the recommended 
       "heikinashi",
       "flowmap"
     ],
-    "indicators": [
+    "indicatorScripts": [
       "indicators-all"
     ],
     "customScripts": [
@@ -267,9 +267,9 @@ These variables are set in your environment and take precedence over options fro
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
-- `HIGHCHARTS_CORE`: Highcharts core scripts to fetch (defaults to ``).
-- `HIGHCHARTS_MODULES`: Highcharts modules to fetch (defaults to ``).
-- `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch (defaults to ``).
+- `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
+- `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
+- `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).

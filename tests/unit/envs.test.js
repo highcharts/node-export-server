@@ -38,18 +38,18 @@ describe('Environment variables should be correctly parsed', () => {
     expect(() => Config.partial().parse(env)).toThrow();
   });
 
-  test('CORE, MODULES, INDICATORS scripts should be arrays', () => {
+  test('CORE, MODULE, INDICATOR scripts should be arrays', () => {
     const env = {
-      HIGHCHARTS_CORE: 'core1, core2, highcharts',
-      HIGHCHARTS_MODULES: 'module1, map, module2',
-      HIGHCHARTS_INDICATORS: 'indicators-all, indicator1, indicator2'
+      HIGHCHARTS_CORE_SCRIPTS: 'core1, core2, highcharts',
+      HIGHCHARTS_MODULE_SCRIPTS: 'module1, map, module2',
+      HIGHCHARTS_INDICATOR_SCRIPTS: 'indicators-all, indicator1, indicator2'
     };
 
     const parsed = Config.partial().parse(env);
 
-    expect(parsed.HIGHCHARTS_CORE).toEqual(['highcharts']);
-    expect(parsed.HIGHCHARTS_MODULES).toEqual(['map']);
-    expect(parsed.HIGHCHARTS_INDICATORS).toEqual(['indicators-all']);
+    expect(parsed.HIGHCHARTS_CORE_SCRIPTS).toEqual(['highcharts']);
+    expect(parsed.HIGHCHARTS_MODULE_SCRIPTS).toEqual(['map']);
+    expect(parsed.HIGHCHARTS_INDICATOR_SCRIPTS).toEqual(['indicators-all']);
   });
 
   test('HIGHCHARTS_FORCE_FETCH should be a boolean', () => {

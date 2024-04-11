@@ -20,7 +20,7 @@ _Enhancements:_
 - Added a new logging level (`5`) for benchmarking logs.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
 - Reordered the `error` and `info` arguments in the callback of the `startExport` function.
-- Renamed the `HIGHCHARTS_CORE_SCRIPTS` environment variable to `HIGHCHARTS_CORE`.
+- Renamed the `HIGHCHARTS_MODULES` and `HIGHCHARTS_INDICATORS` environment variables respectively to `HIGHCHARTS_MODULE_SCRIPTS` and `HIGHCHARTS_INDICATOR_SCRIPTS`.
 - Renamed the `scripts` property of the config options to `customScripts`.
 - Renamed the `initPool` function to `initExport` in the main module.
 - Renamed the `init` function to `initPool` in the pool module.
