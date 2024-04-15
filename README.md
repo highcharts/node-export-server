@@ -237,8 +237,7 @@ The format, along with its default values, is as follows (using the recommended 
     "idleTimeout": 30000,
     "createRetryInterval": 200,
     "reaperInterval": 1000,
-    "benchmarking": false,
-    "listenToProcessExits": true
+    "benchmarking": false
   },
   "logging": {
     "level": 4,
@@ -250,6 +249,8 @@ The format, along with its default values, is as follows (using the recommended 
     "route": "/"
   },
   "other": {
+    "nodeEnv": "production",
+    "listenToProcessExits": true,
     "noLogo": false
   }
 }
@@ -330,7 +331,6 @@ These variables are set in your environment and take precedence over options fro
 - `POOL_CREATE_RETRY_INTERVAL`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `POOL_REAPER_INTERVAL`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
 - `POOL_BENCHMARKING`: Indicates whether to show statistics for the pool of resources or not (defaults to `false`).
-- `POOL_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 
 ### Logging Config
 
@@ -346,6 +346,7 @@ These variables are set in your environment and take precedence over options fro
 ### Other Config
 
 - `OTHER_NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `production`).
+- `OTHER_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 
 ## Command Line Arguments
@@ -372,17 +373,16 @@ _Available options:_
 - `--allowFileResources`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 - `--customCode`: Custom code to execute before chart initialization. It can be a function, code wrapped within a function, or a filename with the _.js_ extension (defaults to `false`).
 - `--callback`: JavaScript code to run during construction. It can be a function or a filename with the _.js_ extension (defaults to `false`).
-- `--resources`: Additional resources in the form of a stringified JSON. It may contain `files`, `js`, and `css` sections (defaults to `false`).
+- `--resources`: Additional resources in the form of a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections (defaults to `false`).
 - `--loadConfig`: A file containing a pre-defined configuration to use (defaults to `false`).
 - `--createConfig`: Enables setting options through a prompt and saving them in a provided config file (defaults to `false`).
 - `--enableServer`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
-- `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
-- `--sslForced`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
-- `--sslPort`: The port on which to run the SSL server (defaults to `443`).
-- `--certPath`: The path to the SSL certificate/key file (defaults to ``).
+- `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
 - `--window`: The time window, in minutes, for the rate limiting (defaults to `1`).
@@ -390,6 +390,10 @@ _Available options:_
 - `--trustProxy`: Set this to true if the server is behind a load balancer (defaults to `false`).
 - `--skipKey`: Allows bypassing the rate limiter and should be provided with the `--skipToken` argument (defaults to ``).
 - `--skipToken`: Allows bypassing the rate limiter and should be provided with the `--skipKey` argument (defaults to ``).
+- `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
+- `--sslForce`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
+- `--sslPort`: The port on which to run the SSL server (defaults to `443`).
+- `--certPath`: The path to the SSL certificate/key file (defaults to ``).
 - `--minWorkers`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `--maxWorkers`: The number of maximum pool workers to spawn (defaults to `8`).
 - `--workLimit`: The number of work pieces that can be performed before restarting the worker process (defaults to `40`).
@@ -400,12 +404,13 @@ _Available options:_
 - `--createRetryInterval`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `--reaperInterval`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
 - `--poolBenchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
-- `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--logLevel`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice, _4_ - verbose or _5_ - benchmark (defaults to `4`).
 - `--logFile`: The name of a log file. The `--logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `--logDest`: The path to store log files. This also enables file logging (defaults to `log/`).
 - `--enableUi`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
 - `--uiRoute`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
+- `--nodeEnv`: The type of Node.js environment (defaults to `production`).
+- `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 
 # HTTP Server
@@ -446,7 +451,7 @@ The server accepts the following arguments in a POST request body:
 - `scale`: The scale factor of the exported chart. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `globalOptions`: Either a JSON or a stringified JSON with global options to be passed into `Highcharts.setOptions`.
 - `themeOptions`: Either a JSON or a stringified JSON with theme options to be passed into `Highcharts.setOptions`.
-- `resources`: Additional resources in the form of a JSON or a stringified JSON. It may contain `files`, `js`, and `css` sections.
+- `resources`: Additional resources in the form of a JSON or a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections.
 - `callback`: Stringified JavaScript function to execute in the Highcharts constructor.
 - `customCode`: Custom code to be executed before the chart initialization. This can be a function, code wrapped within a function, or a filename with the _.js_ extension. Both `allowFileResources` and `allowCodeExecution` must be set to _true_ for the option to be considered.
 - `b64`: Boolean flag, set to true to receive the chart in the _base64_ format instead of the _binary_.
@@ -547,6 +552,10 @@ This package supports both CommonJS and ES modules.
 - `server`: The server instance which offers the following functions:
   - `async startServer(serverConfig)`: The same as `startServer` describe below.
 
+  - `closeServers()`: Closes all servers associated with Express app instance.
+
+  - `getServers()`: Get all servers associated with Express app instance.
+
   - `enableRateLimiting(options)`: Enable rate limiting for the server.
     - `{Object} limitConfig`: Configuration object for rate limiting.
 
@@ -572,10 +581,6 @@ This package supports both CommonJS and ES modules.
 - `async initExport(options)`: Initializes the export process. Tasks such as configuring logging, checking cache and sources, and initializing the pool of resources happen during this stage. Function that is required to be called before trying to export charts or setting a server. The `options` is an object that contains all options.
   - `{Object} options`: All export options.
 
-- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
-  - `{Object} userOptions`: User-provided options for customization.
-  - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
-
 - `async singleExport(options)`: Starts a single export process based on the specified options. Runs the `startExport` underneath.
   - `{Object} options`: The options object containing configuration for a single export.
 
@@ -586,7 +591,12 @@ This package supports both CommonJS and ES modules.
   - `{Object} settings`: The settings object containing export configuration.
   - `{function} endCallback`: The callback function to be invoked upon finalizing work or upon error occurance of the exporting process.
 
-- `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
+- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
+  - `{Object} userOptions`: User-provided options for customization.
+  - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
+
+- `async shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.
+  - `{number} exitCode`: An exit code for the process.exit() function.
 
 - `log(...args)`: Logs a message. Accepts a variable amount of arguments. Arguments after `level` will be passed directly to console.log, and/or will be joined and appended to the log file.
   - `{any} args`: An array of arguments where the first is the log level and the rest are strings to build a message with.
@@ -596,10 +606,10 @@ This package supports both CommonJS and ES modules.
   - `{Error} error`: The error object.
   - `{string} customMessage`: An optional custom message to be logged along with the error.
 
-- `setLogLevel`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
+- `setLogLevel(newLevel)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
   - `{number} newLevel`: The new log level to be set.
 
-- `enableFileLogging`: Enables file logging with the specified destination and log file.
+- `enableFileLogging(logDest, logFile)`: Enables file logging with the specified destination and log file.
   - `{string} logDest`: The destination path for log files.
   - `{string} logFile`: The log file name.
 
@@ -633,7 +643,7 @@ At some point during the transition process from the `PhantomJS` solution, certa
 Additionally, some options are now named differently due to the new structure and categorization. Here is a list of old names and their corresponding new names (`old name` -> `new name`):
 
 - `fromFile` -> `loadConfig`
-- `sslOnly` -> `force` or `sslForced`
+- `sslOnly` -> `force` or `sslForce`
 - `sslPath` -> `certPath`
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
@@ -665,7 +675,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 
 ## Note about Event Listeners
 
-The Export Server attaches event listeners to `process.exit`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
+The Export Server attaches event listeners to `process.exit`, `uncaughtException` and signals such as `SIGINT`, `SIGTERM` and `SIGHUP`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
 Listeners are also attached to handle `uncaught exceptions`. If an exception occurs, the entire pool and browser instance are terminated, and the application is shut down.
 
