@@ -10,6 +10,8 @@ The API for when using the server as a node module has changed significantly, bu
 
 One important note is that the export server now requires `node v16.14.0` or higher.
 
+Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export.highcharts.com, so all requests sent to our public server now must use the HTTPS protocol.
+
 ## Changelog
 
 _Fixes and enhancements:_
@@ -22,6 +24,7 @@ _Fixes and enhancements:_
 - Error messages are now sent back to the client instead of being displayed in rasterized output
 - Updated NPM dependencies, removed deprecated and uneccessary dependencies
 - Lots of smaller bugfixes and tweaks
+- Transitioned our public server (export.highcharts.com) from HTTP to HTTPS
 
 _New Features:_
 
