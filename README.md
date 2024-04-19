@@ -10,6 +10,8 @@ Significant changes have been made to the API for using the server as a Node.js 
 
 An important note is that the Export Server now requires `Node.js v18.12.0` or a higher version.
 
+Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export.highcharts.com, so all requests sent to our public server now must use the HTTPS protocol.
+
 ## Changelog
 
 The full change log for all versions can be viewed [here](CHANGELOG.md).

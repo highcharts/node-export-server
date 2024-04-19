@@ -64,7 +64,7 @@
     "puppeteer": "^22.6.5",
     "tarn": "^3.0.2",
     "uuid": "^9.0.1",
-    "zod": "^3.22.4"
+    "zod": "^3.22.5"
   },
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
