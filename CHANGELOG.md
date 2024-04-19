@@ -75,6 +75,7 @@ _Fixes and enhancements:_
 - Error messages are now sent back to the client instead of being displayed in rasterized output
 - Updated NPM dependencies, removed deprecated and uneccessary dependencies
 - Lots of smaller bugfixes and tweaks
+- Transitioned our public server (export.highcharts.com) from HTTP to HTTPS
 
 _New Features:_
 
