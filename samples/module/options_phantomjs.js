@@ -79,8 +79,8 @@ const start = async () => {
     // Log the error with stack
     exporter.logWithStack(1, error);
 
-    // End process with an error code
-    process.exit(1);
+    // Gracefully shut down the process
+    await exporter.shutdownCleanUp(1);
   }
 };
 

@@ -24,6 +24,12 @@ _Enhancements:_
 - Renamed the `scripts` property of the config options to `customScripts`.
 - Renamed the `initPool` function to `initExport` in the main module.
 - Renamed the `init` function to `initPool` in the pool module.
+- Moved the `listenToProcessExits` from the `pool` to the `other` section of the options.
+- Renamed the environment variable `POOL_LISTEN_TO_PROCESS_EXITS` to `OTHER_LISTEN_TO_PROCESS_EXITS`.
+- Added the `shutdownCleanUp` function for resource release (ending intervals, closing servers, destroying the pool and browser) on shutdown. It will be called in the process exit handlers.
+- Added a new process event handler for the `SIGHUP` signal.
+- Updated the `killPool` function.
+- Updates were made to the `config.js` file.
 - Replaced the temporary benchmark module with a simpler server benchmark for evaluating export time.
 - The `uncaughtException` handler now kills the pool, browser, and terminates the process with exit code 1, when enabled.
 - The browser instance should be correctly closed now when an error occurs during pool creation.
@@ -125,6 +131,7 @@ _Fixes and enhancements:_
 - Error messages are now sent back to the client instead of being displayed in rasterized output.
 - Updated NPM dependencies, removed deprecated and uneccessary dependencies.
 - Lots of smaller bugfixes and tweaks.
+- Transitioned our public server (export.highcharts.com) from HTTP to HTTPS.
 
 _New features:_
 
