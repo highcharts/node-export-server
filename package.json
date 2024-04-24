@@ -25,7 +25,8 @@
     "install": "node ./install.js",
     "prestart": "rm -rf tmp || del -rf tmp /Q && node ./node_modules/puppeteer/install.mjs",
     "start": "node ./bin/cli.js --enableServer 1 --logLevel 2",
-    "dev:start": "nodemon ./bin/cli.js --enableServer 1 --logLevel 4",
+    "start:debug": "node ./bin/cli.js --enableDebug 1 --enableServer 1 --logLevel 4",
+    "start:dev": "nodemon ./bin/cli.js --enableServer 1 --logLevel 4",
     "lint": "eslint ./ --fix",
     "cli-tests": "node ./tests/cli/cli_test_runner.js",
     "cli-tests-single": "node ./tests/cli/cli_test_runner_single.js",
@@ -48,7 +49,7 @@
     "lint-staged": "^15.2.2",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
-    "rollup": "^4.14.3"
+    "rollup": "^4.16.4"
   },
   "dependencies": {
     "colors": "1.4.0",
@@ -61,10 +62,10 @@
     "jsdom": "^24.0.0",
     "multer": "^1.4.5-lts.1",
     "prompts": "^2.4.2",
-    "puppeteer": "^22.6.5",
+    "puppeteer": "^22.7.0",
     "tarn": "^3.0.2",
     "uuid": "^9.0.1",
-    "zod": "^3.22.5"
+    "zod": "^3.23.4"
   },
   "lint-staged": {
     "*.js": "npx eslint --cache --fix",
