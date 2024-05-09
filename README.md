@@ -253,7 +253,8 @@ The format, along with its default values, is as follows (using the recommended 
   "other": {
     "nodeEnv": "production",
     "listenToProcessExits": true,
-    "noLogo": false
+    "noLogo": false,
+    "hardResetPage": false
   }
 }
 ```
@@ -350,6 +351,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `production`).
 - `OTHER_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
+- `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 
 ## Command Line Arguments
 
@@ -414,6 +416,7 @@ _Available options:_
 - `--nodeEnv`: The type of Node.js environment (defaults to `production`).
 - `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
+- `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 
 # HTTP Server
 
