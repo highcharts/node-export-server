@@ -3,9 +3,6 @@
     "title": {
       "text": "The 'constr' option is set to use stockChart"
     },
-    "xAxis": {
-      "categories": ["Jan", "Feb", "Mar", "Apr"]
-    },
     "series": [
       {
         "type": "column",
