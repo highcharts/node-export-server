@@ -255,6 +255,15 @@ The format, along with its default values, is as follows (using the recommended 
     "listenToProcessExits": true,
     "noLogo": false,
     "hardResetPage": false
+  },
+  "debug": {
+    "enable": false,
+    "headless": true,
+    "devtools": false,
+    "listenToConsole": false,
+    "dumpio": false,
+    "slowMo": 0,
+    "debuggingPort": 9222
   }
 }
 ```
@@ -353,6 +362,15 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 
+### Debugging Config
+- `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
+- `DEBUG_HEADLESS`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
+- `DEBUG_DEVTOOLS`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
+- `DEBUG_LISTEN_TO_CONSOLE`: Decides whether to enable a listener for console messages sent from the browser (defaults to `false`).
+- `DEBUG_DUMPIO`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
+- `DEBUG_SLOW_MO`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
+- `DEBUG_DEBUGGING_PORT`: Specifies the debugging port (defaults to `9222`).
+
 ## Command Line Arguments
 
 To supply command line arguments, add them as flags when running the application:
@@ -417,6 +435,13 @@ _Available options:_
 - `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
+- `--enableDebug`: Enables or disables debug mode for the underlying browser (defaults to `false`).
+- `--headless`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
+- `--devtools`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
+- `--listenToConsole`: Decides whether to enable a listener for console messages sent from the browser (defaults to `false`).
+- `--dumpio`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
+- `--slowMo`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
+- `--debuggingPort`: Specifies the debugging port (defaults to `9222`).
 
 # HTTP Server
 
@@ -555,7 +580,7 @@ This package supports both CommonJS and ES modules.
 **highcharts-export-server module**
 
 - `server`: The server instance which offers the following functions:
-  - `async startServer(serverConfig)`: The same as `startServer` describe below.
+  - `async startServer(serverConfig)`: The same as `startServer` described below.
 
   - `closeServers()`: Closes all servers associated with Express app instance.
 
@@ -595,6 +620,11 @@ This package supports both CommonJS and ES modules.
 - `async startExport(settings, endCallback)`: Starts an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an error object as the first argument and the second containing the base64 respresentation of a chart.
   - `{Object} settings`: The settings object containing export configuration.
   - `{function} endCallback`: The callback function to be invoked upon finalizing work or upon error occurance of the exporting process.
+
+- `async initPool(config)`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+  - `{Object} config`: Configuration options for the export pool along with custom puppeteer arguments for the puppeteer.launch function.
+
+- `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
 
 - `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
   - `{Object} userOptions`: User-provided options for customization.
