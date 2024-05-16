@@ -19,7 +19,7 @@ export default (chart) => `
 <html lang='en-US'>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Highcarts Export</title>
+    <title>Highcharts Export</title>
   </head>
   <style>
     ${cssTemplate()}

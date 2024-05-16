@@ -1,36 +1,69 @@
 # 4.0.0
 
+_New Features:_
+
+- Implemented debug mode, including new environment variables, a config section, 'console' event listener, and npm script for debugging the headful Puppeteer browser.
+- Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
+- Added a moving average indicator for the exporting success rate ratio.
+
 _Enhancements:_
 
 - Improved server-related error handling by introducing new centralized error middlewares.
 - Improved overall error handling by adding a main try-catch block to correctly capture and log errors occurring throughout the code.
 - Introduced two new types of custom errors: `ExportError` for functionality-related errors and `HttpError` for server-related errors.
 - Introduced a new error logging mechanism with stack tracing using new function called `logWithStack`.
+- Expanded some error logs with request IDs.
+- Set headless mode to 'shell' for better performance, utilizing an older yet more efficient headless instance.
+- Set the `defaultViewport` to null and optimized code to trigger `setViewport` only once, reducing performance impact during export.
+- Removed unnecessary initial page on browser launch using `waitForInitialPage` and the `--no-startup-window` Chrome flag.
+- Revised Chromium flags sent to the browser, now located in the args array within the config file.
+- Optimized code by reducing evaluate function calls to enhance performance and minimize jumping between NodeJS and browser processes.
+- Optimized and moved chart creation initialization scripts from the HTML template to a separate module named `highcharts.js`.
+- Optimized the `clearPage` function to ensure content cleaning is only performed once, during resource release.
+- Introduced `hardResetPage` option for resetting the page's content (including Highcharts scripts) each time the page is released to the pool (defaulting to `false`).
+- Optimized creating and acquiring pages from the pool.
+- Optimized adding and releasing additional JS and CSS resources.
+- Made corrections for gracefully shutting down resources, including running servers, ongoing intervals, browser instance, created pages, and workers pool.
+- Updated `createImage` and `createPDF` functions with faster execution options including `optimizeForSpeed` and `quality`.
+- Set `waitUntil` to 'domcontentloaded' for `setContent` and `goto` functions to improve performance.
+- Replaced browser's deprecated `isConnected()` with the `onnected` property.
+- Added information on all available pool resources.
+- Numerous minor improvements for performance and stability.
 - Changed the `customCode` section of options to `customLogic` in order to avoid confusion with the existing `customCode` property within.
-- Changed the names of environment variables for a better representation of their roles (refer to all envs in the README's `Environment Variables` section).
-- Added new environment variables (`NODE_ENV`, `HIGHCHARTS_ADMIN_TOKEN`, and `SERVER_BENCHMARKING`) to the `.env.sample` file, along with their descriptions in the README.
-- Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
-- Added several new functions to the `highcharts-export-server` module, including `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
+- Renamed the environment variables for a better representation of their roles (refer to all envs in the README's `Environment Variables` section).
+- Renamed the `HIGHCHARTS_MODULES` and `HIGHCHARTS_INDICATORS` environment variables respectively to `HIGHCHARTS_MODULE_SCRIPTS` and `HIGHCHARTS_INDICATOR_SCRIPTS`.
+- Renamed the `scripts` property of the config options to `customScripts`.
+- Renamed the `initPool` function to `initExport` in the main module.
+- Renamed the `init` function to `initPool` in the pool module.
+- Renamed the environment variable `POOL_LISTEN_TO_PROCESS_EXITS` to `OTHER_LISTEN_TO_PROCESS_EXITS`.
+- Moved the `listenToProcessExits` from the `pool` to the `other` section of the options.
+- Replaced the temporary benchmark module with a simpler server benchmark for evaluating export time.
+- Removed unnecessary separate `body-parser` package (already implemented in Express v4.16+).
+- Added parsing of envs based on `zod` package.
+- Added unit tests for certain parts of the code.
+- Added the `shutdownCleanUp` function for resource release (ending intervals, closing servers, destroying the pool and browser) on shutdown. It will be called in the process exit handlers.
+- Added new environment variables (`HIGHCHARTS_ADMIN_TOKEN`, `SERVER_BENCHMARKING`, and `OTHER_NODE_ENV`) to the `.env.sample` file, along with their descriptions in the README.
+- Added a new section to the server configuration options, `proxy`, along with corresponding environment variables.
+- Added several new functions to the `highcharts-export-server` module, including `initPool`, `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
 - Added a new `initLogging` function where the `setLogLevel` and `enableFileLogging` logic are consolidated into one place.
 - Added a new utility function, `isObjectEmpty`.
 - Added a new logging level (`5`) for benchmarking logs.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
+- Added a new process event handler for the `SIGHUP` signal.
+- Added `mapChart` and `ganttChart` constructors in the exporting UI (#503).
 - Reordered the `error` and `info` arguments in the callback of the `startExport` function.
-- Renamed the `initPool` function to `initExport` in the main module.
-- Renamed the `init` function to `initPool` in the pool module.
-- Replaced the temporary benchmark module with a simpler server benchmark for evaluating export time.
+- Updates were made to the `config.js` file.
+- Updated the `killPool` function.
 - The `uncaughtException` handler now kills the pool, browser, and terminates the process with exit code 1, when enabled.
 - The browser instance should be correctly closed now when an error occurs during pool creation.
 - Corrected error handling and response sending in the `/change_hc_version.js` route.
 - Corrected the `handleResources` function.
 - Corrected samples, test scenarios, and test runners.
-- Removed unnecessary separate `body-parser` package (already implemented in Express v4.16+).
-- Bumped versions of most packages, with an update for the deprecated `Puppeteer` v21.1.1.
-- Added `mapChart` and `ganttChart` constructors in the exporting UI (#503).
+- Bumped versions of most packages, with an updating deprecated `Puppeteer` from `v21.1.1` to latest.
 - Added missing Highcharts modules to stay up-to-date with the latest updates.
 - Added missing JSDoc descriptions.
 - Revamped all log messages, error messages, prompt messages, and info for improved clarity of information.
-- README has been revised and corrected by incorporating additional information, improving descriptions, adding missing details, including new API information, and expanding with new sections such as `Available Endpoints`, `Examples`, and a `Note about Deprecated Options`.
+- README has been revised and corrected by incorporating additional information, improving descriptions, adding missing details, including new API information, and expanding with new sections such as `Debugging`, `Available Endpoints`, `Examples`, and a `Note about Deprecated Options`.
 - Updated Wiki pages with a new `Samples` section.
 
 _Fixes:_
@@ -38,6 +71,7 @@ _Fixes:_
 - Fixed `multer` related error: 'Field value too long'.
 - Fixed the SSL handshake error (#307).
 - Fixed missing background color transparency (#492).
+- Fixed missing `foreignObject` elements issue.
 - Fixed type compatibility issues in the `pairArgumentValue` function, arising from CLI string arguments.
 - Fixed the 'httpsProxyAgent is not a constructor' issue with the `https-proxy-agent` module.
 - Fixed the issue of being unable to run both HTTP and HTTPS servers simultaneously.
@@ -45,6 +79,7 @@ _Fixes:_
 - Fixed the error handling in the `postWork` function which resulted in doubled errors.
 - Fixed the deprecated description of the pool from the `generic-pool` to `tarn` notation, triggered by the `getPoolInfo` and `getPoolInfoJSON` functions.
 - Fixed the issue of not gracefully terminating the process when an error occurs and a pool or browser already exists.
+- Fixed the 'Could not clear the content of the page... - Target closed' error.
 - Made minor corrections to ESLint and Prettier configuration.
 - Other minor stability, linting and text corrections have been implemented.
 
@@ -119,6 +154,7 @@ _Fixes and enhancements:_
 - Error messages are now sent back to the client instead of being displayed in rasterized output.
 - Updated NPM dependencies, removed deprecated and uneccessary dependencies.
 - Lots of smaller bugfixes and tweaks.
+- Transitioned our public server (export.highcharts.com) from HTTP to HTTPS.
 
 _New features:_
 

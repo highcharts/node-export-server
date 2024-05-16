@@ -2,15 +2,19 @@
 
 Convert Highcharts.JS charts into static image files.
 
-## Upgrade Notes for v3.0
+## Upgrade Notes
 
-In most cases, v3 should serve as a drop-in replacement for v2. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
+In most cases, v4 should serve as a drop-in replacement for v2 and v3. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
 
 An important note is that the Export Server now requires `Node.js v18.12.0` or a higher version.
 
+Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export.highcharts.com, so all requests sent to our public server now must use the HTTPS protocol.
+
 ## Changelog
+
+**The v4 introduces numerous breaking changes. For further details, please refer to the changelog document provided below.**
 
 The full change log for all versions can be viewed [here](CHANGELOG.md).
 
@@ -87,7 +91,7 @@ There are four main ways of loading configurations:
 
 The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used.
 
-The format, along with its default values, is as follows (using the recommended ordering of core scripts and modules below):
+The format, along with its default values, is as follows (using the recommended ordering of core and module scripts below):
 
 ```
 {
@@ -102,7 +106,7 @@ The format, along with its default values, is as follows (using the recommended 
       "highcharts-more",
       "highcharts-3d"
     ],
-    "modules": [
+    "moduleScripts": [
       "stock",
       "map",
       "gantt",
@@ -167,10 +171,10 @@ The format, along with its default values, is as follows (using the recommended 
       "heikinashi",
       "flowmap"
     ],
-    "indicators": [
+    "indicatorScripts": [
       "indicators-all"
     ],
-    "scripts": [
+    "customScripts": [
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"
     ],
@@ -206,11 +210,10 @@ The format, along with its default values, is as follows (using the recommended 
     "host": "0.0.0.0",
     "port": 7801,
     "benchmarking": false,
-    "ssl": {
-      "enable": false,
-      "force": false,
-      "port": 443,
-      "certPath": ""
+    "proxy": {
+      "host": "",
+      "port": 8080,
+      "timeout": 5000
     },
     "rateLimiting": {
       "enable": false,
@@ -220,6 +223,12 @@ The format, along with its default values, is as follows (using the recommended 
       "trustProxy": false,
       "skipKey": "",
       "skipToken": ""
+    },
+    "ssl": {
+      "enable": false,
+      "force": false,
+      "port": 443,
+      "certPath": ""
     }
   },
   "pool": {
@@ -232,8 +241,7 @@ The format, along with its default values, is as follows (using the recommended 
     "idleTimeout": 30000,
     "createRetryInterval": 200,
     "reaperInterval": 1000,
-    "benchmarking": false,
-    "listenToProcessExits": true
+    "benchmarking": false
   },
   "logging": {
     "level": 4,
@@ -245,7 +253,19 @@ The format, along with its default values, is as follows (using the recommended 
     "route": "/"
   },
   "other": {
-    "noLogo": false
+    "nodeEnv": "production",
+    "listenToProcessExits": true,
+    "noLogo": false,
+    "hardResetPage": false
+  },
+  "debug": {
+    "enable": false,
+    "headless": true,
+    "devtools": false,
+    "listenToConsole": false,
+    "dumpio": false,
+    "slowMo": 0,
+    "debuggingPort": 9222
   }
 }
 ```
@@ -258,17 +278,13 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
-### Node Environment Config
-
-- `NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `development`).
-
 ### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
-- `HIGHCHARTS_MODULES`: Highcharts modules to fetch (defaults to ``).
-- `HIGHCHARTS_INDICATORS`: Highcharts indicators to fetch (defaults to ``).
+- `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
+- `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
@@ -294,12 +310,11 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 
-### Server SSL Config
+### Server Proxy Config
 
-- `SERVER_SSL_ENABLE`: Enables or disables the SSL protocol (defaults to `false`).
-- `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
-- `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
-- `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
+- `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ### Server Rate Limiting Config
 
@@ -310,6 +325,13 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_RATE_LIMITING_TRUST_PROXY`: Set this to true if the server is behind a load balancer (defaults to `false`).
 - `SERVER_RATE_LIMITING_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with the _skipToken_ argument (defaults to ``).
 - `SERVER_RATE_LIMITING_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with the _skipKey_ argument (defaults to ``).
+
+### Server SSL Config
+
+- `SERVER_SSL_ENABLE`: Enables or disables the SSL protocol (defaults to `false`).
+- `SERVER_SSL_FORCE`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
+- `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
+- `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
 
 ### Pool Config
 
@@ -323,7 +345,6 @@ These variables are set in your environment and take precedence over options fro
 - `POOL_CREATE_RETRY_INTERVAL`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `POOL_REAPER_INTERVAL`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
 - `POOL_BENCHMARKING`: Indicates whether to show statistics for the pool of resources or not (defaults to `false`).
-- `POOL_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 
 ### Logging Config
 
@@ -338,13 +359,19 @@ These variables are set in your environment and take precedence over options fro
 
 ### Other Config
 
+- `OTHER_NODE_ENV`: The type of Node.js environment. The value controls whether to include the error's stack in a response or not. Can be development or production (defaults to `production`).
+- `OTHER_LISTEN_TO_PROCESS_EXITS`: Decides whether or not to attach _process.exit_ handlers (defaults to `true`).
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
+- `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 
-### Proxy Config
-
-- `PROXY_SERVER_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
-- `PROXY_SERVER_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
-- `PROXY_SERVER_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
+### Debugging Config
+- `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
+- `DEBUG_HEADLESS`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
+- `DEBUG_DEVTOOLS`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
+- `DEBUG_LISTEN_TO_CONSOLE`: Decides whether to enable a listener for console messages sent from the browser (defaults to `false`).
+- `DEBUG_DUMPIO`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
+- `DEBUG_SLOW_MO`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
+- `DEBUG_DEBUGGING_PORT`: Specifies the debugging port (defaults to `9222`).
 
 ## Command Line Arguments
 
@@ -370,17 +397,16 @@ _Available options:_
 - `--allowFileResources`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 - `--customCode`: Custom code to execute before chart initialization. It can be a function, code wrapped within a function, or a filename with the _.js_ extension (defaults to `false`).
 - `--callback`: JavaScript code to run during construction. It can be a function or a filename with the _.js_ extension (defaults to `false`).
-- `--resources`: Additional resources in the form of a stringified JSON. It may contain `files`, `js`, and `css` sections (defaults to `false`).
+- `--resources`: Additional resources in the form of a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections (defaults to `false`).
 - `--loadConfig`: A file containing a pre-defined configuration to use (defaults to `false`).
 - `--createConfig`: Enables setting options through a prompt and saving them in a provided config file (defaults to `false`).
 - `--enableServer`: If set to true, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
-- `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
-- `--sslForced`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
-- `--sslPort`: The port on which to run the SSL server (defaults to `443`).
-- `--certPath`: The path to the SSL certificate/key file (defaults to ``).
+- `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
 - `--window`: The time window, in minutes, for the rate limiting (defaults to `1`).
@@ -388,6 +414,10 @@ _Available options:_
 - `--trustProxy`: Set this to true if the server is behind a load balancer (defaults to `false`).
 - `--skipKey`: Allows bypassing the rate limiter and should be provided with the `--skipToken` argument (defaults to ``).
 - `--skipToken`: Allows bypassing the rate limiter and should be provided with the `--skipKey` argument (defaults to ``).
+- `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
+- `--sslForce`: If set to true, the server is forced to serve only over HTTPS (defaults to `false`).
+- `--sslPort`: The port on which to run the SSL server (defaults to `443`).
+- `--certPath`: The path to the SSL certificate/key file (defaults to ``).
 - `--minWorkers`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `--maxWorkers`: The number of maximum pool workers to spawn (defaults to `8`).
 - `--workLimit`: The number of work pieces that can be performed before restarting the worker process (defaults to `40`).
@@ -398,13 +428,22 @@ _Available options:_
 - `--createRetryInterval`: The duration, in milliseconds, to wait before retrying the create process in case of a failure (defaults to `200`).
 - `--reaperInterval`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
 - `--poolBenchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
-- `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--logLevel`: The logging level to be used. Can be _0_ - silent, _1_ - error, _2_ - warning, _3_ - notice, _4_ - verbose or _5_ - benchmark (defaults to `4`).
 - `--logFile`: The name of a log file. The `--logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `--logDest`: The path to store log files. This also enables file logging (defaults to `log/`).
 - `--enableUi`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
 - `--uiRoute`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
+- `--nodeEnv`: The type of Node.js environment (defaults to `production`).
+- `--listenToProcessExits`: Decides whether or not to attach process.exit handlers (defaults to `true`).
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
+- `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
+- `--enableDebug`: Enables or disables debug mode for the underlying browser (defaults to `false`).
+- `--headless`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
+- `--devtools`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
+- `--listenToConsole`: Decides whether to enable a listener for console messages sent from the browser (defaults to `false`).
+- `--dumpio`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
+- `--slowMo`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
+- `--debuggingPort`: Specifies the debugging port (defaults to `9222`).
 
 # HTTP Server
 
@@ -444,7 +483,7 @@ The server accepts the following arguments in a POST request body:
 - `scale`: The scale factor of the exported chart. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
 - `globalOptions`: Either a JSON or a stringified JSON with global options to be passed into `Highcharts.setOptions`.
 - `themeOptions`: Either a JSON or a stringified JSON with theme options to be passed into `Highcharts.setOptions`.
-- `resources`: Additional resources in the form of a JSON or a stringified JSON. It may contain `files`, `js`, and `css` sections.
+- `resources`: Additional resources in the form of a JSON or a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections.
 - `callback`: Stringified JavaScript function to execute in the Highcharts constructor.
 - `customCode`: Custom code to be executed before the chart initialization. This can be a function, code wrapped within a function, or a filename with the _.js_ extension. Both `allowFileResources` and `allowCodeExecution` must be set to _true_ for the option to be considered.
 - `b64`: Boolean flag, set to true to receive the chart in the _base64_ format instead of the _binary_.
@@ -543,7 +582,11 @@ This package supports both CommonJS and ES modules.
 **highcharts-export-server module**
 
 - `server`: The server instance which offers the following functions:
-  - `async startServer(serverConfig)`: The same as `startServer` describe below.
+  - `async startServer(serverConfig)`: The same as `startServer` described below.
+
+  - `closeServers()`: Closes all servers associated with Express app instance.
+
+  - `getServers()`: Get all servers associated with Express app instance.
 
   - `enableRateLimiting(options)`: Enable rate limiting for the server.
     - `{Object} limitConfig`: Configuration object for rate limiting.
@@ -570,10 +613,6 @@ This package supports both CommonJS and ES modules.
 - `async initExport(options)`: Initializes the export process. Tasks such as configuring logging, checking cache and sources, and initializing the pool of resources happen during this stage. Function that is required to be called before trying to export charts or setting a server. The `options` is an object that contains all options.
   - `{Object} options`: All export options.
 
-- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
-  - `{Object} userOptions`: User-provided options for customization.
-  - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
-
 - `async singleExport(options)`: Starts a single export process based on the specified options. Runs the `startExport` underneath.
   - `{Object} options`: The options object containing configuration for a single export.
 
@@ -584,7 +623,17 @@ This package supports both CommonJS and ES modules.
   - `{Object} settings`: The settings object containing export configuration.
   - `{function} endCallback`: The callback function to be invoked upon finalizing work or upon error occurance of the exporting process.
 
+- `async initPool(config)`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+  - `{Object} config`: Configuration options for the export pool along with custom puppeteer arguments for the puppeteer.launch function.
+
 - `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
+
+- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
+  - `{Object} userOptions`: User-provided options for customization.
+  - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
+
+- `async shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.
+  - `{number} exitCode`: An exit code for the process.exit() function.
 
 - `log(...args)`: Logs a message. Accepts a variable amount of arguments. Arguments after `level` will be passed directly to console.log, and/or will be joined and appended to the log file.
   - `{any} args`: An array of arguments where the first is the log level and the rest are strings to build a message with.
@@ -594,10 +643,10 @@ This package supports both CommonJS and ES modules.
   - `{Error} error`: The error object.
   - `{string} customMessage`: An optional custom message to be logged along with the error.
 
-- `setLogLevel`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
+- `setLogLevel(newLevel)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
   - `{number} newLevel`: The new log level to be set.
 
-- `enableFileLogging`: Enables file logging with the specified destination and log file.
+- `enableFileLogging(logDest, logFile)`: Enables file logging with the specified destination and log file.
   - `{string} logDest`: The destination path for log files.
   - `{string} logFile`: The log file name.
 
@@ -631,7 +680,7 @@ At some point during the transition process from the `PhantomJS` solution, certa
 Additionally, some options are now named differently due to the new structure and categorization. Here is a list of old names and their corresponding new names (`old name` -> `new name`):
 
 - `fromFile` -> `loadConfig`
-- `sslOnly` -> `force` or `sslForced`
+- `sslOnly` -> `force` or `sslForce`
 - `sslPath` -> `certPath`
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
@@ -663,7 +712,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 
 ## Note about Event Listeners
 
-The Export Server attaches event listeners to `process.exit`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
+The Export Server attaches event listeners to `process.exit`, `uncaughtException` and signals such as `SIGINT`, `SIGTERM` and `SIGHUP`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
 Listeners are also attached to handle `uncaught exceptions`. If an exception occurs, the entire pool and browser instance are terminated, and the application is shut down.
 
@@ -758,6 +807,40 @@ copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 If you need Google Fonts in your custom installation, they can be had here: https://github.com/google/fonts.
 
 Download them, and follow the above instructions for your OS.
+
+# Debug Mode
+
+Version 4.0.0 introduced a new mode that allows debugging the Puppeteer browser instance. This is particularly useful when setting up a custom server. It helps to delve into the implementation, observe how things work, and analyze and resolve potential problems.
+
+## Launching
+
+Setting the `--enableDebug` to `true` passes all debug options to the `puppeteer.launch()` function on startup. Together with the `--headless` option set to `false`, it launches the browser in a headful state providing a full version of the browser with a graphical user interface (GUI). While this serves as the minimal configuration to simply display the browser, Puppeteer offers additional options. Here is the full list:
+
+- `--enableDebug`: Enables passing debug options to the `puppeteer.launch()`.
+- `--headless`: Sets the browser's state.
+- `--devtools`: Allows turning on the DevTools automatically upon launching the browser.
+- `--listenToConsole`: Allows listening to messages from the browser's console.
+- `--dumpio`: Redirects the browser's process `stdout` and `stderr` to `process.stdout` and `process.stderr` respectively.
+- `--slowMo`: Delays Puppeteer operations by a specified amount of milliseconds.
+- `--debuggingPort`: Specifies a debugging port for a browser.
+
+## Debugging
+
+There are two main ways to debug code:
+
+- By adding a `debugger` statement within any client-side code (e.g., inside a `page.evaluate` callback). With the `--devtools` option set to `true`, the code execution will stop automatically.
+
+- By running the export server with the `--inspect-brk=<PORT>` flag, and adding a `debugger` statement within any server-side code. Subsequently, navigate to `chrome://inspect/`, input the server's IP address and port (e.g., `localhost:9229`) in the Configure section. Clicking 'inspect' initiates debugging of the server-side code.
+
+The `npm run start:debug` script from the `package.json` allows debugging code using both methods simultaneously. In this setup, client-side code is accessible from the devTools of a specific Puppeteer browser's page, while server-side code can be debugged from the devTools of `chrome://inspect/`.
+
+For more details, refer to the [Puppeteer debugging guide](https://pptr.dev/guides/debugging).
+
+## Additional Notes
+
+- Ensure to set the `--headless` to `false` when the `--devtools` is set to `true`. Otherwise, there's a possibility that while DevTools may be recognized as enabled, the browser won't be displayed. Moreover, if a `debugger` is caught within the browser, it might lead to the entire debugging process getting stuck. In such scenarios, you can set the IP address and port (using the value of the `--debuggingPort` option) the same way as described in the section for debugging server-side code. This allows you to access DevTools and resume code execution.
+
+- When using the `--listenToConsole` and `--dumpio` options, be aware that the server's console may become 'polluted' with messages from the browser. If you prefer to avoid this, simply set both options to false.
 
 # Performance Notice
 

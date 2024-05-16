@@ -103,11 +103,8 @@ const start = async () => {
     // Log the error with stack
     main.logWithStack(1, error);
 
-    // Kill pool and close browser if exist
-    await main.killPool();
-
-    // End process with an error code
-    process.exit(1);
+    // Gracefully shut down the process
+    await main.shutdownCleanUp(1);
   }
 };
 
