@@ -1,3 +1,4 @@
+3.1.1
 # Highcharts Node.js Export Server
 
 Convert Highcharts.JS charts to static image files.
