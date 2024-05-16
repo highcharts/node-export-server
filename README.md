@@ -2,9 +2,9 @@
 
 Convert Highcharts.JS charts into static image files.
 
-## Upgrade Notes for v3.0
+## Upgrade Notes
 
-In most cases, v3 should serve as a drop-in replacement for v2. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
+In most cases, v4 should serve as a drop-in replacement for v2 and v3. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
 
@@ -13,6 +13,8 @@ An important note is that the Export Server now requires `Node.js v18.12.0` or a
 Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export.highcharts.com, so all requests sent to our public server now must use the HTTPS protocol.
 
 ## Changelog
+
+**The v4 introduces numerous breaking changes. For further details, please refer to the changelog document provided below.**
 
 The full change log for all versions can be viewed [here](CHANGELOG.md).
 
@@ -805,6 +807,40 @@ copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 If you need Google Fonts in your custom installation, they can be had here: https://github.com/google/fonts.
 
 Download them, and follow the above instructions for your OS.
+
+# Debug Mode
+
+Version 4.0.0 introduced a new mode that allows debugging the Puppeteer browser instance. This is particularly useful when setting up a custom server. It helps to delve into the implementation, observe how things work, and analyze and resolve potential problems.
+
+## Launching
+
+Setting the `--enableDebug` to `true` passes all debug options to the `puppeteer.launch()` function on startup. Together with the `--headless` option set to `false`, it launches the browser in a headful state providing a full version of the browser with a graphical user interface (GUI). While this serves as the minimal configuration to simply display the browser, Puppeteer offers additional options. Here is the full list:
+
+- `--enableDebug`: Enables passing debug options to the `puppeteer.launch()`.
+- `--headless`: Sets the browser's state.
+- `--devtools`: Allows turning on the DevTools automatically upon launching the browser.
+- `--listenToConsole`: Allows listening to messages from the browser's console.
+- `--dumpio`: Redirects the browser's process `stdout` and `stderr` to `process.stdout` and `process.stderr` respectively.
+- `--slowMo`: Delays Puppeteer operations by a specified amount of milliseconds.
+- `--debuggingPort`: Specifies a debugging port for a browser.
+
+## Debugging
+
+There are two main ways to debug code:
+
+- By adding a `debugger` statement within any client-side code (e.g., inside a `page.evaluate` callback). With the `--devtools` option set to `true`, the code execution will stop automatically.
+
+- By running the export server with the `--inspect-brk=<PORT>` flag, and adding a `debugger` statement within any server-side code. Subsequently, navigate to `chrome://inspect/`, input the server's IP address and port (e.g., `localhost:9229`) in the Configure section. Clicking 'inspect' initiates debugging of the server-side code.
+
+The `npm run start:debug` script from the `package.json` allows debugging code using both methods simultaneously. In this setup, client-side code is accessible from the devTools of a specific Puppeteer browser's page, while server-side code can be debugged from the devTools of `chrome://inspect/`.
+
+For more details, refer to the [Puppeteer debugging guide](https://pptr.dev/guides/debugging).
+
+## Additional Notes
+
+- Ensure to set the `--headless` to `false` when the `--devtools` is set to `true`. Otherwise, there's a possibility that while DevTools may be recognized as enabled, the browser won't be displayed. Moreover, if a `debugger` is caught within the browser, it might lead to the entire debugging process getting stuck. In such scenarios, you can set the IP address and port (using the value of the `--debuggingPort` option) the same way as described in the section for debugging server-side code. This allows you to access DevTools and resume code execution.
+
+- When using the `--listenToConsole` and `--dumpio` options, be aware that the server's console may become 'polluted' with messages from the browser. If you prefer to avoid this, simply set both options to false.
 
 # Performance Notice
 
