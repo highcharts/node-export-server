@@ -20,7 +20,8 @@ _Enhancements:_
 - Optimized code by reducing evaluate function calls to enhance performance and minimize jumping between NodeJS and browser processes.
 - Optimized and moved chart creation initialization scripts from the HTML template to a separate module named `highcharts.js`.
 - Optimized the `clearPage` function to ensure content cleaning is only performed once, during resource release.
-- Introduced `hardResetPage` option for resetting the page's content (including Highcharts scripts) each time the page is released to the pool (defaulting to `false`).
+- Introduced the `hardResetPage` option for resetting the page's content (including Highcharts scripts) each time the page is released to the pool (defaulting to `false`).
+- Introduced the `browserShellMode` option for controlling the mode in which the browser runs (new or old, `shell` mode).
 - Optimized creating and acquiring pages from the pool.
 - Optimized adding and releasing additional JS and CSS resources.
 - Made corrections for gracefully shutting down resources, including running servers, ongoing intervals, browser instance, created pages, and workers pool.
