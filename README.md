@@ -367,6 +367,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
 
 ### Debugging Config
+
 - `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
 - `DEBUG_HEADLESS`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
 - `DEBUG_DEVTOOLS`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
@@ -501,6 +502,7 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
 ## Available Endpoints
 
 - POST
+
   - `/`: An endpoint for exporting charts.
   - `/:filename` - An endpoint for exporting charts with a specified filename parameter to save the chart to. The file will be downloaded with the _{filename}.{type}_ name (the `noDownload` must be set to **false**).
   - `/change_hc_version/:newVersion`: An authenticated endpoint allowing the modification of the Highcharts version on the server through the use of a token.
@@ -585,7 +587,9 @@ This package supports both CommonJS and ES modules.
 **highcharts-export-server module**
 
 - `server`: The server instance which offers the following functions:
+
   - `async startServer(serverConfig)`: The same as `startServer` described below.
+
     - `{Object} serverConfig`: The server configuration object.
 
   - `closeServers()`: Closes all servers associated with Express app instance.
@@ -593,6 +597,7 @@ This package supports both CommonJS and ES modules.
   - `getServers()`: Get all servers associated with Express app instance.
 
   - `enableRateLimiting(limitConfig)`: Enable rate limiting for the server.
+
     - `{Object} limitConfig`: Configuration object for rate limiting.
 
   - `getExpress()`: Get the Express instance.
@@ -600,10 +605,12 @@ This package supports both CommonJS and ES modules.
   - `getApp()`: Get the Express app instance.
 
   - `use(path, ...middlewares)`: Apply middleware(s) to a specific path.
+
     - `{string} path`: The path to which the middleware(s) should be applied.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
   - `get(path, ...middlewares)`: Set up a route with GET method and apply middleware(s).
+
     - `{string} path`: The route path.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
@@ -612,55 +619,70 @@ This package supports both CommonJS and ES modules.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
 - `async startServer(serverConfig)`: Starts an HTTP server based on the provided configuration. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+
   - `{Object} serverConfig`: The server configuration object.
 
 - `async initExport(options)`: Initializes the export process. Tasks such as configuring logging, checking cache and sources, and initializing the pool of resources happen during this stage. Function that is required to be called before trying to export charts or setting a server. The `options` is an object that contains all options.
+
   - `{Object} options`: All export options.
 
 - `async singleExport(options)`: Starts a single export process based on the specified options. Runs the `startExport` underneath.
+
   - `{Object} options`: The options object containing configuration for a single export.
 
 - `async batchExport(options)`: Starts a batch export process for multiple charts based on the information in the batch option. The batch is a string in the following format: `"infile1.json=outfile1.png;infile2.json=outfile2.png;..."`. Runs the `startExport` underneath.
+
   - `{Object} options`: The options object containing configuration for a batch export.
 
 - `async startExport(settings, endCallback)`: Starts an export process. The `settings` contains final options gathered from all possible sources (config, env, cli, json). The `endCallback` is called when the export is completed, with an error object as the first argument and the second containing the base64 respresentation of a chart.
+
   - `{Object} settings`: The settings object containing export configuration.
   - `{function} endCallback`: The callback function to be invoked upon finalizing work or upon error occurance of the exporting process.
 
 - `async initPool(config)`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+
   - `{Object} config`: Configuration options for the export pool along with custom puppeteer arguments for the puppeteer.launch function.
 
 - `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
 
 - `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
+
   - `{Object} userOptions`: User-provided options for customization.
   - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
 
 - `async shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.
+
   - `{number} exitCode`: An exit code for the process.exit() function.
 
 - `log(...args)`: Logs a message. Accepts a variable amount of arguments. Arguments after `level` will be passed directly to console.log, and/or will be joined and appended to the log file.
+
   - `{any} args`: An array of arguments where the first is the log level and the rest are strings to build a message with.
 
 - `logWithStack(newLevel, error, customMessage)`: Logs an error message with its stack trace. Optionally, a custom message can be provided.
+
   - `{number} newLevel`: The log level.
   - `{Error} error`: The error object.
   - `{string} customMessage`: An optional custom message to be logged along with the error.
 
 - `setLogLevel(newLevel)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
+
   - `{number} newLevel`: The new log level to be set.
 
 - `enableFileLogging(logDest, logFile)`: Enables file logging with the specified destination and log file.
+
   - `{string} logDest`: The destination path for log files.
   - `{string} logFile`: The log file name.
 
 - `mapToNewConfig(oldOptions)`: Maps old-structured (PhantomJS) options to a new configuration format (Puppeteer).
+
   - `{Object} oldOptions`: Old-structured options to be mapped.
 
 - `async manualConfig(configFileName)`: Allows manual configuration based on specified prompts and saves the configuration to a file.
+
   - `{string} configFileName`: The name of the configuration file.
 
 - `printLogo(noLogo)`: Prints the Highcharts Export Server logo and version information.
+
   - `{boolean} noLogo`: If **true**, only prints version information without the logo.
 
 - `printUsage()`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
@@ -696,12 +718,14 @@ If you depend on any of the above options, the optimal approach is to directly c
 If you need to set the `height` or `width` of the chart, it can be done in two ways:
 
 Set it in the `chart` config under:
-  - [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
-  - [`chart.width`](https://api.highcharts.com/highcharts/chart.width).
+
+- [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
+- [`chart.width`](https://api.highcharts.com/highcharts/chart.width).
 
 Set it in the `exporting` config under:
-  - [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
-  - [`exporting.sourceWidth`](https://api.highcharts.com/highcharts/exporting.sourceWidth).
+
+- [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
+- [`exporting.sourceWidth`](https://api.highcharts.com/highcharts/exporting.sourceWidth).
 
 The latter is preferred, as it allows you to set separate sizing when exporting and when displaying the chart on your web page.
 

@@ -1,10 +1,10 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
-    es2021: true,
-    node: true
+    node: true,
+    es2024: true
   },
-  root: true,
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
