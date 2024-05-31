@@ -719,13 +719,13 @@ If you need to set the `height` or `width` of the chart, it can be done in two w
 
 Set it in the `chart` config under:
 
-- [`chart.height`](https://api.highcharts.com/highcharts/chart.height).
-- [`chart.width`](https://api.highcharts.com/highcharts/chart.width).
+- [`chart.height`](https://api.highcharts.com/highcharts/chart.height)
+- [`chart.width`](https://api.highcharts.com/highcharts/chart.width)
 
 Set it in the `exporting` config under:
 
-- [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight).
-- [`exporting.sourceWidth`](https://api.highcharts.com/highcharts/exporting.sourceWidth).
+- [`exporting.sourceHeight`](https://api.highcharts.com/highcharts/exporting.sourceHeight)
+- [`exporting.sourceWidth`](https://api.highcharts.com/highcharts/exporting.sourceWidth)
 
 The latter is preferred, as it allows you to set separate sizing when exporting and when displaying the chart on your web page.
 
