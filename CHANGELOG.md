@@ -81,7 +81,7 @@ _Fixes:_
 - Fixed the deprecated description of the pool from the `generic-pool` to `tarn` notation, triggered by the `getPoolInfo` and `getPoolInfoJSON` functions.
 - Fixed the issue of not gracefully terminating the process when an error occurs and a pool or browser already exists.
 - Fixed the 'Could not clear the content of the page... - Target closed' error.
-- Added the series-on-point module. [(#534)](https://github.com/highcharts/node-export-server/pull/534).
+- Added the series-on-point module. [(#532)](https://github.com/highcharts/node-export-server/pull/532).
 - Made minor corrections to ESLint and Prettier configuration.
 - Other minor stability, linting and text corrections have been implemented.
 
