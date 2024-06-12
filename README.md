@@ -376,6 +376,17 @@ These variables are set in your environment and take precedence over options fro
 - `DEBUG_SLOW_MO`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
 - `DEBUG_DEBUGGING_PORT`: Specifies the debugging port (defaults to `9222`).
 
+### WebSocket Config
+
+- `WEB_SOCKET_ENABLE`: Enables or disables the WebSocket connection (defaults to `false`).
+- `WEB_SOCKET_RECONNECT`: Controls whether or not to try reconnecting to the WebSocket server in case of a disconnect (defaults to `false`).
+- `WEB_SOCKET_REJECT_UNAUTHORIZED`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
+- `WEB_SOCKET_PING_TIMEOUT`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
+- `WEB_SOCKET_RECONNECT_INTERVAL`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
+- `WEB_SOCKET_RECONNECT_ATTEMPTS`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `WEB_SOCKET_URL`: The URL of the WebSocket server (defaults to ``).
+- `WEB_SOCKET_SECRET`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
+
 ## Command Line Arguments
 
 To supply command line arguments, add them as flags when running the application:
@@ -448,6 +459,14 @@ _Available options:_
 - `--dumpio`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
 - `--slowMo`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
 - `--debuggingPort`: Specifies the debugging port (defaults to `9222`).
+- `--enableWs`: Enables or disables the WebSocket connection (defaults to `false`).
+- `--wsReconnect`: Controls whether or not to try reconnecting to the WebSocket server in case of a disconnect (defaults to `false`).
+- `--wsrejectUnauthorized`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
+- `--wsPingTimeout`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
+- `--wsReconnectInterval`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
+- `--wsReconnectAttempts`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `--wsUrl`: The URL of the WebSocket server (defaults to ``).
+- `--wsSecret`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
 
 # HTTP Server
 
