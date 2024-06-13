@@ -246,7 +246,9 @@ The format, along with its default values, is as follows (using the recommended 
   "logging": {
     "level": 4,
     "file": "highcharts-export-server.log",
-    "dest": "log/"
+    "dest": "log/",
+    "toFile": true,
+    "toConsole": true
   },
   "ui": {
     "enable": false,
@@ -352,6 +354,8 @@ These variables are set in your environment and take precedence over options fro
 - `LOGGING_LEVEL`: The logging level to be used. Can be **0** - silent, **1** - error, **2** - warning, **3** - notice, **4** - verbose or **5** benchmark (defaults to `4`).
 - `LOGGING_FILE`: The name of a log file. The `logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
 - `LOGGING_DEST`: The path to store log files. This also enables file logging (defaults to `log/`).
+- `LOGGING_TO_FILE`: Whether you want to enable or disable creation of the log directory and saving the log into a .log file (defaults to `true`).
+- `LOGGING_TO_CONSOLE`: Whether you want to enable showing logs in the console or not (defaults to `true`).
 
 ### UI Config
 
