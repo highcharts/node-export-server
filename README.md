@@ -384,6 +384,7 @@ These variables are set in your environment and take precedence over options fro
 - `WEB_SOCKET_PING_TIMEOUT`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
 - `WEB_SOCKET_RECONNECT_INTERVAL`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
 - `WEB_SOCKET_RECONNECT_ATTEMPTS`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `WEB_SOCKET_MESSAGE_INTERVAL`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
 - `WEB_SOCKET_URL`: The URL of the WebSocket server (defaults to ``).
 - `WEB_SOCKET_SECRET`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
 
@@ -465,6 +466,7 @@ _Available options:_
 - `--wsPingTimeout`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
 - `--wsReconnectInterval`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
 - `--wsReconnectAttempts`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `--wsMessageInterval`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
 - `--wsUrl`: The URL of the WebSocket server (defaults to ``).
 - `--wsSecret`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
 
