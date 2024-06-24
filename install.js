@@ -23,7 +23,7 @@ const pkgFile = JSON.parse(readFileSync(join(__dirname, 'package.json')));
 
 console.log(
   `
-Highcharts Export Server V${pkgFile.version}
+Highcharts Export Server v${pkgFile.version}
 
 ${'This software requires a valid Highcharts license for commercial use.'.yellow}
 
