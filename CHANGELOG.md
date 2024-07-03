@@ -51,7 +51,8 @@ _Enhancements:_
 - Added a new logging level (`5`) for benchmarking logs.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
 - Added a new process event handler for the `SIGHUP` signal.
-- Added `mapChart` and `ganttChart` constructors in the exporting UI (#503).
+- Added `mapChart` and `ganttChart` constructors in the exporting UI [(#503)](https://github.com/highcharts/node-export-server/issues/503).
+- Added the series-on-point module [(#532)](https://github.com/highcharts/node-export-server/issues/532).
 - Reordered the `error` and `info` arguments in the callback of the `startExport` function.
 - Updates were made to the `config.js` file.
 - Updated the `killPool` function.
@@ -81,7 +82,6 @@ _Fixes:_
 - Fixed the deprecated description of the pool from the `generic-pool` to `tarn` notation, triggered by the `getPoolInfo` and `getPoolInfoJSON` functions.
 - Fixed the issue of not gracefully terminating the process when an error occurs and a pool or browser already exists.
 - Fixed the 'Could not clear the content of the page... - Target closed' error.
-- Added the series-on-point module. [(#532)](https://github.com/highcharts/node-export-server/pull/532).
 - Made minor corrections to ESLint and Prettier configuration.
 - Other minor stability, linting and text corrections have been implemented.
 
@@ -113,8 +113,8 @@ _Fixes:_
 
 # 3.0.5
 
-- Fixed an issue with transparent backgrounds in PNG exports (#463).
-- Fixed an issue with missing `filename` property (https://github.com/highcharts/highcharts/issues/20370).
+- Fixed an issue with transparent backgrounds in PNG exports [(#463)](https://github.com/highcharts/node-export-server/issues/463).
+- Fixed an issue with missing `filename` property [(#20370)](https://github.com/highcharts/highcharts/issues/20370).
 
 # 3.0.4
 
@@ -122,8 +122,8 @@ _Fixes:_
 
 # 3.0.3
 
-- Fixed an issue with height and width for CSS (#419).
-- Fixed `globalOptions` (#434).
+- Fixed an issue with height and width for CSS [(#419)](https://github.com/highcharts/node-export-server/issues/419).
+- Fixed `globalOptions` [(#434)](https://github.com/highcharts/node-export-server/issues/434).
 - Other smaller fixes.
 
 # 3.0.2
@@ -247,8 +247,8 @@ _Changelog:_
 # 2.0.15
 
 - Added `queueSize` option to `initPool` to set the request overfow queue size.
-- Added option to supply `cdnURL` to build script (#133).
-- Added `;` between included scripts. Fixes map collections (#128).
+- Added option to supply `cdnURL` to build script [(#133)](https://github.com/highcharts/node-export-server/issues/133).
+- Added `;` between included scripts. Fixes map collections [(#128)](https://github.com/highcharts/node-export-server/issues/128).
 - Added `--skipKey` and `--skipToken` CLI options to configure the rate limiter.
 - Added `--queueSize` switch to the CLI options to set the overflow queue size.
 - Fixed issue with silent installs and default values.
