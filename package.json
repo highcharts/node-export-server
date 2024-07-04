@@ -34,7 +34,7 @@
     "http-tests-single": "node ./tests/http/http_test_runner_single.js",
     "node-tests": "node ./tests/node/node_test_runner.js",
     "node-tests-single": "node ./tests/node/node_test_runner_single.js",
-    "prepare": "husky install || true",
+    "prepare": "husky || true",
     "build": "rollup -c",
     "unit:test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
