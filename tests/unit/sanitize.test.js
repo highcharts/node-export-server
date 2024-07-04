@@ -44,4 +44,44 @@ describe('sanitize', () => {
     const output = sanitize(input);
     expect(output).toBe('');
   });
+
+  it('removes standalone foreignObject element', () => {
+    const input = '<foreignObject>The foreignObject element</foreignObject>';
+    const output = sanitize(input);
+    expect(output).toBe('');
+  });
+
+  it('removes foreignObject element along with the containing iframe and b tags', () => {
+    const input =
+      "<foreignObject><iframe src=''></iframe><b>Hello</b></foreignObject>";
+    const output = sanitize(input);
+    expect(output).toBe('');
+  });
+
+  it('does not remove foreignObject element from SVG', () => {
+    const input =
+      '<svg><foreignObject>The foreignObject tag</foreignObject></svg>';
+    const output = sanitize(input);
+    expect(output).toBe(
+      '<svg><foreignObject>The foreignObject tag</foreignObject></svg>'
+    );
+  });
+
+  it('does not remove foreignObject with HTML tag inside from SVG', () => {
+    const input =
+      '<svg><foreignObject><span>HTML element</span></foreignObject></svg>';
+    const output = sanitize(input);
+    expect(output).toBe(
+      '<svg><foreignObject><span>HTML element</span></foreignObject></svg>'
+    );
+  });
+
+  it('removes iframe tag and leaves b tag inside foreignObject element from SVG', () => {
+    const input =
+      "<svg><foreignObject><iframe src='<internal AWS UP>'></iframe><b>Hello</b></foreignObject></svg>";
+    const output = sanitize(input);
+    expect(output).toBe(
+      '<svg><foreignObject><b>Hello</b></foreignObject></svg>'
+    );
+  });
 });
