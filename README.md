@@ -111,7 +111,6 @@ The format, along with its default values, is as follows (using the recommended 
       "map",
       "gantt",
       "exporting",
-      "export-data",
       "parallel-coordinates",
       "accessibility",
       "annotations-advanced",
@@ -169,14 +168,17 @@ The format, along with its default values, is as follows (using the recommended 
       "marker-clusters",
       "hollowcandlestick",
       "heikinashi",
-      "flowmap"
+      "flowmap",
+      "export-data",
+      "navigator",
+      "textpath"
     ],
     "indicatorScripts": [
       "indicators-all"
     ],
     "customScripts": [
-      "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"
+      "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js"
     ],
     "forceFetch": false,
     "cachePath": ".cache"
@@ -247,8 +249,8 @@ The format, along with its default values, is as follows (using the recommended 
     "level": 4,
     "file": "highcharts-export-server.log",
     "dest": "log/",
-    "toFile": true,
-    "toConsole": true
+    "toConsole": true,
+    "toFile": true
   },
   "ui": {
     "enable": false,
@@ -352,10 +354,10 @@ These variables are set in your environment and take precedence over options fro
 ### Logging Config
 
 - `LOGGING_LEVEL`: The logging level to be used. Can be **0** - silent, **1** - error, **2** - warning, **3** - notice, **4** - verbose or **5** benchmark (defaults to `4`).
-- `LOGGING_FILE`: The name of a log file. The `logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
-- `LOGGING_DEST`: The path to store log files. This also enables file logging (defaults to `log/`).
-- `LOGGING_TO_FILE`: Whether you want to enable or disable creation of the log directory and saving the log into a .log file (defaults to `true`).
-- `LOGGING_TO_CONSOLE`: Whether you want to enable showing logs in the console or not (defaults to `true`).
+- `LOGGING_FILE`: The name of a log file. The `logToFile` and `logDest` options also need to be set to enable file logging (defaults to `highcharts-export-server.log`).
+- `LOGGING_DEST`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log/`).
+- `LOGGING_TO_CONSOLE`: Enables or disables showing logs in the console (defaults to `true`).
+- `LOGGING_TO_FILE`: Enables or disables creation of the log directory and saving the log into a .log file (defaults to `true`).
 
 ### UI Config
 
@@ -435,8 +437,10 @@ _Available options:_
 - `--reaperInterval`: The duration, in milliseconds, after which the check for idle resources to destroy is triggered (defaults to `1000`).
 - `--poolBenchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
 - `--logLevel`: The logging level to be used. Can be **0** - silent, **1** - error, **2** - warning, **3** - notice, **4** - verbose or **5** - benchmark (defaults to `4`).
-- `--logFile`: The name of a log file. The `--logDest` option also needs to be set to enable file logging (defaults to `highcharts-export-server.log`).
-- `--logDest`: The path to store log files. This also enables file logging (defaults to `log/`).
+- `--logFile`: The name of a log file. The `logToFile` and `logDest` options also need to be set to enable file logging (defaults to `highcharts-export-server.log`).
+- `--logDest`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log/`).
+- `--logToConsole`: Enables or disables showing logs in the console (defaults to `true`).
+- `--logToFile`: Enables or disables creation of the log directory and saving the log into a .log file (defaults to `true`).
 - `--enableUi`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
 - `--uiRoute`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
 - `--nodeEnv`: The type of Node.js environment (defaults to `production`).
