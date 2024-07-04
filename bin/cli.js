@@ -15,7 +15,7 @@ See LICENSE file in root for details.
 
 import main from '../lib/index.js';
 
-import { initLoggerOptions } from '../lib/logger.js';
+import { initLogging } from '../lib/logger.js';
 import ExportError from '../lib/errors/ExportError.js';
 
 /**
@@ -48,7 +48,7 @@ const start = async () => {
 
     // If all options correctly parsed
     if (options) {
-      initLoggerOptions(options.logging);
+      initLogging(options.logging);
 
       // Print initial logo or text
       main.printLogo(options.other.noLogo);
