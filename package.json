@@ -38,7 +38,7 @@
     "node-tests": "node ./tests/node/node_test_runner.js",
     "node-tests-single": "node ./tests/node/node_test_runner_single.js",
     "unit:test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "prepare": "husky install || true"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "colors": "1.4.0",
@@ -55,7 +55,7 @@
     "puppeteer": "^22.12.1",
     "tarn": "^3.0.2",
     "uuid": "^10.0.0",
-    "ws": "^8.17.1",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
