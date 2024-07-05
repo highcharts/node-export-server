@@ -540,7 +540,7 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
   - `/`: An endpoint to perform exports through the user interface the server allows it.
   - `/health`: An endpoint for outputting basic statistics for the server.
 
-## Switching Highcharts Version at Runtime
+## Switching Highcharts Version At Runtime
 
 If the `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change_hc_version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
 
@@ -607,7 +607,7 @@ await exporter.startExport(exportSettings, async (error, info) => {
 });
 ```
 
-## CommonJS support
+## CommonJS Support
 
 This package supports both CommonJS and ES modules.
 
@@ -714,15 +714,41 @@ This package supports both CommonJS and ES modules.
 
   - `{boolean} noLogo`: If **true**, only prints version information without the logo.
 
-- `printUsage()`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
+- `printUsage(noLogo)`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
+
+  - `{boolean} noLogo`: If **true**, only prints version information without the logo.
+
+- `printVersion()`: Prints the Highcharts Export Server logo, version and license information.
 
 # Examples
 
 Samples and tests for every mentioned export method can be found in the `./samples` and `./tests` folders. Detailed descriptions are available in their corresponding sections on the [Wiki](https://github.com/highcharts/node-export-server/wiki).
 
+# WebSocket
+
+One of the new features that v4 introduces is the ability to configure and establish a WebSocket connection between the Export Server and a user-configured WebSocket server. This can be useful for gathering telemetry data and statistics about the usage of your Export Server instance.
+
+## How It Works
+
+When enabled, a WebSocket connection will be established on Export Server startup. The WebSocket server to which the connection is made must also be configured. The authorization process is completed by sending a JWT generated based on a secret that must also be set on the WebSocket server side.
+
+Once the connection is established, the chart data from each request to the Export Server is passed to the telemetry module, which filters the data based on a JSON file that specifies which data needs to be sent. This file can be found under `./lib/schemas/telemetry.json` and can be modified as needed, but the proposed structure must be maintained.
+
+Data processed in this way is saved in an object that collects information about requests for a certain period and is batch sent to the WebSocket server at specified intervals.
+
+Please refer to the [Configuration](https://github.com/highcharts/node-export-server?tab=readme-ov-file#configuration) section for descriptions of the options.
+
+## Additional Notes
+
+- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `wsPingTimeout` must be set to a higher value in milliseconds than its equivalent in the WebSocket server.
+
 # Tips, Tricks & Notes
 
-## Note about Deprecated Options
+## Note About Version And Help Information
+
+Typing `highcharts-export-server --version` will display information about the current version, and `highcharts-export-server --help` will display information about available CLI options.
+
+## Note About Deprecated Options
 
 At some point during the transition process from the `PhantomJS` solution, certain options were deprecated. Here is a list of options that no longer work with the server based on `Puppeteer`:
 
@@ -742,7 +768,7 @@ Additionally, some options are now named differently due to the new structure an
 
 If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/options_phantomjs.js` file.
 
-## Note about Chart Size
+## Note About Chart Size
 
 If you need to set the `height` or `width` of the chart, it can be done in two ways:
 
@@ -767,7 +793,7 @@ Like previously mentioned, there are multiple ways to set and prioritize options
 5. The `height` and `width` from the `chart` section of chart's Highcharts global options, if provided.
 6. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`).
 
-## Note about Event Listeners
+## Note About Event Listeners
 
 The Export Server attaches event listeners to `process.exit`, `uncaughtException` and signals such as `SIGINT`, `SIGTERM` and `SIGHUP`. This is to make sure that there are no memory leaks or zombie processes if the application is unexpectedly terminated.
 
@@ -777,11 +803,11 @@ If you do not want this behavior, start the server with `--listenToProcessExits 
 
 Be aware though, that if you disable this and you do not take great care to manually kill the pool of resources along with a browser instance, your server will bleed memory when the app is terminated.
 
-## Note about Resources
+## Note About Resources
 
 If `--resources` argument is not set and a file named `resources.json` exists in the folder from which the CLI tool was ran, it will use the `resources.json` file.
 
-## Note about Worker Count & Work Limit
+## Note About Worker Count & Work Limit
 
 The Export Server utilizes a pool of workers, where each worker is a Puppeteer process (browser instance's page) responsible for the actual chart rasterization. The pool size can be set with the `--minWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware on which you are running the server.
 
@@ -791,13 +817,13 @@ Each of the workers has a maximum number of requests it can handle before it res
 
 # Usage
 
-## Injecting the Highcharts Dependency
+## Injecting The Highcharts Dependency
 
 In order to use the Export Server, Highcharts needs to be injected into the export template (see the `./templates` folder for reference).
 
 Since version 3.0.0, Highcharts is fetched in a Just-In-Time manner, making it easy to switch configurations. It is no longer required to explicitly accept the license, as in older versions. **However, the Export Server still requires a valid Highcharts license to be used**.
 
-## Using in Automated Deployments
+## Using In Automated Deployments
 
 Since version 3.0.0, when using in automated deployments, the configuration can be loaded either using environment variables or a JSON configuration file.
 
@@ -859,7 +885,7 @@ Copy or move the TTF file to `C:\Windows\Fonts\`:
 copy yourFont.ttf C:\Windows\Fonts\yourFont.ttf
 ```
 
-### Google fonts
+### Google Fonts
 
 If you need Google Fonts in your custom installation, they can be had here: https://github.com/google/fonts.
 

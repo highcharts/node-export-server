@@ -3,6 +3,7 @@
 _New Features:_
 
 - Implemented debug mode, including new environment variables, a config section, 'console' event listener, and npm script for debugging the headful Puppeteer browser.
+- Implemented the possibility of establishing a WebSocket connection between the Export Server and a user-configured WebSocket server.
 - Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
 - Added a moving average indicator for the exporting success rate ratio.
 
@@ -45,14 +46,17 @@ _Enhancements:_
 - Added the `shutdownCleanUp` function for resource release (ending intervals, closing servers, destroying the pool and browser) on shutdown. It will be called in the process exit handlers.
 - Added new environment variables (`HIGHCHARTS_ADMIN_TOKEN`, `SERVER_BENCHMARKING`, and `OTHER_NODE_ENV`) to the `.env.sample` file, along with their descriptions in the README.
 - Added a new section to the server configuration options, `proxy`, along with corresponding environment variables.
-- Added several new functions to the `highcharts-export-server` module, including `initPool`, `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
+- Added several new functions to the `highcharts-export-server` module, including `initPool`, `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, `printUsage` and `printVersion`.
 - Added a new `initLogging` function where the `setLogLevel` and `enableFileLogging` logic are consolidated into one place.
 - Added a new utility function, `isObjectEmpty`.
+- Added two new logging options, `--logToConsole` and `--logToFile`, to explicitly set where log messages are sent.
 - Added a new logging level (`5`) for benchmarking logs.
+- Added support for commands displaying version and help information explicitly.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
 - Added a new process event handler for the `SIGHUP` signal.
 - Added `mapChart` and `ganttChart` constructors in the exporting UI [(#503)](https://github.com/highcharts/node-export-server/issues/503).
-- Added the series-on-point module [(#532)](https://github.com/highcharts/node-export-server/issues/532).
+- Added the `series-on-point` module [(#532)](https://github.com/highcharts/node-export-server/issues/532).
+- Added other missing modules (`navigator` and `textpath`).
 - Reordered the `error` and `info` arguments in the callback of the `startExport` function.
 - Updates were made to the `config.js` file.
 - Updated the `killPool` function.
