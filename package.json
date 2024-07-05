@@ -22,8 +22,7 @@
     "highcharts-export-server": "./bin/cli.js"
   },
   "scripts": {
-    "install": "node ./install.js",
-    "prestart": "rm -rf tmp || (if exist tmp (rd /s /q tmp)) && node ./node_modules/puppeteer/install.mjs",
+    "prestart": "rm -rf tmp && node ./node_modules/puppeteer/install.mjs",
     "start": "node ./bin/cli.js --enableServer 1 --logLevel 2",
     "start:dev": "npx nodemon ./bin/cli.js --enableServer 1 --logLevel 4",
     "start:debug": "node --inspect-brk=9229 ./bin/cli.js --enableDebug 1 --enableServer 1 --logLevel 4",
