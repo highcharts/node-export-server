@@ -1,18 +1,16 @@
 node_modules/
-log/
-tests/_temp
-tmp/
+tests/_temp/
+tests/**/_results/
 dist/
-cert/
+log/
+tmp/
+.cache/
+.cert/
+.vscode/
 
 .DS_Store
-.cache
-.vscode
 .env
 .eslintcache
-
-tests/**/_results/
-
 resources.json
 
 **/*.png

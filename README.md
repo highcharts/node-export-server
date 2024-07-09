@@ -96,11 +96,13 @@ The format, along with its default values, is as follows (using the recommended 
 ```
 {
   "puppeteer": {
-    "args": []
+    "args": [/* See the lib/schemas/config.js file */]
   },
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
+    "forceFetch": false,
+    "cachePath": ".cache",
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -145,6 +147,7 @@ The format, along with its default values, is as follows (using the recommended 
       "arc-diagram",
       "dependency-wheel",
       "series-label",
+      "series-on-point",
       "solid-gauge",
       "sonification",
       "stock-tools",
@@ -179,9 +182,7 @@ The format, along with its default values, is as follows (using the recommended 
     "customScripts": [
       "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js",
       "https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js"
-    ],
-    "forceFetch": false,
-    "cachePath": ".cache"
+    ]
   },
   "export": {
     "infile": false,
@@ -213,8 +214,8 @@ The format, along with its default values, is as follows (using the recommended 
     "port": 7801,
     "benchmarking": false,
     "proxy": {
-      "host": "",
-      "port": 8080,
+      "host": false,
+      "port": false,
       "timeout": 5000
     },
     "rateLimiting": {
@@ -223,14 +224,14 @@ The format, along with its default values, is as follows (using the recommended 
       "window": 1,
       "delay": 0,
       "trustProxy": false,
-      "skipKey": "",
-      "skipToken": ""
+      "skipKey": false,
+      "skipToken": false
     },
     "ssl": {
       "enable": false,
       "force": false,
       "port": 443,
-      "certPath": ""
+      "certPath": false
     }
   },
   "pool": {
@@ -248,7 +249,7 @@ The format, along with its default values, is as follows (using the recommended 
   "logging": {
     "level": 4,
     "file": "highcharts-export-server.log",
-    "dest": "log/",
+    "dest": "log",
     "toConsole": true,
     "toFile": true
   },
@@ -271,6 +272,18 @@ The format, along with its default values, is as follows (using the recommended 
     "dumpio": false,
     "slowMo": 0,
     "debuggingPort": 9222
+  },
+  "webSocket": {
+    "enable": false,
+    "reconnect": false,
+    "rejectUnauthorized": false,
+    "pingTimeout": 16000,
+    "reconnectInterval": 3000,
+    "reconnectAttempts": 3,
+    "messageInterval": 3600000,
+    "gatherAllOptions": false,
+    "url": false,
+    "secret": false
   }
 }
 ```
@@ -287,11 +300,11 @@ These variables are set in your environment and take precedence over options fro
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
+- `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
+- `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
-- `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
-- `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 
 ### Export Config
@@ -319,7 +332,7 @@ These variables are set in your environment and take precedence over options fro
 
 - `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
 - `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
-- `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_TIMEOUT`: The timeout, in milliseconds, for the proxy server to use, if it exists (defaults to `5000`).
 
 ### Server Rate Limiting Config
 
@@ -355,13 +368,13 @@ These variables are set in your environment and take precedence over options fro
 
 - `LOGGING_LEVEL`: The logging level to be used. Can be **0** - silent, **1** - error, **2** - warning, **3** - notice, **4** - verbose or **5** benchmark (defaults to `4`).
 - `LOGGING_FILE`: The name of a log file. The `logToFile` and `logDest` options also need to be set to enable file logging (defaults to `highcharts-export-server.log`).
-- `LOGGING_DEST`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log/`).
+- `LOGGING_DEST`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log`).
 - `LOGGING_TO_CONSOLE`: Enables or disables showing logs in the console (defaults to `true`).
 - `LOGGING_TO_FILE`: Enables or disables creation of the log directory and saving the log into a .log file (defaults to `true`).
 
 ### UI Config
 
-- `UI_ENABLE`: Enables or disables the user interface (UI) for the Export Server (defaults to `true`).
+- `UI_ENABLE`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
 - `UI_ROUTE`: The endpoint route to which the user interface (UI) should be attached (defaults to `/`).
 
 ### Other Config
@@ -391,6 +404,7 @@ These variables are set in your environment and take precedence over options fro
 - `WEB_SOCKET_RECONNECT_INTERVAL`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
 - `WEB_SOCKET_RECONNECT_ATTEMPTS`: The number of reconnect attempts before returning a connection error (defaults to `3`).
 - `WEB_SOCKET_MESSAGE_INTERVAL`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
+- `WEB_SOCKET_GATHER_ALL_OPTIONS`: Decides whether or not to gather all chart's options or only ones defined in the **telemetry.json** file (defaults to `false`).
 - `WEB_SOCKET_URL`: The URL of the WebSocket server (defaults to ``).
 - `WEB_SOCKET_SECRET`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
 
@@ -398,6 +412,8 @@ These variables are set in your environment and take precedence over options fro
 
 To supply command line arguments, add them as flags when running the application:
 `highcharts-export-server --flag1 value --flag2 value ...`
+
+For readability reasons, many options passed as CLI arguments have slightly different names, which combine the option and the section it comes from. For example, to set `server.enable`, use `--enableServer`. This way, it is clear which option is being set. The full listing of CLI options can be seen by typing the `highcharts-export-server --help` command in the console.
 
 _Available options:_
 
@@ -427,18 +443,18 @@ _Available options:_
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
-- `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
+- `--proxyTimeout`: The timeout, in milliseconds, for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
 - `--window`: The time window, in minutes, for the rate limiting (defaults to `1`).
 - `--delay`: The delay duration for each successive request before reaching the maximum limit (defaults to `0`).
 - `--trustProxy`: Set this to **true** if the server is behind a load balancer (defaults to `false`).
-- `--skipKey`: Allows bypassing the rate limiter and should be provided with the `--skipToken` argument (defaults to ``).
-- `--skipToken`: Allows bypassing the rate limiter and should be provided with the `--skipKey` argument (defaults to ``).
+- `--skipKey`: Allows bypassing the rate limiter and should be provided with the `--skipToken` argument (defaults to `false`).
+- `--skipToken`: Allows bypassing the rate limiter and should be provided with the `--skipKey` argument (defaults to `false`).
 - `--enableSsl`: Enables or disables the SSL protocol (defaults to `false`).
 - `--sslForce`: If set to **true**, the server is forced to serve only over HTTPS (defaults to `false`).
 - `--sslPort`: The port on which to run the SSL server (defaults to `443`).
-- `--certPath`: The path to the SSL certificate/key file (defaults to ``).
+- `--certPath`: The path to the SSL certificate/key file (defaults to `false`).
 - `--minWorkers`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `--maxWorkers`: The number of maximum pool workers to spawn (defaults to `8`).
 - `--workLimit`: The number of work pieces that can be performed before restarting the worker process (defaults to `40`).
@@ -451,7 +467,7 @@ _Available options:_
 - `--poolBenchmarking`: Indicate whether to show statistics for the pool of resources or not (defaults to `false`).
 - `--logLevel`: The logging level to be used. Can be **0** - silent, **1** - error, **2** - warning, **3** - notice, **4** - verbose or **5** - benchmark (defaults to `4`).
 - `--logFile`: The name of a log file. The `logToFile` and `logDest` options also need to be set to enable file logging (defaults to `highcharts-export-server.log`).
-- `--logDest`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log/`).
+- `--logDest`: The path to store log files. The `logToFile` option also needs to be set to enable file logging (defaults to `log`).
 - `--logToConsole`: Enables or disables showing logs in the console (defaults to `true`).
 - `--logToFile`: Enables or disables creation of the log directory and saving the log into a .log file (defaults to `true`).
 - `--enableUi`: Enables or disables the user interface (UI) for the Export Server (defaults to `false`).
@@ -470,13 +486,14 @@ _Available options:_
 - `--debuggingPort`: Specifies the debugging port (defaults to `9222`).
 - `--enableWs`: Enables or disables the WebSocket connection (defaults to `false`).
 - `--wsReconnect`: Controls whether or not to try reconnecting to the WebSocket server in case of a disconnect (defaults to `false`).
-- `--wsrejectUnauthorized`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
+- `--wsRejectUnauthorized`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
 - `--wsPingTimeout`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
 - `--wsReconnectInterval`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
 - `--wsReconnectAttempts`: The number of reconnect attempts before returning a connection error (defaults to `3`).
 - `--wsMessageInterval`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
-- `--wsUrl`: The URL of the WebSocket server (defaults to ``).
-- `--wsSecret`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
+- `--wsGatherAllOptions`: Decides whether or not to gather all chart's options or only ones defined in the **telemetry.json** file (defaults to `false`).
+- `--wsUrl`: The URL of the WebSocket server (defaults to `false`).
+- `--wsSecret`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to `false`).
 
 # HTTP Server
 
@@ -635,16 +652,16 @@ This package supports both CommonJS and ES modules.
 
   - `use(path, ...middlewares)`: Apply middleware(s) to a specific path.
 
-    - `{string} path`: The path to which the middleware(s) should be applied.
+    - `{string} path`: The route path to which the middleware(s) should be applied.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
   - `get(path, ...middlewares)`: Set up a route with GET method and apply middleware(s).
 
-    - `{string} path`: The route path.
+    - `{string} path`: The route path to which the middleware(s) should be applied.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
   - `post(path, ...middlewares)`: Set up a route with POST method and apply middleware(s).
-    - `{string} path`: The route path.
+    - `{string} path`: The route path to which the middleware(s) should be applied.
     - `{...Function} middlewares`: The middleware functions to be applied.
 
 - `async startServer(serverConfig)`: Starts an HTTP server based on the provided configuration. The `serverConfig` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
@@ -732,7 +749,7 @@ One of the new features that v4 introduces is the ability to configure and estab
 
 When enabled, a WebSocket connection will be established on Export Server startup. The WebSocket server to which the connection is made must also be configured. The authorization process is completed by sending a JWT generated based on a secret that must also be set on the WebSocket server side.
 
-Once the connection is established, the chart data from each request to the Export Server is passed to the telemetry module, which filters the data based on a JSON file that specifies which data needs to be sent. This file can be found under `./lib/schemas/telemetry.json` and can be modified as needed, but the proposed structure must be maintained.
+Once the connection is established, the chart data from each request to the Export Server is passed to the telemetry module, which filters the data based on a JSON file that specifies which data needs to be sent. This file can be found under `./lib/schemas/telemetry.json` and can be modified as needed, but the proposed structure must be maintained. It is also possible to send the entire object of chart options by setting the `gatherAllOptions` option to **true**.
 
 Data processed in this way is saved in an object that collects information about requests for a certain period and is batch sent to the WebSocket server at specified intervals.
 
@@ -740,7 +757,11 @@ Please refer to the [Configuration](https://github.com/highcharts/node-export-se
 
 ## Additional Notes
 
-- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `wsPingTimeout` must be set to a higher value in milliseconds than its equivalent in the WebSocket server.
+- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `pingTimeout` must be set to a higher value in milliseconds than its equivalent in the WebSocket server.
+
+- Setting **0** for any of the interval/timeout-related options (`pingTimeout`, `reconnectInterval`, or `messageInterval`) will disable that option. Bear in mind, however, that disabling `pingTimeout` might result in WebSocket clients not being terminated if no response is received from the server.
+
+- Disabling `pingTimeout` will also disable the reconnect mechanism.
 
 # Tips, Tricks & Notes
 
