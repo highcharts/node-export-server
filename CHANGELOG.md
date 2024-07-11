@@ -63,7 +63,7 @@ _Enhancements:_
 - The `uncaughtException` handler now kills the pool, browser, and terminates the process with exit code 1, when enabled.
 - The browser instance should be correctly closed now when an error occurs during pool creation.
 - Corrected error handling and response sending in the `/change_hc_version.js` route.
-- Corrected the `handleResources` function.
+- Corrected the `handleResources` function and moved to the `chart.js` module.
 - Corrected samples, test scenarios, and test runners.
 - Bumped versions of most packages, with an updating deprecated `Puppeteer` from `v21.1.1` to latest.
 - Added missing Highcharts modules to stay up-to-date with the latest updates.

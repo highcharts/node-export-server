@@ -731,8 +731,9 @@ This package supports both CommonJS and ES modules.
 
   - `{boolean} noLogo`: If **true**, only prints version information without the logo.
 
-- `printUsage(noLogo)`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
+- `printUsage(defaultConfig, noLogo)`: Prints the usage information for CLI arguments. If required, it can list properties recursively.
 
+  - `{Object} defaultConfig` - Default configuration object for reference.
   - `{boolean} noLogo`: If **true**, only prints version information without the logo.
 
 - `printVersion()`: Prints the Highcharts Export Server logo, version and license information.
@@ -751,17 +752,19 @@ When enabled, a WebSocket connection will be established on Export Server startu
 
 Once the connection is established, the chart data from each request to the Export Server is passed to the telemetry module, which filters the data based on a JSON file that specifies which data needs to be sent. This file can be found under `./lib/schemas/telemetry.json` and can be modified as needed, but the proposed structure must be maintained. It is also possible to send the entire object of chart options by setting the `gatherAllOptions` option to **true**.
 
-Data processed in this way is saved in an object that collects information about requests for a certain period and is batch sent to the WebSocket server at specified intervals.
+Data processed in this way is saved in an object that collects information about requests for a certain period and is batch sent to the WebSocket server at specified intervals. After sending, the object is cleared of request data and gathers new data until the next interval.
 
 Please refer to the [Configuration](https://github.com/highcharts/node-export-server?tab=readme-ov-file#configuration) section for descriptions of the options.
 
 ## Additional Notes
 
-- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `pingTimeout` must be set to a higher value in milliseconds than its equivalent in the WebSocket server.
+- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `pingTimeout` should be set to a higher value in milliseconds than its equivalent in the WebSocket server.
 
 - Setting **0** for any of the interval/timeout-related options (`pingTimeout`, `reconnectInterval`, or `messageInterval`) will disable that option. Bear in mind, however, that disabling `pingTimeout` might result in WebSocket clients not being terminated if no response is received from the server.
 
 - Disabling `pingTimeout` will also disable the reconnect mechanism.
+
+- When using a self-signed certificate (for example, for testing purposes), the `rejectUnauthorized` option should be disabled. Otherwise, it will result in an error and the connection to the WebSocket server will fail.
 
 # Tips, Tricks & Notes
 
