@@ -13,12 +13,12 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { fetch, post } from '../../lib/fetch.js';
-import 'colors';
+import { style } from '../../lib/logger.js';
 
 // Test message
 console.log(
-  'Highcharts Export Server stress test'.yellow,
-  `\nIt sends a certain number of requests in a certain interval`.green
+  `${style.yellow}Highcharts Export Server stress test${style.reset}`,
+  `${style.green}\nIt sends a certain number of requests in a certain interval${style.reset}`
 );
 
 // The request options
@@ -69,8 +69,8 @@ fetch(`${url}/health`)
   .catch((error) => {
     if (error.code === 'ECONNREFUSED') {
       return console.log(
-        `[ERROR] Couldn't connect to ${url}.`.red,
-        `Set your server before running tests.`.red
+        `${style.red}[ERROR] Couldn't connect to ${url}.${style.reset}`,
+        `${style.red}Set your server before running tests.${style.reset}`
       );
     }
   });

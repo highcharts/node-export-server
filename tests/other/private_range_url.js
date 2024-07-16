@@ -12,14 +12,13 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import 'colors';
-
 import { isPrivateRangeUrlFound } from '../../lib/utils.js';
+import { style } from '../../lib/logger.js';
 
 // Test message
 console.log(
-  'The isPrivateRangeUrlFound utility test'.yellow,
-  `\nIt checks multiple IPs and finds which are public and private.\n`.green
+  `${style.yellow}The isPrivateRangeUrlFound utility test${style.reset}`,
+  `${style.green}\nIt checks multiple IPs and finds which are public and private.${style.reset}\n`
 );
 
 // IP adresses to test

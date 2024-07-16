@@ -16,17 +16,14 @@ import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync, readFileSync } from 'fs';
 import { basename, join } from 'path';
 
-import 'colors';
-
 import { __dirname } from '../../lib/utils.js';
+import {
+  showStartingTestMessage,
+  showProcessingTestMessage,
+  showFailOrSuccessMessage
+} from '../test_utils.js';
 
-// Test runner message
-console.log(
-  'Highcharts Export Server CLI Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates the CLI commands to Highcharts Export Server.'.green,
-  '\nLoads a specified JSON file and runs it'.green,
-  '(results are stored in the ./tests/cli/_results).\n'.green
-);
+showStartingTestMessage();
 
 // Results and scenarios paths
 const resultsPath = join(__dirname, 'tests', 'cli', '_results');
@@ -40,7 +37,7 @@ const file = process.argv[2];
 // Check if file even exists and if it is a JSON
 if (existsSync(file) && file.endsWith('.json')) {
   try {
-    console.log('[Test runner]'.blue, `Processing test ${file}.`);
+    showProcessingTestMessage(file);
 
     // Read a CLI file
     const cliJson = JSON.parse(readFileSync(file));
@@ -77,16 +74,12 @@ if (existsSync(file) && file.endsWith('.json')) {
 
     // Close event for a process
     process.on('exit', (code) => {
-      const endMessage = `CLI command from file: ${file}, took ${
-        new Date().getTime() - startDate
-      }ms.`;
-
-      // If code is 1, it means that export server thrown an error
-      if (code === 1) {
-        return console.error(`[Fail] ${endMessage}`.red);
-      }
-
-      console.log(`[Success] ${endMessage}`.green);
+      showFailOrSuccessMessage(
+        code === 1,
+        `CLI command from file: ${file}, took ${
+          new Date().getTime() - startDate
+        }ms.`
+      );
     });
   } catch (error) {
     console.error(error);

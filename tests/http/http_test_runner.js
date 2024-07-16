@@ -22,19 +22,18 @@ import {
 import http from 'http';
 import { join } from 'path';
 
-import 'colors';
-
 import { fetch } from '../../lib/fetch.js';
 import { __dirname, clearText } from '../../lib/utils.js';
+import { style } from '../../lib/logger.js';
+import {
+  showStartingTestMessage,
+  showProcessingTestMessage,
+  showFailOrSuccessMessage,
+  showTestResults,
+  showConnectionErrorMessage
+} from '../test_utils.js';
 
-// Test runner message
-console.log(
-  'Highcharts Export Server HTTP Requests Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates POST requests to Highcharts Export Server.'.green,
-  '\nThe server needs to be started before running this test.'.green,
-  '\nLoads all JSON files from the ./tests/http folder and runs them'.green,
-  '(results are stored in the ./tests/http/_results).\n'.green
-);
+showStartingTestMessage();
 
 // Url of Puppeteer export server
 const url = 'http://127.0.0.1:7801';
@@ -63,7 +62,7 @@ fetch(`${url}/health`)
         .filter((file) => file.endsWith('.json'))
         .map(async (file) => {
           try {
-            console.log('[Test runner]'.blue, `Processing test ${file}.`);
+            showProcessingTestMessage(file);
 
             // A file path
             const filePath = join(scenariosPath, file);
@@ -109,18 +108,19 @@ fetch(`${url}/health`)
                   response.on('end', () => {
                     fileStream.end();
 
-                    const endMessage = `HTTP request with a payload from file: ${file}, took ${
-                      new Date().getTime() - startDate
-                    }ms.`;
+                    showFailOrSuccessMessage(
+                      response.statusCode >= 400,
+                      `HTTP request with a payload from file: ${file}, took ${
+                        new Date().getTime() - startDate
+                      }ms.`
+                    );
 
-                    // Based on received status code check if requests failed
                     if (response.statusCode >= 400) {
                       failsCounter++;
-                      console.log(`[Fail] ${endMessage}`.red);
                     } else {
                       testCounter++;
-                      console.log(`[Success] ${endMessage}`.green);
                     }
+
                     resolve();
                   });
                 }
@@ -133,20 +133,11 @@ fetch(`${url}/health`)
           }
         })
     ).then(() => {
-      console.log(
-        '\n--------------------------------',
-        failsCounter
-          ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
-          : `\n${testCounter} tests done, errors not found!`.green,
-        '\n--------------------------------'
-      );
+      showTestResults(testCounter, failsCounter);
     });
   })
   .catch((error) => {
     if (error.code === 'ECONNREFUSED') {
-      return console.log(
-        `[ERROR] Couldn't connect to ${url}.`.red,
-        `Set your server before running tests.`.red
-      );
+      return showConnectionErrorMessage(url);
     }
   });
