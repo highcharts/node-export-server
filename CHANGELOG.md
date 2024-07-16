@@ -8,6 +8,7 @@ _New Features:_
 
 _Enhancements:_
 
+- Got rid of the `colors` package (unnecessary dependency) and replaced it with our internal logic.
 - Improved server-related error handling by introducing new centralized error middlewares.
 - Improved overall error handling by adding a main try-catch block to correctly capture and log errors occurring throughout the code.
 - Introduced two new types of custom errors: `ExportError` for functionality-related errors and `HttpError` for server-related errors.
