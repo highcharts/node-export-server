@@ -27,11 +27,11 @@ export function showFailOrSuccessMessage(didFail, message) {
 
 export function showTestResults(testCounter, failsCounter) {
   console.log(
-    '--------------------------------',
+    '--------------------------------\n',
     failsCounter
-      ? `\n${style.red} ${testCounter} tests done, ${failsCounter} error(s) found!${style.reset}`
-      : `\n${style.green} ${testCounter} tests done, errors not found!${style.reset}`,
-    '\n--------------------------------'
+      ? `${style.red}${testCounter} tests done, ${failsCounter} error(s) found!${style.reset}\n`
+      : `${style.green}${testCounter} tests done, no errors found.${style.reset}\n`,
+    '--------------------------------'
   );
 }
 
