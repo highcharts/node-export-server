@@ -11,7 +11,7 @@ export function showStartingTestMessage() {
 
 export function showProcessingTestMessage(file) {
   console.log(
-    `${style.blue} [Test runner] ${style.reset}`,
+    `${style.blue}[Test runner]${style.reset}`,
     `Processing test ${file}.`
   );
 }
