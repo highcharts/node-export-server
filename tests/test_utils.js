@@ -18,10 +18,8 @@ export function showProcessingTestMessage(file) {
 
 export function showFailOrSuccessMessage(didFail, message) {
   console.log(
-    didFail
-      ? `${style.red} [Fail] ${message} ${style.reset}`
-      : `${style.green} [Success] ${message} ${style.reset}`,
-    '\n'
+    didFail ? `${style.red}[Fail] ` : `${style.green}[Success] `,
+    `${message} ${style.reset}\n`
   );
 }
 
