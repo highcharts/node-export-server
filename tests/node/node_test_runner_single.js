@@ -90,9 +90,9 @@ showStartingTestMessage();
 
           // Information about the results and the time it took
           console.log(
-            `${style.green} [Success] Node module from file: ${file}, took: ${
+            `${style.green}[Success] Node module from file: ${file}, took: ${
               new Date().getTime() - startTime
-            }ms. ${style.reset}`
+            }ms.${style.reset}`
           );
         });
       } catch (error) {

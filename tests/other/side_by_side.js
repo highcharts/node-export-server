@@ -31,9 +31,9 @@ const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message
 console.log(
-  `${style.yellow}Highcharts Export Server side by side comparator${style.reset}`,
-  `${style.green}\nPuppeteer: ${urls[0]}${style.reset}`,
-  `${style.blue}\nPhantomJS: ${urls[1]}\n${style.reset}`
+  `${style.yellow}Highcharts Export Server side by side comparator${style.reset}\n`,
+  `${style.green}Puppeteer: ${urls[0]}${style.reset}\n`,
+  `${style.blue}PhantomJS: ${urls[1]}${style.reset}\n`
 );
 
 try {

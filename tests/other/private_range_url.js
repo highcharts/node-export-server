@@ -17,8 +17,8 @@ import { style } from '../../lib/logger.js';
 
 // Test message
 console.log(
-  `${style.yellow}The isPrivateRangeUrlFound utility test${style.reset}`,
-  `${style.green}\nIt checks multiple IPs and finds which are public and private.${style.reset}\n`
+  `${style.yellow}The isPrivateRangeUrlFound utility test${style.reset}\n`,
+  `${style.green}It checks multiple IPs and finds which are public and private.${style.reset}\n`
 );
 
 // IP adresses to test

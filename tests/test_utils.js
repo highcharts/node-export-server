@@ -2,10 +2,10 @@ import { style } from '../lib/logger.js';
 
 export function showStartingTestMessage() {
   console.log(
-    `${style.yellow} ${style.bold} Highcharts Export Server CLI Test Runner ${style.reset}
-  \n${style.green} This tool simulates the CLI commands sent to Highcharts Export Server.
-  \nLoads all JSON files from the ./tests/cli folder and runs them sequentially.'
-  \nThe results are stored in the ./tests/cli/_results.\n${style.reset}`
+    `${style.yellow} ${style.bold} Highcharts Export Server CLI Test Runner ${style.reset}\n
+  ${style.green}This tool simulates the CLI commands sent to Highcharts Export Server.\n
+  Loads all JSON files from the ./tests/cli folder and runs them sequentially.\n
+  The results are stored in the ./tests/cli/_results.${style.reset}\n`
   );
 }
 

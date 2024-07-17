@@ -17,8 +17,8 @@ import { style } from '../../lib/logger.js';
 
 // Test message
 console.log(
-  `${style.yellow}Highcharts Export Server stress test${style.reset}`,
-  `${style.green}\nIt sends a certain number of requests in a certain interval${style.reset}`
+  `${style.yellow}Highcharts Export Server stress test${style.reset}\n`,
+  `${style.green}It sends a certain number of requests in a certain interval${style.reset}`
 );
 
 // The request options
