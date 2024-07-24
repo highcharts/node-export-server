@@ -3,6 +3,7 @@ log/
 tests/_temp
 tmp/
 dist/
+.cert/
 
 .DS_Store
 .cache
@@ -11,6 +12,8 @@ dist/
 .eslintcache
 
 tests/**/_results/
+
+resources.json
 
 **/*.png
 **/*.pdf
