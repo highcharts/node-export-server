@@ -23,6 +23,7 @@ module.exports = {
       }
     }
   ],
+  ignorePatterns: ['./tests/visual/_compare_images.js'],
   rules: {
     'no-unused-vars': 0,
     'import/no-cycle': 2,
