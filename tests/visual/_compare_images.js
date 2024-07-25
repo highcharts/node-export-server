@@ -12,7 +12,7 @@ import sharp from 'sharp';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
-async function compareImages(image1Path, image2Path, diffPath) {
+export async function compareImages(image1Path, image2Path, diffPath) {
   const image1 = await sharp(image1Path).png().toBuffer();
   const image2 = await sharp(image2Path).png().toBuffer();
 
