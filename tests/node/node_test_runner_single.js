@@ -18,7 +18,7 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter from '../../lib/index.js';
-import { __dirname } from '../../lib/utils.js';
+import { __dirname } from '../../lib/constants.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,

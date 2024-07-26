@@ -14,15 +14,7 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": [
-    "dist",
-    "bin",
-    "templates",
-    "install.js",
-    "lib",
-    "msg",
-    "public"
-  ],
+  "files": ["dist", "bin", "templates", "install.js", "lib", "msg", "public"],
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"

@@ -19,7 +19,7 @@ import { promisify } from 'util';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname } from '../../lib/constants.js';
 
 // Convert from callback to promise
 const spawn = promisify(exec);
