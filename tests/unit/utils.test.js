@@ -6,7 +6,8 @@ import {
   isCorrectJSON,
   isObject,
   isObjectEmpty,
-  isPrivateRangeUrlFound
+  isPrivateRangeUrlFound,
+  addXlinkNamespace
 } from '../../lib/utils';
 
 describe('clearText', () => {
@@ -164,5 +165,31 @@ describe('isPrivateRangeUrlFound', () => {
     testCases.forEach((testCase) => {
       expect(isPrivateRangeUrlFound(testCase)).toBe(false);
     });
+  });
+});
+
+describe('addXlinkNamespace', () => {
+  it('adds the xlink namespace to an SVG string', () => {
+    const svg = '<svg><image xlink:href="http://localhost/image.jpg"/></svg>';
+    const expected =
+      '<svg xmlns:xlink="http://www.w3.org/1999/xlink"><image xlink:href="http://localhost/image.jpg"/></svg>';
+
+    expect(addXlinkNamespace(svg)).toBe(expected);
+  });
+
+  it('does not add the xlink namespace if it already exists', () => {
+    const svg =
+      '<svg xmlns:xlink="http://www.w3.org/1999/xlink"><image xlink:href="http://localhost/image.jpg"/></svg>';
+    expect(addXlinkNamespace(svg)).toBe(svg);
+  });
+
+  it('does add the xlink namespace properly for SVG tag with multiple attributes', () => {
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" custom_attr="0" width="200" height="200"><image xlink:href="http://localhost/image.jpg" width="100" height="100"/></svg>';
+
+    const expected =
+      '<svg xmlns="http://www.w3.org/2000/svg" custom_attr="0" width="200" height="200" xmlns:xlink="http://www.w3.org/1999/xlink"><image xlink:href="http://localhost/image.jpg" width="100" height="100"/></svg>';
+
+    expect(addXlinkNamespace(svg)).toBe(expected);
   });
 });
