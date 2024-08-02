@@ -3,7 +3,7 @@ log/
 tests/_temp
 tmp/
 dist/
-cert/
+.cert/
 
 .DS_Store
 .cache
