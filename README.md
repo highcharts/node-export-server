@@ -14,7 +14,7 @@ Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export
 
 ## Changelog
 
-**The v4 introduces numerous breaking changes. For further details, please refer to the changelog document provided below.**
+**Version 4 introduces some breaking changes, mostly related to renamed options, environment variables, function names, and reordered function parameters. For further details, please refer to the changelog document provided below, under the Breaking Changes section.**
 
 The full change log for all versions can be viewed [here](CHANGELOG.md).
 

@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "./dist/index.esm.js",
   "engines": {
     "node": ">=18.12.0"
@@ -14,6 +14,7 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": ["dist", "bin", "templates", "install.js", "lib"],
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
     "type": "git"
@@ -35,6 +36,7 @@
     "node-tests": "node ./tests/node/node_test_runner.js",
     "node-tests-single": "node ./tests/node/node_test_runner_single.js",
     "prepare": "husky || true",
+    "prepack": "npm run build",
     "build": "rollup -c",
     "unit:test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
