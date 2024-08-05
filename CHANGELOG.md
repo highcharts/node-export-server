@@ -1,3 +1,9 @@
+# 4.0.2
+
+_Fixes:_
+
+- Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
+
 # 4.0.1
 
 _Hotfix_:
