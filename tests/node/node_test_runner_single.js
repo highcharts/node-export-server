@@ -18,7 +18,7 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter from '../../lib/index.js';
-import { __dirname } from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -73,7 +73,7 @@ console.log(
       );
 
       // The start date of a startExport function run
-      const startTime = new Date().getTime();
+      const startTime = getNewDateTime();
 
       try {
         // Start the export process
@@ -94,7 +94,7 @@ console.log(
           // Information about the results and the time it took
           console.log(
             `[Success] Node module from file: ${file}, took: ${
-              new Date().getTime() - startTime
+              getNewDateTime() - startTime
             }ms.`.green
           );
         });
@@ -102,7 +102,7 @@ console.log(
         // Information about the error and the time it took
         console.log(
           `[Fail] Node module from file: ${file}, took: ${
-            new Date().getTime() - startTime
+            getNewDateTime() - startTime
           }ms.`.red
         );
       }

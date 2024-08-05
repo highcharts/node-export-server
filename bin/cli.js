@@ -29,13 +29,27 @@ const start = async () => {
     // Get the CLI arguments
     const args = process.argv;
 
-    // Print the usage information if no arguments supplied
-    if (args.length <= 2) {
-      main.log(
-        2,
-        '[cli] The number of provided arguments is too small. Please refer to the section below.'
-      );
+    // Display version information if requested
+    if (
+      ['-v', '--v', '-version', '--version'].includes(args[args.length - 1])
+    ) {
+      // Print logo with the version information
+      return main.printVersion();
+    }
+
+    // Display help information if requested
+    if (['-h', '--h', '-help', '--help'].includes(args[args.length - 1])) {
+      // Print logo with the version information
       return main.printUsage();
+    }
+
+    // Print logo with a version and usage information if no arguments supplied
+    if (args.length <= 2) {
+      main.printUsage();
+      return main.log(
+        2,
+        '[cli] The number of provided arguments is too small. Please refer to the help section above.'
+      );
     }
 
     // Set the options, keeping the priority order of setting values:

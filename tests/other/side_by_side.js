@@ -19,7 +19,7 @@ import { join } from 'path';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 // Results paths
 const resultsPath = join(__dirname, 'tests', 'other', '_results');
@@ -93,7 +93,7 @@ try {
           ].join(' ');
 
           // The start date of a POST request
-          const startDate = new Date().getTime();
+          const startDate = getNewDateTime();
 
           // Launch command in a new process
           // eslint-disable-next-line no-global-assign
@@ -103,7 +103,7 @@ try {
           process.on('close', () => {
             const message = `Done with ${
               index ? '[PhantomJS]' : '[Puppeteer]'
-            } ${type} export, took ${new Date().getTime() - startDate}ms.`;
+            } ${type} export, took ${getNewDateTime() - startDate}ms.`;
 
             console.log(index ? message.blue : message.green);
           });

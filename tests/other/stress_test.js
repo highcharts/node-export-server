@@ -12,8 +12,10 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { fetch, post } from '../../lib/fetch.js';
 import 'colors';
+
+import { fetch, post } from '../../lib/fetch.js';
+import { getNewDateTime } from '../../lib/utils.js';
 
 // Test message
 console.log(
@@ -45,12 +47,12 @@ const interval = 150;
 
 const stressTest = () => {
   for (let i = 1; i <= requestsNumber; i++) {
-    const startTime = new Date().getTime();
+    const startTime = getNewDateTime();
 
     // Perform a request
     post(url, requestBody)
       .then(async (res) => {
-        const postTime = new Date().getTime() - startTime;
+        const postTime = getNewDateTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
         console.log(`---\n${res.text}\n---`);
       })
