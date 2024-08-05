@@ -16,21 +16,23 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { __dirname } from './lib/utils.js';
-
-import 'colors';
+import { style } from './lib/logger.js';
 
 const pkgFile = JSON.parse(readFileSync(join(__dirname, 'package.json')));
 
 console.log(
-  `
-Highcharts Export Server V${pkgFile.version}
+  `${style.green}
+Highcharts Export Server v${pkgFile.version}
 
-${'This software requires a valid Highcharts license for commercial use.'.yellow}
+${style.yellow}This software requires a valid Highcharts license for commercial use.${style.reset}
 
+${style.yellow}
 If you do not have a license, one can be obtained here:
-${'https://shop.highsoft.com/'.green}
+https://shop.highsoft.com/
+${style.reset}
 
 To customize your installation (include additional/fewer modules and so on),
 please refer to the readme file.
-`.green
+${style.reset}
+`
 );
