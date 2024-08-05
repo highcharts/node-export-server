@@ -1,3 +1,9 @@
+# 4.0.1
+
+_Hotfix_:
+
+- Fixed missing 'dist' bundle in 4.0.0 on NPM.
+
 # 4.0.0
 
 _Breaking Changes:_
