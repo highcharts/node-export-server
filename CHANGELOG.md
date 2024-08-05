@@ -4,6 +4,12 @@ _Fixes:_
 
 - Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
 
+# 4.0.1
+
+_Hotfix_:
+
+- Fixed missing 'dist' bundle in 4.0.0 on NPM.
+
 # 4.0.0
 
 _Breaking Changes:_
