@@ -290,7 +290,7 @@ The format, along with its default values, is as follows (using the recommended 
 
 ## Custom JSON Config
 
-To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig` option.
+To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option.
 
 ## Environment Variables
 
