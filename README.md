@@ -568,20 +568,24 @@ const options = {
   }
 };
 
-// Initialize export settings with your chart's config
-const exportSettings = exporter.setOptions(options);
 
-// Must initialize exporting before being able to export charts
-await exporter.initExport(exportSettings);
+// Logic must be triggered in an asynchronous function
+(async () => {
+  // Initialize export settings with your chart's config
+  const exportSettings = exporter.setOptions(options);
 
-// Perform an export
-await exporter.startExport(exportSettings, async (error, info) => {
-  // The export result is now in info
-  // It will be base64 encoded (info.data)
+  // Must initialize exporting before being able to export charts
+  await exporter.initExport(exportSettings);
 
-  // Kill the pool when we are done with it
-  await exporter.killPool();
-});
+  // Perform an export
+  await exporter.startExport(exportSettings, async (error, info) => {
+    // The export result is now in info
+    // It will be base64 encoded (info.data)
+
+    // Kill the pool when we are done with it
+    await exporter.killPool();
+  });
+})();
 ```
 
 ## CommonJS support
