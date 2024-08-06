@@ -580,7 +580,7 @@ const options = {
   // Perform an export
   await exporter.startExport(exportSettings, async (error, info) => {
     // The export result is now in info
-    // It will be base64 encoded (info.data)
+    // It will be base64 encoded (info.result)
 
     // Kill the pool when we are done with it
     await exporter.killPool();
