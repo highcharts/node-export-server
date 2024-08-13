@@ -1,4 +1,5 @@
-// cacheManager.test.js
+import { describe, expect, it } from '@jest/globals';
+
 import { extractVersion, extractModuleName } from '../../lib/cache';
 
 describe('extractVersion', () => {

@@ -100,7 +100,7 @@ The format, along with its default values, is as follows (using the recommended 
   },
   "highcharts": {
     "version": "latest",
-    "cdnURL": "https://code.highcharts.com/",
+    "cdnUrl": "https://code.highcharts.com/",
     "forceFetch": false,
     "cachePath": ".cache",
     "coreScripts": [
@@ -302,10 +302,10 @@ These variables are set in your environment and take precedence over options fro
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
+- `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
-- `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 
 ### Export Config
 

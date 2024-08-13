@@ -93,7 +93,7 @@ export function excludeFromValues(values, categories = []) {
  * of the types specified in the `filterTypes` array. It then iterates over
  * the remaining values and asserts that the validator function throws an error
  * when parsing them. The exception from this rule is an empty string, which
- * should not throw an error when `envsCheck` is true.
+ * should not throw an error when `envCheck` is true.
  */
 export function validateOtherTypes(validator, filterTypes = [], ...valArgs) {
   // Filter the possibleValue object to exclude values of types from
@@ -104,7 +104,7 @@ export function validateOtherTypes(validator, filterTypes = [], ...valArgs) {
   otherValues.forEach((value) => {
     expect(() => validator(...valArgs).parse(value)).toThrow();
     // Except an empty string, which will be transitioned to false when
-    // the `envsCheck` is true
+    // the `envCheck` is true
     if (value !== '') {
       expect(() => validator(...valArgs, true).parse(value)).toThrow();
     }
