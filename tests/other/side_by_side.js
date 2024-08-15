@@ -19,7 +19,7 @@ import { join } from 'path';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname } from '../../lib/constants.js';
 
 // Results paths
 const resultsPath = join(__dirname, 'tests', 'other', '_results');

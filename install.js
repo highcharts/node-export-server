@@ -15,7 +15,7 @@ See LICENSE file in root for details.
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { __dirname } from './lib/utils.js';
+import { __dirname } from './lib/constants.js';
 
 import 'colors';
 

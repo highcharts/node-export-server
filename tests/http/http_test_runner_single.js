@@ -19,7 +19,8 @@ import { basename, join } from 'path';
 import 'colors';
 
 import { fetch } from '../../lib/fetch.js';
-import { __dirname, clearText } from '../../lib/utils.js';
+import { __dirname } from '../../lib/constants.js';
+import { clearText } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
