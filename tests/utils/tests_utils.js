@@ -6,53 +6,48 @@ import { expect } from '@jest/globals';
  */
 export const possibleValues = {
   // String
-  string: ['', 'string', '1.0.1.0.1'],
+  emptyString: [''],
+  string: ['string', '1.0.1.0.1'],
 
   // Boolean
   boolean: [true, false],
   stringBoolean: ['true', 'false'],
 
   // Number
-  number: [0, 0.1, 1, -1, -0.1, NaN, BigInt(1)],
-  stringNumber: ['0', '0.1', '1', '-0.1', 'NaN', 'BigInt(1)'],
+  number: [0, 0.1, 1, -1, -0.1, NaN],
+  stringNumber: ['0', '0.1', '1', '-0.1', 'NaN'],
 
-  // Nullish
-  nullish: [null, undefined, void 0],
-  stringNullish: ['null', 'undefined', 'void 0'],
+  // BigInt
+  bigInt: [BigInt(1)],
+  stringBigInt: ['BigInt(1)'],
+
+  // Undefined
+  undefined: [undefined],
+  stringUndefined: ['undefined'],
+
+  // Null
+  null: [null],
+  stringNull: ['null'],
 
   // Symbol
-  symbol: [Symbol('')],
-  stringSymbol: ['Symbol("")'],
+  symbol: [Symbol('a')],
+  stringSymbol: ["Symbol('a')"],
 
   // Object
-  object: [
-    {},
-    { a: 1 },
-    { a: '1', b: { c: 3 } },
-    [],
-    [1],
-    ['a'],
-    [{ a: 1 }],
-    function () {},
-    () => {},
-    new Date(),
-    new RegExp('abc'),
-    new Error('')
-  ],
-  stringObject: [
-    '{}',
-    '{ a: 1 }',
-    '{ a: "1", b: { c: 3 } }',
-    '[]',
-    '[1]',
-    '["a"]',
-    '[{ a: 1 }]',
-    'function () {}',
-    '() => {}',
-    'new Date()',
-    'new RegExp("abc")',
-    'new Error("")'
-  ]
+  object: [{}, { a: 1 }, { a: '1', b: { c: 3 } }],
+  stringObject: ['{}', '{ a: 1 }', '{ a: "1", b: { c: 3 } }'],
+
+  // Array objects
+  array: [[], [1], ['a'], [{ a: 1 }]],
+  stringArray: ['[]', '[1]', '["a"]', '[{ a: 1 }]'],
+
+  // Function objects
+  function: [function () {}, () => {}],
+  stringFunction: ['function () {}', '() => {}'],
+
+  // Other objects
+  other: [new Date(), new RegExp('abc'), new Error('')],
+  stringOther: ['new Date()', 'new RegExp("abc")', 'new Error("")']
 };
 
 /**
@@ -81,32 +76,28 @@ export function excludeFromValues(values, categories = []) {
 }
 
 /**
- * Validates values against a provided validator function, ensuring that all
- * types not in the filter list throw errors.
+ * Validates a specific property of a provided schema by testing it against
+ * various values and ensuring that values not matching the types in the
+ * `filterTypes` list throw errors.
  *
- * @param {Function} validator - A function that returns a Zod schema object for
- * validation.
+ * @param {ZodSchema} schema - The Zod schema object to be validated.
+ * @param {string} property - The property of the schema to be validated.
  * @param {string[]} [filterTypes=[]] - An array of type categories to be
- * excluded from validation.
+ * excluded from validation. Values of these types will be skipped in the
+ * validation process.
  *
- * The function filters the `possibleValues` object to exclude values
- * of the types specified in the `filterTypes` array. It then iterates over
- * the remaining values and asserts that the validator function throws an error
- * when parsing them. The exception from this rule is an empty string, which
- * should not throw an error when `envCheck` is true.
+ * The function filters the `possibleValues` object to exclude values of the
+ * types specified in the `filterTypes` array. It then iterates over the
+ * remaining values and ensures that parsing those values for the specified
+ * property in the schema results in an error.
  */
-export function validateOtherTypes(validator, filterTypes = [], ...valArgs) {
-  // Filter the possibleValue object to exclude values of types from
+export function validatePropOfSchema(schema, property, filterTypes = []) {
+  // Filter the possibleValues object to exclude values of types from
   // the filterTypes array
   const otherValues = excludeFromValues(possibleValues, filterTypes);
 
-  // All other values should fail
+  // Ensure all other values fail validation
   otherValues.forEach((value) => {
-    expect(() => validator(...valArgs).parse(value)).toThrow();
-    // Except an empty string, which will be transitioned to false when
-    // the `envCheck` is true
-    if (value !== '') {
-      expect(() => validator(...valArgs, true).parse(value)).toThrow();
-    }
+    expect(() => schema.parse({ [property]: value })).toThrow();
   });
 }
