@@ -319,6 +319,8 @@ These variables are set in your environment and take precedence over options fro
 
 - `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
 - `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_USERNAME`: If used proxy with authentication, need to pass username and password (optional, defaults to `false`).
+- `SERVER_PROXY_PASSWORD`: If used proxy with authentication, need to pass username and password (optional, defaults to `false`).
 - `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ### Server Rate Limiting Config
@@ -414,6 +416,8 @@ _Available options:_
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyUsername`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
+- `--proxyPassword`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
 - `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
