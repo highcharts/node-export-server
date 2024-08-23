@@ -1,358 +1,15 @@
 import { describe } from '@jest/globals';
 
-import { sharedTests } from './shared';
+import { configTests } from './shared';
 import { EnvSchema } from '../../../lib/envs';
 
-const generalTests = sharedTests(EnvSchema.partial());
-
-/**
- * Shared tests for the environment variables validators and parsers
- */
-const envTests = {
-  puppeteerArgs: (values, filteredArray) => {
-    describe('PUPPETEER_ARGS', () =>
-      generalTests.stringArray('PUPPETEER_ARGS', values, filteredArray, false));
-  },
-  highchartsVersion: () => {
-    describe('HIGHCHARTS_VERSION', () =>
-      generalTests.version('HIGHCHARTS_VERSION', false));
-  },
-  highchartsCdnUrl: (correctValues, incorrectValues) => {
-    describe('HIGHCHARTS_CDN_URL', () =>
-      generalTests.startsWith(
-        'HIGHCHARTS_CDN_URL',
-        correctValues,
-        incorrectValues,
-        false
-      ));
-  },
-  highchartsForceFetch: () => {
-    describe('HIGHCHARTS_FORCE_FETCH', () =>
-      generalTests.boolean('HIGHCHARTS_FORCE_FETCH', false));
-  },
-  highchartsCachePath: () => {
-    describe('HIGHCHARTS_CACHE_PATH', () =>
-      generalTests.string('HIGHCHARTS_CACHE_PATH', false));
-  },
-  highchartsAdminToken: () => {
-    describe('HIGHCHARTS_ADMIN_TOKEN', () =>
-      generalTests.string('HIGHCHARTS_ADMIN_TOKEN', false));
-  },
-  highchartsCoreScripts: (values, filteredValues) => {
-    describe('HIGHCHARTS_CORE_SCRIPTS', () =>
-      generalTests.scriptsArray(
-        'HIGHCHARTS_CORE_SCRIPTS',
-        values,
-        filteredValues,
-        false
-      ));
-  },
-  highchartsModuleScripts: (values, filteredValues) => {
-    describe('HIGHCHARTS_MODULE_SCRIPTS', () =>
-      generalTests.scriptsArray(
-        'HIGHCHARTS_MODULE_SCRIPTS',
-        values,
-        filteredValues,
-        false
-      ));
-  },
-  highchartsIndicatorScripts: (values, filteredValues) => {
-    describe('HIGHCHARTS_INDICATOR_SCRIPTS', () =>
-      generalTests.scriptsArray(
-        'HIGHCHARTS_INDICATOR_SCRIPTS',
-        values,
-        filteredValues,
-        false
-      ));
-  },
-  highchartsCustomScripts: (values, filteredValues) => {
-    describe('HIGHCHARTS_CUSTOM_SCRIPTS', () =>
-      generalTests.scriptsArray(
-        'HIGHCHARTS_CUSTOM_SCRIPTS',
-        values,
-        filteredValues,
-        false
-      ));
-  },
-  exportType: (correctValues, incorrectValues) => {
-    describe('EXPORT_TYPE', () =>
-      generalTests.enum('EXPORT_TYPE', correctValues, incorrectValues, false));
-  },
-  exportConstr: (correctValues, incorrectValues) => {
-    describe('EXPORT_CONSTR', () =>
-      generalTests.enum(
-        'EXPORT_CONSTR',
-        correctValues,
-        incorrectValues,
-        false
-      ));
-  },
-  exportDefaultHeight: () => {
-    describe('EXPORT_DEFAULT_HEIGHT', () =>
-      generalTests.positiveNum('EXPORT_DEFAULT_HEIGHT', false));
-  },
-  exportDefaultWidth: () => {
-    describe('EXPORT_DEFAULT_WIDTH', () =>
-      generalTests.positiveNum('EXPORT_DEFAULT_WIDTH', false));
-  },
-  exportDefaultScale: () => {
-    describe('EXPORT_DEFAULT_SCALE', () =>
-      generalTests.scale('EXPORT_DEFAULT_SCALE', false));
-  },
-  exportRasterizationTimeout: () => {
-    describe('EXPORT_RASTERIZATION_TIMEOUT', () =>
-      generalTests.nonNegativeNum('EXPORT_RASTERIZATION_TIMEOUT', false));
-  },
-  customLogicAllowCodeExecution: () => {
-    describe('CUSTOM_LOGIC_ALLOW_CODE_EXECUTION', () =>
-      generalTests.boolean('CUSTOM_LOGIC_ALLOW_CODE_EXECUTION', false));
-  },
-  customLogicAllowFileResources: () => {
-    describe('CUSTOM_LOGIC_ALLOW_FILE_RESOURCES', () =>
-      generalTests.boolean('CUSTOM_LOGIC_ALLOW_FILE_RESOURCES', false));
-  },
-  serverEnable: () => {
-    describe('SERVER_ENABLE', () =>
-      generalTests.boolean('SERVER_ENABLE', false));
-  },
-  serverHost: () => {
-    describe('SERVER_HOST', () => generalTests.string('SERVER_HOST', false));
-  },
-  serverPort: () => {
-    describe('SERVER_PORT', () =>
-      generalTests.nonNegativeNum('SERVER_PORT', false));
-  },
-  serverBenchmarking: () => {
-    describe('SERVER_BENCHMARKING', () =>
-      generalTests.boolean('SERVER_BENCHMARKING', false));
-  },
-  serverProxyHost: () => {
-    describe('SERVER_PROXY_HOST', () =>
-      generalTests.string('SERVER_PROXY_HOST', false));
-  },
-  serverProxyPort: () => {
-    describe('SERVER_PROXY_PORT', () =>
-      generalTests.nonNegativeNum('SERVER_PROXY_PORT', false));
-  },
-  serverProxyTimeout: () => {
-    describe('SERVER_PROXY_TIMEOUT', () =>
-      generalTests.nonNegativeNum('SERVER_PROXY_TIMEOUT', false));
-  },
-  serverRateLimitingEnable: () => {
-    describe('SERVER_RATE_LIMITING_ENABLE', () =>
-      generalTests.boolean('SERVER_RATE_LIMITING_ENABLE', false));
-  },
-  serverRateLimitingMaxRequests: () => {
-    describe('SERVER_RATE_LIMITING_MAX_REQUESTS', () =>
-      generalTests.nonNegativeNum('SERVER_RATE_LIMITING_MAX_REQUESTS', false));
-  },
-  serverRateLimitingWindow: () => {
-    describe('SERVER_RATE_LIMITING_WINDOW', () =>
-      generalTests.nonNegativeNum('SERVER_RATE_LIMITING_WINDOW', false));
-  },
-  serverRateLimitingDelay: () => {
-    describe('SERVER_RATE_LIMITING_DELAY', () =>
-      generalTests.nonNegativeNum('SERVER_RATE_LIMITING_DELAY', false));
-  },
-  serverRateLimitingTrustProxy: () => {
-    describe('SERVER_RATE_LIMITING_TRUST_PROXY', () =>
-      generalTests.boolean('SERVER_RATE_LIMITING_TRUST_PROXY', false));
-  },
-  serverRateLimitingSkipKey: () => {
-    describe('SERVER_RATE_LIMITING_SKIP_KEY', () =>
-      generalTests.string('SERVER_RATE_LIMITING_SKIP_KEY', false));
-  },
-  serverRateLimitingSkipToken: () => {
-    describe('SERVER_RATE_LIMITING_SKIP_TOKEN', () =>
-      generalTests.string('SERVER_RATE_LIMITING_SKIP_TOKEN', false));
-  },
-  serverSslEnable: () => {
-    describe('SERVER_SSL_ENABLE', () =>
-      generalTests.boolean('SERVER_SSL_ENABLE', false));
-  },
-  serverSslForce: () => {
-    describe('SERVER_SSL_FORCE', () =>
-      generalTests.boolean('SERVER_SSL_FORCE', false));
-  },
-  serverSslPort: () => {
-    describe('SERVER_SSL_PORT', () =>
-      generalTests.nonNegativeNum('SERVER_SSL_PORT', false));
-  },
-  serverSslCertPath: () => {
-    describe('SERVER_SSL_CERT_PATH', () =>
-      generalTests.string('SERVER_SSL_CERT_PATH', false));
-  },
-  poolMinWorkers: () => {
-    describe('POOL_MIN_WORKERS', () =>
-      generalTests.positiveNum('POOL_MIN_WORKERS', false));
-  },
-  poolMaxWorkers: () => {
-    describe('POOL_MAX_WORKERS', () =>
-      generalTests.positiveNum('POOL_MAX_WORKERS', false));
-  },
-  poolWorkLimit: () => {
-    describe('POOL_WORK_LIMIT', () =>
-      generalTests.positiveNum('POOL_WORK_LIMIT', false));
-  },
-  poolAcquireTimeout: () => {
-    describe('POOL_ACQUIRE_TIMEOUT', () =>
-      generalTests.nonNegativeNum('POOL_ACQUIRE_TIMEOUT', false));
-  },
-  poolCreateTimeout: () => {
-    describe('POOL_CREATE_TIMEOUT', () =>
-      generalTests.nonNegativeNum('POOL_CREATE_TIMEOUT', false));
-  },
-  poolDestroyTimeout: () => {
-    describe('POOL_DESTROY_TIMEOUT', () =>
-      generalTests.nonNegativeNum('POOL_DESTROY_TIMEOUT', false));
-  },
-  poolIdleTimeout: () => {
-    describe('POOL_IDLE_TIMEOUT', () =>
-      generalTests.nonNegativeNum('POOL_IDLE_TIMEOUT', false));
-  },
-  poolCreateRetryInterval: () => {
-    describe('POOL_CREATE_RETRY_INTERVAL', () =>
-      generalTests.nonNegativeNum('POOL_CREATE_RETRY_INTERVAL', false));
-  },
-  poolReaperInterval: () => {
-    describe('POOL_REAPER_INTERVAL', () =>
-      generalTests.nonNegativeNum('POOL_REAPER_INTERVAL', false));
-  },
-  poolBenchmarking: () => {
-    describe('POOL_BENCHMARKING', () =>
-      generalTests.boolean('POOL_BENCHMARKING', false));
-  },
-  loggingLevel: () => {
-    describe('LOGGING_LEVEL', () =>
-      generalTests.logLevel('LOGGING_LEVEL', false));
-  },
-  loggingFile: () => {
-    describe('LOGGING_FILE', () => generalTests.string('LOGGING_FILE', false));
-  },
-  loggingDest: () => {
-    describe('LOGGING_DEST', () => generalTests.string('LOGGING_DEST', false));
-  },
-  loggingToConsole: () => {
-    describe('LOGGING_TO_CONSOLE', () =>
-      generalTests.boolean('LOGGING_TO_CONSOLE', false));
-  },
-  loggingToFile: () => {
-    describe('LOGGING_TO_FILE', () =>
-      generalTests.boolean('LOGGING_TO_FILE', false));
-  },
-  uiEnable: () => {
-    describe('UI_ENABLE', () => generalTests.boolean('UI_ENABLE', false));
-  },
-  uiRoute: (correctValues, incorrectValues) => {
-    describe('UI_ROUTE', () =>
-      generalTests.startsWith(
-        'UI_ROUTE',
-        correctValues,
-        incorrectValues,
-        false
-      ));
-  },
-  otherNodeEnv: (correctValues, incorrectValues) => {
-    describe('OTHER_NODE_ENV', () =>
-      generalTests.enum(
-        'OTHER_NODE_ENV',
-        correctValues,
-        incorrectValues,
-        false
-      ));
-  },
-  otherListenToProcessExits: () => {
-    describe('OTHER_LISTEN_TO_PROCESS_EXITS', () =>
-      generalTests.boolean('OTHER_LISTEN_TO_PROCESS_EXITS', false));
-  },
-  otherNoLogo: () => {
-    describe('OTHER_NO_LOGO', () =>
-      generalTests.boolean('OTHER_NO_LOGO', false));
-  },
-  otherHardResetPage: () => {
-    describe('OTHER_HARD_RESET_PAGE', () =>
-      generalTests.boolean('OTHER_HARD_RESET_PAGE', false));
-  },
-  otherBrowserShellMode: () => {
-    describe('OTHER_BROWSER_SHELL_MODE', () =>
-      generalTests.boolean('OTHER_BROWSER_SHELL_MODE', false));
-  },
-  debugEnable: () => {
-    describe('DEBUG_ENABLE', () => generalTests.boolean('DEBUG_ENABLE', false));
-  },
-  debugHeadless: () => {
-    describe('DEBUG_HEADLESS', () =>
-      generalTests.boolean('DEBUG_HEADLESS', false));
-  },
-  debugDevtools: () => {
-    describe('DEBUG_DEVTOOLS', () =>
-      generalTests.boolean('DEBUG_DEVTOOLS', false));
-  },
-  debugListenToConsole: () => {
-    describe('DEBUG_LISTEN_TO_CONSOLE', () =>
-      generalTests.boolean('DEBUG_LISTEN_TO_CONSOLE', false));
-  },
-  debugDumpio: () => {
-    describe('DEBUG_DUMPIO', () => generalTests.boolean('DEBUG_DUMPIO', false));
-  },
-  debugSlowMo: () => {
-    describe('DEBUG_SLOW_MO', () =>
-      generalTests.nonNegativeNum('DEBUG_SLOW_MO', false));
-  },
-  debugDebuggingPort: () => {
-    describe('DEBUG_DEBUGGING_PORT', () =>
-      generalTests.nonNegativeNum('DEBUG_DEBUGGING_PORT', false));
-  },
-  webSocketEnable: () => {
-    describe('WEB_SOCKET_ENABLE', () =>
-      generalTests.boolean('WEB_SOCKET_ENABLE', false));
-  },
-  webSocketReconnect: () => {
-    describe('WEB_SOCKET_RECONNECT', () =>
-      generalTests.boolean('WEB_SOCKET_RECONNECT', false));
-  },
-  webSocketRejectUnauthorized: () => {
-    describe('WEB_SOCKET_REJECT_UNAUTHORIZED', () =>
-      generalTests.boolean('WEB_SOCKET_REJECT_UNAUTHORIZED', false));
-  },
-  webSocketPingTimeout: () => {
-    describe('WEB_SOCKET_PING_TIMEOUT', () =>
-      generalTests.nonNegativeNum('WEB_SOCKET_PING_TIMEOUT', false));
-  },
-  webSocketReconnectInterval: () => {
-    describe('WEB_SOCKET_RECONNECT_INTERVAL', () =>
-      generalTests.nonNegativeNum('WEB_SOCKET_RECONNECT_INTERVAL', false));
-  },
-  webSocketReconnectAttempts: () => {
-    describe('WEB_SOCKET_RECONNECT_ATTEMPTS', () =>
-      generalTests.nonNegativeNum('WEB_SOCKET_RECONNECT_ATTEMPTS', false));
-  },
-  webSocketMessageInterval: () => {
-    describe('WEB_SOCKET_MESSAGE_INTERVAL', () =>
-      generalTests.nonNegativeNum('WEB_SOCKET_MESSAGE_INTERVAL', false));
-  },
-  webSocketGatherAllOptions: () => {
-    describe('WEB_SOCKET_GATHER_ALL_OPTIONS', () =>
-      generalTests.boolean('WEB_SOCKET_GATHER_ALL_OPTIONS', false));
-  },
-  webSocketUrl: (correctValues, incorrectValues) => {
-    describe('WEB_SOCKET_URL', () =>
-      generalTests.startsWith(
-        'WEB_SOCKET_URL',
-        correctValues,
-        incorrectValues,
-        false
-      ));
-  },
-  webSocketSecret: () => {
-    describe('WEB_SOCKET_SECRET', () =>
-      generalTests.string('WEB_SOCKET_SECRET', false));
-  }
-};
+// Return config tests with a specific schema and strictCheck flag injected
+const tests = configTests(EnvSchema.partial(), false);
 
 describe('PUPPETEER environment variables should be correctly parsed and validated', () => {
   // PUPPETEER_ARGS
-  envTests.puppeteerArgs(
+  tests.puppeteerArgs(
+    'PUPPETEER_ARGS',
     '--disable-sync, --enable-unsafe-webgpu, --hide-crash-restore-bubble, --hide-scrollbars, --metrics-recording-only',
     [
       '--disable-sync',
@@ -366,44 +23,49 @@ describe('PUPPETEER environment variables should be correctly parsed and validat
 
 describe('HIGHCHARTS environment variables should be correctly parsed and validated', () => {
   // HIGHCHARTS_VERSION
-  envTests.highchartsVersion();
+  tests.highchartsVersion('HIGHCHARTS_VERSION');
 
   // HIGHCHARTS_CDN_URL
-  envTests.highchartsCdnUrl(
+  tests.highchartsCdnUrl(
+    'HIGHCHARTS_CDN_URL',
     ['http://example.com', 'https://example.com'],
     ['http:a.com', 'http:/b.com', 'https:c.com', 'https:/d.com']
   );
 
   // HIGHCHARTS_FORCE_FETCH
-  envTests.highchartsForceFetch();
+  tests.highchartsForceFetch('HIGHCHARTS_FORCE_FETCH');
 
   // HIGHCHARTS_CACHE_PATH
-  envTests.highchartsCachePath();
+  tests.highchartsCachePath('HIGHCHARTS_CACHE_PATH');
 
   // HIGHCHARTS_ADMIN_TOKEN
-  envTests.highchartsAdminToken();
+  tests.highchartsAdminToken('HIGHCHARTS_ADMIN_TOKEN');
 
   // HIGHCHARTS_CORE_SCRIPTS
-  envTests.highchartsCoreScripts(
-    'highcharts,highcharts-more, false, true, undefined, null,NaN,1,1.1,Symbol("symbol"),{},[],function () {},"false","true","undefined","null","NaN","1","1.1","Symbol("symbol")","{}","[]","function () {}",highcharts-3d',
+  tests.highchartsCoreScripts(
+    'HIGHCHARTS_CORE_SCRIPTS',
+    'highcharts, highcharts-more, text1, highcharts-3d, text2',
     ['highcharts', 'highcharts-more', 'highcharts-3d']
   );
 
   // HIGHCHARTS_MODULE_SCRIPTS
-  envTests.highchartsModuleScripts(
-    'data , false, true, undefined, null,NaN,1,1.1,Symbol("symbol"),{},[],function () {},"false","true","undefined","null","NaN","1","1.1","Symbol("symbol")","{}","[]","function () {},data-tools, text',
+  tests.highchartsModuleScripts(
+    'HIGHCHARTS_MODULE_SCRIPTS',
+    'data, text1, data-tools, text2',
     ['data', 'data-tools']
   );
 
   // HIGHCHARTS_INDICATOR_SCRIPTS
-  envTests.highchartsIndicatorScripts(
-    'text1, text2 ,indicators-all , false, true, undefined, null,NaN,1,1.1,Symbol("symbol"),{},[],function () {},"false","true","undefined","null","NaN","1","1.1","Symbol("symbol")","{}","[]","function () {},',
+  tests.highchartsIndicatorScripts(
+    'HIGHCHARTS_INDICATOR_SCRIPTS',
+    'text1, indicators-all, text2',
     ['indicators-all']
   );
 
   // HIGHCHARTS_CUSTOM_SCRIPTS
-  envTests.highchartsCustomScripts(
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js, undefined, NaN, null, false, true,https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js,  false, true, undefined, null,NaN,1,1.1,Symbol("symbol"),{},[],function () {},"false","true","undefined","null","NaN","1","1.1","Symbol("symbol")","{}","[]","function () {},',
+  tests.highchartsCustomScripts(
+    'HIGHCHARTS_CUSTOM_SCRIPTS',
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js, text1, https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js, text2',
     [
       'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js'
@@ -413,228 +75,235 @@ describe('HIGHCHARTS environment variables should be correctly parsed and valida
 
 describe('EXPORT environment variables should be correctly parsed and validated', () => {
   // EXPORT_TYPE
-  envTests.exportType(['jpeg', 'jpg', 'png', 'pdf', 'svg'], ['json', 'txt']);
+  tests.exportType(
+    'EXPORT_TYPE',
+    ['jpeg', 'jpg', 'png', 'pdf', 'svg'],
+    ['json', 'txt']
+  );
 
   // EXPORT_CONSTR
-  envTests.exportConstr(
+  tests.exportConstr(
+    'EXPORT_CONSTR',
     ['chart', 'stockChart', 'mapChart', 'ganttChart'],
     ['stock', 'map', 'gantt']
   );
 
   // EXPORT_DEFAULT_HEIGHT
-  envTests.exportDefaultHeight();
+  tests.exportDefaultHeight('EXPORT_DEFAULT_HEIGHT');
 
   // EXPORT_DEFAULT_WIDTH
-  envTests.exportDefaultWidth();
+  tests.exportDefaultWidth('EXPORT_DEFAULT_WIDTH');
 
   // EXPORT_DEFAULT_SCALE
-  envTests.exportDefaultScale();
+  tests.exportDefaultScale('EXPORT_DEFAULT_SCALE');
 
   // EXPORT_RASTERIZATION_TIMEOUT
-  envTests.exportRasterizationTimeout();
+  tests.exportRasterizationTimeout('EXPORT_RASTERIZATION_TIMEOUT');
 });
 
 describe('CUSTOM_LOGIC environment variables should be correctly parsed and validated', () => {
   // CUSTOM_LOGIC_ALLOW_CODE_EXECUTION
-  envTests.customLogicAllowCodeExecution();
+  tests.customLogicAllowCodeExecution('CUSTOM_LOGIC_ALLOW_CODE_EXECUTION');
 
   // CUSTOM_LOGIC_ALLOW_FILE_RESOURCES
-  envTests.customLogicAllowFileResources();
+  tests.customLogicAllowFileResources('CUSTOM_LOGIC_ALLOW_FILE_RESOURCES');
 });
 
 describe('SERVER environment variables should be correctly parsed and validated', () => {
   // SERVER_ENABLE
-  envTests.serverEnable();
+  tests.serverEnable('SERVER_ENABLE');
 
   // SERVER_HOST
-  envTests.serverHost();
+  tests.serverHost('SERVER_HOST');
 
   // SERVER_PORT
-  envTests.serverPort();
+  tests.serverPort('SERVER_PORT');
 
   // SERVER_BENCHMARKING
-  envTests.serverBenchmarking();
+  tests.serverBenchmarking('SERVER_BENCHMARKING');
 });
 
 describe('SERVER_PROXY environment variables should be correctly parsed and validated', () => {
   // SERVER_PROXY_HOST
-  envTests.serverProxyHost();
+  tests.serverProxyHost('SERVER_PROXY_HOST');
 
   // SERVER_PROXY_PORT
-  envTests.serverProxyPort();
+  tests.serverProxyPort('SERVER_PROXY_PORT');
 
   // SERVER_PROXY_TIMEOUT
-  envTests.serverProxyTimeout();
+  tests.serverProxyTimeout('SERVER_PROXY_TIMEOUT');
 });
 
 describe('SERVER_RATE_LIMITING environment variables should be correctly parsed and validated', () => {
   // SERVER_RATE_LIMITING_ENABLE
-  envTests.serverRateLimitingEnable();
+  tests.serverRateLimitingEnable('SERVER_RATE_LIMITING_ENABLE');
 
   // SERVER_RATE_LIMITING_MAX_REQUESTS
-  envTests.serverRateLimitingMaxRequests();
+  tests.serverRateLimitingMaxRequests('SERVER_RATE_LIMITING_MAX_REQUESTS');
 
   // SERVER_RATE_LIMITING_WINDOW
-  envTests.serverRateLimitingWindow();
+  tests.serverRateLimitingWindow('SERVER_RATE_LIMITING_WINDOW');
 
   // SERVER_RATE_LIMITING_DELAY
-  envTests.serverRateLimitingDelay();
+  tests.serverRateLimitingDelay('SERVER_RATE_LIMITING_DELAY');
 
   // SERVER_RATE_LIMITING_TRUST_PROXY
-  envTests.serverRateLimitingTrustProxy();
+  tests.serverRateLimitingTrustProxy('SERVER_RATE_LIMITING_TRUST_PROXY');
 
   // SERVER_RATE_LIMITING_SKIP_KEY
-  envTests.serverRateLimitingSkipKey();
+  tests.serverRateLimitingSkipKey('SERVER_RATE_LIMITING_SKIP_KEY');
 
   // SERVER_RATE_LIMITING_SKIP_TOKEN
-  envTests.serverRateLimitingSkipToken();
+  tests.serverRateLimitingSkipToken('SERVER_RATE_LIMITING_SKIP_TOKEN');
 });
 
 describe('SERVER_SSL environment variables should be correctly parsed and validated', () => {
   // SERVER_SSL_ENABLE
-  envTests.serverSslEnable();
+  tests.serverSslEnable('SERVER_SSL_ENABLE');
 
   // SERVER_SSL_FORCE
-  envTests.serverSslForce();
+  tests.serverSslForce('SERVER_SSL_FORCE');
 
   // SERVER_SSL_PORT
-  envTests.serverSslPort();
+  tests.serverSslPort('SERVER_SSL_PORT');
 
   // SERVER_SSL_CERT_PATH
-  envTests.serverSslCertPath();
+  tests.serverSslCertPath('SERVER_SSL_CERT_PATH');
 });
 
 describe('POOL environment variables should be correctly parsed and validated', () => {
   // POOL_MIN_WORKERS
-  envTests.poolMinWorkers();
+  tests.poolMinWorkers('POOL_MIN_WORKERS');
 
   // POOL_MAX_WORKERS
-  envTests.poolMaxWorkers();
+  tests.poolMaxWorkers('POOL_MAX_WORKERS');
 
   // POOL_WORK_LIMIT
-  envTests.poolWorkLimit();
+  tests.poolWorkLimit('POOL_WORK_LIMIT');
 
   // POOL_ACQUIRE_TIMEOUT
-  envTests.poolAcquireTimeout();
+  tests.poolAcquireTimeout('POOL_ACQUIRE_TIMEOUT');
 
   // POOL_CREATE_TIMEOUT
-  envTests.poolCreateTimeout();
+  tests.poolCreateTimeout('POOL_CREATE_TIMEOUT');
 
   // POOL_DESTROY_TIMEOUT
-  envTests.poolDestroyTimeout();
+  tests.poolDestroyTimeout('POOL_DESTROY_TIMEOUT');
 
   // POOL_IDLE_TIMEOUT
-  envTests.poolIdleTimeout();
+  tests.poolIdleTimeout('POOL_IDLE_TIMEOUT');
 
   // POOL_CREATE_RETRY_INTERVAL
-  envTests.poolCreateRetryInterval();
+  tests.poolCreateRetryInterval('POOL_CREATE_RETRY_INTERVAL');
 
   // POOL_REAPER_INTERVAL
-  envTests.poolReaperInterval();
+  tests.poolReaperInterval('POOL_REAPER_INTERVAL');
 
   // POOL_BENCHMARKING
-  envTests.poolBenchmarking();
+  tests.poolBenchmarking('POOL_BENCHMARKING');
 });
 
 describe('LOGGING environment variables should be correctly parsed and validated', () => {
   // LOGGING_LEVEL
-  envTests.loggingLevel();
+  tests.loggingLevel('LOGGING_LEVEL');
 
   // LOGGING_FILE
-  envTests.loggingFile();
+  tests.loggingFile('LOGGING_FILE');
 
   // LOGGING_DEST
-  envTests.loggingDest();
+  tests.loggingDest('LOGGING_DEST');
 
   // LOGGING_TO_CONSOLE
-  envTests.loggingToConsole();
+  tests.loggingToConsole('LOGGING_TO_CONSOLE');
 
   // LOGGING_TO_FILE
-  envTests.loggingToFile();
+  tests.loggingToFile('LOGGING_TO_FILE');
 });
 
 describe('UI environment variables should be correctly parsed and validated', () => {
   // UI_ENABLE
-  envTests.uiEnable();
+  tests.uiEnable('UI_ENABLE');
 
   // UI_ROUTE
-  envTests.uiRoute(['/', '/ui'], ['ui', 'example/ui/']);
+  tests.uiRoute('UI_ROUTE', ['/', '/ui'], ['ui', 'example/ui/']);
 });
 
 describe('OTHER environment variables should be correctly parsed and validated', () => {
   // OTHER_NODE_ENV
-  envTests.otherNodeEnv(
+  tests.otherNodeEnv(
+    'OTHER_NODE_ENV',
     ['development', 'production', 'test'],
     ['dev-env', 'prod-env', 'test-env']
   );
 
   // OTHER_LISTEN_TO_PROCESS_EXITS
-  envTests.otherListenToProcessExits();
+  tests.otherListenToProcessExits('OTHER_LISTEN_TO_PROCESS_EXITS');
 
   // OTHER_NO_LOGO
-  envTests.otherNoLogo();
+  tests.otherNoLogo('OTHER_NO_LOGO');
 
   // OTHER_HARD_RESET_PAGE
-  envTests.otherHardResetPage();
+  tests.otherHardResetPage('OTHER_HARD_RESET_PAGE');
 
   // OTHER_BROWSER_SHELL_MODE
-  envTests.otherBrowserShellMode();
+  tests.otherBrowserShellMode('OTHER_BROWSER_SHELL_MODE');
 });
 
 describe('DEBUG environment variables should be correctly parsed and validated', () => {
   // DEBUG_ENABLE
-  envTests.debugEnable();
+  tests.debugEnable('DEBUG_ENABLE');
 
   // DEBUG_HEADLESS
-  envTests.debugHeadless();
+  tests.debugHeadless('DEBUG_HEADLESS');
 
   // DEBUG_DEVTOOLS
-  envTests.debugDevtools();
+  tests.debugDevtools('DEBUG_DEVTOOLS');
 
   // DEBUG_LISTEN_TO_CONSOLE
-  envTests.debugListenToConsole();
+  tests.debugListenToConsole('DEBUG_LISTEN_TO_CONSOLE');
 
   // DEBUG_DUMPIO
-  envTests.debugDumpio();
+  tests.debugDumpio('DEBUG_DUMPIO');
 
   // DEBUG_SLOW_MO
-  envTests.debugSlowMo();
+  tests.debugSlowMo('DEBUG_SLOW_MO');
 
   // DEBUG_DEBUGGING_PORT
-  envTests.debugDebuggingPort();
+  tests.debugDebuggingPort('DEBUG_DEBUGGING_PORT');
 });
 
 describe('WEB_SOCKET environment variables should be correctly parsed and validated', () => {
   // WEB_SOCKET_ENABLE
-  envTests.webSocketEnable();
+  tests.webSocketEnable('WEB_SOCKET_ENABLE');
 
   // WEB_SOCKET_RECONNECT
-  envTests.webSocketReconnect();
+  tests.webSocketReconnect('WEB_SOCKET_RECONNECT');
 
   // WEB_SOCKET_REJECT_UNAUTHORIZED
-  envTests.webSocketRejectUnauthorized();
+  tests.webSocketRejectUnauthorized('WEB_SOCKET_REJECT_UNAUTHORIZED');
 
   // WEB_SOCKET_PING_TIMEOUT
-  envTests.webSocketPingTimeout();
+  tests.webSocketPingTimeout('WEB_SOCKET_PING_TIMEOUT');
 
   // WEB_SOCKET_RECONNECT_INTERVAL
-  envTests.webSocketReconnectInterval();
+  tests.webSocketReconnectInterval('WEB_SOCKET_RECONNECT_INTERVAL');
 
   // WEB_SOCKET_RECONNECT_ATTEMPTS
-  envTests.webSocketReconnectAttempts();
+  tests.webSocketReconnectAttempts('WEB_SOCKET_RECONNECT_ATTEMPTS');
 
   // WEB_SOCKET_MESSAGE_INTERVAL
-  envTests.webSocketMessageInterval();
+  tests.webSocketMessageInterval('WEB_SOCKET_MESSAGE_INTERVAL');
 
   // WEB_SOCKET_GATHER_ALL_OPTIONS
-  envTests.webSocketGatherAllOptions();
+  tests.webSocketGatherAllOptions('WEB_SOCKET_GATHER_ALL_OPTIONS');
 
   // WEB_SOCKET_URL
-  envTests.webSocketUrl(
+  tests.webSocketUrl(
+    'WEB_SOCKET_URL',
     ['ws://example.com/socket', 'wss://example.com/socket'],
     ['example.com', 'ws:a.com', 'ws:/b.com', 'wss:c.com', 'wss:/d.com']
   );
 
   // WEB_SOCKET_SECRET
-  envTests.webSocketSecret();
+  tests.webSocketSecret('WEB_SOCKET_SECRET');
 });
