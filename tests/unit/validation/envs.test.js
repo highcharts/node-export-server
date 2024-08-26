@@ -1,7 +1,7 @@
 import { describe } from '@jest/globals';
 
-import { configTests } from './shared';
-import { EnvSchema } from '../../../lib/envs';
+import { configTests } from './shared.js';
+import { EnvSchema } from '../../../lib/validate.js';
 
 // Return config tests with a specific schema and strictCheck flag injected
 const tests = configTests(EnvSchema.partial(), false);

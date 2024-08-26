@@ -1,66 +1,155 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { validatePropOfSchema } from '../../utils/tests_utils';
+import { validatePropOfSchema } from '../../utils/tests_utils.js';
 
 /**
- * Properties of config validators and parsers tests
+ * Runs a series of tests to validate and parse configuration properties using
+ * the injected schema. Optionally performs strict checks.
+ *
+ * @param {object} schema - The schema used for validation and parsing.
+ * @param {boolean} strictCheck - A flag indicating whether to enforce strict
+ * validation.
  */
 export const configTests = (schema, strictCheck) => {
+  /**
+   * Verifies that a property that is not present in the object results in
+   * undefined.
+   *
+   * @param {string} property - The property to check for undefined.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const noPropertyToUndefined = (property) => {
     const obj = {};
     expect(schema.parse(obj)[property]).toBe(undefined);
   };
 
+  /**
+   * Verifies that a property with the value undefined is accepted.
+   *
+   * @param {string} property - The property to check for accepting null.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const acceptUndefined = (property) => {
     const obj = { [property]: undefined };
     expect(schema.parse(obj)[property]).toBe(undefined);
   };
 
+  /**
+   * Verifies that a property with the value null is accepted.
+   *
+   * @param {string} property - The property to check for accepting null.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const acceptNull = (property) => {
     const obj = { [property]: null };
     expect(schema.parse(obj)[property]).toBe(null);
   };
 
+  /**
+   * Verifies that a property with the string value 'null' is converted to null.
+   *
+   * @param {string} property - The property to check for conversion of 'null'
+   * to null.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const stringNullToNull = (property) => {
     const obj = { [property]: 'null' };
     expect(schema.parse(obj)[property]).toBe(null);
   };
 
+  /**
+   * Verifies that a property with the string value 'undefined' is converted to
+   * null.
+   *
+   * @param {string} property - The property to check for conversion of
+   * 'undefined' to null.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const stringUndefinedToNull = (property) => {
     const obj = { [property]: 'undefined' };
     expect(schema.parse(obj)[property]).toBe(null);
   };
 
+  /**
+   * Verifies that a property with the string value '' is converted to null.
+   *
+   * @param {string} property - The property to check for conversion of '' to
+   * null.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const emptyStringToNull = (property) => {
     const obj = { [property]: '' };
     expect(schema.parse(obj)[property]).toBe(null);
   };
 
+  /**
+   * Verifies that a property set to null causes a schema validation error.
+   *
+   * @param {string} property - The property to check for a thrown validation
+   * error.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const nullThrow = (property) => {
     const obj = { [property]: null };
     expect(() => schema.parse(obj)).toThrow();
   };
 
+  /**
+   * Verifies that a property set to 'null' causes a schema validation error.
+   *
+   * @param {string} property - The property to check for a thrown validation
+   * error.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const stringNullThrow = (property) => {
     const obj = { [property]: 'null' };
     expect(() => schema.parse(obj)).toThrow();
   };
 
+  /**
+   * Verifies that a property set to 'undefined' causes a schema validation
+   * error.
+   *
+   * @param {string} property - The property to check for a thrown validation
+   * error.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const stringUndefinedThrow = (property) => {
     const obj = { [property]: 'undefined' };
     expect(() => schema.parse(obj)).toThrow();
   };
 
+  /**
+   * Verifies that a property set to '' causes a schema validation error.
+   *
+   * @param {string} property - The property to check for a thrown validation
+   * error.
+   *
+   * @throws {Error} - Throws an error if the schema validation fails.
+   */
   const emptyStringThrow = (property) => {
     const obj = { [property]: '' };
     expect(() => schema.parse(obj)).toThrow();
   };
 
-  const generalTests = {
+  /**
+   * Object that contains all tests for validating and parsing values of the
+   * options config.
+   */
+  const validationTests = {
     /**
-     * The boolean validator
+     * The boolean validator.
      */
-    boolean: (property) => {
+    boolean(property) {
       it('should accept a boolean value', () => {
         const obj = { [property]: true };
         expect(schema.parse(obj)[property]).toBe(true);
@@ -136,9 +225,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The string validator
+     * The string validator.
      */
-    string: (property, strictCheck) => {
+    string(property, strictCheck) {
       it('should accept a string value', () => {
         const obj = { [property]: 'text' };
         expect(schema.parse(obj)[property]).toBe('text');
@@ -244,9 +333,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The accept values validator
+     * The accept values validator.
      */
-    acceptValues: (property, correctValue, incorrectValue) => {
+    acceptValues(property, correctValue, incorrectValue) {
       it(`should accept the following ${correctValue.join(', ')} values`, () => {
         correctValue.forEach((value) => {
           expect(schema.parse({ [property]: value })[property]).toBe(value);
@@ -311,9 +400,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The nullable accept values validator
+     * The nullable accept values validator.
      */
-    nullableAcceptValues: (property, correctValue, incorrectValue) => {
+    nullableAcceptValues(property, correctValue, incorrectValue) {
       it(`should accept the following ${correctValue.join(', ')} values`, () => {
         correctValue.forEach((value) => {
           expect(schema.parse({ [property]: value })[property]).toBe(value);
@@ -374,9 +463,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The object validator
+     * The object validator.
      */
-    object: (property) => {
+    object(property) {
       it('should accept any object values', () => {
         const obj = { [property]: {} };
         expect(schema.parse(obj)[property]).toEqual({});
@@ -471,9 +560,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The array of strings validator
+     * The array of strings validator.
      */
-    stringArray: (property, value, correctValue) => {
+    stringArray(property, value, correctValue) {
       it('should accept a string value or an array of strings and correctly parse it to an array of strings', () => {
         const obj = { [property]: value };
         expect(schema.parse(obj)[property]).toEqual(correctValue);
@@ -565,9 +654,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The positive number validator
+     * The positive number validator.
      */
-    positiveNum: (property) => {
+    positiveNum(property) {
       it('should accept a positive number value', () => {
         const obj = { [property]: 0.1 };
         expect(schema.parse(obj)[property]).toBe(0.1);
@@ -671,9 +760,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The nullable positive number validator
+     * The nullable positive number validator.
      */
-    nullablePositiveNum: (property) => {
+    nullablePositiveNum(property) {
       it('should accept a positive number value', () => {
         const obj = { [property]: 0.1 };
         expect(schema.parse(obj)[property]).toBe(0.1);
@@ -773,9 +862,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The non-negative number validator
+     * The non-negative number validator.
      */
-    nonNegativeNum: (property) => {
+    nonNegativeNum(property) {
       it('should accept a non-negative number value', () => {
         const obj = { [property]: 0 };
         expect(schema.parse(obj)[property]).toBe(0);
@@ -869,9 +958,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The nullable non-negative number validator
+     * The nullable non-negative number validator.
      */
-    nullableNonNegativeNum: (property) => {
+    nullableNonNegativeNum(property) {
       it('should accept a non-negative number value', () => {
         const obj = { [property]: 0 };
         expect(schema.parse(obj)[property]).toBe(0);
@@ -961,9 +1050,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The infile option validator
+     * The infile option validator.
      */
-    infile: (property) => {
+    infile(property) {
       it('should accept string values that end with .json or .svg', () => {
         const obj = { [property]: 'chart.json' };
         expect(schema.parse(obj)[property]).toBe('chart.json');
@@ -1033,9 +1122,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The outfile option validator
+     * The outfile option validator.
      */
-    outfile: (property) => {
+    outfile(property) {
       it('should accept string values that end with .jpeg, .jpg, .png, .pdf, or .svg', () => {
         const obj = { [property]: 'chart.jpeg' };
         expect(schema.parse(obj)[property]).toBe('chart.jpeg');
@@ -1117,9 +1206,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The version option validator
+     * The version option validator.
      */
-    version: (property) => {
+    version(property) {
       it("should accept the 'latest' value", () => {
         const obj = { [property]: 'latest' };
         expect(schema.parse(obj)[property]).toBe('latest');
@@ -1221,9 +1310,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The scale option validator
+     * The scale option validator.
      */
-    scale: (property) => {
+    scale(property) {
       it('should accept number values between the 0.1 and 5.0', () => {
         const obj = { [property]: 0.1 };
         expect(schema.parse(obj)[property]).toBe(0.1);
@@ -1329,9 +1418,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The nullable scale option validator
+     * The nullable scale option validator.
      */
-    nullableScale: (property) => {
+    nullableScale(property) {
       it('should accept number values between the 0.1 and 5.0', () => {
         const obj = { [property]: 0.1 };
         expect(schema.parse(obj)[property]).toBe(0.1);
@@ -1437,9 +1526,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The logLevel option validator
+     * The logLevel option validator.
      */
-    logLevel: (property) => {
+    logLevel(property) {
       it('should accept integer number values between the 1 and 5', () => {
         const obj = { [property]: 1 };
         expect(schema.parse(obj)[property]).toBe(1);
@@ -1548,9 +1637,9 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The resources option validator
+     * The resources option validator.
      */
-    resources: (property) => {
+    resources(property) {
       it("should accept an object with properties 'js', 'css', and 'files'", () => {
         const obj = { [property]: { js: '', css: '', files: [] } };
         expect(schema.parse(obj)[property]).toEqual({
@@ -1665,24 +1754,24 @@ export const configTests = (schema, strictCheck) => {
     },
 
     /**
-     * The config object section validator
+     * The config object section validator.
      */
-    configObject: (property, object) => {
+    configObject(property, value) {
       it(`should accept an object with the ${property} properties`, () => {
-        const obj = { [property]: object };
-        expect(schema.parse(obj)[property]).toEqual(object);
+        const obj = { [property]: value };
+        expect(schema.parse(obj)[property]).toEqual(value);
       });
 
       it(`should accept an object with the ${property} properties and filter out other properties`, () => {
-        const obj = { [property]: { ...object, extraProp: true } };
-        expect(schema.parse(obj)[property]).toEqual({ ...object });
+        const obj = { [property]: { ...value, extraProp: true } };
+        expect(schema.parse(obj)[property]).toEqual({ ...value });
       });
 
       it(`should accept a partial object with some ${property} properties`, () => {
-        for (const [key, value] of Object.entries(object)) {
+        for (const [key, val] of Object.entries(value)) {
           expect(
-            schema.parse({ [property]: { [key]: value } })[property]
-          ).toEqual({ [key]: value });
+            schema.parse({ [property]: { [key]: val } })[property]
+          ).toEqual({ [key]: val });
         }
         expect(
           schema.parse({ [property]: { extraProp: true } })[property]
@@ -1706,336 +1795,339 @@ export const configTests = (schema, strictCheck) => {
     }
   };
 
-  // The options config tests
+  // The options config validation tests
   return {
     puppeteer: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     puppeteerArgs: (property, value, filteredValue) => {
       describe(property, () =>
-        generalTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue)
       );
     },
     highcharts: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     highchartsVersion: (property) => {
-      describe(property, () => generalTests.version(property));
+      describe(property, () => validationTests.version(property));
     },
     highchartsCdnUrl: (property, correctValue, incorrectValue) => {
       describe(property, () =>
-        generalTests.acceptValues(property, correctValue, incorrectValue)
+        validationTests.acceptValues(property, correctValue, incorrectValue)
       );
     },
     highchartsForceFetch: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     highchartsCachePath: (property) => {
-      describe(property, () => generalTests.string(property, strictCheck));
+      describe(property, () => validationTests.string(property, strictCheck));
     },
     highchartsAdminToken: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     highchartsCoreScripts: (property, value, filteredValue) => {
       describe(property, () =>
-        generalTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue)
       );
     },
     highchartsModuleScripts: (property, value, filteredValue) => {
       describe(property, () =>
-        generalTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue)
       );
     },
     highchartsIndicatorScripts: (property, value, filteredValue) => {
       describe(property, () =>
-        generalTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue)
       );
     },
     highchartsCustomScripts: (property, value, filteredValue) => {
       describe(property, () =>
-        generalTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue)
       );
     },
     export: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     exportInfile: (property) => {
-      describe(property, () => generalTests.infile(property));
+      describe(property, () => validationTests.infile(property));
     },
     exportInstr: (property) => {
-      describe(property, () => generalTests.object(property));
+      describe(property, () => validationTests.object(property));
     },
     exportOptions: (property) => {
-      describe(property, () => generalTests.object(property));
+      describe(property, () => validationTests.object(property));
     },
     exportOutfile: (property) => {
-      describe(property, () => generalTests.outfile(property));
+      describe(property, () => validationTests.outfile(property));
     },
     exportType: (property, correctValue, incorrectValue) => {
       describe(property, () =>
-        generalTests.acceptValues(property, correctValue, incorrectValue)
+        validationTests.acceptValues(property, correctValue, incorrectValue)
       );
     },
     exportConstr: (property, correctValue, incorrectValue) => {
       describe(property, () =>
-        generalTests.acceptValues(property, correctValue, incorrectValue)
+        validationTests.acceptValues(property, correctValue, incorrectValue)
       );
     },
     exportDefaultHeight: (property) => {
-      describe(property, () => generalTests.positiveNum(property));
+      describe(property, () => validationTests.positiveNum(property));
     },
     exportDefaultWidth: (property) => {
-      describe(property, () => generalTests.positiveNum(property));
+      describe(property, () => validationTests.positiveNum(property));
     },
     exportDefaultScale: (property) => {
-      describe(property, () => generalTests.scale(property));
+      describe(property, () => validationTests.scale(property));
     },
     exportHeight: (property) => {
-      describe(property, () => generalTests.nullablePositiveNum(property));
+      describe(property, () => validationTests.nullablePositiveNum(property));
     },
     exportWidth: (property) => {
-      describe(property, () => generalTests.nullablePositiveNum(property));
+      describe(property, () => validationTests.nullablePositiveNum(property));
     },
     exportScale: (property) => {
-      describe(property, () => generalTests.nullableScale(property));
+      describe(property, () => validationTests.nullableScale(property));
     },
     exportGlobalOptions: (property) => {
-      describe(property, () => generalTests.object(property));
+      describe(property, () => validationTests.object(property));
     },
     exportThemeOptions: (property) => {
-      describe(property, () => generalTests.object(property));
+      describe(property, () => validationTests.object(property));
     },
     exportBatch: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     exportRasterizationTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     customLogic: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     customLogicAllowCodeExecution: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     customLogicAllowFileResources: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     customLogicCustomCode: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     customLogicCallback: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     customLogicResources: (property) => {
-      describe(property, () => generalTests.resources(property));
+      describe(property, () => validationTests.resources(property));
     },
     customLogicLoadConfig: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     customLogicCreateConfig: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     server: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     serverEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverHost: (property) => {
-      describe(property, () => generalTests.string(property, strictCheck));
+      describe(property, () => validationTests.string(property, strictCheck));
     },
     serverPort: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverBenchmarking: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverProxy: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     serverProxyHost: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     serverProxyPort: (property) => {
-      describe(property, () => generalTests.nullableNonNegativeNum(property));
+      describe(property, () =>
+        validationTests.nullableNonNegativeNum(property)
+      );
     },
     serverProxyTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverRateLimiting: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     serverRateLimitingEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverRateLimitingMaxRequests: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverRateLimitingWindow: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverRateLimitingDelay: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverRateLimitingTrustProxy: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverRateLimitingSkipKey: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     serverRateLimitingSkipToken: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     serverSsl: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     serverSslEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverSslForce: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     serverSslPort: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     serverSslCertPath: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
     pool: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     poolMinWorkers: (property) => {
-      describe(property, () => generalTests.positiveNum(property));
+      describe(property, () => validationTests.positiveNum(property));
     },
     poolMaxWorkers: (property) => {
-      describe(property, () => generalTests.positiveNum(property));
+      describe(property, () => validationTests.positiveNum(property));
     },
     poolWorkLimit: (property) => {
-      describe(property, () => generalTests.positiveNum(property));
+      describe(property, () => validationTests.positiveNum(property));
     },
     poolAcquireTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolCreateTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolDestroyTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolIdleTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolCreateRetryInterval: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolReaperInterval: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     poolBenchmarking: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     logging: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     loggingLevel: (property) => {
-      describe(property, () => generalTests.logLevel(property, strictCheck));
+      describe(property, () => validationTests.logLevel(property, strictCheck));
     },
     loggingFile: (property) => {
-      describe(property, () => generalTests.string(property, strictCheck));
+      describe(property, () => validationTests.string(property, strictCheck));
     },
     loggingDest: (property) => {
-      describe(property, () => generalTests.string(property, strictCheck));
+      describe(property, () => validationTests.string(property, strictCheck));
     },
     loggingToConsole: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     loggingToFile: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     ui: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     uiEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     uiRoute: (property, correctValue, incorrectValue) => {
       describe(property, () =>
-        generalTests.acceptValues(property, correctValue, incorrectValue)
+        validationTests.acceptValues(property, correctValue, incorrectValue)
       );
     },
     other: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     otherNodeEnv: (property, correctValue, incorrectValue) => {
-      describe('other.nodeEnv', () =>
-        generalTests.acceptValues(property, correctValue, incorrectValue));
+      describe(property, () =>
+        validationTests.acceptValues(property, correctValue, incorrectValue)
+      );
     },
     otherListenToProcessExits: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     otherNoLogo: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     otherHardResetPage: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     otherBrowserShellMode: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debug: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     debugEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debugHeadless: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debugDevtools: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debugListenToConsole: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debugDumpio: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     debugSlowMo: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     debugDebuggingPort: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     webSocket: (property, value) => {
-      describe(property, () => generalTests.configObject(property, value));
+      describe(property, () => validationTests.configObject(property, value));
     },
     webSocketEnable: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     webSocketReconnect: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     webSocketRejectUnauthorized: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     webSocketPingTimeout: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     webSocketReconnectInterval: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     webSocketReconnectAttempts: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     webSocketMessageInterval: (property) => {
-      describe(property, () => generalTests.nonNegativeNum(property));
+      describe(property, () => validationTests.nonNegativeNum(property));
     },
     webSocketGatherAllOptions: (property) => {
-      describe(property, () => generalTests.boolean(property));
+      describe(property, () => validationTests.boolean(property));
     },
     webSocketUrl: (property, correctValue, incorrectValue) => {
       describe(property, () =>
-        generalTests.nullableAcceptValues(
+        validationTests.nullableAcceptValues(
           property,
           correctValue,
           incorrectValue
@@ -2043,10 +2135,22 @@ export const configTests = (schema, strictCheck) => {
       );
     },
     webSocketSecret: (property) => {
-      describe(property, () => generalTests.string(property, false));
+      describe(property, () => validationTests.string(property, false));
     },
-    payload: (property) => {
-      describe(property, () => {});
+    payload: (property, value) => {
+      describe(property, () => validationTests.configObject(property, value));
+    },
+    payloadSvg: (property) => {
+      describe(property, () => validationTests.string(property, false));
+    },
+    payloadB64: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    payloadNoDownload: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    payloadRequestId: (property) => {
+      describe(property, () => validationTests.string(property, false));
     }
   };
 };

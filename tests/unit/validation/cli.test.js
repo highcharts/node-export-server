@@ -1,9 +1,9 @@
 import { describe } from '@jest/globals';
 
-import { configTests } from './shared';
-import { CliSchema } from '../../../lib/envs';
+import { configTests } from './shared.js';
+import { CliSchema } from '../../../lib/validate.js';
 
-describe('Overall configuration options should be correctly parsed and validated', () => {
+describe('CLI options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
   const tests = configTests(CliSchema.partial(), false);
 
@@ -133,6 +133,14 @@ describe('Overall configuration options should be correctly parsed and validated
     gatherAllOptions: false,
     url: null,
     secret: null
+  });
+
+  // payload
+  tests.payload('payload', {
+    svg: "<svg xmlns='http://www.w3.org/2000/svg'></svg>",
+    b64: false,
+    noDownload: false,
+    requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
   });
 });
 
@@ -546,4 +554,21 @@ describe('WebSocket configuration options should be correctly parsed and validat
 
   // webSocket.secret
   tests.webSocketSecret('secret');
+});
+
+describe('Payload configuration options should be correctly parsed and validated', () => {
+  // Return config tests with a specific schema and strictCheck flag injected
+  const tests = configTests(CliSchema.shape.payload, false);
+
+  // payload.svg
+  tests.payloadSvg('svg');
+
+  // payload.b64
+  tests.payloadB64('b64');
+
+  // payload.noDownload
+  tests.payloadNoDownload('noDownload');
+
+  // payload.requestId
+  tests.payloadRequestId('requestId');
 });
