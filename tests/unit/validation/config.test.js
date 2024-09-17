@@ -1,11 +1,11 @@
 import { describe } from '@jest/globals';
 
 import { configTests } from './shared.js';
-import { ConfigSchema } from '../../../lib/validate.js';
+import { StrictConfigSchema } from '../../../lib/validate.js';
 
 describe('Configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.partial(), true);
+  const tests = configTests(StrictConfigSchema.partial(), true);
 
   // puppeteer
   tests.puppeteer('puppeteer', {
@@ -21,7 +21,7 @@ describe('Configuration options should be correctly parsed and validated', () =>
   // highcharts
   tests.highcharts('highcharts', {
     version: 'latest',
-    cdnUrl: 'https://code.highcharts.com/',
+    cdnUrl: 'https://code.highcharts.com',
     forceFetch: false,
     cachePath: '.cache',
     coreScripts: ['highcharts'],
@@ -146,7 +146,7 @@ describe('Configuration options should be correctly parsed and validated', () =>
 
 describe('Puppeteer configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.puppeteer, true);
+  const tests = configTests(StrictConfigSchema.shape.puppeteer, true);
 
   // puppeteer.args
   tests.puppeteerArgs(
@@ -170,7 +170,7 @@ describe('Puppeteer configuration options should be correctly parsed and validat
 
 describe('Highcharts configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.highcharts, true);
+  const tests = configTests(StrictConfigSchema.shape.highcharts, true);
 
   // highcharts.version
   tests.highchartsVersion('version');
@@ -227,7 +227,7 @@ describe('Highcharts configuration options should be correctly parsed and valida
 
 describe('Export configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.export, true);
+  const tests = configTests(StrictConfigSchema.shape.export, true);
 
   // export.infile
   tests.exportInfile('infile');
@@ -288,7 +288,7 @@ describe('Export configuration options should be correctly parsed and validated'
 
 describe('Custom Logic configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.customLogic, true);
+  const tests = configTests(StrictConfigSchema.shape.customLogic, true);
 
   // customLogic.allowCodeExecution
   tests.customLogicAllowCodeExecution('allowCodeExecution');
@@ -314,7 +314,7 @@ describe('Custom Logic configuration options should be correctly parsed and vali
 
 describe('Server configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.server, true);
+  const tests = configTests(StrictConfigSchema.shape.server, true);
 
   // server.enable
   tests.serverEnable('enable');
@@ -357,7 +357,7 @@ describe('Server configuration options should be correctly parsed and validated'
 
 describe('Server Proxy configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.server.shape.proxy, true);
+  const tests = configTests(StrictConfigSchema.shape.server.shape.proxy, true);
 
   // server.proxy.host
   tests.serverProxyHost('host');
@@ -371,7 +371,10 @@ describe('Server Proxy configuration options should be correctly parsed and vali
 
 describe('Server Rate Limiting configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.server.shape.rateLimiting, true);
+  const tests = configTests(
+    StrictConfigSchema.shape.server.shape.rateLimiting,
+    true
+  );
 
   // server.rateLimiting.enable
   tests.serverRateLimitingEnable('enable');
@@ -397,7 +400,7 @@ describe('Server Rate Limiting configuration options should be correctly parsed 
 
 describe('Server SSL configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.server.shape.ssl, true);
+  const tests = configTests(StrictConfigSchema.shape.server.shape.ssl, true);
 
   // server.ssl.enable
   tests.serverSslEnable('enable');
@@ -414,7 +417,7 @@ describe('Server SSL configuration options should be correctly parsed and valida
 
 describe('Pool configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.pool, true);
+  const tests = configTests(StrictConfigSchema.shape.pool, true);
 
   // pool.minWorkers
   tests.poolMinWorkers('minWorkers');
@@ -449,7 +452,7 @@ describe('Pool configuration options should be correctly parsed and validated', 
 
 describe('Logging configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.logging, true);
+  const tests = configTests(StrictConfigSchema.shape.logging, true);
 
   // logging.level
   tests.loggingLevel('level');
@@ -469,7 +472,7 @@ describe('Logging configuration options should be correctly parsed and validated
 
 describe('UI configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.ui, true);
+  const tests = configTests(StrictConfigSchema.shape.ui, true);
 
   // ui.enable
   tests.uiEnable('enable');
@@ -480,7 +483,7 @@ describe('UI configuration options should be correctly parsed and validated', ()
 
 describe('Other configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.other, true);
+  const tests = configTests(StrictConfigSchema.shape.other, true);
 
   // other.nodeEnv
   tests.otherNodeEnv(
@@ -504,7 +507,7 @@ describe('Other configuration options should be correctly parsed and validated',
 
 describe('Debug configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.debug, true);
+  const tests = configTests(StrictConfigSchema.shape.debug, true);
 
   // debug.enable
   tests.debugEnable('enable');
@@ -530,7 +533,7 @@ describe('Debug configuration options should be correctly parsed and validated',
 
 describe('WebSocket configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.webSocket, true);
+  const tests = configTests(StrictConfigSchema.shape.webSocket, true);
 
   // webSocket.enable
   tests.webSocketEnable('enable');
@@ -569,7 +572,7 @@ describe('WebSocket configuration options should be correctly parsed and validat
 
 describe('Payload configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(ConfigSchema.shape.payload, true);
+  const tests = configTests(StrictConfigSchema.shape.payload, true);
 
   // payload.svg
   tests.payloadSvg('svg');

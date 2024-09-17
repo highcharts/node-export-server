@@ -1,0 +1,5 @@
+{
+  "infile": "./samples/cli/svgBasic.svg",
+  "type": "pdf",
+  "scale": 3
+}

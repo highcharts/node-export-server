@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 
-import exporter from '../../lib/index.js';
+import exporter, { initExport } from '../../lib/index.js';
 
 // Export settings with new options structure (Puppeteer)
 const exportSettings = {
@@ -21,23 +21,23 @@ const exportSettings = {
 const start = async () => {
   try {
     // Set the new options
-    const options = exporter.setOptions(exportSettings);
+    const options = exporter.setGeneralOptions(exportSettings);
 
     // Init a pool for one export
-    await exporter.initExport(options);
+    await initExport(options);
 
     // Perform an export
-    await exporter.startExport(options, async (error, info) => {
+    await exporter.startExport(options, async (error, data) => {
       // Exit process and display error
       if (error) {
         throw error;
       }
-      const { outfile, type } = info.options.export;
+      const { outfile, type } = data.options.export;
 
       // Save the base64 from a buffer to a correct image file
       writeFileSync(
         outfile,
-        type !== 'svg' ? Buffer.from(info.result, 'base64') : info.result
+        type !== 'svg' ? Buffer.from(data.result, 'base64') : data.result
       );
 
       // Kill the pool

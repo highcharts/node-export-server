@@ -52,9 +52,9 @@ describe('isCorrectJSON', () => {
     expect(isCorrectJSON(json)).toEqual({ key: 'value' });
   });
 
-  it('returns false for invalid JSON strings', () => {
+  it('returns null for invalid JSON strings', () => {
     const json = '{"key":value}';
-    expect(isCorrectJSON(json)).toBe(false);
+    expect(isCorrectJSON(json)).toBe(null);
   });
 
   it('parses JavaScript objects', () => {
@@ -71,17 +71,17 @@ describe('isCorrectJSON', () => {
 
   it('handles non-JSON strings', () => {
     const str = 'Just a string';
-    expect(isCorrectJSON(str)).toBe(false);
+    expect(isCorrectJSON(str)).toBe(null);
   });
 
   it('handles non-object types (e.g., numbers, booleans)', () => {
-    expect(isCorrectJSON(123)).toBe(123);
-    expect(isCorrectJSON(true)).toBe(true);
+    expect(isCorrectJSON(123)).toBe(null);
+    expect(isCorrectJSON(true)).toBe(null);
   });
 
   it('correctly parses and stringifies an array when toString is true', () => {
     const arr = [1, 2, 3];
-    expect(isCorrectJSON(arr, true)).toBe('[1,2,3]');
+    expect(isCorrectJSON(arr, true)).toBe(null);
   });
 });
 

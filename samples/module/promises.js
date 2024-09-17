@@ -1,13 +1,13 @@
 import { writeFileSync } from 'fs';
 
-import exporter from '../../lib/index.js';
+import exporter, { initExport } from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
   // Set the new options
-  const options = exporter.setOptions(exportOptions);
+  const options = exporter.setGeneralOptions(exportOptions);
 
   // Init the pool
-  await exporter.initExport(options);
+  await initExport(options);
 
   const promises = [];
   const chartResults = [];
@@ -19,13 +19,13 @@ const exportCharts = async (charts, exportOptions = {}) => {
         const settings = { ...options };
         settings.export.options = chart;
 
-        exporter.startExport(settings, (error, info) => {
+        exporter.startExport(settings, (error, data) => {
           if (error) {
             return reject(error);
           }
 
           // Add the data to the chartResults
-          chartResults.push(info.result);
+          chartResults.push(data.result);
           resolve();
         });
       })
@@ -82,7 +82,7 @@ exportCharts(
     charts.forEach((chart, index) => {
       // Save the base64 from a buffer to a correct image file
       writeFileSync(
-        `./samples/module/promise_${index + 1}.jpeg`,
+        `./samples/module/promise${index + 1}.jpeg`,
         Buffer.from(chart, 'base64')
       );
     });

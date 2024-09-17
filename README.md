@@ -100,7 +100,7 @@ The format, along with its default values, is as follows (using the recommended 
   },
   "highcharts": {
     "version": "latest",
-    "cdnUrl": "https://code.highcharts.com/",
+    "cdnUrl": "https://code.highcharts.com",
     "forceFetch": false,
     "cachePath": ".cache",
     "coreScripts": [
@@ -188,7 +188,7 @@ The format, along with its default values, is as follows (using the recommended 
     "infile": false,
     "instr": false,
     "options": false,
-    "outfile": false,
+    "outfile": "chart.png",
     "type": "png",
     "constr": "chart",
     "height": 400,
@@ -290,22 +290,27 @@ The format, along with its default values, is as follows (using the recommended 
 
 ## Custom JSON Config
 
-To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option.
+To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option. The value of the `<filepath>` must be set with the _.json_ extension.
 
 ## Environment Variables
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
+
+### Puppeteer Config
+
+- `PUPPETEER_ARGS`: An array of an additional Puppeteer arguments sent to the browser init (defaults to ``).
 
 ### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
-- `HIGHCHARTS_CACHE_PATH`: In which directory should the fetched Highcharts scripts be placed (defaults to `.cache`).
+- `HIGHCHARTS_CACHE_PATH`: A directory path where the fetched Highcharts scripts should be placed (defaults to `.cache`).
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
+- `HIGHCHARTS_CUSTOM_SCRIPTS`: Additional custom scripts or dependencies to fetch (defaults to ``).
 
 ### Export Config
 
@@ -551,7 +556,7 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
 
   - `/`: An endpoint for exporting charts.
   - `/:filename` - An endpoint for exporting charts with a specified filename parameter to save the chart to. The file will be downloaded with the _{filename}.{type}_ name (the `noDownload` must be set to **false**).
-  - `/change_hc_version/:newVersion`: An authenticated endpoint allowing the modification of the Highcharts version on the server through the use of a token.
+  - `/version_change/:newVersion`: An authenticated endpoint allowing the modification of the Highcharts version on the server through the use of a token.
 
 - GET
   - `/`: An endpoint to perform exports through the user interface the server allows it.
@@ -559,18 +564,18 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
 
 ## Switching Highcharts Version At Runtime
 
-If the `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /change_hc_version/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
+If the `HIGHCHARTS_ADMIN_TOKEN` is set, you can use the `POST /version_change/:newVersion` route to switch the Highcharts version on the server at runtime, ie. without restarting or redeploying the application.
 
 A sample request to change the version to 10.3.3 is as follows:
 
 ```
-curl -H 'hc-auth: <YOUR AUTH TOKEN>' -X POST <SERVER URL>/change_hc_version/10.3.3
+curl -H 'hc-auth: <YOUR AUTH TOKEN>' -X POST <SERVER URL>/version_change/10.3.3
 ```
 
 e.g.
 
 ```
-curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change_hc_version/10.3.3
+curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/version_change/10.3.3
 ```
 
 This is useful to e.g. upgrade to the latest HC version without downtime.
@@ -583,7 +588,7 @@ Finally, the Export Server can also be used as a Node.js module to simplify inte
 // Import the Highcharts Export Server module
 const exporter = require('highcharts-export-server');
 
-// Export options correspond to the available CLI/HTTP arguments described above
+// Options correspond to the available CLI/HTTP arguments described above
 const options = {
   export: {
     type: 'png',
@@ -608,21 +613,23 @@ const options = {
   }
 };
 
-// Initialize export settings with your chart's config
-const exportSettings = exporter.setOptions(options);
+// Update general options with user configuration
+const generalOptions = exporter.setGeneralOptions(options);
 
 // Must initialize exporting before being able to export charts
-await exporter.initExport(exportSettings);
+await exporter.initExport(generalOptions);
 
 // Perform an export
-await exporter.startExport(exportSettings, async (error, info) => {
-  // The export result is now in info
-  // It will be base64 encoded (info.data)
+await exporter.startExport(generalOptions, async (error, data) => {
+  // The export result is now in data
+  // It will be base64 encoded (data.result)
 
   // Kill the pool when we are done with it
   await exporter.killPool();
 });
 ```
+
+In order for everything to work as it is supposed to, the `setGeneralOptions` function must be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
 
 ## CommonJS Support
 
@@ -691,10 +698,15 @@ This package supports both CommonJS and ES modules.
 
 - `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
 
-- `setOptions(userOptions, args)`: Initializes and sets the general options for the server instace, keeping the principle of the options load priority. It accepts optional userOptions and args from the CLI.
+- `getGeneralOptions()`: Gets the general options of the export server instance.
 
-  - `{Object} userOptions`: User-provided options for customization.
-  - `{Array} args`: Command-line arguments for additional configuration (CLI usage).
+  -`@returns {Object}` The general options object.
+
+- `setGeneralOptions(customOptions = {}, cliArgs = [])`: Sets the general options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
+
+  - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration.
+  - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration.
+  - `@returns {Object}` The updated general options object, reflecting the merged configuration from all available sources.
 
 - `async shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.
 
@@ -790,7 +802,7 @@ Additionally, some options are now named differently due to the new structure an
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
 
-If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/options_phantomjs.js` file.
+If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/optionsPhantomjs.js` file.
 
 ## Note About Chart Size
 

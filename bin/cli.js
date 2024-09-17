@@ -13,7 +13,15 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import main from '../lib/index.js';
+import { singleExport, batchExport } from '../lib/chart.js';
+import { setGeneralOptions } from '../lib/config.js';
+import { initExport } from '../lib/index.js';
+import { log, logWithStack } from '../lib/logger.js';
+import { manualConfig } from '../lib/prompts.js';
+import { shutdownCleanUp } from '../lib/resourceRelease.js';
+import { printLogo, printVersion } from '../lib/utils.js';
+import { printUsage } from '../lib/schemas/config.js';
+import { startServer } from '../lib/server/server.js';
 
 import ExportError from '../lib/errors/ExportError.js';
 
@@ -24,7 +32,7 @@ import ExportError from '../lib/errors/ExportError.js';
  * @throws {Error} Throws an Error if an unexpected error occurs during
  * execution.
  */
-const start = async () => {
+async function start() {
   try {
     // Get the CLI arguments
     const args = process.argv;
@@ -34,19 +42,19 @@ const start = async () => {
       ['-v', '--v', '-version', '--version'].includes(args[args.length - 1])
     ) {
       // Print logo with the version information
-      return main.printVersion();
+      return printVersion();
     }
 
     // Display help information if requested
     if (['-h', '--h', '-help', '--help'].includes(args[args.length - 1])) {
       // Print logo with the version information
-      return main.printUsage();
+      return printUsage();
     }
 
     // Print logo with a version and usage information if no arguments supplied
     if (args.length <= 2) {
-      main.printUsage();
-      return main.log(
+      printUsage();
+      return log(
         2,
         '[cli] The number of provided arguments is too small. Please refer to the help section above.'
       );
@@ -57,55 +65,43 @@ const start = async () => {
     // 2. Options from a custom JSON file (loaded by the --loadConfig argument)
     // 3. Options from the environment variables (the .env file)
     // 4. Options from the CLI
-    const options = main.setOptions(null, args);
+    const options = setGeneralOptions(null, args);
 
     // If all options correctly parsed
     if (options) {
       // Print initial logo or text
-      main.printLogo(options.other.noLogo);
+      printLogo(options.other.noLogo);
 
       // In this case we want to prepare config manually
       if (options.customLogic.createConfig) {
-        return main.manualConfig(options.customLogic.createConfig);
+        return manualConfig(options.customLogic.createConfig);
       }
 
       // Start server
       if (options.server.enable) {
         // Init the export mechanism for the server configuration
-        await main.initExport(options);
+        await initExport(options);
 
         // Run the server
-        await main.startServer(options.server);
+        await startServer(options.server);
       } else {
         // Perform batch exports
         if (options.export.batch) {
-          // If not set explicitly, use default option for batch exports
-          if (!args.includes('--minWorkers', '--maxWorkers')) {
-            options.pool = {
-              ...options.pool,
-              minWorkers: 2,
-              maxWorkers: 25
-            };
-          }
-
           // Init a pool for the batch exports
-          await main.initExport(options);
+          await initExport(options);
 
           // Start batch exports
-          await main.batchExport(options);
+          await batchExport(options);
         } else {
           // No need for multiple workers in case of a single CLI export
-          options.pool = {
-            ...options.pool,
-            minWorkers: 1,
-            maxWorkers: 1
-          };
+          options.pool.minWorkers = 1;
+          options.pool.maxWorkers = 1;
 
           // Init a pool for one export
-          await main.initExport(options);
+          await initExport(options);
 
           // Start a single export
-          await main.singleExport(options);
+          await singleExport(options);
         }
       }
     } else {
@@ -115,11 +111,11 @@ const start = async () => {
     }
   } catch (error) {
     // Log the error with stack
-    main.logWithStack(1, error);
+    logWithStack(1, error);
 
     // Gracefully shut down the process
-    await main.shutdownCleanUp(1);
+    await shutdownCleanUp(1);
   }
-};
+}
 
 start();

@@ -1,23 +1,23 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { validatePropOfSchema } from '../../utils/tests_utils.js';
+import { validatePropOfSchema } from '../../utils/testsUtils.js';
 
 /**
  * Runs a series of tests to validate and parse configuration properties using
  * the injected schema. Optionally performs strict checks.
  *
- * @param {object} schema - The schema used for validation and parsing.
+ * @param {Object} schema - The schema used for validation and parsing.
  * @param {boolean} strictCheck - A flag indicating whether to enforce strict
  * validation.
  */
-export const configTests = (schema, strictCheck) => {
+export function configTests(schema, strictCheck) {
   /**
    * Verifies that a property that is not present in the object results in
    * undefined.
    *
    * @param {string} property - The property to check for undefined.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const noPropertyToUndefined = (property) => {
     const obj = {};
@@ -29,7 +29,7 @@ export const configTests = (schema, strictCheck) => {
    *
    * @param {string} property - The property to check for accepting null.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const acceptUndefined = (property) => {
     const obj = { [property]: undefined };
@@ -41,7 +41,7 @@ export const configTests = (schema, strictCheck) => {
    *
    * @param {string} property - The property to check for accepting null.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const acceptNull = (property) => {
     const obj = { [property]: null };
@@ -54,7 +54,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for conversion of 'null'
    * to null.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const stringNullToNull = (property) => {
     const obj = { [property]: 'null' };
@@ -68,7 +68,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for conversion of
    * 'undefined' to null.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const stringUndefinedToNull = (property) => {
     const obj = { [property]: 'undefined' };
@@ -81,7 +81,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for conversion of '' to
    * null.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const emptyStringToNull = (property) => {
     const obj = { [property]: '' };
@@ -94,7 +94,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for a thrown validation
    * error.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const nullThrow = (property) => {
     const obj = { [property]: null };
@@ -107,7 +107,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for a thrown validation
    * error.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const stringNullThrow = (property) => {
     const obj = { [property]: 'null' };
@@ -121,7 +121,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for a thrown validation
    * error.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const stringUndefinedThrow = (property) => {
     const obj = { [property]: 'undefined' };
@@ -134,7 +134,7 @@ export const configTests = (schema, strictCheck) => {
    * @param {string} property - The property to check for a thrown validation
    * error.
    *
-   * @throws {Error} - Throws an error if the schema validation fails.
+   * @throws {Error} Throws an error if the schema validation fails.
    */
   const emptyStringThrow = (property) => {
     const obj = { [property]: '' };
@@ -2153,4 +2153,4 @@ export const configTests = (schema, strictCheck) => {
       describe(property, () => validationTests.string(property, false));
     }
   };
-};
+}
