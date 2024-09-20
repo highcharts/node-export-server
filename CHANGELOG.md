@@ -1,5 +1,9 @@
 # 4.0.2
 
+_Hotfix_:
+
+- Fixed missing 'msg' and 'public' bundle in 4.0.1 on NPM.
+
 _Fixes:_
 
 - Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
