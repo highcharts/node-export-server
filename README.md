@@ -261,7 +261,8 @@ The format, along with its default values, is as follows (using the recommended 
     "listenToProcessExits": true,
     "noLogo": false,
     "hardResetPage": false,
-    "browserShellMode": true
+    "browserShellMode": true,
+    "uploadSizeLimit": 52428800
   },
   "debug": {
     "enable": false,
@@ -371,6 +372,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `OTHER_UPLOAD_SIZE_LIMIT`: Determines the maximum size of the uploaded file in bytes. The default is 50MB (52428800 bytes).
 
 ### Debugging Config
 - `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
