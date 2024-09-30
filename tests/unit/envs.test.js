@@ -59,4 +59,25 @@ describe('Environment variables should be correctly parsed', () => {
     env.HIGHCHARTS_FORCE_FETCH = 'false';
     expect(Config.partial().parse(env).HIGHCHARTS_FORCE_FETCH).toEqual(false);
   });
+
+  test('PUPPETEER_DIR should be a valid path', () => {
+    const env = { PUPPETEER_DIR: '/path/to/dir' };
+    expect(Config.partial().parse(env).PUPPETEER_DIR).toEqual('/path/to/dir');
+
+    env.PUPPETEER_DIR = '/another/path/to/dir';
+    expect(Config.partial().parse(env).PUPPETEER_DIR).toEqual(
+      '/another/path/to/dir'
+    );
+
+    env.PUPPETEER_DIR = '';
+    expect(() => Config.partial().parse(env)).toThrow();
+  });
+
+  test('PUPPETEER_DIR can be a relative path', () => {
+    const env = { PUPPETEER_DIR: './tmp/' };
+    expect(Config.partial().parse(env).PUPPETEER_DIR).toEqual('./tmp/');
+
+    env.PUPPETEER_DIR = '../custom-tmp/';
+    expect(Config.partial().parse(env).PUPPETEER_DIR).toEqual('../custom-tmp/');
+  });
 });
