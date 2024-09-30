@@ -7,6 +7,7 @@ _Hotfix_:
 _Fixes:_
 
 - Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
+- Fix the base64 images not working in exported SVGs (Namespace prefix xlink for href on image is not defined, [#547](https://github.com/highcharts/node-export-server/issues/547)).
 
 # 4.0.1
 
