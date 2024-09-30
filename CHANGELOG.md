@@ -1,3 +1,9 @@
+# 4.1.0
+
+_New Features:_
+
+- Added `uploadSizeLimit` option (`OTHER_UPLOAD_SIZE_LIMIT` env) [(#580)](https://github.com/highcharts/node-export-server/pull/580).
+
 # 4.0.2
 
 _Hotfix_:
