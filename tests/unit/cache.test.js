@@ -1,4 +1,3 @@
-// cacheManager.test.js
 import { extractVersion, extractModuleName } from '../../lib/cache';
 
 describe('extractVersion', () => {
