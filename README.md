@@ -589,7 +589,7 @@ Finally, the Export Server can also be used as a Node.js module to simplify inte
 const exporter = require('highcharts-export-server');
 
 // Options correspond to the available CLI/HTTP arguments described above
-const options = {
+const customOptions = {
   export: {
     type: 'png',
     options: {
@@ -613,14 +613,14 @@ const options = {
   }
 };
 
-// Update general options with user configuration
-const generalOptions = exporter.setGeneralOptions(options);
+// Set options with user configuration
+const options = exporter.setOptions(customOptions);
 
 // Must initialize exporting before being able to export charts
-await exporter.initExport(generalOptions);
+await exporter.initExport(options);
 
 // Perform an export
-await exporter.startExport(generalOptions, async (error, data) => {
+await exporter.startExport(options, async (error, data) => {
   // The export result is now in data
   // It will be base64 encoded (data.result)
 
@@ -629,7 +629,7 @@ await exporter.startExport(generalOptions, async (error, data) => {
 });
 ```
 
-In order for everything to work as it is supposed to, the `setGeneralOptions` function must be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
+In order for everything to work as it is supposed to, the `setOptions` function must be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
 
 ## CommonJS Support
 
@@ -698,14 +698,16 @@ This package supports both CommonJS and ES modules.
 
 - `async killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
 
-- `getGeneralOptions()`: Gets the general options of the export server instance.
+- `getOptions(getGlobal = false)`: Gets the global options of the export server instance.
 
-  -`@returns {Object}` The general options object.
+  - `@param {boolean} [getGlobal = false]` - Optional parameter to decide whether to return the reference to the global options of the server instance object or return a copy of it.
+  - `@returns {Object}` The global options object of the server instance.
 
-- `setGeneralOptions(customOptions = {}, cliArgs = [])`: Sets the general options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
+- `setOptions(customOptions = {}, cliArgs = [])`: Sets the general options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
 
   - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration.
   - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration.
+  - `@param {boolean} [modifyGlobal = false]` - Optional parameter to decide whether to update and return the reference to the global options of the server instance object or return a copy of it.
   - `@returns {Object}` The updated general options object, reflecting the merged configuration from all available sources.
 
 - `async shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.

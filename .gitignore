@@ -15,6 +15,6 @@ resources.json
 
 **/*.png
 **/*.pdf
-# **/*.svg
+**/*.svg
 **/*.jpeg
 **/*.log

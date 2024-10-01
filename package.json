@@ -30,9 +30,9 @@
   },
   "scripts": {
     "prestart": "rm -rf tmp || npx -y rimraf tmp && node ./node_modules/puppeteer/install.mjs",
-    "start": "node ./bin/cli.js --enableServer 1 --logLevel 2",
-    "start:dev": "npx nodemon ./bin/cli.js --enableServer 1 --logLevel 4",
-    "start:debug": "node --inspect-brk=9229 ./bin/cli.js --enableDebug 1 --enableServer 1 --logLevel 4",
+    "start": "node ./bin/cli.js --enableServer true --logLevel 2",
+    "start:dev": "npx nodemon ./bin/cli.js --enableServer true --logLevel 4",
+    "start:debug": "node --inspect-brk=9229 ./bin/cli.js --enableDebug 1 --enableServer true --logLevel 4",
     "complete": "npm run lint && npm run format && npm run build",
     "lint": "eslint ./ --ext .js,.ts --fix",
     "format": "prettier ./ --config .prettierrc --write",
@@ -55,11 +55,11 @@
     "express": "^4.21.0",
     "express-rate-limit": "^7.4.0",
     "https-proxy-agent": "^7.0.5",
-    "jsdom": "^25.0.0",
+    "jsdom": "^25.0.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "prompts": "^2.4.2",
-    "puppeteer": "^23.3.1",
+    "puppeteer": "^23.4.1",
     "tarn": "^3.0.2",
     "uuid": "^10.0.0",
     "ws": "^8.18.0",
@@ -75,8 +75,8 @@
     "husky": "^9.1.6",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "rollup": "^4.21.3"
+    "rollup": "^4.22.5"
   }
 }

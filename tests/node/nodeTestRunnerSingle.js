@@ -18,7 +18,11 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter, { initExport } from '../../lib/index.js';
-import { __dirname, getNewDateTime } from '../../lib/utils.js';
+import {
+  __dirname,
+  getNewDateTime,
+  mergeConfigOptions
+} from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -42,23 +46,6 @@ console.log(
 
     // Check if file even exists and if it is a JSON
     if (existsSync(file) && file.endsWith('.json')) {
-      // Set options
-      const options = exporter.setGeneralOptions({
-        pool: {
-          minWorkers: 1,
-          maxWorkers: 1
-        },
-        logging: {
-          level: 0
-        }
-      });
-
-      // Initialize pool with disabled logging
-      await initExport(options);
-
-      // Start the export
-      console.log('[Test runner]'.blue, `Processing test ${file}.`);
-
       // Options from a file
       const fileOptions = JSON.parse(readFileSync(file));
 
@@ -72,12 +59,31 @@ console.log(
           )
       );
 
+      // Set options
+      const options = exporter.setOptions(
+        mergeConfigOptions(fileOptions, {
+          pool: {
+            minWorkers: 1,
+            maxWorkers: 1
+          },
+          logging: {
+            level: 0
+          }
+        })
+      );
+
+      // Initialize pool with disabled logging
+      await initExport(options);
+
+      // Start the export
+      console.log('[Test runner]'.blue, `Processing test ${file}.`);
+
       // The start date of a startExport function run
       const startTime = getNewDateTime();
 
       try {
         // Start the export process
-        await exporter.startExport(fileOptions, async (error, data) => {
+        await exporter.startExport(options, async (error, data) => {
           // Throw an error
           if (error) {
             throw error;

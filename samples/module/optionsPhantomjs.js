@@ -53,7 +53,7 @@ const start = async () => {
     const mappedOptions = exporter.mapToNewConfig(exportSettings);
 
     // Set the new options
-    const options = exporter.setGeneralOptions(mappedOptions);
+    const options = exporter.setOptions(mappedOptions);
 
     // Init a pool for one export
     await initExport(options);

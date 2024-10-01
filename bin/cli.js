@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { singleExport, batchExport } from '../lib/chart.js';
-import { setGeneralOptions } from '../lib/config.js';
+import { setOptions } from '../lib/config.js';
 import { initExport } from '../lib/index.js';
 import { log, logWithStack } from '../lib/logger.js';
 import { manualConfig } from '../lib/prompts.js';
@@ -65,7 +65,7 @@ async function start() {
     // 2. Options from a custom JSON file (loaded by the --loadConfig argument)
     // 3. Options from the environment variables (the .env file)
     // 4. Options from the CLI
-    const options = setGeneralOptions(null, args);
+    const options = setOptions(null, args, true);
 
     // If all options correctly parsed
     if (options) {

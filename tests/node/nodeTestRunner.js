@@ -46,12 +46,9 @@ console.log(
     // Get files names
     const files = readdirSync(scenariosPath);
 
-    // Set options
-    const options = exporter.setGeneralOptions();
-
     try {
-      // Initialize pool with disabled logging
-      await initExport(options);
+      // Initialize pool
+      await initExport();
     } catch (error) {
       await exporter.killPool();
       throw error;
@@ -90,9 +87,12 @@ console.log(
               // The start date of a startExport function run
               const startTime = getNewDateTime();
 
+              // Init options
+              const options = exporter.setOptions(fileOptions);
+
               // Start the export process
               exporter
-                .startExport(fileOptions, (error, data) => {
+                .startExport(options, (error, data) => {
                   // Throw an error
                   if (error) {
                     throw error;

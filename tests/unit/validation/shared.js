@@ -465,7 +465,7 @@ export function configTests(schema, strictCheck) {
     /**
      * The object validator.
      */
-    object(property) {
+    object(property, strictCheck) {
       it('should accept any object values', () => {
         const obj = { [property]: {} };
         expect(schema.parse(obj)[property]).toEqual({});
@@ -1122,6 +1122,121 @@ export function configTests(schema, strictCheck) {
     },
 
     /**
+     * The svg validator.
+     */
+    svg(property, strictCheck) {
+      it('should accept a string value that starts with the <svg or <?xml', () => {
+        const obj = {
+          [property]: "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        };
+        expect(schema.parse(obj)[property]).toBe(
+          "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        );
+        obj[property] =
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>';
+        expect(schema.parse(obj)[property]).toBe(
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>'
+        );
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      if (strictCheck) {
+        it("should not accept 'false', 'undefined', 'NaN', 'null', '' values", () => {
+          const obj = { [property]: 'false' };
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'undefined';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'NaN';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'null';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = '';
+          expect(() => schema.parse(obj)).toThrow();
+        });
+
+        it('should not accept null', () => {
+          nullThrow(property);
+        });
+
+        it('should not accept a stringified undefined', () => {
+          stringUndefinedThrow(property);
+        });
+
+        it('should not accept a stringified null', () => {
+          stringNullThrow(property);
+        });
+
+        it('should not accept an empty string', () => {
+          emptyStringThrow(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined'
+          ]));
+      } else {
+        it("should accept 'false', 'undefined', 'NaN', 'null', '' values and trasform to null", () => {
+          const obj = { [property]: 'false' };
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'undefined';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'NaN';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'null';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = '';
+          expect(schema.parse(obj)[property]).toBe(null);
+        });
+
+        it('should accept null', () => {
+          acceptNull(property);
+        });
+
+        it('should accept a stringified undefined and transform it to null', () => {
+          stringUndefinedToNull(property);
+        });
+
+        it('should accept a stringified null and transform it to null', () => {
+          stringNullToNull(property);
+        });
+
+        it('should accept an empty string and transform it to null', () => {
+          emptyStringToNull(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'emptyString',
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringUndefined',
+            'stringNull',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined',
+            'null'
+          ]));
+      }
+    },
+
+    /**
      * The outfile option validator.
      */
     outfile(property) {
@@ -1529,8 +1644,10 @@ export function configTests(schema, strictCheck) {
      * The logLevel option validator.
      */
     logLevel(property) {
-      it('should accept integer number values between the 1 and 5', () => {
-        const obj = { [property]: 1 };
+      it('should accept integer number values between the 0 and 5', () => {
+        const obj = { [property]: 0 };
+        expect(schema.parse(obj)[property]).toBe(0);
+        obj[property] = 1;
         expect(schema.parse(obj)[property]).toBe(1);
         obj[property] = 3;
         expect(schema.parse(obj)[property]).toBe(3);
@@ -1538,8 +1655,10 @@ export function configTests(schema, strictCheck) {
         expect(schema.parse(obj)[property]).toBe(5);
       });
 
-      it('should not accept float number values between the 1 and 5', () => {
-        const obj = { [property]: 1.1 };
+      it('should not accept float number values between the 0 and 5', () => {
+        const obj = { [property]: 0.1 };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = 1.1;
         expect(() => schema.parse(obj)).toThrow();
         obj[property] = 3.1;
         expect(() => schema.parse(obj)).toThrow();
@@ -1547,8 +1666,10 @@ export function configTests(schema, strictCheck) {
         expect(() => schema.parse(obj)).toThrow();
       });
 
-      it('should not accept stringified float number values between the 1 and 5', () => {
-        const obj = { [property]: '1.1' };
+      it('should not accept stringified float number values between the 0 and 5', () => {
+        const obj = { [property]: '0.1' };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = '1.1';
         expect(() => schema.parse(obj)).toThrow();
         obj[property] = '3.1';
         expect(() => schema.parse(obj)).toThrow();
@@ -1556,19 +1677,15 @@ export function configTests(schema, strictCheck) {
         expect(() => schema.parse(obj)).toThrow();
       });
 
-      it('should not accept number values that fall outside the 1 and 5 range', () => {
+      it('should not accept number values that fall outside the 0 and 5 range', () => {
         const obj = { [property]: -1.1 };
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = 0;
         expect(() => schema.parse(obj)).toThrow();
         obj[property] = 6;
         expect(() => schema.parse(obj)).toThrow();
       });
 
-      it('should not accept stringified number number values that fall outside the 1 and 5 range', () => {
+      it('should not accept stringified number number values that fall outside the 0 and 5 range', () => {
         const obj = { [property]: '-1.1' };
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = '0';
         expect(() => schema.parse(obj)).toThrow();
         obj[property] = '6';
         expect(() => schema.parse(obj)).toThrow();
@@ -1598,8 +1715,10 @@ export function configTests(schema, strictCheck) {
         it('should not accept values of other types', () =>
           validatePropOfSchema(schema, property, ['number', 'undefined']));
       } else {
-        it('should accept stringified number values between the 1 and 5', () => {
-          const obj = { [property]: '1' };
+        it('should accept stringified number values between the 0 and 5', () => {
+          const obj = { [property]: '0' };
+          expect(schema.parse(obj)[property]).toBe(0);
+          obj[property] = '1';
           expect(schema.parse(obj)[property]).toBe(1);
           obj[property] = '3';
           expect(schema.parse(obj)[property]).toBe(3);
@@ -1852,10 +1971,10 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.infile(property));
     },
     exportInstr: (property) => {
-      describe(property, () => validationTests.object(property));
+      describe(property, () => validationTests.object(property, false));
     },
     exportOptions: (property) => {
-      describe(property, () => validationTests.object(property));
+      describe(property, () => validationTests.object(property, false));
     },
     exportOutfile: (property) => {
       describe(property, () => validationTests.outfile(property));
@@ -1889,10 +2008,10 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.nullableScale(property));
     },
     exportGlobalOptions: (property) => {
-      describe(property, () => validationTests.object(property));
+      describe(property, () => validationTests.object(property, false));
     },
     exportThemeOptions: (property) => {
-      describe(property, () => validationTests.object(property));
+      describe(property, () => validationTests.object(property, false));
     },
     exportBatch: (property) => {
       describe(property, () => validationTests.string(property, false));
@@ -2141,7 +2260,7 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.configObject(property, value));
     },
     payloadSvg: (property) => {
-      describe(property, () => validationTests.string(property, false));
+      describe(property, () => validationTests.svg(property, false));
     },
     payloadB64: (property) => {
       describe(property, () => validationTests.boolean(property));

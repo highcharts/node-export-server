@@ -124,7 +124,7 @@ const exportSettings = {
 const start = async () => {
   try {
     // Set the new options
-    const options = exporter.setGeneralOptions(exportSettings);
+    const options = exporter.setOptions(exportSettings);
 
     // Init a pool for one export
     await initExport(options);

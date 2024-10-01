@@ -4,7 +4,7 @@ import exporter, { initExport } from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
   // Set the new options
-  const options = exporter.setGeneralOptions(exportOptions);
+  const options = exporter.setOptions(exportOptions);
 
   // Init the pool
   await initExport(options);
