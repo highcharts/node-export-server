@@ -15,18 +15,15 @@ See LICENSE file in root for details.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 
-import 'colors';
-
 import exporter from '../../lib/index.js';
 import { __dirname } from '../../lib/utils.js';
+import { style } from '../../lib/logger.js';
+import {
+  showStartingTestMessage,
+  showProcessingTestMessage
+} from '../test_utils.js';
 
-console.log(
-  'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates NodeJS module execution by using selected'.green,
-  'functions (initExport and startExport) of Highcharts Export Server.'.green,
-  '\nLoads a specified JSON file and runs it'.green,
-  '(results are stored in the ./test/node/_results).\n'.green
-);
+showStartingTestMessage();
 
 // Create a promise for the export
 (async () => {
@@ -57,7 +54,7 @@ console.log(
       await exporter.initExport(options);
 
       // Start the export
-      console.log('[Test runner]'.blue, `Processing test ${file}.`);
+      showProcessingTestMessage(file);
 
       // Options from a file
       const fileOptions = JSON.parse(readFileSync(file));
@@ -93,17 +90,17 @@ console.log(
 
           // Information about the results and the time it took
           console.log(
-            `[Success] Node module from file: ${file}, took: ${
+            `${style.green}[Success] Node module from file: ${file}, took: ${
               new Date().getTime() - startTime
-            }ms.`.green
+            }ms.${style.reset}`
           );
         });
       } catch (error) {
         // Information about the error and the time it took
         console.log(
-          `[Fail] Node module from file: ${file}, took: ${
+          `${style.red}[Fail] Node module from file: ${file}, took: ${
             new Date().getTime() - startTime
-          }ms.`.red
+          }ms.${style.reset}`
         );
       }
 
@@ -111,7 +108,7 @@ console.log(
       await exporter.killPool();
     } else {
       console.log(
-        'The test does not exist. Please give a full path starting from ./tests.'
+        `${style.red}The test does not exist. Please give a full path starting from ./tests.${style.reset}`
       );
     }
   } catch (error) {

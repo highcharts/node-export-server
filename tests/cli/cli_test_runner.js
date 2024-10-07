@@ -17,22 +17,18 @@ import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
-import 'colors';
-
 import { __dirname } from '../../lib/utils.js';
+import {
+  showStartingTestMessage,
+  showProcessingTestMessage,
+  showFailOrSuccessMessage,
+  showTestResults
+} from '../test_utils.js';
+
+showStartingTestMessage();
 
 // Convert from callback to promise
 const spawn = promisify(exec);
-
-// Test runner message
-console.log(
-  'Highcharts Export Server CLI Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates the CLI commands sent to Highcharts Export Server.'
-    .green,
-  '\nLoads all JSON files from the ./tests/cli folder and runs them sequentially.'
-    .green,
-  '\nThe results are stored in the ./tests/cli/_results.\n'.green
-);
 
 // Results and scenarios paths
 const resultsPath = join(__dirname, 'tests', 'cli', '_results');
@@ -52,7 +48,7 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
   // For a separate CLI command trigger
   await (async (file) => {
     try {
-      console.log('[Test runner]'.blue, `Processing test ${file}.`);
+      showProcessingTestMessage(file);
 
       // Read a CLI file
       const cliJson = JSON.parse(readFileSync(join(scenariosPath, file)));
@@ -93,13 +89,11 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
       }
       testCounter++;
 
-      const endMessage = `CLI command from file: ${file}, took ${
-        new Date().getTime() - startDate
-      }ms.`;
-
-      console.log(
-        didFail ? `[Fail] ${endMessage}`.red : `[Success] ${endMessage}`.green,
-        '\n'
+      showFailOrSuccessMessage(
+        didFail,
+        `CLI command from file: ${file}, took ${
+          new Date().getTime() - startDate
+        }ms.`
       );
     } catch (error) {
       console.error(error);
@@ -107,11 +101,4 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
   })(file);
 }
 
-// Display the results in numbers
-console.log(
-  '--------------------------------',
-  failsCounter
-    ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
-    : `\n${testCounter} tests done, errors not found!`.green,
-  '\n--------------------------------'
-);
+showTestResults(testCounter, failsCounter);

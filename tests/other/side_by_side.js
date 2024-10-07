@@ -17,8 +17,7 @@ import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-import 'colors';
-
+import { style } from '../../lib/logger.js';
 import { __dirname } from '../../lib/utils.js';
 
 // Results paths
@@ -32,9 +31,9 @@ const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message
 console.log(
-  'Highcharts Export Server side by side comparator'.yellow,
-  `\nPuppeteer: ${urls[0]}`.green,
-  `\nPhantomJS: ${urls[1]}\n`.blue
+  `${style.yellow}Highcharts Export Server side by side comparator${style.reset}\n`,
+  `${style.green}Puppeteer: ${urls[0]}${style.reset}\n`,
+  `${style.blue}PhantomJS: ${urls[1]}${style.reset}\n`
 );
 
 try {
@@ -105,15 +104,17 @@ try {
               index ? '[PhantomJS]' : '[Puppeteer]'
             } ${type} export, took ${new Date().getTime() - startDate}ms.`;
 
-            console.log(index ? message.blue : message.green);
+            console.log(
+              `${index ? style.blue : style.green}${message}${style.reset}`
+            );
           });
         }
       })
       .catch((error) => {
         if (error.code === 'ECONNREFUSED') {
           return console.log(
-            `[ERROR] Couldn't connect to ${url}.`.red,
-            `Set your server before running tests.`.red
+            `${style.red}[ERROR] Couldn't connect to ${url}.${style.reset}`,
+            `${style.red}Set your server before running tests.${style.reset}`
           );
         }
       });

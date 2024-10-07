@@ -21,18 +21,16 @@ import {
 } from 'fs';
 import { basename, join } from 'path';
 
-import 'colors';
-
 import exporter from '../../lib/index.js';
 import { __dirname } from '../../lib/utils.js';
+import { style } from '../../lib/logger.js';
+import {
+  showProcessingTestMessage,
+  showStartingTestMessage,
+  showTestResults
+} from '../test_utils.js';
 
-console.log(
-  'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
-  '\nThis tool simulates NodeJS module execution by using selected'.green,
-  'functions (initExport and startExport) of Highcharts Export Server.'.green,
-  '\nLoads all JSON files from the ./tests/node folder and runs them'.green,
-  '(results are stored in the ./test/node/_results).\n'.green
-);
+showStartingTestMessage();
 
 (async () => {
   try {
@@ -70,7 +68,7 @@ console.log(
         .map(
           (file) =>
             new Promise((resolve) => {
-              console.log('[Test runner]'.blue, `Processing test ${file}.`);
+              showProcessingTestMessage(file);
 
               // Options from a file
               const fileOptions = JSON.parse(
@@ -108,17 +106,17 @@ console.log(
 
                   // Information about the results and the time it took
                   console.log(
-                    `[Success] Node module from file: ${file}, took: ${
+                    `${style.green}[Success] Node module from file: ${file}, took: ${
                       new Date().getTime() - startTime
-                    }ms.`.green
+                    }ms.${style.green}`
                   );
                 })
                 .catch((error) => {
                   // Information about the error and the time it took
                   console.log(
-                    `[Fail] Node module from file: ${file}, took: ${
+                    `${style.red}[Fail] Node module from file: ${file}, took: ${
                       new Date().getTime() - startTime
-                    }ms.`.red
+                    }ms.${style.reset}`
                   );
                   exporter.setLogLevel(1);
                   exporter.logWithStack(1, error);
@@ -133,13 +131,7 @@ console.log(
         )
     ).then(async () => {
       // Summarize the run and kill the pool
-      console.log(
-        '\n--------------------------------',
-        failsCounter
-          ? `\n${testCounter} tests done, ${failsCounter} error(s) found!`.red
-          : `\n${testCounter} tests done, errors not found!`.green,
-        '\n--------------------------------'
-      );
+      showTestResults(testCounter, failsCounter);
       await exporter.killPool();
     });
   } catch (error) {
