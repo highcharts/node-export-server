@@ -46,8 +46,8 @@ export const possibleValues = {
   stringFunction: ['function () {}', '() => {}'],
 
   // Other objects
-  other: [new Date(), new RegExp('abc'), new Error('')],
-  stringOther: ['new Date()', 'new RegExp("abc")', 'new Error("")']
+  other: [new Date(), new Error(''), new RegExp('abc')],
+  stringOther: ['new Date()', 'new Error("")', 'new RegExp("abc")']
 };
 
 /**

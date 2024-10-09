@@ -12,19 +12,6 @@ import { validatePropOfSchema } from '../../utils/testsUtils.js';
  */
 export function configTests(schema, strictCheck) {
   /**
-   * Verifies that a property that is not present in the object results in
-   * undefined.
-   *
-   * @param {string} property - The property to check for undefined.
-   *
-   * @throws {Error} Throws an error if the schema validation fails.
-   */
-  const noPropertyToUndefined = (property) => {
-    const obj = {};
-    expect(schema.parse(obj)[property]).toBe(undefined);
-  };
-
-  /**
    * Verifies that a property with the value undefined is accepted.
    *
    * @param {string} property - The property to check for accepting null.
@@ -240,12 +227,10 @@ export function configTests(schema, strictCheck) {
       });
 
       if (strictCheck) {
-        it("should not accept 'false', 'undefined', 'NaN', 'null', '' values", () => {
+        it("should not accept 'false', 'undefined', 'null', '' values", () => {
           const obj = { [property]: 'false' };
           expect(() => schema.parse(obj)).toThrow();
           obj[property] = 'undefined';
-          expect(() => schema.parse(obj)).toThrow();
-          obj[property] = 'NaN';
           expect(() => schema.parse(obj)).toThrow();
           obj[property] = 'null';
           expect(() => schema.parse(obj)).toThrow();
@@ -283,12 +268,10 @@ export function configTests(schema, strictCheck) {
             'undefined'
           ]));
       } else {
-        it("should accept 'false', 'undefined', 'NaN', 'null', '' values and trasform to null", () => {
+        it("should accept 'false', 'undefined', 'null', '' values and trasform to null", () => {
           const obj = { [property]: 'false' };
           expect(schema.parse(obj)[property]).toBe(null);
           obj[property] = 'undefined';
-          expect(schema.parse(obj)[property]).toBe(null);
-          obj[property] = 'NaN';
           expect(schema.parse(obj)[property]).toBe(null);
           obj[property] = 'null';
           expect(schema.parse(obj)[property]).toBe(null);
@@ -463,106 +446,9 @@ export function configTests(schema, strictCheck) {
     },
 
     /**
-     * The object validator.
-     */
-    object(property, strictCheck) {
-      it('should accept any object values', () => {
-        const obj = { [property]: {} };
-        expect(schema.parse(obj)[property]).toEqual({});
-        obj[property] = { a: 1 };
-        expect(schema.parse(obj)[property]).toEqual({ a: 1 });
-        obj[property] = { a: '1', b: { c: 3 } };
-        expect(schema.parse(obj)[property]).toEqual({ a: '1', b: { c: 3 } });
-      });
-
-      it('should not accept any array values', () => {
-        const obj = { [property]: [] };
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = [1];
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = ['a'];
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = [{ a: 1 }];
-        expect(() => schema.parse(obj)).toThrow();
-      });
-
-      it('should not accept any other object based values', () => {
-        const obj = { [property]: function () {} };
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = () => {};
-        expect(() => schema.parse(obj)).toThrow();
-        obj[property] = new Date();
-        expect(() => schema.parse(obj)).toThrow();
-      });
-
-      it('should accept undefined', () => {
-        acceptUndefined(property);
-      });
-
-      it('should accept null', () => {
-        acceptNull(property);
-      });
-
-      if (strictCheck) {
-        it('should not accept a stringified undefined', () => {
-          stringUndefinedThrow(property);
-        });
-
-        it('should not accept a stringified null', () => {
-          stringNullThrow(property);
-        });
-
-        it('should not accept an empty string', () => {
-          emptyStringThrow(property);
-        });
-
-        it('should not accept values of other types', () =>
-          validatePropOfSchema(schema, property, [
-            'undefined',
-            'null',
-            'object',
-            'other'
-          ]));
-      } else {
-        it("should accept a string value that starts with the '{' and ends with the '}'", () => {
-          const obj = { [property]: '{}' };
-          expect(schema.parse(obj)[property]).toBe('{}');
-          obj[property] = '{ a: 1 }';
-          expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
-          obj[property] = '{ a: "1", b: { c: 3 } }';
-          expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
-        });
-
-        it('should accept a stringified undefined and transform it to null', () => {
-          stringUndefinedToNull(property);
-        });
-
-        it('should accept a stringified null and transform it to null', () => {
-          stringNullToNull(property);
-        });
-
-        it('should accept an empty string and transform it to null', () => {
-          emptyStringToNull(property);
-        });
-
-        it('should not accept values of other types', () =>
-          validatePropOfSchema(schema, property, [
-            'undefined',
-            'null',
-            'emptyString',
-            'stringUndefined',
-            'stringNull',
-            'stringObject',
-            'object',
-            'other'
-          ]));
-      }
-    },
-
-    /**
      * The array of strings validator.
      */
-    stringArray(property, value, correctValue) {
+    stringArray(property, value, correctValue, separator = ',') {
       it('should accept a string value or an array of strings and correctly parse it to an array of strings', () => {
         const obj = { [property]: value };
         expect(schema.parse(obj)[property]).toEqual(correctValue);
@@ -580,7 +466,7 @@ export function configTests(schema, strictCheck) {
 
         it('should accept an array of strings and filter it from the forbidden values', () => {
           const obj = {
-            [property]: [...value, 'false', 'undefined', 'NaN', 'null', '']
+            [property]: [...value, 'false', 'undefined', 'null', '']
           };
           expect(schema.parse(obj)[property]).toEqual(correctValue);
         });
@@ -611,7 +497,7 @@ export function configTests(schema, strictCheck) {
 
         it('should filter a stringified array of a values string from forbidden values and correctly parse it to an array of strings', () => {
           const obj = {
-            [property]: `[${value}, false, undefined, NaN, null,]`
+            [property]: `[${value}${separator} false${separator} undefined${separator} null${separator}]`
           };
           expect(schema.parse(obj)[property]).toEqual(correctValue);
         });
@@ -1050,6 +936,255 @@ export function configTests(schema, strictCheck) {
     },
 
     /**
+     * The svg validator.
+     */
+    svg(property) {
+      it('should accept a string value that starts with the <svg or <?xml', () => {
+        const obj = {
+          [property]: "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        };
+        expect(schema.parse(obj)[property]).toBe(
+          "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        );
+        obj[property] =
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>';
+        expect(schema.parse(obj)[property]).toBe(
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>'
+        );
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      it("should accept 'false', 'undefined', 'null', '' values and trasform to null", () => {
+        const obj = { [property]: 'false' };
+        expect(schema.parse(obj)[property]).toBe(null);
+        obj[property] = 'undefined';
+        expect(schema.parse(obj)[property]).toBe(null);
+        obj[property] = 'null';
+        expect(schema.parse(obj)[property]).toBe(null);
+        obj[property] = '';
+        expect(schema.parse(obj)[property]).toBe(null);
+      });
+
+      it('should accept null', () => {
+        acceptNull(property);
+      });
+
+      it('should accept a stringified undefined and transform it to null', () => {
+        stringUndefinedToNull(property);
+      });
+
+      it('should accept a stringified null and transform it to null', () => {
+        stringNullToNull(property);
+      });
+
+      it('should accept an empty string and transform it to null', () => {
+        emptyStringToNull(property);
+      });
+
+      it('should not accept values of other types', () =>
+        validatePropOfSchema(schema, property, [
+          'emptyString',
+          'string',
+          'stringBoolean',
+          'stringNumber',
+          'stringBigInt',
+          'stringUndefined',
+          'stringNull',
+          'stringSymbol',
+          'stringObject',
+          'stringArray',
+          'stringFunction',
+          'stringOther',
+          'undefined',
+          'null'
+        ]));
+    },
+
+    /**
+     * The chartConfig validator.
+     */
+    chartConfig(property) {
+      it('should accept any object values', () => {
+        const obj = { [property]: {} };
+        expect(schema.parse(obj)[property]).toEqual({});
+        obj[property] = { a: 1 };
+        expect(schema.parse(obj)[property]).toEqual({ a: 1 });
+        obj[property] = { a: '1', b: { c: 3 } };
+        expect(schema.parse(obj)[property]).toEqual({ a: '1', b: { c: 3 } });
+      });
+
+      it("should accept a string value that starts with the '{' and ends with the '}'", () => {
+        const obj = { [property]: '{}' };
+        expect(schema.parse(obj)[property]).toBe('{}');
+        obj[property] = '{ a: 1 }';
+        expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
+        obj[property] = '{ a: "1", b: { c: 3 } }';
+        expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
+      });
+
+      it('should accept a string value that starts with the <svg or <?xml', () => {
+        const obj = {
+          [property]: "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        };
+        expect(schema.parse(obj)[property]).toBe(
+          "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
+        );
+        obj[property] =
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>';
+        expect(schema.parse(obj)[property]).toBe(
+          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>'
+        );
+      });
+
+      it('should not accept any array values', () => {
+        const obj = { [property]: [] };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = [1];
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = ['a'];
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = [{ a: 1 }];
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should not accept any other object based values', () => {
+        const obj = { [property]: function () {} };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = () => {};
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = new Date();
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      it('should accept null', () => {
+        acceptNull(property);
+      });
+
+      it('should accept a stringified undefined and transform it to null', () => {
+        stringUndefinedToNull(property);
+      });
+
+      it('should accept a stringified null and transform it to null', () => {
+        stringNullToNull(property);
+      });
+
+      it('should accept an empty string and transform it to null', () => {
+        emptyStringToNull(property);
+      });
+
+      it('should not accept values of other types', () =>
+        validatePropOfSchema(schema, property, [
+          'undefined',
+          'null',
+          'emptyString',
+          'stringUndefined',
+          'stringNull',
+          'stringObject',
+          'object',
+          'other'
+        ]));
+    },
+
+    /**
+     * The additionalOptions validator.
+     */
+    additionalOptions(property) {
+      it('should accept any object values', () => {
+        const obj = { [property]: {} };
+        expect(schema.parse(obj)[property]).toEqual({});
+        obj[property] = { a: 1 };
+        expect(schema.parse(obj)[property]).toEqual({ a: 1 });
+        obj[property] = { a: '1', b: { c: 3 } };
+        expect(schema.parse(obj)[property]).toEqual({ a: '1', b: { c: 3 } });
+      });
+
+      it("should accept a string value that starts with the '{' and ends with the '}'", () => {
+        const obj = { [property]: '{}' };
+        expect(schema.parse(obj)[property]).toBe('{}');
+        obj[property] = '{ a: 1 }';
+        expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
+        obj[property] = '{ a: "1", b: { c: 3 } }';
+        expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
+      });
+
+      it('should accept string values that end with .json', () => {
+        const obj = { [property]: 'options.json' };
+        expect(schema.parse(obj)[property]).toBe('options.json');
+      });
+
+      it('should not accept string values that do not end with .json', () => {
+        const obj = { [property]: 'options.pdf' };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = 'options.png';
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should not accept string values that are not at least one character long without the extensions', () => {
+        const obj = { [property]: '.json' };
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should not accept any array values', () => {
+        const obj = { [property]: [] };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = [1];
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = ['a'];
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = [{ a: 1 }];
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should not accept any other object based values', () => {
+        const obj = { [property]: function () {} };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = () => {};
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = new Date();
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      it('should accept null', () => {
+        acceptNull(property);
+      });
+
+      it('should accept a stringified undefined and transform it to null', () => {
+        stringUndefinedToNull(property);
+      });
+
+      it('should accept a stringified null and transform it to null', () => {
+        stringNullToNull(property);
+      });
+
+      it('should accept an empty string and transform it to null', () => {
+        emptyStringToNull(property);
+      });
+
+      it('should not accept values of other types', () =>
+        validatePropOfSchema(schema, property, [
+          'undefined',
+          'null',
+          'emptyString',
+          'stringUndefined',
+          'stringNull',
+          'stringObject',
+          'object',
+          'other'
+        ]));
+    },
+
+    /**
      * The infile option validator.
      */
     infile(property) {
@@ -1115,121 +1250,6 @@ export function configTests(schema, strictCheck) {
             'emptyString',
             'stringUndefined',
             'stringNull',
-            'undefined',
-            'null'
-          ]));
-      }
-    },
-
-    /**
-     * The svg validator.
-     */
-    svg(property, strictCheck) {
-      it('should accept a string value that starts with the <svg or <?xml', () => {
-        const obj = {
-          [property]: "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
-        };
-        expect(schema.parse(obj)[property]).toBe(
-          "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
-        );
-        obj[property] =
-          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>';
-        expect(schema.parse(obj)[property]).toBe(
-          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>'
-        );
-      });
-
-      it('should accept undefined', () => {
-        acceptUndefined(property);
-      });
-
-      if (strictCheck) {
-        it("should not accept 'false', 'undefined', 'NaN', 'null', '' values", () => {
-          const obj = { [property]: 'false' };
-          expect(() => schema.parse(obj)).toThrow();
-          obj[property] = 'undefined';
-          expect(() => schema.parse(obj)).toThrow();
-          obj[property] = 'NaN';
-          expect(() => schema.parse(obj)).toThrow();
-          obj[property] = 'null';
-          expect(() => schema.parse(obj)).toThrow();
-          obj[property] = '';
-          expect(() => schema.parse(obj)).toThrow();
-        });
-
-        it('should not accept null', () => {
-          nullThrow(property);
-        });
-
-        it('should not accept a stringified undefined', () => {
-          stringUndefinedThrow(property);
-        });
-
-        it('should not accept a stringified null', () => {
-          stringNullThrow(property);
-        });
-
-        it('should not accept an empty string', () => {
-          emptyStringThrow(property);
-        });
-
-        it('should not accept values of other types', () =>
-          validatePropOfSchema(schema, property, [
-            'string',
-            'stringBoolean',
-            'stringNumber',
-            'stringBigInt',
-            'stringSymbol',
-            'stringObject',
-            'stringArray',
-            'stringFunction',
-            'stringOther',
-            'undefined'
-          ]));
-      } else {
-        it("should accept 'false', 'undefined', 'NaN', 'null', '' values and trasform to null", () => {
-          const obj = { [property]: 'false' };
-          expect(schema.parse(obj)[property]).toBe(null);
-          obj[property] = 'undefined';
-          expect(schema.parse(obj)[property]).toBe(null);
-          obj[property] = 'NaN';
-          expect(schema.parse(obj)[property]).toBe(null);
-          obj[property] = 'null';
-          expect(schema.parse(obj)[property]).toBe(null);
-          obj[property] = '';
-          expect(schema.parse(obj)[property]).toBe(null);
-        });
-
-        it('should accept null', () => {
-          acceptNull(property);
-        });
-
-        it('should accept a stringified undefined and transform it to null', () => {
-          stringUndefinedToNull(property);
-        });
-
-        it('should accept a stringified null and transform it to null', () => {
-          stringNullToNull(property);
-        });
-
-        it('should accept an empty string and transform it to null', () => {
-          emptyStringToNull(property);
-        });
-
-        it('should not accept values of other types', () =>
-          validatePropOfSchema(schema, property, [
-            'emptyString',
-            'string',
-            'stringBoolean',
-            'stringNumber',
-            'stringBigInt',
-            'stringUndefined',
-            'stringNull',
-            'stringSymbol',
-            'stringObject',
-            'stringArray',
-            'stringFunction',
-            'stringOther',
             'undefined',
             'null'
           ]));
@@ -1756,6 +1776,117 @@ export function configTests(schema, strictCheck) {
     },
 
     /**
+     * The logFile option validator.
+     */
+    logFile(property, strictCheck) {
+      it('should accept a string value that ends with the .log extension and is at least one character long without the extension', () => {
+        const obj = { [property]: 'text.log' };
+        expect(schema.parse(obj)[property]).toBe('text.log');
+        obj[property] = 't.log';
+        expect(schema.parse(obj)[property]).toBe('t.log');
+      });
+
+      it('should not accept a string value that does not end with the .log extension or is not at least one character long without the extension', () => {
+        const obj = { [property]: 'text' };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = '.log';
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      if (strictCheck) {
+        it("should not accept 'false', 'undefined', 'null', '' values", () => {
+          const obj = { [property]: 'false' };
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'undefined';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'null';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = '';
+          expect(() => schema.parse(obj)).toThrow();
+        });
+
+        it('should not accept null', () => {
+          nullThrow(property);
+        });
+
+        it('should not accept a stringified undefined', () => {
+          stringUndefinedThrow(property);
+        });
+
+        it('should not accept a stringified null', () => {
+          stringNullThrow(property);
+        });
+
+        it('should not accept an empty string', () => {
+          emptyStringThrow(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined'
+          ]));
+      } else {
+        it("should accept 'false', 'undefined', 'null', '' values and trasform to null", () => {
+          const obj = { [property]: 'false' };
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'undefined';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'null';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = '';
+          expect(schema.parse(obj)[property]).toBe(null);
+        });
+
+        it('should accept null', () => {
+          acceptNull(property);
+        });
+
+        it('should accept a stringified undefined and transform it to null', () => {
+          stringUndefinedToNull(property);
+        });
+
+        it('should accept a stringified null and transform it to null', () => {
+          stringNullToNull(property);
+        });
+
+        it('should accept an empty string and transform it to null', () => {
+          emptyStringToNull(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'emptyString',
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringUndefined',
+            'stringNull',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined',
+            'null'
+          ]));
+      }
+    },
+
+    /**
      * The resources option validator.
      */
     resources(property) {
@@ -1873,7 +2004,118 @@ export function configTests(schema, strictCheck) {
     },
 
     /**
-     * The config object section validator.
+     * The createConfig/loadConfig options validator.
+     */
+    customConfig(property, strictCheck) {
+      it('should accept a string value that ends with the .json extension and is at least one character long without the extension', () => {
+        const obj = { [property]: 'text.json' };
+        expect(schema.parse(obj)[property]).toBe('text.json');
+        obj[property] = 't.json';
+        expect(schema.parse(obj)[property]).toBe('t.json');
+      });
+
+      it('should not accept a string value that does not end with the .json extension or is not at least one character long without the extension', () => {
+        const obj = { [property]: 'text' };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = '.json';
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      if (strictCheck) {
+        it("should not accept 'false', 'undefined', 'null', '' values", () => {
+          const obj = { [property]: 'false' };
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'undefined';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = 'null';
+          expect(() => schema.parse(obj)).toThrow();
+          obj[property] = '';
+          expect(() => schema.parse(obj)).toThrow();
+        });
+
+        it('should not accept null', () => {
+          nullThrow(property);
+        });
+
+        it('should not accept a stringified undefined', () => {
+          stringUndefinedThrow(property);
+        });
+
+        it('should not accept a stringified null', () => {
+          stringNullThrow(property);
+        });
+
+        it('should not accept an empty string', () => {
+          emptyStringThrow(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined'
+          ]));
+      } else {
+        it("should accept 'false', 'undefined', 'null', '' values and trasform to null", () => {
+          const obj = { [property]: 'false' };
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'undefined';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = 'null';
+          expect(schema.parse(obj)[property]).toBe(null);
+          obj[property] = '';
+          expect(schema.parse(obj)[property]).toBe(null);
+        });
+
+        it('should accept null', () => {
+          acceptNull(property);
+        });
+
+        it('should accept a stringified undefined and transform it to null', () => {
+          stringUndefinedToNull(property);
+        });
+
+        it('should accept a stringified null and transform it to null', () => {
+          stringNullToNull(property);
+        });
+
+        it('should accept an empty string and transform it to null', () => {
+          emptyStringToNull(property);
+        });
+
+        it('should not accept values of other types', () =>
+          validatePropOfSchema(schema, property, [
+            'emptyString',
+            'string',
+            'stringBoolean',
+            'stringNumber',
+            'stringBigInt',
+            'stringUndefined',
+            'stringNull',
+            'stringSymbol',
+            'stringObject',
+            'stringArray',
+            'stringFunction',
+            'stringOther',
+            'undefined',
+            'null'
+          ]));
+      }
+    },
+
+    /**
+     * The config object validator.
      */
     configObject(property, value) {
       it(`should accept an object with the ${property} properties`, () => {
@@ -1897,12 +2139,13 @@ export function configTests(schema, strictCheck) {
         ).toEqual({});
       });
 
-      it('should accept undefined', () => {
-        acceptUndefined(property);
+      it('should accept object with no properties and transform it to undefined', () => {
+        const obj = {};
+        expect(schema.parse(obj)[property]).toBe(undefined);
       });
 
-      it('should accept object with no properties and transform it to undefined', () => {
-        noPropertyToUndefined(property);
+      it('should accept undefined', () => {
+        acceptUndefined(property);
       });
 
       it('should not accept values of other types', () =>
@@ -1911,6 +2154,56 @@ export function configTests(schema, strictCheck) {
           'object',
           'other'
         ]));
+    },
+
+    /**
+     * The requestId validator.
+     */
+    requestId(property) {
+      it('should accept a correct UUID string value', () => {
+        const obj = { [property]: 'b012bde4-8b91-4d68-8b48-cd099358a17f' };
+        expect(schema.parse(obj)[property]).toBe(
+          'b012bde4-8b91-4d68-8b48-cd099358a17f'
+        );
+        obj[property] = '0694de13-ac56-44f9-813c-1c91674e6a19';
+        expect(schema.parse(obj)[property]).toBe(
+          '0694de13-ac56-44f9-813c-1c91674e6a19'
+        );
+      });
+
+      it('should accept undefined', () => {
+        acceptUndefined(property);
+      });
+
+      it('should accept null', () => {
+        acceptNull(property);
+      });
+
+      it("should not accept 'false', 'undefined', 'null', '' values", () => {
+        const obj = { [property]: 'false' };
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = 'undefined';
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = 'null';
+        expect(() => schema.parse(obj)).toThrow();
+        obj[property] = '';
+        expect(() => schema.parse(obj)).toThrow();
+      });
+
+      it('should not accept a stringified undefined', () => {
+        stringUndefinedThrow(property);
+      });
+
+      it('should not accept a stringified null', () => {
+        stringNullThrow(property);
+      });
+
+      it('should not accept an empty string', () => {
+        emptyStringThrow(property);
+      });
+
+      it('should not accept values of other types', () =>
+        validatePropOfSchema(schema, property, ['null', 'undefined']));
     }
   };
 
@@ -1921,7 +2214,7 @@ export function configTests(schema, strictCheck) {
     },
     puppeteerArgs: (property, value, filteredValue) => {
       describe(property, () =>
-        validationTests.stringArray(property, value, filteredValue)
+        validationTests.stringArray(property, value, filteredValue, ';')
       );
     },
     highcharts: (property, value) => {
@@ -1971,10 +2264,13 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.infile(property));
     },
     exportInstr: (property) => {
-      describe(property, () => validationTests.object(property, false));
+      describe(property, () => validationTests.chartConfig(property, false));
     },
     exportOptions: (property) => {
-      describe(property, () => validationTests.object(property, false));
+      describe(property, () => validationTests.chartConfig(property, false));
+    },
+    exportSvg: (property) => {
+      describe(property, () => validationTests.svg(property));
     },
     exportOutfile: (property) => {
       describe(property, () => validationTests.outfile(property));
@@ -1988,6 +2284,12 @@ export function configTests(schema, strictCheck) {
       describe(property, () =>
         validationTests.acceptValues(property, correctValue, incorrectValue)
       );
+    },
+    exportB64: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    exportNoDownload: (property) => {
+      describe(property, () => validationTests.boolean(property));
     },
     exportDefaultHeight: (property) => {
       describe(property, () => validationTests.positiveNum(property));
@@ -2008,10 +2310,14 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.nullableScale(property));
     },
     exportGlobalOptions: (property) => {
-      describe(property, () => validationTests.object(property, false));
+      describe(property, () =>
+        validationTests.additionalOptions(property, false)
+      );
     },
     exportThemeOptions: (property) => {
-      describe(property, () => validationTests.object(property, false));
+      describe(property, () =>
+        validationTests.additionalOptions(property, false)
+      );
     },
     exportBatch: (property) => {
       describe(property, () => validationTests.string(property, false));
@@ -2038,10 +2344,10 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.resources(property));
     },
     customLogicLoadConfig: (property) => {
-      describe(property, () => validationTests.string(property, false));
+      describe(property, () => validationTests.customConfig(property, false));
     },
     customLogicCreateConfig: (property) => {
-      describe(property, () => validationTests.string(property, false));
+      describe(property, () => validationTests.customConfig(property, false));
     },
     server: (property, value) => {
       describe(property, () => validationTests.configObject(property, value));
@@ -2151,7 +2457,7 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.logLevel(property, strictCheck));
     },
     loggingFile: (property) => {
-      describe(property, () => validationTests.string(property, strictCheck));
+      describe(property, () => validationTests.logFile(property, strictCheck));
     },
     loggingDest: (property) => {
       describe(property, () => validationTests.string(property, strictCheck));
@@ -2259,17 +2565,8 @@ export function configTests(schema, strictCheck) {
     payload: (property, value) => {
       describe(property, () => validationTests.configObject(property, value));
     },
-    payloadSvg: (property) => {
-      describe(property, () => validationTests.svg(property, false));
-    },
-    payloadB64: (property) => {
-      describe(property, () => validationTests.boolean(property));
-    },
-    payloadNoDownload: (property) => {
-      describe(property, () => validationTests.boolean(property));
-    },
     payloadRequestId: (property) => {
-      describe(property, () => validationTests.string(property, false));
+      describe(property, () => validationTests.requestId(property));
     }
   };
 }

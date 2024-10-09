@@ -38,15 +38,13 @@ async function start() {
     const args = process.argv;
 
     // Display version information if requested
-    if (
-      ['-v', '--v', '-version', '--version'].includes(args[args.length - 1])
-    ) {
+    if (['-v', '--v'].includes(args[args.length - 1])) {
       // Print logo with the version information
       return printVersion();
     }
 
     // Display help information if requested
-    if (['-h', '--h', '-help', '--help'].includes(args[args.length - 1])) {
+    if (['-h', '--h'].includes(args[args.length - 1])) {
       // Print logo with the version information
       return printUsage();
     }

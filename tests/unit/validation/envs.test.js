@@ -10,7 +10,7 @@ describe('PUPPETEER environment variables should be correctly parsed and validat
   // PUPPETEER_ARGS
   tests.puppeteerArgs(
     'PUPPETEER_ARGS',
-    '--disable-sync, --enable-unsafe-webgpu, --hide-crash-restore-bubble, --hide-scrollbars, --metrics-recording-only',
+    '--disable-sync; --enable-unsafe-webgpu; --hide-crash-restore-bubble; --hide-scrollbars; --metrics-recording-only',
     [
       '--disable-sync',
       '--enable-unsafe-webgpu',
@@ -74,6 +74,21 @@ describe('HIGHCHARTS environment variables should be correctly parsed and valida
 });
 
 describe('EXPORT environment variables should be correctly parsed and validated', () => {
+  // EXPORT_INFILE
+  tests.exportInfile('EXPORT_INFILE');
+
+  // EXPORT_INSTR
+  tests.exportInstr('EXPORT_INSTR');
+
+  // EXPORT_OPTIONS
+  tests.exportOptions('EXPORT_OPTIONS');
+
+  // EXPORT_SVG
+  tests.exportSvg('EXPORT_SVG');
+
+  // EXPORT_OUTFILE
+  tests.exportOutfile('EXPORT_OUTFILE');
+
   // EXPORT_TYPE
   tests.exportType(
     'EXPORT_TYPE',
@@ -88,6 +103,12 @@ describe('EXPORT environment variables should be correctly parsed and validated'
     ['stock', 'map', 'gantt']
   );
 
+  // EXPORT_B64
+  tests.exportB64('EXPORT_B64');
+
+  // EXPORT_NO_DOWNLOAD
+  tests.exportNoDownload('EXPORT_NO_DOWNLOAD');
+
   // EXPORT_DEFAULT_HEIGHT
   tests.exportDefaultHeight('EXPORT_DEFAULT_HEIGHT');
 
@@ -96,6 +117,24 @@ describe('EXPORT environment variables should be correctly parsed and validated'
 
   // EXPORT_DEFAULT_SCALE
   tests.exportDefaultScale('EXPORT_DEFAULT_SCALE');
+
+  // EXPORT_HEIGHT
+  tests.exportDefaultHeight('EXPORT_HEIGHT');
+
+  // EXPORT_WIDTH
+  tests.exportDefaultWidth('EXPORT_WIDTH');
+
+  // EXPORT_SCALE
+  tests.exportDefaultScale('EXPORT_SCALE');
+
+  // EXPORT_GLOBAL_OPTIONS
+  tests.exportGlobalOptions('EXPORT_GLOBAL_OPTIONS');
+
+  // EXPORT_THEME_OPTIONS
+  tests.exportThemeOptions('EXPORT_THEME_OPTIONS');
+
+  // EXPORT_BATCH
+  tests.exportBatch('EXPORT_BATCH');
 
   // EXPORT_RASTERIZATION_TIMEOUT
   tests.exportRasterizationTimeout('EXPORT_RASTERIZATION_TIMEOUT');
@@ -107,6 +146,21 @@ describe('CUSTOM_LOGIC environment variables should be correctly parsed and vali
 
   // CUSTOM_LOGIC_ALLOW_FILE_RESOURCES
   tests.customLogicAllowFileResources('CUSTOM_LOGIC_ALLOW_FILE_RESOURCES');
+
+  // CUSTOM_LOGIC_CUSTOM_CODE
+  tests.customLogicCustomCode('CUSTOM_LOGIC_CUSTOM_CODE');
+
+  // CUSTOM_LOGIC_CALLBACK
+  tests.customLogicCallback('CUSTOM_LOGIC_CALLBACK');
+
+  // CUSTOM_LOGIC_RESOURCES
+  tests.customLogicResources('CUSTOM_LOGIC_RESOURCES');
+
+  // CUSTOM_LOGIC_LOAD_CONFIG
+  tests.customLogicLoadConfig('CUSTOM_LOGIC_LOAD_CONFIG');
+
+  // CUSTOM_LOGIC_CREATE_CONFIG
+  tests.customLogicCreateConfig('CUSTOM_LOGIC_CREATE_CONFIG');
 });
 
 describe('SERVER environment variables should be correctly parsed and validated', () => {

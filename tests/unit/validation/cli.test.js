@@ -10,11 +10,53 @@ describe('CLI options should be correctly parsed and validated', () => {
   // puppeteer
   tests.puppeteer('puppeteer', {
     args: [
+      '--allow-running-insecure-content',
+      '--ash-no-nudges',
+      '--autoplay-policy=user-gesture-required',
+      '--block-new-web-contents',
+      '--disable-accelerated-2d-canvas',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-breakpad',
+      '--disable-checker-imaging',
+      '--disable-client-side-phishing-detection',
+      '--disable-component-extensions-with-background-pages',
+      '--disable-component-update',
+      '--disable-default-apps',
+      '--disable-dev-shm-usage',
+      '--disable-domain-reliability',
+      '--disable-extensions',
+      '--disable-features=CalculateNativeWinOcclusion,InterestFeedContentSuggestions,WebOTP',
+      '--disable-hang-monitor',
+      '--disable-ipc-flooding-protection',
+      '--disable-logging',
+      '--disable-notifications',
+      '--disable-offer-store-unmasked-wallet-cards',
+      '--disable-popup-blocking',
+      '--disable-print-preview',
+      '--disable-prompt-on-repost',
+      '--disable-renderer-backgrounding',
+      '--disable-search-engine-choice-screen',
+      '--disable-session-crashed-bubble',
+      '--disable-setuid-sandbox',
+      '--disable-site-isolation-trials',
+      '--disable-speech-api',
       '--disable-sync',
       '--enable-unsafe-webgpu',
       '--hide-crash-restore-bubble',
       '--hide-scrollbars',
-      '--metrics-recording-only'
+      '--metrics-recording-only',
+      '--mute-audio',
+      '--no-default-browser-check',
+      '--no-first-run',
+      '--no-pings',
+      '--no-sandbox',
+      '--no-startup-window',
+      '--no-zygote',
+      '--password-store=basic',
+      '--process-per-tab',
+      '--use-mock-keychain'
     ]
   });
 
@@ -24,10 +66,80 @@ describe('CLI options should be correctly parsed and validated', () => {
     cdnUrl: 'https://code.highcharts.com',
     forceFetch: false,
     cachePath: '.cache',
-    coreScripts: ['highcharts'],
-    moduleScripts: ['stock'],
+    coreScripts: ['highcharts', 'highcharts-more', 'highcharts-3d'],
+    moduleScripts: [
+      'stock',
+      'map',
+      'gantt',
+      'exporting',
+      'parallel-coordinates',
+      'accessibility',
+      // 'annotations-advanced',
+      'boost-canvas',
+      'boost',
+      'data',
+      'data-tools',
+      'draggable-points',
+      'static-scale',
+      'broken-axis',
+      'heatmap',
+      'tilemap',
+      'tiledwebmap',
+      'timeline',
+      'treemap',
+      'treegraph',
+      'item-series',
+      'drilldown',
+      'histogram-bellcurve',
+      'bullet',
+      'funnel',
+      'funnel3d',
+      'geoheatmap',
+      'pyramid3d',
+      'networkgraph',
+      'overlapping-datalabels',
+      'pareto',
+      'pattern-fill',
+      'pictorial',
+      'price-indicator',
+      'sankey',
+      'arc-diagram',
+      'dependency-wheel',
+      'series-label',
+      'series-on-point',
+      'solid-gauge',
+      'sonification',
+      // 'stock-tools',
+      'streamgraph',
+      'sunburst',
+      'variable-pie',
+      'variwide',
+      'vector',
+      'venn',
+      'windbarb',
+      'wordcloud',
+      'xrange',
+      'no-data-to-display',
+      'drag-panes',
+      'debugger',
+      'dumbbell',
+      'lollipop',
+      'cylinder',
+      'organization',
+      'dotplot',
+      'marker-clusters',
+      'hollowcandlestick',
+      'heikinashi',
+      'flowmap',
+      'export-data',
+      'navigator',
+      'textpath'
+    ],
     indicatorScripts: ['indicators-all'],
-    customScripts: ['https://example.js']
+    customScripts: [
+      'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.45/moment-timezone-with-data.min.js'
+    ]
   });
 
   // export
@@ -35,9 +147,12 @@ describe('CLI options should be correctly parsed and validated', () => {
     infile: null,
     instr: null,
     options: null,
+    svg: null,
     outfile: null,
     type: 'png',
     constr: 'chart',
+    b64: false,
+    noDownload: false,
     defaultHeight: 400,
     defaultWidth: 600,
     defaultScale: 1,
@@ -67,9 +182,26 @@ describe('CLI options should be correctly parsed and validated', () => {
     host: '0.0.0.0',
     port: 7801,
     benchmarking: false,
-    proxy: {},
-    rateLimiting: {},
-    ssl: {}
+    proxy: {
+      host: null,
+      port: null,
+      timeout: 5000
+    },
+    rateLimiting: {
+      enable: false,
+      maxRequests: 10,
+      window: 1,
+      delay: 0,
+      trustProxy: false,
+      skipKey: null,
+      skipToken: null
+    },
+    ssl: {
+      enable: false,
+      force: false,
+      port: 443,
+      certPath: null
+    }
   });
 
   // pool
@@ -131,15 +263,11 @@ describe('CLI options should be correctly parsed and validated', () => {
     reconnectAttempts: 3,
     messageInterval: 3600000,
     gatherAllOptions: false,
-    url: null,
-    secret: null
+    url: null
   });
 
   // payload
   tests.payload('payload', {
-    svg: "<svg xmlns='http://www.w3.org/2000/svg'></svg>",
-    b64: false,
-    noDownload: false,
     requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
   });
 });
@@ -151,7 +279,7 @@ describe('Puppeteer configuration options should be correctly parsed and validat
   // puppeteer.args
   tests.puppeteerArgs(
     'args',
-    '--disable-sync, --enable-unsafe-webgpu, --hide-crash-restore-bubble, --hide-scrollbars, --metrics-recording-only',
+    '--disable-sync; --enable-unsafe-webgpu; --hide-crash-restore-bubble; --hide-scrollbars; --metrics-recording-only',
     [
       '--disable-sync',
       '--enable-unsafe-webgpu',
@@ -227,6 +355,9 @@ describe('Export configuration options should be correctly parsed and validated'
   // export.options
   tests.exportOptions('options');
 
+  // export.svg
+  tests.exportSvg('svg');
+
   // export.outfile
   tests.exportOutfile('outfile');
 
@@ -243,6 +374,12 @@ describe('Export configuration options should be correctly parsed and validated'
     ['chart', 'stockChart', 'mapChart', 'ganttChart'],
     ['stock', 'map', 'gantt']
   );
+
+  // export.b64
+  tests.exportB64('b64');
+
+  // export.noDownload
+  tests.exportNoDownload('noDownload');
 
   // export.defaultHeight
   tests.exportDefaultHeight('defaultHeight');
@@ -554,23 +691,11 @@ describe('WebSocket configuration options should be correctly parsed and validat
     ['ws://example.com', 'wss://example.com'],
     ['ws:a.com', 'ws:/b.com', 'wss:c.com', 'wss:/d.com']
   );
-
-  // webSocket.secret
-  tests.webSocketSecret('secret');
 });
 
 describe('Payload configuration options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
   const tests = configTests(LooseConfigSchema.shape.payload, false);
-
-  // payload.svg
-  tests.payloadSvg('svg');
-
-  // payload.b64
-  tests.payloadB64('b64');
-
-  // payload.noDownload
-  tests.payloadNoDownload('noDownload');
 
   // payload.requestId
   tests.payloadRequestId('requestId');
