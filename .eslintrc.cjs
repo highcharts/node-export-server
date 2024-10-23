@@ -25,6 +25,7 @@ module.exports = {
   ],
   rules: {
     'no-unused-vars': 'off',
-    'import/no-cycle': 'error'
+    'import/no-cycle': 'error',
+    'import/no-named-as-default': 'off'
   }
 };
