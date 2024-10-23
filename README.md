@@ -1,3 +1,5 @@
+**Note:** If you use the public Export Server at [https://export.highcharts.com](https://export.highcharts.com) you should read our [Terms of use and Fair Usage Policy](https://www.highcharts.com/docs/export-module/privacy-disclaimer-export). Note that a valid Highcharts License is required to do exports.
+
 # Highcharts Node.js Export Server
 
 Convert Highcharts.JS charts into static image files.
@@ -312,7 +314,7 @@ _Available variables:_
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
-- `HIGHCHARTS_CACHE_PATH`: A directory path where the fetched Highcharts scripts should be placed (defaults to `.cache`).
+- `HIGHCHARTS_CACHE_PATH`: A directory path where the fetched Highcharts scripts should be placed (defaults to `.cache`). Since v4.0.3 can be either absolute or relative path.
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).

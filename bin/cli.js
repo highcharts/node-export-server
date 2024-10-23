@@ -104,7 +104,8 @@ async function start() {
       }
     } else {
       throw new ExportError(
-        '[cli] No valid options provided. Please check your input and try again.'
+        '[cli] No valid options provided. Please check your input and try again.',
+        400
       );
     }
   } catch (error) {
