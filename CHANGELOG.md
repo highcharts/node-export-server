@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes:_
+
+- Corrected status codes of the most custom errors.
+
 # 4.0.2
 
 _Hotfix_:
