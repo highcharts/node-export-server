@@ -1,3 +1,9 @@
+# 4.0.3
+
+_New Features:_
+
+- Added support for absolute paths in the `HIGHCHARTS_CACHE_PATH` option [(#562)](https://github.com/highcharts/node-export-server/issues/562).
+
 # 4.0.2
 
 _Hotfix_:
