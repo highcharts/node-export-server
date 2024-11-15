@@ -1,3 +1,5 @@
+**Note:** If you use the public Export Server at [https://export.highcharts.com](https://export.highcharts.com) you should read our [Terms of use and Fair Usage Policy](https://www.highcharts.com/docs/export-module/privacy-disclaimer-export). Note that a valid Highcharts License is required to do exports.
+
 # Highcharts Node.js Export Server
 
 Convert Highcharts.JS charts into static image files.
