@@ -1,3 +1,13 @@
+# 4.0.3
+
+_Fixes_:
+
+- Improved resources management/usage.
+
+_Other:_
+
+- Add fair usage policy note on the page.
+
 # 4.0.2
 
 _Hotfix_:
