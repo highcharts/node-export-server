@@ -568,7 +568,6 @@ const options = {
   }
 };
 
-
 // Initialize export settings with your chart's config
 const exportSettings = exporter.setOptions(options);
 
