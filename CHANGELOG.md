@@ -6,13 +6,14 @@ _New Features:_
 
 _Fixes_:
 
-- Improved status codes (user errors instead of 500) [(#577)](https://github.com/highcharts/node-export-server/pull/577)
-
-- Improved memory management/usage [(#586)](https://github.com/highcharts/node-export-server/pull/586)
+- Fixed the warning message when the the default `resources.json` file is not found.
+- Fixed the problem with the lack of the `instr` value, when the `options` is set instead.
+- Improved status codes (user errors instead of 500) [(#577)](https://github.com/highcharts/node-export-server/pull/577).
+- Improved memory management/usage [(#586)](https://github.com/highcharts/node-export-server/pull/586).
 
 _Other:_
 
-- Add fair usage policy note on the page [(#583)](https://github.com/highcharts/node-export-server/pull/583)
+- Add fair usage policy note on the page [(#583)](https://github.com/highcharts/node-export-server/pull/583).
 
 # 4.0.2
 
