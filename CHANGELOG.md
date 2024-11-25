@@ -1,8 +1,18 @@
 # 4.0.3
 
-_Fixes:_
+_New Features:_
 
+- Added support for absolute paths in the `HIGHCHARTS_CACHE_PATH` option [(#562)](https://github.com/highcharts/node-export-server/issues/562).
+
+_Fixes_:
+
+- Improved status codes (user errors instead of 500) [(#577)](https://github.com/highcharts/node-export-server/pull/577).
+- Improved memory management/usage [(#586)](https://github.com/highcharts/node-export-server/pull/586).
 - Corrected the `Node.js Module` example in the README.
+
+_Other:_
+
+- Add fair usage policy note on the page [(#583)](https://github.com/highcharts/node-export-server/pull/583).
 
 # 4.0.2
 
