@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "4.0.1",
+  "version": "4.0.3",
   "main": "./dist/index.esm.js",
   "engines": {
     "node": ">=18.12.0"
@@ -19,7 +19,9 @@
     "bin",
     "templates",
     "install.js",
-    "lib"
+    "lib",
+    "msg",
+    "public"
   ],
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
@@ -59,7 +61,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "prompts": "^2.4.2",
-    "puppeteer": "^22.15.0",
+    "puppeteer": "^23.5.3",
     "tarn": "^3.0.2",
     "uuid": "^10.0.0",
     "ws": "^8.18.0",
