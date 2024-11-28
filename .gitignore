@@ -1,22 +1,21 @@
-node_modules/
-log/
-tests/_temp
-tmp/
-dist/
+.cache/
 .cert/
-
-.DS_Store
-.cache
-.vscode
-.env
-.eslintcache
-
+.vscode/
+dist/
+log/
+node_modules/
+tmp/
+tests/_temp/
 tests/**/_results/
 
+.env
+.eslintcache
+.DS_Store
 resources.json
 
+**/*.jpeg
+**/*.jpg
 **/*.png
 **/*.pdf
 **/*.svg
-**/*.jpeg
 **/*.log
