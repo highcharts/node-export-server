@@ -1,4 +1,4 @@
 node_modules/
 dist/
 
-samples/cli/infile_not_json.json
+samples/cli/infileNotJson.json

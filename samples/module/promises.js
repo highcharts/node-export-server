@@ -82,7 +82,7 @@ exportCharts(
     charts.forEach((chart, index) => {
       // Save the base64 from a buffer to a correct image file
       writeFileSync(
-        `./samples/module/promise_${index + 1}.jpeg`,
+        `./samples/module/promise${index + 1}.jpeg`,
         Buffer.from(chart, 'base64')
       );
     });

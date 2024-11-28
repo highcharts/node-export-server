@@ -18,6 +18,6 @@
     ]
   },
   "callback": "./samples/resources/callback.js",
-  "customCode": "./samples/resources/custom_code.js",
+  "customCode": "./samples/resources/customCode.js",
   "resources": "./samples/resources/resources.js"
 }

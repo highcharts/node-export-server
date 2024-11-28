@@ -722,7 +722,7 @@ Additionally, some options are now named differently due to the new structure an
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
 
-If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/options_phantomjs.js` file.
+If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/optionsPhantom.js` file.
 
 ## Note about Chart Size
 
