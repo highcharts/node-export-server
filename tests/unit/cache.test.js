@@ -1,11 +1,12 @@
-// cacheManager.test.js
+import { describe, expect, it } from '@jest/globals';
+
 import { extractVersion, extractModuleName } from '../../lib/cache';
 
 describe('extractVersion', () => {
   it('should extract the Highcharts version correctly', () => {
     const cache = { sources: '/* Highcharts 9.3.2 */' };
 
-    const version = extractVersion(cache);
+    const version = extractVersion(cache.sources);
     expect(version).toBe('Highcharts 9.3.2');
   });
 });

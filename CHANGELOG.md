@@ -1,3 +1,19 @@
+# 4.0.3
+
+_New Features:_
+
+- Added support for absolute paths in the `HIGHCHARTS_CACHE_PATH` option [(#562)](https://github.com/highcharts/node-export-server/issues/562)
+
+_Fixes_:
+
+- Improved status codes (user errors instead of 500) [(#577)](https://github.com/highcharts/node-export-server/pull/577)
+
+- Improved memory management/usage [(#586)](https://github.com/highcharts/node-export-server/pull/586)
+
+_Other:_
+
+- Add fair usage policy note on the page [(#583)](https://github.com/highcharts/node-export-server/pull/583)
+
 # 4.0.2
 
 _Hotfix_:
@@ -31,6 +47,7 @@ _Breaking Changes:_
 _New Features:_
 
 - Implemented debug mode, including new environment variables, a config section, 'console' event listener, and npm script for debugging the headful Puppeteer browser.
+- Implemented the possibility of establishing a WebSocket connection between the Export Server and a user-configured WebSocket server.
 - Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
 - Added a moving average indicator for the exporting success rate ratio.
 
@@ -41,10 +58,10 @@ _Enhancements:_
 - Introduced two new types of custom errors: `ExportError` for functionality-related errors and `HttpError` for server-related errors.
 - Introduced a new error logging mechanism with stack tracing using new function called `logWithStack`.
 - Expanded some error logs with request IDs.
-- Set headless mode to 'shell' for better performance, utilizing an older yet more efficient headless instance.
+- Set headless mode to `shell` for better performance, utilizing an older yet more efficient headless instance.
 - Set the `defaultViewport` to null and optimized code to trigger `setViewport` only once, reducing performance impact during export.
 - Removed unnecessary initial page on browser launch using `waitForInitialPage` and the `--no-startup-window` Chrome flag.
-- Revised Chromium flags sent to the browser, now located in the args array within the config file.
+- Revised Chromium flags sent to the browser, now located in the `args` array within the config file.
 - Optimized code by reducing evaluate function calls to enhance performance and minimize jumping between NodeJS and browser processes.
 - Optimized and moved chart creation initialization scripts from the HTML template to a separate module named `highcharts.js`.
 - Optimized the `clearPage` function to ensure content cleaning is only performed once, during resource release.
@@ -66,20 +83,23 @@ _Enhancements:_
 - Added the `shutdownCleanUp` function for resource release (ending intervals, closing servers, destroying the pool and browser) on shutdown. It will be called in the process exit handlers.
 - Added new environment variables (`HIGHCHARTS_ADMIN_TOKEN`, `SERVER_BENCHMARKING`, and `OTHER_NODE_ENV`) to the `.env.sample` file, along with their descriptions in the README.
 - Added a new section to the server configuration options, `proxy`, along with corresponding environment variables.
-- Added several new functions to the `highcharts-export-server` module, including `initPool`, `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, and `printUsage`.
+- Added several new functions to the `highcharts-export-server` module, including `initPool`, `logWithStack`, `setLogLevel`, `enableFileLogging`, `manualConfig`, `printLogo`, `printUsage` and `printVersion`.
 - Added a new `initLogging` function where the `setLogLevel` and `enableFileLogging` logic are consolidated into one place.
 - Added a new utility function, `isObjectEmpty`.
+- Added two new logging options, `--logToConsole` and `--logToFile`, to explicitly set where log messages are sent.
 - Added a new logging level (`5`) for benchmarking logs.
+- Added support for commands displaying version and help information explicitly.
 - Added legacy names of options to the `defaultConfig` and `mapToNewConfig` function in order to support the old, PhantomJS-based structure of options.
 - Added a new process event handler for the `SIGHUP` signal.
 - Added `mapChart` and `ganttChart` constructors in the exporting UI [(#503)](https://github.com/highcharts/node-export-server/issues/503).
-- Added the series-on-point module [(#532)](https://github.com/highcharts/node-export-server/issues/532).
+- Added the `series-on-point` module [(#532)](https://github.com/highcharts/node-export-server/issues/532).
+- Added other missing modules (`navigator` and `textpath`).
 - Updates were made to the `config.js` file.
 - Updated the `killPool` function.
 - The `uncaughtException` handler now kills the pool, browser, and terminates the process with exit code 1, when enabled.
 - The browser instance should be correctly closed now when an error occurs during pool creation.
 - Corrected error handling and response sending in the `/change_hc_version.js` route.
-- Corrected the `handleResources` function.
+- Corrected the `handleResources` function and moved to the `chart.js` module.
 - Corrected samples, test scenarios, and test runners.
 - Bumped versions of most packages, with an updating deprecated `Puppeteer` from `v21.1.1` to latest.
 - Added missing Highcharts modules to stay up-to-date with the latest updates.
@@ -148,15 +168,15 @@ _Fixes:_
 
 # 3.0.2
 
-- Changed the priority of loading options to: config -> custom JSON -> envs -> CLI.
+- Changed the priority of loading options to: `config -> custom JSON -> envs -> CLI`.
 - Corrected the The unhandledRejection error, message: Protocol error: Connection closed. Most likely the page has been closed, an error related to closing the browser earlier than closing each of an active page.
-- Refactored the way options are set (the setOptions function).
-- Corrected straight inject with JS functions in chart's options (e.g. formatter), when the allowCodeExecution is set to true.
-- Organized code into two separate functions (singleExport and batchExport).
+- Refactored the way options are set (the `setOptions` function).
+- Corrected straight inject with JS functions in chart's options (e.g. formatter), when the `allowCodeExecution` is set to true.
+- Organized code into two separate functions (`singleExport` and `batchExport`).
 - Corrected reseting global options for Highcharts between each export.
 - Corrections for the linter.
 - Samples and tests corrections.
-- Added sample for the loadConfig option.
+- Added sample for the `loadConfig` option.
 - Updated README.
 - Other small fixes.
 
@@ -168,7 +188,7 @@ _Fixes:_
 
 _Fixes and enhancements:_
 
-- Replaced PhantomJS with Puppeteer.
+- Replaced `PhantomJS` with `Puppeteer`.
 - Updated the config handling system to optionally load JSON files, and improved environment var loading.
 - Rewrote the HC caching system: it's now easier to include custom modules/dependency lists in your own deployments.
 - The install step no longer requires interaction when installing.
@@ -189,15 +209,13 @@ This version is not backwards compatible out of the box!
 
 _Breaking changes:_
 
-- Log destinations must now exist before starting file logging
+- Log destinations must now exist before starting file logging.
 - When running in server mode, the following options are now disabled by default:
   - `callback`
   - `resources`
   - `customCode`
 
-Disabled options can be enabled by adding the `--allowCodeExecution` flag when
-starting the server. Using this flag is not recommended, and should not be
-done unless the server is sandboxed and not reachable on the public internet.
+Disabled options can be enabled by adding the `--allowCodeExecution` flag when starting the server. Using this flag is not recommended, and should not be done unless the server is sandboxed and not reachable on the public internet.
 
 _Changelog:_
 
@@ -212,12 +230,12 @@ _Changelog:_
 
 # 2.0.29
 
-- Added polyfill for `DOMParser` to accommodate Highcharts 9.0.
+- Added polyfill for `DOMParser` to accommodate Highcharts `v9.0`.
 - Updated some dependencies.
 
 # 2.0.28
 
-- Fixed UUID and mkdirp versions in package.json.
+- Fixed UUID and mkdirp versions in `package.json`.
 
 # 2.0.27
 
@@ -243,21 +261,21 @@ _Changelog:_
 
 - Added support for fetching sources through `npm` for automated builds. To use, set `HIGHCHARTS_CDN` to `npm`.
 - Added support for `pareto` charts.
-- Fixed issue with script concatination causing exporting errors when including certain modules.
+- Fixed issue with script concatenation causing exporting errors when including certain modules.
 
 # 2.0.18
 
-- Added HIGHCHARTS_CDN variable support for build process.
+- Added `HIGHCHARTS_CDN` variable support for build process.
 
 # 2.0.17
 
-- Added support for 7.1 charts.
+- Added support for `7.1` charts.
 - Updated dependencies.
 
 # 2.0.16
 
-- Added support for bullet charts.
-- Added support for Gantt charts.
+- Added support for `bullet` charts.
+- Added support for `gantt` charts.
 - Added configuration option for chart generation timeout (`--timeoutThreshold`).
 - Gracefull failing of 404 map collections now working properly.
 - Increased max configuration size from 5MB to 50MB.
@@ -275,7 +293,7 @@ _Changelog:_
 
 # 2.0.14
 
-- Fixed issue with CDN pull failing when using Highcharts < 6.0.
+- Fixed issue with CDN pull failing when using Highcharts < `v6.0`.
 
 # 2.0.13
 
@@ -283,10 +301,10 @@ _Changelog:_
 
 # 2.0.12
 
-- Build.js now uses cached respones when building styled mode to speed things up.
-- `historgram-bellcurve` is now included by default.
-- Added optional inclusion system to build.js.
-  - Will now prompt for inclusion of `wordcloud` and `annotations`.
+- The `build.js` now uses cached respones when building styled mode to speed things up.
+- The `historgram-bellcurve` is now included by default.
+- Added optional inclusion system to `build.js`.
+- Will now prompt for inclusion of `wordcloud` and `annotations`.
 
 # 2.0.11
 
@@ -298,7 +316,7 @@ _Changelog:_
 
 # 2.0.9
 
-- Added build config for including moment.js support.
+- Added build config for including `moment.js` support.
 
 # 2.0.8
 
@@ -306,8 +324,8 @@ _Changelog:_
 
 # 2.0.7
 
-- Now including sunburst/xrange/streamgraph/tilemap when baking with a supported version.
-- Added package-lock.json.
+- Now including `sunburst/xrange/streamgraph/tilemap` when baking with a supported version.
+- Added `package-lock.json`.
 
 # 2.0.6
 
@@ -320,8 +338,7 @@ _Changelog:_
 
 # 2.0.4
 
-- Fixed bug causing unpredictable export results if one or more exported.
-  charts contain bundled images.
+- Fixed bug causing unpredictable export results if one or more exported (charts contain bundled images).
 
 # 2.0.3
 
@@ -330,7 +347,7 @@ _Changelog:_
 # 2.0.2
 
 - Server now respects `host` option.
-- Added promise sample/test for batch export.
+- Added promise `sample/test` for batch export.
 
 # 2.0.1
 
@@ -339,8 +356,7 @@ _Changelog:_
 # 2.0.0
 
 - Fixed Phantom cleanup: instead of reaping every 2.5s, workers are checked for timeout when other work is posted.
-- Added additional error handlers to:
-  - `hhtp(s)Server`, `process`.
+- Added additional error handlers to: `http(s)Server`, `process`.
 - Worker busy check before restarting.
 - Now checking if the client connection is still open before sending returns.
 - Changed return codes for error conditions.
@@ -368,7 +384,7 @@ _Changelog:_
 
 # 1.0.9
 
-- Set minimum node version to 5.10.0.
+- Set minimum node version to `5.10.0`.
 
 # 1.0.8
 
