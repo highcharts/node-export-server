@@ -17,6 +17,6 @@
       }
     ]
   },
-  "globalOptions": "./samples/resources/options_global.json",
-  "themeOptions": "./samples/resources/options_theme.json"
+  "globalOptions": "./samples/resources/optionsGlobal.json",
+  "themeOptions": "./samples/resources/optionsTheme.json"
 }

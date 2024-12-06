@@ -44,7 +44,7 @@
     "resources": {
       "js": "Highcharts.charts[0].update({xAxis:{title:{text:'Title from the resources file, js section'}}});",
       "css": ".highcharts-yaxis .highcharts-axis-line {stroke-width:2px;stroke:#FF0000;}",
-      "files": "./samples/resources/resources_file_1.js,./samples/resources/resources_file_2.js"
+      "files": "./samples/resources/resourcesFile1.js,./samples/resources/resourcesFile2.js"
     }
   }
 }

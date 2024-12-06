@@ -7,7 +7,7 @@ import exporter from '../../lib/index.js';
 const exportSettings = {
   type: 'png',
   constr: 'chart',
-  outfile: './samples/module/options_phantom.jpeg',
+  outfile: './samples/module/optionsPhantom.jpeg',
   logLevel: 4,
   scale: 1,
   workers: 1,

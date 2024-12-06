@@ -5,7 +5,7 @@
         "type": "column"
       },
       "title": {
-        "text": "Do not allow file resources"
+        "text": "Allow file resources"
       },
       "yAxis": [
         {
@@ -38,9 +38,9 @@
   },
   "customLogic": {
     "allowCodeExecution": true,
-    "allowFileResources": false,
+    "allowFileResources": true,
     "callback": "./samples/resources/callback.js",
-    "customCode": "./samples/resources/custom_code.js",
+    "customCode": "./samples/resources/customCode.js",
     "resources": "./samples/resources/resources.json"
   }
 }

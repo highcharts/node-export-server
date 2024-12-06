@@ -48,7 +48,7 @@ try {
           // Results folder path
           const resultsFile = join(
             resultsPath,
-            (index ? 'phantom_' : 'puppeteer_') + `chart.${type}`
+            (index ? 'phantom' : 'puppeteer') + `Chart.${type}`
           );
 
           // Payload body

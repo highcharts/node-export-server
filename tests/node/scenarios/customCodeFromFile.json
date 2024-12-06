@@ -5,17 +5,15 @@
         "type": "column"
       },
       "title": {
-        "text": "Theme and global options from files"
+        "text": "Custom code (from file)"
       },
       "yAxis": [
         {
-          "className": "highcharts-color-0",
           "title": {
             "text": "Primary axis"
           }
         },
         {
-          "className": "highcharts-color-1",
           "opposite": true,
           "title": {
             "text": "Secondary axis"
@@ -36,8 +34,11 @@
           "yAxis": 1
         }
       ]
-    },
-    "globalOptions": "./samples/resources/options_global.json",
-    "themeOptions": "./samples/resources/options_theme.json"
+    }
+  },
+  "customLogic": {
+    "allowCodeExecution": true,
+    "allowFileResources": true,
+    "customCode": "./samples/resources/customCode.js"
   }
 }

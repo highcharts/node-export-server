@@ -11,7 +11,7 @@ const exportSettings = {
   export: {
     type: 'jpeg',
     constr: 'chart',
-    outfile: './samples/module/options_puppeteer.jpeg',
+    outfile: './samples/module/optionsPuppeteer.jpeg',
     height: 800,
     width: 1200,
     scale: 1,
@@ -113,7 +113,7 @@ const exportSettings = {
     allowCodeExecution: true,
     allowFileResources: true,
     callback: './samples/resources/callback.js',
-    customCode: './samples/resources/custom_code.js',
+    customCode: './samples/resources/customCode.js',
     resources: {
       js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
       css: '.highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; }'
