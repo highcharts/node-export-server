@@ -12,7 +12,6 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-//// VALIDATION
 import { describe, expect, it } from '@jest/globals';
 
 import {
@@ -183,4 +182,3 @@ describe('isPrivateRangeUrlFound', () => {
     });
   });
 });
-////
