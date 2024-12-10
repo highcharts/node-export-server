@@ -802,6 +802,12 @@ This package supports both CommonJS and ES modules.
   - `@param {Error} error` - The error object.
   - `@param {string} customMessage` - An optional custom message to be logged along with the error.
 
+- `function logZodIssues(newLevel, issues = [], customMessage)`: Logs an error message about Zod issues with the validation. Optionally, a custom message can be provided.
+
+  - `@param {number} newLevel` - The log level.
+  - `@param {Error[]} issues` - The array of Zod issues.
+  - `@param {string} customMessage` - An optional custom message to be logged along with the error.
+
 - `function setLogLevel(newLevel)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
 
   - `@param {number} newLevel` - The new log level to be set.
