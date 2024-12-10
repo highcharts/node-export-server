@@ -1,4 +1,18 @@
-import { Config } from '../../lib/envs';
+/*******************************************************************************
+
+Highcharts Export Server
+
+Copyright (c) 2016-2024, Highsoft
+
+Licenced under the MIT licence.
+
+Additionally a valid Highcharts license is required for use.
+
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
+import { Config } from '../../lib/envs.js';
 
 describe('Environment variables should be correctly parsed', () => {
   test('HIGHCHARTS_VERSION accepts latests and not unrelated strings', () => {

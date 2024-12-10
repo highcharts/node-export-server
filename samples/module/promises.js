@@ -1,13 +1,27 @@
+/*******************************************************************************
+
+Highcharts Export Server
+
+Copyright (c) 2016-2024, Highsoft
+
+Licenced under the MIT licence.
+
+Additionally a valid Highcharts license is required for use.
+
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
 import { writeFileSync } from 'fs';
 
-import exporter from '../../lib/index.js';
+import exporter, { initExport } from '../../lib/index.js';
 
 const exportCharts = async (charts, exportOptions = {}) => {
   // Set the new options
   const options = exporter.setOptions(exportOptions);
 
   // Init the pool
-  await exporter.initExport(options);
+  await initExport(options);
 
   const promises = [];
   const chartResults = [];
@@ -19,13 +33,13 @@ const exportCharts = async (charts, exportOptions = {}) => {
         const settings = { ...options };
         settings.export.options = chart;
 
-        exporter.startExport(settings, (error, info) => {
+        exporter.startExport(settings, (error, data) => {
           if (error) {
             return reject(error);
           }
 
           // Add the data to the chartResults
-          chartResults.push(info.result);
+          chartResults.push(data.result);
           resolve();
         });
       })

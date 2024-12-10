@@ -25,7 +25,7 @@ import { join } from 'path';
 import 'colors';
 
 import { fetch } from '../../lib/fetch.js';
-import { __dirname, clearText } from '../../lib/utils.js';
+import { __dirname, clearText, getNewDateTime } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -87,7 +87,7 @@ fetch(`${url}/health`)
 
             return new Promise((resolve) => {
               // The start date of a POST request
-              const startDate = new Date().getTime();
+              const startDate = getNewDateTime();
               const request = http.request(
                 url,
                 {
@@ -110,7 +110,7 @@ fetch(`${url}/health`)
                     fileStream.end();
 
                     const endMessage = `HTTP request with a payload from file: ${file}, took ${
-                      new Date().getTime() - startDate
+                      getNewDateTime() - startDate
                     }ms.`;
 
                     // Based on received status code check if requests failed
