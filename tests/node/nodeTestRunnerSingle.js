@@ -17,8 +17,12 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import exporter from '../../lib/index.js';
-import { __dirname } from '../../lib/utils.js';
+import exporter, { initExport } from '../../lib/index.js';
+import {
+  __dirname,
+  getNewDateTime,
+  mergeConfigOptions
+} from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -42,23 +46,6 @@ console.log(
 
     // Check if file even exists and if it is a JSON
     if (existsSync(file) && file.endsWith('.json')) {
-      // Set options
-      const options = exporter.setOptions({
-        pool: {
-          minWorkers: 1,
-          maxWorkers: 1
-        },
-        logging: {
-          level: 0
-        }
-      });
-
-      // Initialize pool with disabled logging
-      await exporter.initExport(options);
-
-      // Start the export
-      console.log('[Test runner]'.blue, `Processing test ${file}.`);
-
       // Options from a file
       const fileOptions = JSON.parse(readFileSync(file));
 
@@ -72,12 +59,31 @@ console.log(
           )
       );
 
+      // Set options
+      const options = exporter.setOptions(
+        mergeConfigOptions(fileOptions, {
+          pool: {
+            minWorkers: 1,
+            maxWorkers: 1
+          },
+          logging: {
+            level: 0
+          }
+        })
+      );
+
+      // Initialize pool with disabled logging
+      await initExport(options);
+
+      // Start the export
+      console.log('[Test runner]'.blue, `Processing test ${file}.`);
+
       // The start date of a startExport function run
-      const startTime = new Date().getTime();
+      const startTime = getNewDateTime();
 
       try {
         // Start the export process
-        await exporter.startExport(fileOptions, async (error, info) => {
+        await exporter.startExport(options, async (error, data) => {
           // Throw an error
           if (error) {
             throw error;
@@ -85,16 +91,16 @@ console.log(
 
           // Save returned data to a correct image file if no error occured
           writeFileSync(
-            info.options.export.outfile,
-            info.options?.export?.type !== 'svg'
-              ? Buffer.from(info.result, 'base64')
-              : info.result
+            data.options.export.outfile,
+            data.options?.export?.type !== 'svg'
+              ? Buffer.from(data.result, 'base64')
+              : data.result
           );
 
           // Information about the results and the time it took
           console.log(
             `[Success] Node module from file: ${file}, took: ${
-              new Date().getTime() - startTime
+              getNewDateTime() - startTime
             }ms.`.green
           );
         });
@@ -102,7 +108,7 @@ console.log(
         // Information about the error and the time it took
         console.log(
           `[Fail] Node module from file: ${file}, took: ${
-            new Date().getTime() - startTime
+            getNewDateTime() - startTime
           }ms.`.red
         );
       }
