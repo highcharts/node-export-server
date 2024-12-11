@@ -267,6 +267,19 @@ describe('Configuration options should be correctly parsed and validated', () =>
     debuggingPort: 9222
   });
 
+  // webSocket
+  tests.webSocket('webSocket', {
+    enable: false,
+    reconnect: false,
+    rejectUnauthorized: false,
+    pingTimeout: 16000,
+    reconnectInterval: 3000,
+    reconnectAttempts: 3,
+    messageInterval: 3600000,
+    gatherAllOptions: false,
+    url: null
+  });
+
   // payload
   tests.payload('payload', {
     requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
@@ -667,6 +680,42 @@ describe('Debug configuration options should be correctly parsed and validated',
 
   // debug.debuggingPort
   tests.debugDebuggingPort('debuggingPort');
+});
+
+describe('WebSocket configuration options should be correctly parsed and validated', () => {
+  // Return config tests with a specific schema and strictCheck flag injected
+  const tests = configTests(StrictConfigSchema.shape.webSocket, true);
+
+  // webSocket.enable
+  tests.webSocketEnable('enable');
+
+  // webSocket.reconnect
+  tests.webSocketReconnect('reconnect');
+
+  // webSocket.rejectUnauthorized
+  tests.webSocketRejectUnauthorized('rejectUnauthorized');
+
+  // webSocket.pingTimeout
+  tests.webSocketPingTimeout('pingTimeout');
+
+  // webSocket.reconnectInterval
+  tests.webSocketReconnectInterval('reconnectInterval');
+
+  // webSocket.reconnectAttempts
+  tests.webSocketReconnectAttempts('reconnectAttempts');
+
+  // webSocket.messageInterval
+  tests.webSocketMessageInterval('messageInterval');
+
+  // webSocket.gatherAllOptions
+  tests.webSocketGatherAllOptions('gatherAllOptions');
+
+  // webSocket.url
+  tests.webSocketUrl(
+    'url',
+    ['ws://example.com', 'wss://example.com'],
+    ['ws:a.com', 'ws:/b.com', 'wss:c.com', 'wss:/d.com']
+  );
 });
 
 describe('Payload configuration options should be correctly parsed and validated', () => {
