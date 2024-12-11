@@ -339,3 +339,39 @@ describe('DEBUG environment variables should be correctly parsed and validated',
   // DEBUG_DEBUGGING_PORT
   tests.debugDebuggingPort('DEBUG_DEBUGGING_PORT');
 });
+
+describe('WEB_SOCKET environment variables should be correctly parsed and validated', () => {
+  // WEB_SOCKET_ENABLE
+  tests.webSocketEnable('WEB_SOCKET_ENABLE');
+
+  // WEB_SOCKET_RECONNECT
+  tests.webSocketReconnect('WEB_SOCKET_RECONNECT');
+
+  // WEB_SOCKET_REJECT_UNAUTHORIZED
+  tests.webSocketRejectUnauthorized('WEB_SOCKET_REJECT_UNAUTHORIZED');
+
+  // WEB_SOCKET_PING_TIMEOUT
+  tests.webSocketPingTimeout('WEB_SOCKET_PING_TIMEOUT');
+
+  // WEB_SOCKET_RECONNECT_INTERVAL
+  tests.webSocketReconnectInterval('WEB_SOCKET_RECONNECT_INTERVAL');
+
+  // WEB_SOCKET_RECONNECT_ATTEMPTS
+  tests.webSocketReconnectAttempts('WEB_SOCKET_RECONNECT_ATTEMPTS');
+
+  // WEB_SOCKET_MESSAGE_INTERVAL
+  tests.webSocketMessageInterval('WEB_SOCKET_MESSAGE_INTERVAL');
+
+  // WEB_SOCKET_GATHER_ALL_OPTIONS
+  tests.webSocketGatherAllOptions('WEB_SOCKET_GATHER_ALL_OPTIONS');
+
+  // WEB_SOCKET_URL
+  tests.webSocketUrl(
+    'WEB_SOCKET_URL',
+    ['ws://example.com/socket', 'wss://example.com/socket'],
+    ['example.com', 'ws:a.com', 'ws:/b.com', 'wss:c.com', 'wss:/d.com']
+  );
+
+  // WEB_SOCKET_SECRET
+  tests.webSocketSecret('WEB_SOCKET_SECRET');
+});
