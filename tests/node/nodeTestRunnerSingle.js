@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,11 +18,7 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter, { initExport } from '../../lib/index.js';
-import {
-  __dirname,
-  getNewDateTime,
-  mergeConfigOptions
-} from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -61,7 +57,7 @@ console.log(
 
       // Set options
       const options = exporter.setOptions(
-        mergeConfigOptions(fileOptions, {
+        exporter.mergeOptions(fileOptions, {
           pool: {
             minWorkers: 1,
             maxWorkers: 1

@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -26,7 +26,7 @@ console.log(
 // The request options
 const requestBody = {
   type: 'svg',
-  infile: {
+  options: {
     title: {
       text: 'Chart'
     },

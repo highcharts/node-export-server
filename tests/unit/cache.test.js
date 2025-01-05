@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -11,6 +11,8 @@ Additionally a valid Highcharts license is required for use.
 See LICENSE file in root for details.
 
 *******************************************************************************/
+
+import { describe, expect, it } from '@jest/globals';
 
 import { extractVersion, extractModuleName } from '../../lib/cache';
 

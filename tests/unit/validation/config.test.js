@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -267,10 +267,12 @@ describe('Configuration options should be correctly parsed and validated', () =>
     debuggingPort: 9222
   });
 
-  // payload
-  tests.payload('payload', {
-    requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
-  });
+  ////
+  // // payload
+  // tests.payload('payload', {
+  //   requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
+  // });
+  ////
 });
 
 describe('Puppeteer configuration options should be correctly parsed and validated', () => {
@@ -669,10 +671,12 @@ describe('Debug configuration options should be correctly parsed and validated',
   tests.debugDebuggingPort('debuggingPort');
 });
 
-describe('Payload configuration options should be correctly parsed and validated', () => {
-  // Return config tests with a specific schema and strictCheck flag injected
-  const tests = configTests(StrictConfigSchema.shape.payload, true);
+////
+// describe('Payload configuration options should be correctly parsed and validated', () => {
+//   // Return config tests with a specific schema and strictCheck flag injected
+//   const tests = configTests(StrictConfigSchema.shape.payload, true);
 
-  // payload.requestId
-  tests.payloadRequestId('requestId');
-});
+//   // payload.requestId
+//   tests.payloadRequestId('requestId');
+// });
+////

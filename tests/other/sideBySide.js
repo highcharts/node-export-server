@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -53,7 +53,7 @@ try {
 
           // Payload body
           const payload = JSON.stringify({
-            infile: {
+            options: {
               title: {
                 text: index
                   ? 'Phantom Export Server'

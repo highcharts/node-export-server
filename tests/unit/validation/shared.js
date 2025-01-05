@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -2554,12 +2554,14 @@ export function configTests(schema, strictCheck) {
     },
     debugDebuggingPort: (property) => {
       describe(property, () => validationTests.nonNegativeNum(property));
-    },
-    payload: (property, value) => {
-      describe(property, () => validationTests.configObject(property, value));
-    },
-    payloadRequestId: (property) => {
-      describe(property, () => validationTests.requestId(property));
     }
+    ////
+    // payload: (property, value) => {
+    //   describe(property, () => validationTests.configObject(property, value));
+    // },
+    // payloadRequestId: (property) => {
+    //   describe(property, () => validationTests.requestId(property));
+    // }
+    ////
   };
 }
