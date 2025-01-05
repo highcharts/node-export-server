@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -87,7 +87,8 @@ exportCharts(
       maxWorkers: 2
     },
     logging: {
-      level: 4
+      level: 4,
+      toFile: false
     }
   }
 )

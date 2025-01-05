@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,19 +12,10 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { writeFileSync } from 'fs';
-
 import exporter, { initExport } from '../../lib/index.js';
 
-// Export settings with the old options structure (PhantomJS)
-// Will be mapped appropriately to the new structure with the `mapToNewConfig`
-const exportSettings = {
-  type: 'png',
-  constr: 'chart',
-  outfile: './samples/module/optionsPhantom.jpeg',
-  logLevel: 4,
-  scale: 1,
-  workers: 1,
+// Old options structure (PhantomJS)
+const oldOptions = {
   options: {
     chart: {
       type: 'column'
@@ -58,37 +49,38 @@ const exportSettings = {
         data: [5, 3, 4, 2]
       }
     ]
-  }
+  },
+  type: 'png',
+  constr: 'chart',
+  outfile: './samples/module/optionsPhantom.png',
+  scale: 1,
+  width: 1000,
+  globalOptions: './samples/resources/optionsGlobal.json',
+  allowFileResources: true,
+  callback: './samples/resources/callback.js',
+  resources: './samples/resources/resources.json',
+  fromFile: './samples/resources/customOptions.json',
+  workers: 1,
+  workLimit: 5,
+  logLevel: 4,
+  logFile: 'phantom.log',
+  logDest: './samples/module/log',
+  logToFile: false
 };
 
-const start = async () => {
+(async () => {
   try {
-    // Map to fit the new options structure
-    const mappedOptions = exporter.mapToNewConfig(exportSettings);
+    // Map to fit the new options structure (Puppeteer)
+    const newOptions = exporter.mapToNewOptions(oldOptions);
 
     // Set the new options
-    const options = exporter.setOptions(mappedOptions);
+    const options = exporter.setOptions(newOptions);
 
     // Init a pool for one export
     await initExport(options);
 
     // Perform an export
-    await exporter.startExport(options, async (error, data) => {
-      // Exit process and display error
-      if (error) {
-        throw error;
-      }
-      const { outfile, type } = data.options.export;
-
-      // Save the base64 from a buffer to a correct image file
-      writeFileSync(
-        outfile,
-        type !== 'svg' ? Buffer.from(data.result, 'base64') : data.result
-      );
-
-      // Kill the pool
-      await exporter.killPool();
-    });
+    await exporter.singleExport(options);
   } catch (error) {
     // Log the error with stack
     exporter.logWithStack(1, error);
@@ -96,6 +88,4 @@ const start = async () => {
     // Gracefully shut down the process
     await exporter.shutdownCleanUp(1);
   }
-};
-
-start();
+})();
