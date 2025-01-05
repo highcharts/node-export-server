@@ -91,7 +91,7 @@ There are four main ways of loading configurations:
 
 ## Default JSON Config
 
-The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used.
+The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used. The configuration is not recommended to be modified directly, as it can typically be managed through other sources.
 
 The format, along with its default values, is as follows (using the recommended ordering of core and module scripts below).
 
@@ -193,20 +193,17 @@ _Available default JSON config:_
     "instr": null,
     "options": null,
     "svg": null,
+    "batch": null,
     "outfile": null,
     "type": "png",
     "constr": "chart",
     "b64": false,
     "noDownload": false,
-    "defaultHeight": 400,
-    "defaultWidth": 600,
-    "defaultScale": 1,
     "height": null,
     "width": null,
     "scale": null,
     "globalOptions": null,
     "themeOptions": null,
-    "batch": null,
     "rasterizationTimeout": 1500
   },
   "customLogic": {
@@ -222,6 +219,7 @@ _Available default JSON config:_
     "enable": false,
     "host": "0.0.0.0",
     "port": 7801,
+    "uploadLimit": 3,
     "benchmarking": false,
     "proxy": {
       "host": null,
@@ -288,7 +286,7 @@ _Available default JSON config:_
 
 ## Custom JSON Config
 
-To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option. The value of the `<filepath>` must be set with the _.json_ extension.
+To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option. The `<filepath>` value does not need a _.json_ extension, but the file's content must be valid JSON when using the `--loadConfig` option.
 
 ## Environment Variables
 
@@ -314,10 +312,11 @@ _Available environment variables:_
 
 ### Export Config
 
-- `EXPORT_INFILE`: The input file should include a name and a type (**.json** or **.svg**) and must be a correctly formatted JSON or SVG file (defaults to ``).
-- `EXPORT_INSTR`: An input in a form of a stringified JSON or SVG file. Overrides the `infile` option (defaults to ``).
+- `EXPORT_INFILE`: The input file should include a name and a type (**.json** or **.svg**) and must contain a correctly formatted JSON or SVG (defaults to ``).
+- `EXPORT_INSTR`: An input in a form of a stringified JSON.
 - `EXPORT_OPTIONS`: An alias for the `instr` option (defaults to ``).
 - `EXPORT_SVG`: A string containing SVG representation to render as a chart (defaults to ``).
+- `EXPORT_BATCH`: Initiates a batch job with a string containing input/output pairs: **"in=out;in=out;.."** (defaults to ``).
 - `EXPORT_OUTFILE`: The output filename, accompanied by a type (**jpeg**, **png**, **pdf**, or **svg**). Ignores the `type` option (defaults to ``).
 - `EXPORT_TYPE`: The format of the file to export to. Can be **jpeg**, **png**, **pdf**, or **svg** (defaults to `png`).
 - `EXPORT_CONSTR`: The constructor to use. Can be **chart**, **stockChart**, **mapChart**, or **ganttChart** (defaults to `chart`).
@@ -326,12 +325,11 @@ _Available environment variables:_
 - `EXPORT_HEIGHT`: The height of the exported chart. Overrides the option in the chart settings (defaults to ``).
 - `EXPORT_WIDTH`: The width of the exported chart. Overrides the option in the chart settings (defaults to ``).
 - `EXPORT_SCALE`: The scale of the exported chart. Ranges between **0.1** and **5.0** (defaults to ``).
-- `EXPORT_DEFAULT_HEIGHT`: The default height for exported charts if not set explicitly (defaults to `400`).
-- `EXPORT_DEFAULT_WIDTH`: The default width for exported charts if not set explicitly (defaults to `600`).
-- `EXPORT_DEFAULT_SCALE`: The default scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
+- `EXPORT_DEFAULT_HEIGHT`: The default fallback height for exported charts if not set explicitly (defaults to `400`).
+- `EXPORT_DEFAULT_WIDTH`: The default fallback width for exported charts if not set explicitly (defaults to `600`).
+- `EXPORT_DEFAULT_SCALE`: The default fallback scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
 - `EXPORT_GLOBAL_OPTIONS`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions` (defaults to ``).
 - `EXPORT_THEME_OPTIONS`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions` (defaults to ``).
-- `EXPORT_BATCH`: Initiates a batch job with a string containing input/output pairs: **"in=out;in=out;.."** (defaults to ``).
 - `EXPORT_RASTERIZATION_TIMEOUT`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
 ### Custom Logic Config
@@ -339,7 +337,7 @@ _Available environment variables:_
 - `CUSTOM_LOGIC_ALLOW_CODE_EXECUTION`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
 - `CUSTOM_LOGIC_ALLOW_FILE_RESOURCES`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 - `CUSTOM_LOGIC_CUSTOM_CODE`: Custom code to execute before chart initialization. It can be a function, code wrapped within a function, or a filename with the _.js_ extension (defaults to ``).
-- `CUSTOM_LOGIC_CALLBACK`: JavaScript code to run during construction. It can be a function or a filename with the _.js_ extension (defaults to ``).
+- `CUSTOM_LOGIC_CALLBACK`: JavaScript code to run during construction. It can be a stringified function or a filename with the _.js_ extension that contains a correct Highcharts callback (defaults to ``).
 - `CUSTOM_LOGIC_RESOURCES`: Additional resources in the form of a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections (defaults to ``).
 - `CUSTOM_LOGIC_LOAD_CONFIG`: A file containing a pre-defined configuration to use (defaults to ``).
 - `CUSTOM_LOGIC_CREATE_CONFIG`: Enables setting options through a prompt and saving them in a provided config file (defaults to ``).
@@ -349,6 +347,7 @@ _Available environment variables:_
 - `SERVER_ENABLE`: If set to **true**, the server starts on 0.0.0.0 (defaults to `false`).
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
+- `SERVER_UPLOAD_LIMIT`: The maximum request body size in MB (defaults to `3`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 
 ### Server Proxy Config
@@ -444,10 +443,11 @@ _Available CLI arguments:_
 
 ### Export Config
 
-- `--infile`: The input file should include a name and a type (**.json** or **.svg**) and must be a correctly formatted JSON or SVG file (defaults to `null`).
-- `--instr`: An input in a form of a stringified JSON or SVG file. Overrides the `infile` option (defaults to `null`).
+- `--infile`: The input file should include a name and a type (**.json** or **.svg**) and must contain a correctly formatted JSON or SVG (defaults to `null`).
+- `--instr`: An input in a form of a stringified JSON.
 - `--options`: An alias for the `instr` option (defaults to `null`).
 - `--svg`: A string containing SVG representation to render as a chart (defaults to `null`).
+- `--batch`: Initiates a batch job with a string containing input/output pairs: **"in=out;in=out;.."** (defaults to `null`).
 - `--outfile`: The output filename, accompanied by a type (**jpeg**, **png**, **pdf**, or **svg**). Ignores the `type` option (defaults to `null`).
 - `--type`: The format of the file to export to. Can be **jpeg**, **png**, **pdf**, or **svg** (defaults to `png`).
 - `--constr`: The constructor to use. Can be **chart**, **stockChart**, **mapChart**, or **ganttChart** (defaults to `chart`).
@@ -456,12 +456,11 @@ _Available CLI arguments:_
 - `--height`: The height of the exported chart. Overrides the option in the chart settings (defaults to `null`).
 - `--width`: The width of the exported chart. Overrides the option in the chart settings (defaults to `null`).
 - `--scale`: The scale of the exported chart. Ranges between **0.1** and **5.0** (defaults to `null`).
-- `--defaultHeight`: The default height for exported charts if not set explicitly (defaults to `400`).
-- `--defaultWidth`: The default width for exported charts if not set explicitly (defaults to `600`).
-- `--defaultScale`: The default scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
+- `--defaultHeight`: The default fallback height for exported charts if not set explicitly (defaults to `400`).
+- `--defaultWidth`: The default fallback width for exported charts if not set explicitly (defaults to `600`).
+- `--defaultScale`: The default fallback scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
 - `--globalOptions`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions` (defaults to `null`).
 - `--themeOptions`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions` (defaults to `null`).
-- `--batch`: Initiates a batch job with a string containing input/output pairs: **"in=out;in=out;.."** (defaults to `null`).
 - `--rasterizationTimeout`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
 ### Custom Logic Config
@@ -469,7 +468,7 @@ _Available CLI arguments:_
 - `--allowCodeExecution`: Controls whether the execution of arbitrary code is allowed during the exporting process (defaults to `false`).
 - `--allowFileResources`: Controls the ability to inject resources from the filesystem. This setting has no effect when running as a server (defaults to `false`).
 - `--customCode`: Custom code to execute before chart initialization. It can be a function, code wrapped within a function, or a filename with the _.js_ extension (defaults to `null`).
-- `--callback`: JavaScript code to run during construction. It can be a function or a filename with the _.js_ extension (defaults to `null`).
+- `--callback`: JavaScript code to run during construction. It can be a stringified function or a filename with the _.js_ extension that contains a correct Highcharts callback (defaults to `null`).
 - `--resources`: Additional resources in the form of a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections (defaults to `null`).
 - `--loadConfig`: A file containing a pre-defined configuration to use (defaults to `null`).
 - `--createConfig`: Enables setting options through a prompt and saving them in a provided config file (defaults to `null`).
@@ -479,6 +478,7 @@ _Available CLI arguments:_
 - `--enableServer`: If set to **true**, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
+- `--uploadLimit`: The maximum request body size in MB (defaults to `3`).
 - `--serverBenchmarking`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 
 ### Server Proxy Config
@@ -559,7 +559,7 @@ Apart from using as a CLI tool, which allows you to run one command at a time, i
 To test if the server is running correctly, you can send a simple POST request, e.g. by using Curl:
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"infile":{"title": {"text": "Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o chart.png
+curl -H "Content-Type: application/json" -X POST -d '{"options":{"title": {"text": "Chart"}, "xAxis": {"categories": ["Jan", "Feb", "Mar"]}, "series": [{"data": [29.9, 71.5, 106.4]}]}}' 127.0.0.1:7801 -o chart.png
 ```
 
 The above should result in a chart being generated and saved in a file named `chart.png`.
@@ -577,10 +577,10 @@ The server accepts the following arguments in a POST request body.
 
 _Available request arguments:_
 
-- `infile`: Chart options in the form of JSON or stringified JSON.
-- `options`: An alias for the `infile` option.
-- `data`: Another alias for the `infile` option.
+- `instr`: Chart options in the form of JSON or stringified JSON.
+- `options`: An alias for the `instr` option.
 - `svg`: A string containing SVG representation to render as a chart.
+- `outfile`: The output filename, accompanied by a type (**jpeg**, **png**, **pdf**, or **svg**). Ignores the `type` option.
 - `type`: The format of an exported chart (can be **png**, **jpeg**, **pdf** or **svg**). Mimetypes can also be used.
 - `constr`: The constructor to use (can be **chart**, **stockChart**, **mapChart** or **ganttChart**).
 - `height`: The height of the exported chart.
@@ -674,7 +674,7 @@ const customOptions = {
 
   // Perform an export
   await exporter.startExport(options, async (error, data) => {
-    // The export result is now in the `data` (it will be base64 encoded)
+    // The export result is now in the `data` (it will be Base64 encoded)
     console.log(data.result);
 
     // Kill the pool when we are done with it
@@ -683,7 +683,22 @@ const customOptions = {
 })();
 ```
 
-In order for everything to work as it is supposed to, the `setOptions` function must be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
+In order for everything to work as it is supposed to, the `setOptions` function should be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
+
+## Options Handling
+
+When starting a server or performing single or batch exports via the CLI, server's global options are initialized from the `defaultConfig` object located in `./lib/schemas/config.js`. These options are then extended with values from all other sources mentioned in the [Configuration](#configuration) section.
+
+For `Node.js Module` usage, the process differs slightly. Some API functions must be called manually. By default, global options are initialized solely from the `defaultConfig` object at the start, similar to the server and CLI scenarios. However, to include options from other sources (as outlined in the [Configuration](#configuration) section), you need to explicitly call the `setOptions()` function. If `setOptions()` is not used, the system will rely on the default values from the defaultConfig object.
+
+The `setOptions()` function allows you to either extend or copy global options.
+
+- `Extend`: Adds new options to the global configuration while keeping the original options intact.
+- `Copy`: Merges new options into a separate set, leaving global options unaffected.
+
+This flexibility is useful for deciding whether global options should remain unmodified during subsequent exports or be updated dynamically. In either case, new options from other sources are merged into the configuration, and the final options are returned for use in API functions.
+
+Functions such as `initExport()`, `singleExport()`, `batchExport()`, and `startExport()` accept partial options. Any missing values in these options will be automatically filled in using the default values from the defaultConfig object.
 
 ## CommonJS Support
 
@@ -697,7 +712,9 @@ This package supports both CommonJS and ES modules.
 
 - `async function startServer(serverOptions = getOptions().server)`: Starts HTTP or/and HTTPS server based on the provided configuration. The `serverOptions` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
 
-  - `@param {Object} [serverOptions=getOptions().server]` - Object containing server options. The default value is the global server options of the export server instance.
+  - `@param {Object} [serverOptions=getOptions().server]` - Object containing `server` options. The default value is the global server options of the export server instance.
+
+  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when the server should not be enabled or when no valid Express app is found.
 
   - `@throws {ExportError}` Throws an `ExportError` if the server cannot be configured and started.
 
@@ -707,94 +724,128 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {Array.<Object>}` Servers associated with Express app instance.
 
-- `function enableRateLimiting(limitConfig)`: Enable rate limiting for the server.
-
-  - `@param {Object} limitConfig` - Configuration object for rate limiting.
-
-  - `@returns {Object}` Middleware for enabling rate limiting.
-
 - `function getExpress()`: Get the Express instance.
 
-  - `@returns {Object}` The Express instance.
+  - `@returns {Express}` The Express instance.
 
 - `function getApp()`: Get the Express app instance.
 
-  - `@returns {Object}` The Express app instance.
+  - `@returns {Express}` The Express app instance.
+
+- `function enableRateLimiting(rateLimitingOptions)`: Enable rate limiting for the server.
+
+  - `@param {Object} rateLimitingOptions` - Object containing `rateLimiting` options.
 
 - `function use(path, ...middlewares)`: Apply middleware(s) to a specific path.
 
   - `@param {string} path` - The path to which the middleware(s) should be applied.
-  - `@param {...Function} middlewares` - The middleware functions to be applied.
+  - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `function get(path, ...middlewares)`: Set up a route with GET method and apply middleware(s).
 
-  - `@param {string} path` - The route path.
-  - `@param {...Function} middlewares` - The middleware functions to be applied.
+  - `@param {string} path` - The path to which the middleware(s) should be applied.
+  - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `function post(path, ...middlewares)`: Set up a route with POST method and apply middleware(s).
 
-  - `@param {string} path` - The route path.
-  - `@param {...Function} middlewares` - The middleware functions to be applied.
+  - `@param {string} path` - The path to which the middleware(s) should be applied.
+  - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `async function startServer(serverOptions = getOptions().server)`: Starts HTTP or/and HTTPS server based on the provided configuration. The `serverOptions` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
 
-  - `@param {Object} [serverOptions=getOptions().server]` - Object containing server options. The default value is the global server options of the export server instance.
+  - `@param {Object} [serverOptions=getOptions().server]` - Object containing `server` options. The default value is the global server options of the export server instance.
+
+  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when the server should not be enabled or when no valid Express app is found.
 
   - `@throws {ExportError}` Throws an `ExportError` if the server cannot be configured and started.
 
-- `function getOptions(getGlobal = false)`: Gets the global options of the export server instance.
+- `function getOptions(getReference = true)`: Gets the reference to the global options of the server instance object or its copy.
 
-  - `@param {boolean} [getGlobal = false]` - Optional parameter to decide whether to return the reference to the global options of the server instance object or return a copy of it.
+  - `@param {boolean} [getReference=true]` - Optional parameter to decide whether to return the reference to the global options of the server instance object or return a copy of it. The default value is true.
 
-  - `@returns {Object}` The global options object of the server instance.
+  - `@returns {Object}` The reference to the global options of the server instance object or its copy.
 
-- `function setOptions(customOptions = {}, cliArgs = [], modifyGlobal = false)`: Sets the general options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
+- `function setOptions(customOptions = {}, cliArgs = [], modifyGlobal = false)`: Sets the global options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
 
-  - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration.
-  - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration.
-  - `@param {boolean} [modifyGlobal = false]` - Optional parameter to decide whether to update and return the reference to the global options of the server instance object or return a copy of it.
+  The priority order of setting values is:
+
+  1. Options from the `lib/schemas/config.js` file (default values).
+  2. Options from a custom JSON file (loaded by the `loadConfig` option).
+  3. Options from the environment variables (the `.env` file).
+  4. Options from the first parameter (by default an empty object).
+  5. Options from the CLI.
+
+  - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration. The default value is an empty object.
+  - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration. The default value is an empty array.
+  - `@param {boolean} [modifyGlobal=false]` - Optional parameter to decide whether to update and return the reference to the global options of the server instance object or return a copy of it. The default value is false.
 
   - `@returns {Object}` The updated general options object, reflecting the merged configuration from all available sources.
 
-- `async function initExport(options = getOptions())`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the pool of resources happen during this stage. This function must be called before attempting to export charts or set up a server. The `options` parameter is an object that contains all possible options. If the object is not provided, the default general options will be retrieved using the `getOptions` function.
+- `function mergeOptions(originalOptions, newOptions)`: Merges two sets of configuration options, considering absolute properties.
 
-  - `@param {Object} [options=getOptions()]` - The `options` object containing configuration for a custom export. The default value is the global options of the export server instance.
+  - `@param {Object} originalOptions` - Original configuration options.
+  - `@param {Object} newOptions` - New configuration options to be merged.
 
-- `async function startExport(options = getOptions(), endCallback)`: Starts an export process. The `options` object contains final options gathered from all possible sources (config, custom json, env, cli). The `endCallback` is called when the export is completed, with the `error` object as the first argument and the `data` object as the second, which contains the base64 respresentation of a chart.
+  - `@returns {Object}` Merged configuration options.
 
-  - `@param {Object} [options=getOptions()]` - The `options` object containing configuration for a custom export. The default value is the global options of the export server instance.
-  - `@param {Function} endCallback` - The callback function to be invoked upon finalizing work or upon error occurance of the exporting process.
+- `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS) to a new format (Puppeteer). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping (`nestedProps`). The new format is used for Puppeteer, while the old format was used for PhantomJS.
 
-  - `@returns {void}` This function does not return a value directly. Instead, it communicates results via the `endCallback`.
+  - `@param {Object} oldOptions` - The old, flat configuration options to be converted.
 
-- `async function singleExport(options = getOptions())`: Starts a single export process based on the specified options.
+  - `@returns {Object}` A new object containing options structured according to the mapping defined in `nestedProps` or an empty object if the provided `oldOptions` is not a correct object.
 
-  - `@param {Object} [options=getOptions()]` - The `options` object containing configuration for a custom export. The default value is the global options of the export server instance.
+- `async function initExport(customOptions)`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage. This function must be called before attempting to export charts or set up a server.
+
+  - `@param {Object} customOptions` - The `customOptions` object, which may be a partial or complete set of options. If the provided options are partial, missing values will be merged with the default general options, retrieved using the `getOptions` function.
+
+- `async function singleExport(options)`: Starts a single export process based on the specified options and saves the image in the provided outfile.
+
+  - `@param {Object} options` - The `options` object, which may be a partial or complete set of options. It must contain at least one of the following properties: `infile`, `instr`, `options`, or `svg` to generate a valid image.
 
   - `@returns {Promise<void>}` A Promise that resolves once the single export process is completed.
 
   - `@throws {ExportError}` Throws an `ExportError` if an error occurs during the single export process.
 
-- `async function batchExport(options = getOptions())`: Starts a batch export process for multiple charts based on the information in the `batch` option. The `batch` is a string in the following format: "infile1.json=outfile1.png;infile2.json=outfile2.png;...".
+- `async function batchExport(options)`: Starts a batch export process for multiple charts based on the information in the `batch` option. The `batch` is a string in the following format: "infile1.json=outfile1.png;infile2.json=outfile2.png;...". Results are saved in provided outfiles.
 
-  - `@param {Object} [options=getOptions()]` - The `options` object containing configuration for a custom export. The default value is the global options of the export server instance.
+  - `@param {Object} options` - The `options` object, which may be a partial or complete set of options. It must contain the `batch` option to generate valid images.
 
-  - `@returns {Promise<void>}` A Promise that resolves once the batch export process is completed.
+  - `@returns {Promise<void>}` A Promise that resolves once the batch export processes are completed.
 
   - `@throws {ExportError}` Throws an `ExportError` if an error occurs during any of the batch export process.
 
-- `async function initPool(poolOptions = getOptions().pool, puppeteerArgs)`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+- `async function startExport(customOptions, endCallback)`: Starts an export process. The `customOptions` parameter is an object that may be partial or complete set of options. The `endCallback` is called when the export is completed, with the `error` object as the first argument and the `data` object as the second, which contains the Base64 representation of the chart in the `result` property and the full set of export options in the `options` property.
 
-  - `@param {Object} poolOptions` - Object containing pool options.
-  - `@param {Array.<string>} puppeteerArgs` - Array of custom puppeteer arguments for the puppeteer.launch function.
+  - `@param {Object} customOptions` - The `customOptions` object, which may be a partial or complete set of options. If the provided options are partial, missing values will be merged with the default general options, retrieved using the `getOptions` function.
+  - `@param {Function} endCallback` - The callback function to be invoked upon finalizing work or upon error occurance of the exporting process. The first argument is `error` object and the `data` object is the second, that contains the Base64 representation of the chart in the `result` property and the full set of export options in the `options` property.
+
+  - `@returns {Promise<void>}` This function does not return a value directly. Instead, it communicates results via the `endCallback`.
+
+  - `@throws {ExportError}` Throws an `ExportError` if there is a problem with processing input of any type. The error is passed into the `endCallback` function and processed there.
+
+- `async function checkAndUpdateCache(highchartsOptions, serverProxyOptions)`: Checks the cache for Highcharts dependencies, updates the cache if needed, and loads the sources.
+
+  - `@param {Object} highchartsOptions` - Object containing `highcharts` options.
+  - `@param {Object} serverProxyOptions` - Object containing `server.proxy` options.
+
+- `async function initPool(poolOptions = getOptions().pool, puppeteerArgs = [])`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+
+  - `@param {Object} [poolOptions=getOptions().pool]` - Object containing `pool` options. The default value is the global pool options of the export server instance.
+  - `@param {Array.<string>} [puppeteerArgs=[]]` - Additional arguments for Puppeteer launch. The default value is an empty array.
+
+  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when an already initialized pool of resources is found.
+
+  - `@throws {ExportError}` Throws an `ExportError` if could not create the pool of workers.
 
 - `async function killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
 
-  - `@returns {Promise<void>}` A promise that resolves after the workers are killed, the pool is destroyed, and the browser is closed.
+  - `@returns {Promise<void>}` A Promise that resolves after the workers are killed, the pool is destroyed, and the browser is closed.
 
 - `function log(...args)`: Logs a message. Accepts a variable amount of arguments. Arguments after the `level` will be passed directly to `console.log`, and/or will be joined and appended to the log file.
 
   - `@param {...unknown} args` - An array of arguments where the first is the log level and the rest are strings to build a message with.
+
+  - `@returns {void}` Ends the function execution when attempting to log information at a higher level than what is allowed.
 
 - `function logWithStack(newLevel, error, customMessage)`: Logs an error message with its stack trace. Optionally, a custom message can be provided.
 
@@ -802,24 +853,25 @@ This package supports both CommonJS and ES modules.
   - `@param {Error} error` - The error object.
   - `@param {string} customMessage` - An optional custom message to be logged along with the error.
 
-- `function setLogLevel(newLevel)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose or 5 = benchmark).
+  - `@returns {void}` Ends the function execution when attempting to log information at a higher level than what is allowed.
 
-  - `@param {number} newLevel` - The new log level to be set.
+- `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose, or 5 = benchmark).
 
-- `function enableFileLogging(dest, file)`: Enables file logging with the specified destination and log file.
+  - `@param {number} level` - The log level to be set.
 
-  - `@param {string} logDest` - The destination path for log files.
-  - `@param {string} logFile` - The log file name.
+- `function enableConsoleLogging(toConsole)`: Enables console logging.
 
-- `async function shutdownCleanUp(exitCode)`: Clean up function to trigger before ending process for the graceful shutdown.
+  - `@param {boolean} toConsole` - The flag for setting the logging to the console.
+
+- `function enableFileLogging(dest, file, toFile)`: Enables file logging with the specified destination and log file.
+
+  - `@param {string} dest` - The destination path for the log file.
+  - `@param {string} file` - The log file name.
+  - `@param {boolean} toFile` - The flag for setting the logging to a file.
+
+- `async function shutdownCleanUp(exitCode)`: Cleans up function to trigger before ending process for the graceful shutdown.
 
   - `@param {number} exitCode` - An exit code for the `process.exit()` function.
-
-- `function mapToNewConfig(oldOptions)`: Maps old-structured configuration options (PhantomJS) to a new format (Puppeteer). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping (`nestedArgs`). The new format is used for Puppeteer, while the old format was used for PhantomJS.
-
-  - `@param {Object} oldOptions` - The old, flat configuration options to be converted.
-
-  - `@returns {Object}` A new object containing options structured according to the mapping defined in `nestedArgs`.
 
 # Examples
 
@@ -849,7 +901,7 @@ Additionally, some options are now named differently due to the new structure an
 - `rateLimit` -> `maxRequests`
 - `workers` -> `maxWorkers`
 
-If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewConfig` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/optionsPhantom.js` file.
+If you depend on any of the above options, the optimal approach is to directly change the old names to the new ones in the options. However, you don't have to do it manually, as there is a utility function called `mapToNewOptions` that can easily transfer the old-structured options to the new format. For an example, refer to the `./samples/module/optionsPhantom.js` file.
 
 ## Note About Chart Size
 
@@ -869,12 +921,14 @@ The latter is preferred, as it allows you to set separate sizing when exporting 
 
 Like previously mentioned, there are multiple ways to set and prioritize options, and the `height`, `width` and `scale` are no exceptions here. The priority goes like this:
 
-1. Options from the `export` section of the provided options (CLI, JSON, etc.).
+1. The `height`, `width`, and `scale` options from the `export` section of the provided options (CLI, JSON, envs).
 2. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts options.
 3. The `height` and `width` from the `chart` section of chart's Highcharts options.
 4. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts global options, if provided.
 5. The `height` and `width` from the `chart` section of chart's Highcharts global options, if provided.
-6. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`).
+6. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts theme options, if provided.
+7. The `height` and `width` from the `chart` section of chart's Highcharts theme options, if provided.
+8. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`).
 
 ## Note About Event Listeners
 
