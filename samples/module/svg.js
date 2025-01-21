@@ -33,7 +33,7 @@ const svgOptions = {
 (async () => {
   try {
     // Set the new options
-    const options = exporter.setOptions(svgOptions);
+    const options = exporter.setGlobalOptions(svgOptions);
 
     // Init a pool for one export
     await initExport(options);

@@ -87,12 +87,9 @@ console.log(
               // The start date of a startExport function run
               const startTime = getNewDateTime();
 
-              // Init options
-              const options = exporter.setOptions(fileOptions);
-
               // Start the export process
               exporter
-                .startExport(options, (error, data) => {
+                .startExport(fileOptions, (error, data) => {
                   // Throw an error
                   if (error) {
                     throw error;
