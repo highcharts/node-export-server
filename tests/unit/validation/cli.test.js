@@ -21,6 +21,9 @@ describe('CLI options should be correctly parsed and validated', () => {
   // Return config tests with a specific schema and strictCheck flag injected
   const tests = configTests(LooseConfigSchema.partial(), false);
 
+  // requestId
+  tests.requestId('requestId');
+
   // puppeteer
   tests.puppeteer('puppeteer', {
     args: [
@@ -253,7 +256,8 @@ describe('CLI options should be correctly parsed and validated', () => {
     listenToProcessExits: true,
     noLogo: false,
     hardResetPage: false,
-    browserShellMode: true
+    browserShellMode: true,
+    validation: true
   });
 
   // debug
@@ -266,13 +270,6 @@ describe('CLI options should be correctly parsed and validated', () => {
     slowMo: 0,
     debuggingPort: 9222
   });
-
-  ////
-  // // payload
-  // tests.payload('payload', {
-  //   requestId: 'd4faa416-0e85-433a-9f84-e735567d8fa5'
-  // });
-  ////
 });
 
 describe('Puppeteer configuration options should be correctly parsed and validated', () => {
@@ -632,6 +629,9 @@ describe('Other configuration options should be correctly parsed and validated',
 
   // other.browserShellMode
   tests.otherBrowserShellMode('browserShellMode');
+
+  // other.validation
+  tests.otherValidation('validation');
 });
 
 describe('Debug configuration options should be correctly parsed and validated', () => {
@@ -659,13 +659,3 @@ describe('Debug configuration options should be correctly parsed and validated',
   // debug.debuggingPort
   tests.debugDebuggingPort('debuggingPort');
 });
-
-////
-// describe('Payload configuration options should be correctly parsed and validated', () => {
-//   // Return config tests with a specific schema and strictCheck flag injected
-//   const tests = configTests(LooseConfigSchema.shape.payload, false);
-
-//   // payload.requestId
-//   tests.payloadRequestId('requestId');
-// });
-////

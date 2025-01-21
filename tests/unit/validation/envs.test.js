@@ -315,6 +315,9 @@ describe('OTHER environment variables should be correctly parsed and validated',
 
   // OTHER_BROWSER_SHELL_MODE
   tests.otherBrowserShellMode('OTHER_BROWSER_SHELL_MODE');
+
+  // OTHER_VALIDATION
+  tests.otherValidation('OTHER_VALIDATION');
 });
 
 describe('DEBUG environment variables should be correctly parsed and validated', () => {
