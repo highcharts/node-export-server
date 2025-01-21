@@ -667,7 +667,7 @@ const customOptions = {
 // Logic must be triggered in an asynchronous function
 (async () => {
   // Set options with user configuration
-  const options = exporter.setOptions(customOptions);
+  const options = exporter.setGlobalOptions(customOptions);
 
   // Must initialize exporting before being able to export charts
   await exporter.initExport(options);
@@ -683,15 +683,15 @@ const customOptions = {
 })();
 ```
 
-In order for everything to work as it is supposed to, the `setOptions` function should be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
+In order for everything to work as it is supposed to, the `setGlobalOptions` function should be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
 
 ## Options Handling
 
 When starting a server or performing single or batch exports via the CLI, server's global options are initialized from the `defaultConfig` object located in `./lib/schemas/config.js`. These options are then extended with values from all other sources mentioned in the [Configuration](#configuration) section.
 
-For `Node.js Module` usage, the process differs slightly. Some API functions must be called manually. By default, global options are initialized solely from the `defaultConfig` object at the start, similar to the server and CLI scenarios. However, to include options from other sources (as outlined in the [Configuration](#configuration) section), you need to explicitly call the `setOptions()` function. If `setOptions()` is not used, the system will rely on the default values from the defaultConfig object.
+For `Node.js Module` usage, the process differs slightly. Some API functions must be called manually. By default, global options are initialized solely from the `defaultConfig` object at the start, similar to the server and CLI scenarios. However, to include options from other sources (as outlined in the [Configuration](#configuration) section), you need to explicitly call the `setGlobalOptions()` function. If `setGlobalOptions()` is not used, the system will rely on the default values from the defaultConfig object.
 
-The `setOptions()` function allows you to either extend or copy global options.
+The `setGlobalOptions()` function allows you to either extend or copy global options.
 
 - `Extend`: Adds new options to the global configuration while keeping the original options intact.
 - `Copy`: Merges new options into a separate set, leaving global options unaffected.
@@ -708,13 +708,11 @@ This package supports both CommonJS and ES modules.
 
 **highcharts-export-server module**
 
-- `server`: The server instance which offers the following functions:
+- `async function startServer(serverOptions)`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `lib/schemas/config.js` file for details).
 
-- `async function startServer(serverOptions = getOptions().server)`: Starts HTTP or/and HTTPS server based on the provided configuration. The `serverOptions` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+  - `@param {Object} serverOptions` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration.
 
-  - `@param {Object} [serverOptions=getOptions().server]` - Object containing `server` options. The default value is the global server options of the export server instance.
-
-  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when the server should not be enabled or when no valid Express app is found.
+  - `@returns {Promise<void>}` A Promise that resolves when the server is either not enabled or no valid Express app is found, signaling the end of the function's execution.
 
   - `@throws {ExportError}` Throws an `ExportError` if the server cannot be configured and started.
 
@@ -734,7 +732,7 @@ This package supports both CommonJS and ES modules.
 
 - `function enableRateLimiting(rateLimitingOptions)`: Enable rate limiting for the server.
 
-  - `@param {Object} rateLimitingOptions` - Object containing `rateLimiting` options.
+  - `@param {Object} rateLimitingOptions` - The configuration object containing `rateLimiting` options. This object may include a partial or complete set of the `rateLimiting` options. If the options are partial, missing values will default to the current global configuration.
 
 - `function use(path, ...middlewares)`: Apply middleware(s) to a specific path.
 
@@ -751,42 +749,26 @@ This package supports both CommonJS and ES modules.
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
-- `async function startServer(serverOptions = getOptions().server)`: Starts HTTP or/and HTTPS server based on the provided configuration. The `serverOptions` object contains all server related properties (see the `server` section in the `lib/schemas/config.js` file for a reference).
+- `function getOptions(getInstance = true)`: Retrieves a reference to the options object. Depending on the `getInstance` parameter, it returns either the global options or the instance-specific options object.
 
-  - `@param {Object} [serverOptions=getOptions().server]` - Object containing `server` options. The default value is the global server options of the export server instance.
+  - `@param {boolean} [getInstance=true]` - Optional parameter that decides whether to return the instance-specific options (when `true`) or the global options (when `false`). The default value is `true`.
 
-  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when the server should not be enabled or when no valid Express app is found.
+  - `@returns {Object}` A reference to either the global options or the instance-specific options, based on the `getInstance` parameter.
 
-  - `@throws {ExportError}` Throws an `ExportError` if the server cannot be configured and started.
-
-- `function getOptions(getReference = true)`: Gets the reference to the global options of the server instance object or its copy.
-
-  - `@param {boolean} [getReference=true]` - Optional parameter to decide whether to return the reference to the global options of the server instance object or return a copy of it. The default value is true.
-
-  - `@returns {Object}` The reference to the global options of the server instance object or its copy.
-
-- `function setOptions(customOptions = {}, cliArgs = [], modifyGlobal = false)`: Sets the global options of the export server instance, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
+- `function setGlobalOptions(customOptions = {}, cliArgs = [])`: Sets the global options of the export server, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
 
   The priority order of setting values is:
 
   1. Options from the `lib/schemas/config.js` file (default values).
   2. Options from a custom JSON file (loaded by the `loadConfig` option).
   3. Options from the environment variables (the `.env` file).
-  4. Options from the first parameter (by default an empty object).
-  5. Options from the CLI.
+  4. Options from the command line interface (CLI).
+  5. Options from the first parameter (the `customOptions` is by default an empty object).
 
   - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration. The default value is an empty object.
   - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration. The default value is an empty array.
-  - `@param {boolean} [modifyGlobal=false]` - Optional parameter to decide whether to update and return the reference to the global options of the server instance object or return a copy of it. The default value is false.
 
-  - `@returns {Object}` The updated general options object, reflecting the merged configuration from all available sources.
-
-- `function mergeOptions(originalOptions, newOptions)`: Merges two sets of configuration options, considering absolute properties.
-
-  - `@param {Object} originalOptions` - Original configuration options.
-  - `@param {Object} newOptions` - New configuration options to be merged.
-
-  - `@returns {Object}` Merged configuration options.
+  - `@returns {Object}` The updated global options object, reflecting the merged configuration from all available sources.
 
 - `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS) to a new format (Puppeteer). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping (`nestedProps`). The new format is used for Puppeteer, while the old format was used for PhantomJS.
 
@@ -794,68 +776,62 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {Object}` A new object containing options structured according to the mapping defined in `nestedProps` or an empty object if the provided `oldOptions` is not a correct object.
 
-- `async function initExport(customOptions)`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage. This function must be called before attempting to export charts or set up a server.
+- `async function initExport(initOptions = {})`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage.
 
-  - `@param {Object} customOptions` - The `customOptions` object, which may be a partial or complete set of options. If the provided options are partial, missing values will be merged with the default general options, retrieved using the `getOptions` function.
+  This function must be called before attempting to export charts or set up a server.
 
-- `async function singleExport(options)`: Starts a single export process based on the specified options and saves the image in the provided outfile.
+  - `@param {Object} [initOptions={}]` - The `initOptions` object, which may be a partial or complete set of options. If the options are partial, missing values will default to the current global configuration. The default value is an empty object.
 
-  - `@param {Object} options` - The `options` object, which may be a partial or complete set of options. It must contain at least one of the following properties: `infile`, `instr`, `options`, or `svg` to generate a valid image.
+- `async function singleExport(options)`: Starts a single export process based on the specified options and saves the resulting image to the provided output file.
+
+  - `@param {Object} options` - The `options` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. The object must contain at least one of the following `export` properties: `infile`, `instr`, `options`, or `svg` to generate a valid image.
 
   - `@returns {Promise<void>}` A Promise that resolves once the single export process is completed.
 
   - `@throws {ExportError}` Throws an `ExportError` if an error occurs during the single export process.
 
-- `async function batchExport(options)`: Starts a batch export process for multiple charts based on the information in the `batch` option. The `batch` is a string in the following format: "infile1.json=outfile1.png;infile2.json=outfile2.png;...". Results are saved in provided outfiles.
+- `async function batchExport(options)`: Starts a batch export process for multiple charts based on information provided in the `batch` option. The `batch` is a string in the following format: "infile1.json=outfile1.png;infile2.json=outfile2.png;...". Results are saved to the specified output files.
 
-  - `@param {Object} options` - The `options` object, which may be a partial or complete set of options. It must contain the `batch` option to generate valid images.
+  - `@param {Object} options` - The `options` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. It must contain the `batch` option from the `export` section to generate valid images.
 
   - `@returns {Promise<void>}` A Promise that resolves once the batch export processes are completed.
 
   - `@throws {ExportError}` Throws an `ExportError` if an error occurs during any of the batch export process.
 
-- `async function startExport(customOptions, endCallback)`: Starts an export process. The `customOptions` parameter is an object that may be partial or complete set of options. The `endCallback` is called when the export is completed, with the `error` object as the first argument and the `data` object as the second, which contains the Base64 representation of the chart in the `result` property and the full set of export options in the `options` property.
+- `async function startExport(exportingOptions, endCallback)`: Starts an export process. The `exportingOptions` parameter is an object that should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. If partial options are provided, missing values will be merged with the current global options.
 
-  - `@param {Object} customOptions` - The `customOptions` object, which may be a partial or complete set of options. If the provided options are partial, missing values will be merged with the default general options, retrieved using the `getOptions` function.
-  - `@param {Function} endCallback` - The callback function to be invoked upon finalizing work or upon error occurance of the exporting process. The first argument is `error` object and the `data` object is the second, that contains the Base64 representation of the chart in the `result` property and the full set of export options in the `options` property.
+  The `endCallback` function is invoked upon the completion of the export, either successfully or with an error. The `error` object is provided as the first argument, and the `data` object is the second, containing the Base64 representation of the chart in the `result` property and the complete set of options in the `options` property.
+
+  - `@param {Object} exportingOptions` - The `exportingOptions` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. If the provided options are partial, missing values will be merged with the current global options.
+  - `@param {Function} endCallback` - The callback function to be invoked upon finalizing the export process or upon encountering an error. The first argument is the `error` object, and the second argument is the `data` object, which includes the Base64 representation of the chart in the `result` property and the full set of options in the `options` property.
 
   - `@returns {Promise<void>}` This function does not return a value directly. Instead, it communicates results via the `endCallback`.
 
   - `@throws {ExportError}` Throws an `ExportError` if there is a problem with processing input of any type. The error is passed into the `endCallback` function and processed there.
 
-- `async function checkAndUpdateCache(highchartsOptions, serverProxyOptions)`: Checks the cache for Highcharts dependencies, updates the cache if needed, and loads the sources.
+- `async function killPool()`: Terminates all workers in the pool, destroys the pool, and closes the browser instance.
 
-  - `@param {Object} highchartsOptions` - Object containing `highcharts` options.
-  - `@param {Object} serverProxyOptions` - Object containing `server.proxy` options.
+  - `@returns {Promise<void>}` A Promise that resolves once all workers are terminated, the pool is destroyed, and the browser is successfully closed.
 
-- `async function initPool(poolOptions = getOptions().pool, puppeteerArgs = [])`: Initializes the export pool with the provided configuration, creating a browser instance and setting up worker resources.
+- `async function shutdownCleanUp(exitCode = 0)`: Performs cleanup operations to ensure a graceful shutdown of the process. This includes clearing all registered timeouts/intervals, closing active servers, terminating resources (pages) of the pool, pool itself, and closing the browser.
 
-  - `@param {Object} [poolOptions=getOptions().pool]` - Object containing `pool` options. The default value is the global pool options of the export server instance.
-  - `@param {Array.<string>} [puppeteerArgs=[]]` - Additional arguments for Puppeteer launch. The default value is an empty array.
+  - `@param {number} [exitCode=0]` - The exit code to use with `process.exit()`. The default value is `0`.
 
-  - `@returns {Promise<void>}` A Promise that resolves to ending the function execution when an already initialized pool of resources is found.
+- `function log(...args)`: Logs a message with a specified log level. Accepts a variable number of arguments. The arguments after the `level` are passed to `console.log` and/or used to construct and append messages to a log file.
 
-  - `@throws {ExportError}` Throws an `ExportError` if could not create the pool of workers.
+  - `@param {...unknown} args` - An array of arguments where the first is the log level and the remaining are strings used to build the log message.
 
-- `async function killPool()`: Kills all workers in the pool, destroys the pool, and closes the browser instance.
+  - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
 
-  - `@returns {Promise<void>}` A Promise that resolves after the workers are killed, the pool is destroyed, and the browser is closed.
-
-- `function log(...args)`: Logs a message. Accepts a variable amount of arguments. Arguments after the `level` will be passed directly to `console.log`, and/or will be joined and appended to the log file.
-
-  - `@param {...unknown} args` - An array of arguments where the first is the log level and the rest are strings to build a message with.
-
-  - `@returns {void}` Ends the function execution when attempting to log information at a higher level than what is allowed.
-
-- `function logWithStack(newLevel, error, customMessage)`: Logs an error message with its stack trace. Optionally, a custom message can be provided.
+- `function logWithStack(newLevel, error, customMessage)`: Logs an error message along with its stack trace. Optionally, a custom message can be provided.
 
   - `@param {number} newLevel` - The log level.
-  - `@param {Error} error` - The error object.
-  - `@param {string} customMessage` - An optional custom message to be logged along with the error.
+  - `@param {Error} error` - The error object containing the stack trace.
+  - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
 
-  - `@returns {void}` Ends the function execution when attempting to log information at a higher level than what is allowed.
+  - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
 
-- `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (0 = no logging, 1 = error, 2 = warning, 3 = notice, 4 = verbose, or 5 = benchmark).
+- `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (`0` = no logging, `1` = error, `2` = warning, `3` = notice, `4` = verbose, or `5` = benchmark).
 
   - `@param {number} level` - The log level to be set.
 
@@ -863,15 +839,11 @@ This package supports both CommonJS and ES modules.
 
   - `@param {boolean} toConsole` - The flag for setting the logging to the console.
 
-- `function enableFileLogging(dest, file, toFile)`: Enables file logging with the specified destination and log file.
+- `function enableFileLogging(dest, file, toFile)`: Enables file logging with the specified destination and log file name.
 
-  - `@param {string} dest` - The destination path for the log file.
-  - `@param {string} file` - The log file name.
-  - `@param {boolean} toFile` - The flag for setting the logging to a file.
-
-- `async function shutdownCleanUp(exitCode)`: Cleans up function to trigger before ending process for the graceful shutdown.
-
-  - `@param {number} exitCode` - An exit code for the `process.exit()` function.
+  - `@param {string} dest` - The destination path where the log file should be saved.
+  - `@param {string} file` - The name of the log file.
+  - `@param {boolean} toFile` - A flag indicating whether logging should be directed to a file.
 
 # Examples
 
