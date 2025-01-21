@@ -26,12 +26,13 @@ import {
   printLicense,
   printUsage,
   printVersion,
-  setOptions
+  setGlobalOptions
 } from '../lib/config.js';
 import { initExport } from '../lib/index.js';
 import { log, logWithStack } from '../lib/logger.js';
 import { manualConfig } from '../lib/prompt.js';
 import { shutdownCleanUp } from '../lib/resourceRelease.js';
+
 import { startServer } from '../lib/server/server.js';
 
 import ExportError from '../lib/errors/ExportError.js';
@@ -81,7 +82,7 @@ async function start() {
     }
 
     // Set the options, keeping the priority order of setting values
-    const options = setOptions({}, args, true);
+    const options = setGlobalOptions({}, args);
 
     // If all options are correctly parsed
     if (options) {
@@ -90,35 +91,44 @@ async function start() {
 
       // In this case we want to prepare config manually
       if (options.customLogic.createConfig) {
-        manualConfig(options.customLogic.createConfig);
+        manualConfig(
+          options.customLogic.createConfig,
+          options.customLogic.allowCodeExecution
+        );
         return;
       }
 
       // Start server
       if (options.server.enable) {
         // Init the export mechanism for the server configuration
-        await initExport(options);
+        await initExport();
 
         // Run the server
-        await startServer(options.server);
+        await startServer();
       } else {
         // Perform batch exports
         if (options.export.batch) {
           // Init the export mechanism for batch exports
-          await initExport(options);
+          await initExport();
 
           // Start batch exports
-          await batchExport(options);
+          await batchExport({
+            export: options.export,
+            customLogic: options.customLogic
+          });
         } else {
           // No need for multiple workers in case of a single CLI export
           options.pool.minWorkers = 1;
           options.pool.maxWorkers = 1;
 
           // Init the export mechanism for a single export
-          await initExport(options);
+          await initExport();
 
           // Start a single export
-          await singleExport(options);
+          await singleExport({
+            export: options.export,
+            customLogic: options.customLogic
+          });
         }
       }
     } else {

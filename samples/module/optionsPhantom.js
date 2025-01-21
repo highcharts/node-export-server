@@ -74,7 +74,7 @@ const oldOptions = {
     const newOptions = exporter.mapToNewOptions(oldOptions);
 
     // Set the new options
-    const options = exporter.setOptions(newOptions);
+    const options = exporter.setGlobalOptions(newOptions);
 
     // Init a pool for one export
     await initExport(options);

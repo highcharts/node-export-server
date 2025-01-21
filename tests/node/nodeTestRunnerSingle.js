@@ -55,21 +55,16 @@ console.log(
           )
       );
 
-      // Set options
-      const options = exporter.setOptions(
-        exporter.mergeOptions(fileOptions, {
-          pool: {
-            minWorkers: 1,
-            maxWorkers: 1
-          },
-          logging: {
-            level: 0
-          }
-        })
-      );
-
       // Initialize pool with disabled logging
-      await initExport(options);
+      await initExport({
+        pool: {
+          minWorkers: 1,
+          maxWorkers: 1
+        },
+        logging: {
+          level: 0
+        }
+      });
 
       // Start the export
       console.log('[Test runner]'.blue, `Processing test ${file}.`);
@@ -79,7 +74,7 @@ console.log(
 
       try {
         // Start the export process
-        await exporter.startExport(options, async (error, data) => {
+        await exporter.startExport(fileOptions, async (error, data) => {
           // Throw an error
           if (error) {
             throw error;
