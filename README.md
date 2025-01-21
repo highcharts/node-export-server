@@ -270,7 +270,8 @@ _Available default JSON config:_
     "listenToProcessExits": true,
     "noLogo": false,
     "hardResetPage": false,
-    "browserShellMode": true
+    "browserShellMode": true,
+    "validation": true
   },
   "debug": {
     "enable": false,
@@ -406,6 +407,7 @@ _Available environment variables:_
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `OTHER_VALIDATION`: Decides whether or not to enable validation of options types (defaults to `true`).
 
 ### Debugging Config
 
@@ -537,6 +539,7 @@ _Available CLI arguments:_
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `--browserShellMode`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `--validation`: Decides whether or not to enable validation of options types (defaults to `true`).
 
 ### Debugging Config
 
@@ -776,6 +779,21 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {Object}` A new object containing options structured according to the mapping defined in `nestedProps` or an empty object if the provided `oldOptions` is not a correct object.
 
+- `function validateOption(name, configOption, strictCheck = true)`: Validates a specified option using the corresponding validator from the configuration object. Returns the original option if the validation is disabled globally.
+
+  - `@param {string} name` - The name of the option to validate.
+  - `@param {any} configOption` - The value of the option to validate.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
+
+  - `@returns {any}` The parsed and validated value of the option.
+
+- `function validateOptions(configOptions, strictCheck = true)`: Validates the provided configuration options for the exporting process. Returns the original option if the validation is disabled globally.
+
+  - `@param {Object} configOptions` - The configuration options to be validated.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
+
+  - `@returns {Object}` The parsed and validated configuration options object.
+
 - `async function initExport(initOptions = {})`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage.
 
   This function must be called before attempting to export charts or set up a server.
@@ -831,11 +849,11 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
 
-- `function logZodIssues(newLevel, issues = [], customMessage)`: Logs an error message about Zod issues with the validation. Optionally, a custom message can be provided.
+- `function logZodIssues(newLevel, issues, customMessage)`: Logs an error message related to Zod validation issues. Optionally, a custom message can be provided.
 
   - `@param {number} newLevel` - The log level.
-  - `@param {Error[]} issues` - The array of Zod issues.
-  - `@param {string} customMessage` - An optional custom message to be logged along with the error.
+  - `@param {Error[]} issues` - An array of Zod validation issues.
+  - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
 
 - `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (`0` = no logging, `1` = error, `2` = warning, `3` = notice, `4` = verbose, or `5` = benchmark).
 
