@@ -1,8 +1,5 @@
 {
   "export": {
-    "height": 800,
-    "width": 1200,
-    "scale": 2,
     "options": {
       "chart": {
         "type": "column"
@@ -37,6 +34,9 @@
           "yAxis": 1
         }
       ]
-    }
+    },
+    "height": 800,
+    "width": 1200,
+    "scale": 2
   }
 }

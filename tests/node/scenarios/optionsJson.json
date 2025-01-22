@@ -1,6 +1,5 @@
 {
   "export": {
-    "constr": "chart",
     "options": {
       "title": {
         "text": "Basic options"
