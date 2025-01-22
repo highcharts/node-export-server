@@ -753,11 +753,13 @@ This package supports both CommonJS and ES modules.
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
-- `function getOptions()`: Retrieves a copy of the global options object.
+- `function getOptions(getCopy = true)`: Retrieves a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
 
-  - `@returns {Object}` A reference to the global options object.
+  - `@param {boolean} [getCopy=true]` - Specifies whether to return a copied object of the global options (`true`) or a reference to the global options object (`false`). The default value is `false`.
 
-- `function updateOptions(newOptions, getCopy = false)`: Updates the global options with the provided options.
+  - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
+
+- `function updateOptions(newOptions, getCopy = false)`: Updates a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
 
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
