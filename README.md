@@ -82,16 +82,38 @@ highcharts-export-server <arguments>
 
 There are four main ways of loading configurations:
 
-- By loading default options from the `lib/schemas/config.js` file.
-- By loading options from a custom JSON file.
+- By loading default options from the `./lib/schemas/config.js` file.
 - By providing configurations via environment variables from the `.env` file.
+- By loading options from a custom JSON file.
 - By passing arguments through command line interface (CLI).
 
-...or any combination of the four. In such cases, the options from the later step take precedence (config file -> custom JSON -> envs -> CLI arguments).
+...or any combination of the four. In such cases, the options from the later step take precedence (config file -> envs -> custom JSON -> CLI arguments).
+
+## Options Handling
+
+A description of how options are handled and processed when using a specific export method.
+
+### Server And CLI Usage
+
+When starting a server or performing single or batch exports via the CLI, the server's global options are initialized from the `defaultConfig` object located in `./lib/schemas/config.js`, along with values from the `.env` file. These options can be extended with additional values provided through CLI arguments, which are internally set using the `setCliOptions()` function.
+
+### Node.js Module Usage
+
+For `Node.js Module` usage, the process differs slightly because API functions are called manually. By default, global options are initialized from the `defaultConfig` object and the `.env` file at startup, similar to the server and CLI scenarios. However, to include additional options, you need to explicitly call the `updateOptions()` function. If the `updateOptions()` function is not invoked, the system will rely on the default values previously set in the global options object.
+
+### Options Management
+
+All API functions accept specific sets of options that, if provided, extend the global options. When such options are not provided, the default global option values are used. Additionally, the `updateOptions()` function allows you to extend global options in advance, eliminating the need to provide options to each function individually. However, `singleExport()`, `batchExport()`, and `startExport()` must still be provided with export-related options.
+
+This flexibility is particularly useful for deciding whether global options should remain static during subsequent exports or be updated dynamically. In either case, new options from various sources are merged into the configuration, and the resulting options are applied in API functions.
+
+### Export Functions
+
+The `singleExport()`, `batchExport()`, and `startExport()` functions must be provided with at least partial options that include one of the following options from the `export` section: `infile`, `instr`, `svg`, or `batch`. Any missing values in the provided options object will automatically default to those specified in the global options object. Unlike other API functions, options provided to the export functions will not be merged into the global options object, as these options represent a specific export process. To make the export options global, you can use the `updateOptions()` function before initiating the export.
 
 ## Default JSON Config
 
-The JSON below represents the default configuration stored in the `lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used. The configuration is not recommended to be modified directly, as it can typically be managed through other sources.
+The JSON below represents the default configuration stored in the `./lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used. The configuration is not recommended to be modified directly, as it can typically be managed through other sources.
 
 The format, along with its default values, is as follows (using the recommended ordering of core and module scripts below).
 
@@ -285,13 +307,9 @@ _Available default JSON config:_
 }
 ```
 
-## Custom JSON Config
-
-To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option. The `<filepath>` value does not need a _.json_ extension, but the file's content must be valid JSON when using the `--loadConfig` option.
-
 ## Environment Variables
 
-These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
+These variables are set in your environment and take precedence over options from the `./lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
 _Available environment variables:_
 
@@ -329,8 +347,8 @@ _Available environment variables:_
 - `EXPORT_DEFAULT_HEIGHT`: The default fallback height for exported charts if not set explicitly (defaults to `400`).
 - `EXPORT_DEFAULT_WIDTH`: The default fallback width for exported charts if not set explicitly (defaults to `600`).
 - `EXPORT_DEFAULT_SCALE`: The default fallback scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
-- `EXPORT_GLOBAL_OPTIONS`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions` (defaults to ``).
-- `EXPORT_THEME_OPTIONS`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions` (defaults to ``).
+- `EXPORT_GLOBAL_OPTIONS`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions()` (defaults to ``).
+- `EXPORT_THEME_OPTIONS`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions()` (defaults to ``).
 - `EXPORT_RASTERIZATION_TIMEOUT`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
 ### Custom Logic Config
@@ -419,6 +437,10 @@ _Available environment variables:_
 - `DEBUG_SLOW_MO`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
 - `DEBUG_DEBUGGING_PORT`: Specifies the debugging port (defaults to `9222`).
 
+## Custom JSON Config
+
+To load an additional JSON configuration file, use the `--loadConfig <filepath>` option. This JSON file can either be manually created or generated through a prompt triggered by the `--createConfig <filepath>` option. The `<filepath>` value does not need a _.json_ extension, but the file's content must be valid JSON when using the `--loadConfig` option.
+
 ## Command Line Arguments
 
 To supply command line arguments, add them as flags when running the application:
@@ -461,8 +483,8 @@ _Available CLI arguments:_
 - `--defaultHeight`: The default fallback height for exported charts if not set explicitly (defaults to `400`).
 - `--defaultWidth`: The default fallback width for exported charts if not set explicitly (defaults to `600`).
 - `--defaultScale`: The default fallback scale for exported charts if not set explicitly. Ranges between **0.1** and **5.0** (defaults to `1`).
-- `--globalOptions`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions` (defaults to `null`).
-- `--themeOptions`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions` (defaults to `null`).
+- `--globalOptions`: Either a stringified JSON or a filename containing global options to be passed into the `Highcharts.setOptions()` (defaults to `null`).
+- `--themeOptions`: Either a stringified JSON or a filename containing theme options to be passed into the `Highcharts.setOptions()` (defaults to `null`).
 - `--rasterizationTimeout`: The specified duration, in milliseconds, to wait for rendering a webpage (defaults to `1500`).
 
 ### Custom Logic Config
@@ -589,8 +611,8 @@ _Available request arguments:_
 - `height`: The height of the exported chart.
 - `width`: The width of the exported chart.
 - `scale`: The scale factor of the exported chart. Use it to improve resolution in PNG and JPEG, for example setting scale to 2 on a 600px chart will result in a 1200px output.
-- `globalOptions`: Either a JSON or a stringified JSON with global options to be passed into `Highcharts.setOptions`.
-- `themeOptions`: Either a JSON or a stringified JSON with theme options to be passed into `Highcharts.setOptions`.
+- `globalOptions`: Either a JSON or a stringified JSON with global options to be passed into `Highcharts.setOptions()`.
+- `themeOptions`: Either a JSON or a stringified JSON with theme options to be passed into `Highcharts.setOptions()`.
 - `resources`: Additional resources in the form of a JSON or a stringified JSON. It may contain `files` (array of JS filenames), `js` (stringified JS), and `css` (stringified CSS) sections.
 - `callback`: Stringified JavaScript function to execute in the Highcharts constructor.
 - `customCode`: Custom code to be executed before the chart initialization. This can be a function, code wrapped within a function, or a filename with the _.js_ extension. Both `allowFileResources` and `allowCodeExecution` must be set to **true** for the option to be considered.
@@ -669,9 +691,6 @@ const customOptions = {
 
 // Logic must be triggered in an asynchronous function
 (async () => {
-  // Set options with user configuration
-  const options = exporter.setGlobalOptions(customOptions);
-
   // Must initialize exporting before being able to export charts
   await exporter.initExport(options);
 
@@ -686,22 +705,7 @@ const customOptions = {
 })();
 ```
 
-In order for everything to work as it is supposed to, the `setGlobalOptions` function should be called before running the `initExport` and any export-related function (`startExport`, `singleExport`, or `batchExport`) to correctly initialize all option values.
-
-## Options Handling
-
-When starting a server or performing single or batch exports via the CLI, server's global options are initialized from the `defaultConfig` object located in `./lib/schemas/config.js`. These options are then extended with values from all other sources mentioned in the [Configuration](#configuration) section.
-
-For `Node.js Module` usage, the process differs slightly. Some API functions must be called manually. By default, global options are initialized solely from the `defaultConfig` object at the start, similar to the server and CLI scenarios. However, to include options from other sources (as outlined in the [Configuration](#configuration) section), you need to explicitly call the `setGlobalOptions()` function. If `setGlobalOptions()` is not used, the system will rely on the default values from the defaultConfig object.
-
-The `setGlobalOptions()` function allows you to either extend or copy global options.
-
-- `Extend`: Adds new options to the global configuration while keeping the original options intact.
-- `Copy`: Merges new options into a separate set, leaving global options unaffected.
-
-This flexibility is useful for deciding whether global options should remain unmodified during subsequent exports or be updated dynamically. In either case, new options from other sources are merged into the configuration, and the final options are returned for use in API functions.
-
-Functions such as `initExport()`, `singleExport()`, `batchExport()`, and `startExport()` accept partial options. Any missing values in these options will be automatically filled in using the default values from the defaultConfig object.
+In order for exporting to work as intended, the `initExport()` function must be called before running any export-related functions (`singleExport()`, `batchExport()`, or `startExport()`). This initializes all required mechanisms, such as script fetching, cache setting, resource pooling, and browser startup.
 
 ## CommonJS Support
 
@@ -711,7 +715,7 @@ This package supports both CommonJS and ES modules.
 
 **highcharts-export-server module**
 
-- `async function startServer(serverOptions)`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `lib/schemas/config.js` file for details).
+- `async function startServer(serverOptions)`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
 
   - `@param {Object} serverOptions` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration.
 
@@ -752,26 +756,16 @@ This package supports both CommonJS and ES modules.
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
-- `function getOptions(getInstance = true)`: Retrieves a reference to the options object. Depending on the `getInstance` parameter, it returns either the global options or the instance-specific options object.
+- `function getOptions()`: Retrieves a copy of the global options object.
 
-  - `@param {boolean} [getInstance=true]` - Optional parameter that decides whether to return the instance-specific options (when `true`) or the global options (when `false`). The default value is `true`.
+  - `@returns {Object}` A reference to the global options object.
 
-  - `@returns {Object}` A reference to either the global options or the instance-specific options, based on the `getInstance` parameter.
+- `function updateOptions(newOptions, getCopy = false)`: Updates the global options with the provided options.
 
-- `function setGlobalOptions(customOptions = {}, cliArgs = [])`: Sets the global options of the export server, keeping the principle of the options load priority from all available sources. It accepts optional `customOptions` object and `cliArgs` array with arguments from the CLI. These options will be validated and applied if provided.
+  - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
+  - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
 
-  The priority order of setting values is:
-
-  1. Options from the `lib/schemas/config.js` file (default values).
-  2. Options from a custom JSON file (loaded by the `loadConfig` option).
-  3. Options from the environment variables (the `.env` file).
-  4. Options from the command line interface (CLI).
-  5. Options from the first parameter (the `customOptions` is by default an empty object).
-
-  - `@param {Object} [customOptions={}]` - Optional custom options for additional configuration. The default value is an empty object.
-  - `@param {Array.<string>} [cliArgs=[]]` - Optional command line arguments for additional configuration. The default value is an empty array.
-
-  - `@returns {Object}` The updated global options object, reflecting the merged configuration from all available sources.
+  - `@returns {Object}` The updated options object, either the modified global options or a modified copy, based on the value of `getCopy`.
 
 - `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS) to a new format (Puppeteer). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping (`nestedProps`). The new format is used for Puppeteer, while the old format was used for PhantomJS.
 

@@ -26,7 +26,7 @@ import {
   printLicense,
   printUsage,
   printVersion,
-  setGlobalOptions
+  setCliOptions
 } from '../lib/config.js';
 import { initExport } from '../lib/index.js';
 import { log, logWithStack } from '../lib/logger.js';
@@ -81,8 +81,8 @@ async function start() {
       return;
     }
 
-    // Set the options, keeping the priority order of setting values
-    const options = setGlobalOptions({}, args);
+    // Set the options from CLI, keeping the priority order of setting values
+    const options = setCliOptions(args);
 
     // If all options are correctly parsed
     if (options) {

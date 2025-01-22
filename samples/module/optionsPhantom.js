@@ -50,11 +50,11 @@ const oldOptions = {
       }
     ]
   },
+  outfile: './samples/module/optionsPhantom.png',
   type: 'png',
   constr: 'chart',
-  outfile: './samples/module/optionsPhantom.png',
-  scale: 1,
   width: 1000,
+  scale: 1,
   globalOptions: './samples/resources/optionsGlobal.json',
   allowFileResources: true,
   callback: './samples/resources/callback.js',
@@ -73,14 +73,11 @@ const oldOptions = {
     // Map to fit the new options structure (Puppeteer)
     const newOptions = exporter.mapToNewOptions(oldOptions);
 
-    // Set the new options
-    const options = exporter.setGlobalOptions(newOptions);
-
     // Init a pool for one export
-    await initExport(options);
+    await initExport(newOptions);
 
     // Perform an export
-    await exporter.singleExport(options);
+    await exporter.singleExport(newOptions);
   } catch (error) {
     // Log the error with stack
     exporter.logWithStack(1, error);
