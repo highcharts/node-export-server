@@ -692,7 +692,7 @@ const customOptions = {
 // Logic must be triggered in an asynchronous function
 (async () => {
   // Must initialize exporting before being able to export charts
-  await exporter.initExport(options);
+  await exporter.initExport();
 
   // Perform an export
   await exporter.startExport(options, async (error, data) => {
@@ -756,11 +756,13 @@ This package supports both CommonJS and ES modules.
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
-- `function getOptions()`: Retrieves a copy of the global options object.
+- `function getOptions(getCopy = true)`: Retrieves a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
 
-  - `@returns {Object}` A reference to the global options object.
+  - `@param {boolean} [getCopy=true]` - Specifies whether to return a copied object of the global options (`true`) or a reference to the global options object (`false`). The default value is `false`.
 
-- `function updateOptions(newOptions, getCopy = false)`: Updates the global options with the provided options.
+  - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
+
+- `function updateOptions(newOptions, getCopy = false)`: Updates a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
 
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
@@ -872,6 +874,10 @@ Samples and tests for every mentioned export method can be found in the `./sampl
 ## Note About Version And Help Information
 
 Typing `highcharts-export-server --v` will display information about the current version of the Export Server, and `highcharts-export-server --h` will display information about available CLI options.
+
+## Note About Paths
+
+All path-related options (such as those for loading additional resources and logic) can be either relative or absolute. If they are relative, they will be resolved based on the current working directory (the directory from which the Node.js process was started). This is especially important to remember when running a custom script in your application that imports the `highcharts-export-server` npm package and uses provided exporting API functions.
 
 ## Note About Deprecated Options
 
