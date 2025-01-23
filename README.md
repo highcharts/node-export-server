@@ -689,7 +689,7 @@ const customOptions = {
 // Logic must be triggered in an asynchronous function
 (async () => {
   // Must initialize exporting before being able to export charts
-  await exporter.initExport(options);
+  await exporter.initExport();
 
   // Perform an export
   await exporter.startExport(options, async (error, data) => {
@@ -850,6 +850,10 @@ Samples and tests for every mentioned export method can be found in the `./sampl
 ## Note About Version And Help Information
 
 Typing `highcharts-export-server --v` will display information about the current version of the Export Server, and `highcharts-export-server --h` will display information about available CLI options.
+
+## Note About Paths
+
+All path-related options (such as those for loading additional resources and logic) can be either relative or absolute. If they are relative, they will be resolved based on the current working directory (the directory from which the Node.js process was started). This is especially important to remember when running a custom script in your application that imports the `highcharts-export-server` npm package and uses provided exporting API functions.
 
 ## Note About Deprecated Options
 
