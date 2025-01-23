@@ -115,6 +115,10 @@ The `singleExport()`, `batchExport()`, and `startExport()` functions must be pro
 
 Essentially, all options can be configured through `.env`, the CLI, and prompts, with one exception: the `HIGHCHARTS_ADMIN_TOKEN`, which is only available as an environment variable.
 
+## Options Validation
+
+By default, options validation is enabled, and it is recommended to keep it enabled to ensure that the provided options are correctly checked, validated, and parsed, allowing the exporting process to function without issues. However, it is possible to disable validation (by setting the `validation` option to **false**) if you are confident in the accuracy of the data you provide. Additionaly, when used as a Node.js module, each API function that updates global options with the provided data also offers the ability to validate the data.
+
 ## Default JSON Config
 
 The JSON below represents the default configuration stored in the `./lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used. The configuration is not recommended to be modified directly, as it can typically be managed through other sources.
@@ -766,10 +770,11 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
 
-- `function updateOptions(newOptions, getCopy = false)`: Updates a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
+- `function updateOptions(newOptions, getCopy = false, strictCheck = true)`: Updates either a copy of the global options object or a reference to the global options object, depending on the getCopy flag, using the provided newOptions, which may or may not be validated.
 
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
 
   - `@returns {Object}` The updated options object, either the modified global options or a modified copy, based on the value of `getCopy`.
 
