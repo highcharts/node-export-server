@@ -12,7 +12,7 @@ Significant changes have been made to the API for using the server as a Node.js 
 
 An important note is that the Export Server now requires `Node.js v18.12.0` or a higher version.
 
-Additionally, with the v3 release, we transitioned from HTTP to HTTPS for export.highcharts.com, so all requests sent to our public server now must use the HTTPS protocol.
+Additionally, with the v3 release, we transitioned from HTTP to HTTPS for `export.highcharts.com`, so all requests sent to our public server now must use the HTTPS protocol.
 
 ## Changelog
 
@@ -110,6 +110,10 @@ This flexibility is particularly useful for deciding whether global options shou
 ### Export Functions
 
 The `singleExport()`, `batchExport()`, and `startExport()` functions must be provided with at least partial options that include one of the following options from the `export` section: `infile`, `instr`, `svg`, or `batch`. Any missing values in the provided options object will automatically default to those specified in the global options object. Unlike other API functions, options provided to the export functions will not be merged into the global options object, as these options represent a specific export process. To make the export options global, you can use the `updateOptions()` function before initiating the export.
+
+### Options Setting
+
+Essentially, all options can be configured through `.env`, the CLI, and prompts, with one exception: the `HIGHCHARTS_ADMIN_TOKEN`, which is only available as an environment variable.
 
 ## Default JSON Config
 
@@ -908,7 +912,7 @@ The Export Server attaches event listeners to `process.exit`, `uncaughtException
 
 Listeners are also attached to handle `uncaught exceptions`. If an exception occurs, the entire pool and browser instance are terminated, and the application is shut down.
 
-If you do not want this behavior, start the server with `--listenToProcessExits 0` or `--listenToProcessExits false`.
+If you do not want this behavior, start the server with `--listenToProcessExits false`.
 
 Be aware though, that if you disable this and you do not take great care to manually kill the pool of resources along with a browser instance, your server will bleed memory when the app is terminated.
 
