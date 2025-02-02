@@ -728,7 +728,7 @@ This package supports both CommonJS and ES modules.
 
 - `function getServers()`: Get all servers associated with Express app instance.
 
-  - `@returns {Array.<Object>}` Servers associated with Express app instance.
+  - `@returns {Array<Object>}` Servers associated with Express app instance.
 
 - `function getExpress()`: Get the Express instance.
 
@@ -757,24 +757,24 @@ This package supports both CommonJS and ES modules.
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
-- `function getOptions(getCopy = true)`: Retrieves a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
+- `function getOptions(getCopy = true)`: Retrieves a copy of the global options object or an original global options object, based on the `getCopy` flag.
 
-  - `@param {boolean} [getCopy=true]` - Specifies whether to return a copied object of the global options (`true`) or a reference to the global options object (`false`). The default value is `false`.
+  - `@param {boolean} [getCopy=true]` - Specifies whether to return a copied object of the global options (`true`) or a reference to the global options object (`false`). The default value is `true`.
 
   - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
 
-- `function updateOptions(newOptions, getCopy = false)`: Updates a copy of the global options object or a reference to the global options object, based on the `getCopy` flag.
+- `function updateOptions(newOptions, getCopy = false)`: Updates and returns the global options object or a copy of the global options object, based on the `getCopy` flag.
 
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
 
   - `@returns {Object}` The updated options object, either the modified global options or a modified copy, based on the value of `getCopy`.
 
-- `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS) to a new format (Puppeteer). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping (`nestedProps`). The new format is used for Puppeteer, while the old format was used for PhantomJS.
+- `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS-based) to a new format (Puppeteer-based). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping provided in the `nestedProps` object. The new format is used for Puppeteer, while the old format was used for PhantomJS.
 
   - `@param {Object} oldOptions` - The old, flat configuration options to be converted.
 
-  - `@returns {Object}` A new object containing options structured according to the mapping defined in `nestedProps` or an empty object if the provided `oldOptions` is not a correct object.
+  - `@returns {Object}` A new object containing options structured according to the mapping defined in the `nestedProps` object or an empty object if the provided `oldOptions` is not a correct object.
 
 - `async function initExport(initOptions = {})`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage.
 
