@@ -16,7 +16,6 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   clearText,
-  fixType,
   roundNumber,
   toBoolean,
   isObject,
@@ -29,16 +28,6 @@ describe('clearText', () => {
     const input = '  This   is  a test    ';
     const expected = 'This is a test';
     expect(clearText(input)).toBe(expected);
-  });
-});
-
-describe('fixType', () => {
-  it('corrects the export type based on file extension', () => {
-    expect(fixType('image/jpeg', 'output.png')).toBe('png');
-  });
-
-  it('returns the original type if no outfile is provided', () => {
-    expect(fixType('pdf')).toBe('pdf');
   });
 });
 

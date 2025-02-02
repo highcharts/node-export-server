@@ -24,7 +24,7 @@ import { join } from 'path';
 
 import 'colors';
 
-import { fetch } from '../../lib/fetch.js';
+import { get } from '../../lib/fetch.js';
 import { __dirname, clearText, getNewDateTime } from '../../lib/utils.js';
 
 // Test runner message
@@ -40,7 +40,7 @@ console.log(
 const url = 'http://127.0.0.1:7801';
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+get(`${url}/health`)
   .then(() => {
     // Results and scenarios paths
     const resultsPath = join(__dirname, 'tests', 'http', '_results');
