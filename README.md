@@ -723,9 +723,9 @@ This package supports both CommonJS and ES modules.
 
 **highcharts-export-server module**
 
-- `async function startServer(serverOptions)`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
+- `async function startServer(serverOptions = {})`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
 
-  - `@param {Object} serverOptions` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration.
+  - `@param {Object} [serverOptions={}]` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration. The default value is an empty object.
 
   - `@returns {Promise<void>}` A Promise that resolves when the server is either not enabled or no valid Express app is found, signaling the end of the function's execution.
 
