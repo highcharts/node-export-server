@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -16,32 +16,33 @@ import { writeFileSync } from 'fs';
 
 import exporter, { initExport } from '../../lib/index.js';
 
-const exportCharts = async (charts, exportOptions = {}) => {
-  // Set the new options
-  const options = exporter.setOptions(exportOptions);
-
+const exportCharts = async (charts, initOptions) => {
   // Init the pool
-  await initExport(options);
+  await initExport(initOptions);
 
   const promises = [];
   const chartResults = [];
 
   // Start exporting charts
-  charts.forEach((chart) => {
+  charts.forEach((options) => {
     promises.push(
       new Promise((resolve, reject) => {
-        const settings = { ...options };
-        settings.export.options = chart;
+        exporter.startExport(
+          {
+            export: {
+              options
+            }
+          },
+          (error, data) => {
+            if (error) {
+              return reject(error);
+            }
 
-        exporter.startExport(settings, (error, data) => {
-          if (error) {
-            return reject(error);
+            // Add the data to the chartResults
+            chartResults.push(data.result);
+            resolve();
           }
-
-          // Add the data to the chartResults
-          chartResults.push(data.result);
-          resolve();
-        });
+        );
       })
     );
   });
@@ -87,7 +88,8 @@ exportCharts(
       maxWorkers: 2
     },
     logging: {
-      level: 4
+      level: 4,
+      toFile: false
     }
   }
 )
@@ -100,8 +102,8 @@ exportCharts(
         Buffer.from(chart, 'base64')
       );
     });
-    exporter.log(4, 'All done!');
+    exporter.log(4, '[promises] All done!');
   })
   .catch((error) => {
-    exporter.logWithStack(1, error, 'Something went wrong!');
+    exporter.logWithStack(1, error, '[promises] Something went wrong!');
   });

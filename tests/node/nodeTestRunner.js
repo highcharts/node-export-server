@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -87,12 +87,9 @@ console.log(
               // The start date of a startExport function run
               const startTime = getNewDateTime();
 
-              // Init options
-              const options = exporter.setOptions(fileOptions);
-
               // Start the export process
               exporter
-                .startExport(options, (error, data) => {
+                .startExport(fileOptions, (error, data) => {
                   // Throw an error
                   if (error) {
                     throw error;

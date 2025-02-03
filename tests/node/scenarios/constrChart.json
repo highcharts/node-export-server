@@ -1,6 +1,5 @@
 {
   "export": {
-    "constr": "chart",
     "options": {
       "title": {
         "text": "Chart"
@@ -48,6 +47,7 @@
           ]
         }
       ]
-    }
+    },
+    "constr": "chart"
   }
 }

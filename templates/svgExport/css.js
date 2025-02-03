@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,6 +12,11 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
+/**
+ * The CSS to be used on the exported page.
+ *
+ * @returns {string} The CSS configuration.
+ */
 export default () => `
 
 html, body {

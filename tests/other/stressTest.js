@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -14,7 +14,7 @@ See LICENSE file in root for details.
 
 import 'colors';
 
-import { fetch, post } from '../../lib/fetch.js';
+import { get, post } from '../../lib/fetch.js';
 import { getNewDateTime } from '../../lib/utils.js';
 
 // Test message
@@ -26,7 +26,7 @@ console.log(
 // The request options
 const requestBody = {
   type: 'svg',
-  infile: {
+  options: {
     title: {
       text: 'Chart'
     },
@@ -63,7 +63,7 @@ const stressTest = () => {
 };
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+get(`${url}/health`)
   .then(() => {
     stressTest();
     setInterval(stressTest, interval);
