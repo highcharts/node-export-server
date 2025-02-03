@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,11 +18,7 @@ import { basename, join } from 'path';
 import 'colors';
 
 import exporter, { initExport } from '../../lib/index.js';
-import {
-  __dirname,
-  getNewDateTime,
-  mergeConfigOptions
-} from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -59,21 +55,16 @@ console.log(
           )
       );
 
-      // Set options
-      const options = exporter.setOptions(
-        mergeConfigOptions(fileOptions, {
-          pool: {
-            minWorkers: 1,
-            maxWorkers: 1
-          },
-          logging: {
-            level: 0
-          }
-        })
-      );
-
       // Initialize pool with disabled logging
-      await initExport(options);
+      await initExport({
+        pool: {
+          minWorkers: 1,
+          maxWorkers: 1
+        },
+        logging: {
+          level: 0
+        }
+      });
 
       // Start the export
       console.log('[Test runner]'.blue, `Processing test ${file}.`);
@@ -83,7 +74,7 @@ console.log(
 
       try {
         // Start the export process
-        await exporter.startExport(options, async (error, data) => {
+        await exporter.startExport(fileOptions, async (error, data) => {
           // Throw an error
           if (error) {
             throw error;

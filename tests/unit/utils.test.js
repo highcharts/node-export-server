@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -16,10 +16,8 @@ import { describe, expect, it } from '@jest/globals';
 
 import {
   clearText,
-  fixType,
   roundNumber,
   toBoolean,
-  isCorrectJSON,
   isObject,
   isObjectEmpty,
   isPrivateRangeUrlFound
@@ -30,16 +28,6 @@ describe('clearText', () => {
     const input = '  This   is  a test    ';
     const expected = 'This is a test';
     expect(clearText(input)).toBe(expected);
-  });
-});
-
-describe('fixType', () => {
-  it('corrects the export type based on file extension', () => {
-    expect(fixType('image/jpeg', 'output.png')).toBe('png');
-  });
-
-  it('returns the original type if no outfile is provided', () => {
-    expect(fixType('pdf')).toBe('pdf');
   });
 });
 
@@ -57,45 +45,6 @@ describe('toBoolean', () => {
     expect(toBoolean('false')).toBe(false);
     expect(toBoolean(undefined)).toBe(false);
     expect(toBoolean('any string')).toBe(true);
-  });
-});
-
-describe('isCorrectJSON', () => {
-  it('parses valid JSON strings', () => {
-    const json = '{"key":"value"}';
-    expect(isCorrectJSON(json)).toEqual({ key: 'value' });
-  });
-
-  it('returns null for invalid JSON strings', () => {
-    const json = '{"key":value}';
-    expect(isCorrectJSON(json)).toBe(null);
-  });
-
-  it('parses JavaScript objects', () => {
-    const obj = { key: 'value' };
-    expect(isCorrectJSON(obj)).toEqual({ key: 'value' });
-  });
-
-  it('returns a stringified version of a valid JSON/object when toString is true', () => {
-    const obj = { key: 'value' };
-    const json = '{"key":"value"}';
-    expect(isCorrectJSON(obj, true)).toBe(json);
-    expect(isCorrectJSON(json, true)).toBe(json);
-  });
-
-  it('handles non-JSON strings', () => {
-    const str = 'Just a string';
-    expect(isCorrectJSON(str)).toBe(null);
-  });
-
-  it('handles non-object types (e.g., numbers, booleans)', () => {
-    expect(isCorrectJSON(123)).toBe(null);
-    expect(isCorrectJSON(true)).toBe(null);
-  });
-
-  it('correctly parses and stringifies an array when toString is true', () => {
-    const arr = [1, 2, 3];
-    expect(isCorrectJSON(arr, true)).toBe(null);
   });
 });
 

@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -13,6 +13,7 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 /* eslint-disable no-undef */
+
 const highexp = {};
 
 (function () {
@@ -58,7 +59,7 @@ const highexp = {};
 
     function toStructure(b64) {
       return {
-        infile: optionsCM.getValue(),
+        options: optionsCM.getValue(),
         width: width.value.length ? width.value : false,
         scale: scale.value.length ? scale.value : false,
         constr: constr.value,

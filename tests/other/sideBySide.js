@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,7 +12,7 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { fetch } from '../../lib/fetch.js';
+import { get } from '../../lib/fetch.js';
 import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
@@ -41,7 +41,7 @@ try {
   // Run for both servers
   for (const [index, url] of urls.entries()) {
     // Perform a health check before continuing
-    fetch(`${url}/health`)
+    get(`${url}/health`)
       .then(() => {
         // And all types
         for (const type of ['png', 'jpeg', 'svg', 'pdf']) {
@@ -53,7 +53,7 @@ try {
 
           // Payload body
           const payload = JSON.stringify({
-            infile: {
+            options: {
               title: {
                 text: index
                   ? 'Phantom Export Server'

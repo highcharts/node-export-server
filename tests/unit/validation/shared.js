@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -214,6 +214,13 @@ export function configTests(schema, strictCheck) {
           expect(schema.parse(obj)[property]).toBe(false);
         });
 
+        it('should accept a stringified 0 and 1 values and transform them to a boolean', () => {
+          const obj = { [property]: '1' };
+          expect(schema.parse(obj)[property]).toBe(true);
+          obj[property] = '0';
+          expect(schema.parse(obj)[property]).toBe(false);
+        });
+
         it('should accept null', () => {
           acceptNull(property);
         });
@@ -234,6 +241,7 @@ export function configTests(schema, strictCheck) {
           validatePropOfSchema(schema, property, [
             'emptyString',
             'stringBoolean',
+            'stringNumber',
             'stringUndefined',
             'stringNull',
             'boolean',
@@ -1055,20 +1063,6 @@ export function configTests(schema, strictCheck) {
         expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
         obj[property] = '{ a: "1", b: { c: 3 } }';
         expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
-      });
-
-      it('should accept a string value that starts with the <svg or <?xml', () => {
-        const obj = {
-          [property]: "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
-        };
-        expect(schema.parse(obj)[property]).toBe(
-          "<svg xmlns='http://www.w3.org/2000/svg'>...</svg>"
-        );
-        obj[property] =
-          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>';
-        expect(schema.parse(obj)[property]).toBe(
-          '<?xml version="1.0" encoding="UTF-8"?><note>...</note>'
-        );
       });
 
       it('should not accept any array values', () => {
@@ -2241,6 +2235,9 @@ export function configTests(schema, strictCheck) {
 
   // The options config validation tests
   return {
+    requestId: (property) => {
+      describe(property, () => validationTests.requestId(property));
+    },
     puppeteer: (property, value) => {
       describe(property, () => validationTests.configObject(property, value));
     },
@@ -2531,6 +2528,9 @@ export function configTests(schema, strictCheck) {
     otherBrowserShellMode: (property) => {
       describe(property, () => validationTests.boolean(property));
     },
+    otherValidation: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
     debug: (property, value) => {
       describe(property, () => validationTests.configObject(property, value));
     },
@@ -2593,12 +2593,6 @@ export function configTests(schema, strictCheck) {
     },
     webSocketSecret: (property) => {
       describe(property, () => validationTests.string(property, false));
-    },
-    payload: (property, value) => {
-      describe(property, () => validationTests.configObject(property, value));
-    },
-    payloadRequestId: (property) => {
-      describe(property, () => validationTests.requestId(property));
     }
   };
 }
