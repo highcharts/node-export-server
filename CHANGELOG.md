@@ -8,6 +8,10 @@ _Fixes:_
 
 - Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
 
+_Other:_
+
+- Added fair usage policy note on the page.
+
 # 4.0.1
 
 _Hotfix_:
