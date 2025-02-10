@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes:_
+
+- Corrected the `Node.js Module` example in the README.
+
 # 4.0.2
 
 _Hotfix_:
