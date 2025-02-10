@@ -1,3 +1,15 @@
+# 4.1.0
+
+_Enhancements:_
+
+- Made corrections and enhancements to all configuration files (`ESLint`, `Prettier`, `lint-staged`, `Husky`, `Jest`, `Nodemon`, ignore files, templates, documentation, and workflow files).
+- Corrected `package.json` by adding and optimizing content and scripts.
+- Made various corrections, mostly stylistic and visual, to the `CHANGELOG.md` and `README.md` files.
+- Removed the unnecessary `install.js` file.
+- Enhancements in samples and tests.
+- Renamed all files to use `camelCase` notation.
+- Linted and formatted all files.
+
 # 4.0.2
 
 _Hotfix_:
