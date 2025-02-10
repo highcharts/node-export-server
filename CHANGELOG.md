@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes:_
+
+- Bumped versions of most packages, with updating `Puppeteer` from the `v22.12.1` to the `v24.2.0` (the latest at the time).
+
 # 4.0.2
 
 _Hotfix_:
