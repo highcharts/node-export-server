@@ -1,3 +1,10 @@
+# 4.0.3
+
+_Fixes:_
+
+- Fixed the warning message when the the default `resources.json` file is not found.
+- Fixed the problem with the lack of the `instr` value, when the `options` is set instead.
+
 # 4.0.2
 
 _Hotfix_:
