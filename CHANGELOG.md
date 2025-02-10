@@ -1,3 +1,10 @@
+# 4.0.3
+
+_Fixes:_
+
+- Wrapped the `clearPageResources` function in a try-catch to handle potential page resources errors.
+- Secured against errors caused by `dev-tools` protocol data size limitations.
+
 # 4.0.2
 
 _Hotfix_:
