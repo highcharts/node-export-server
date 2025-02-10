@@ -1,13 +1,3 @@
-# 4.0.3
-
-_Fixes_:
-
-- Improved resources management/usage.
-
-_Other:_
-
-- Add fair usage policy note on the page.
-
 # 4.0.2
 
 _Hotfix_:
@@ -17,6 +7,10 @@ _Hotfix_:
 _Fixes:_
 
 - Made chart userOptions available within `customCode` as variable `options` [(#551)](https://github.com/highcharts/node-export-server/issues/551).
+
+_Other:_
+
+- Added fair usage policy note on the page.
 
 # 4.0.1
 
