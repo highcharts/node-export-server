@@ -1,3 +1,9 @@
+# 4.0.3
+
+_New Features:_
+
+- Added proxy authentication [(#631)](https://github.com/highcharts/node-export-server/issues/631).
+
 # 4.0.2
 
 _Hotfix_:
