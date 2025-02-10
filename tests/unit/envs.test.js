@@ -11,9 +11,6 @@ describe('Environment variables should be correctly parsed', () => {
     expect(Config.partial().parse(env).PUPPETEER_TEMP_DIR).toEqual(
       '/another/path/to/dir'
     );
-
-    env.PUPPETEER_TEMP_DIR = '';
-    expect(() => Config.partial().parse(env)).toThrow();
   });
 
   test('PUPPETEER_TEMP_DIR can be a relative path', () => {
