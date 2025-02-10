@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes:_
+
+- Added the integrity and crossorigin properties for the scripts in the `public/index.js` file.
+
 # 4.0.2
 
 _Hotfix_:
