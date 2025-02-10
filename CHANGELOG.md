@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes:_
+
+- Limited the the Access-Control-Allow-Methods CORS header to 'POST', 'GET' and 'OPTIONS'.
+
 # 4.0.2
 
 _Hotfix_:
