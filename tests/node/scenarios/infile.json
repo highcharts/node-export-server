@@ -1,5 +1,5 @@
 {
   "export": {
-    "infile": "./samples/cli/infile_json.json"
+    "infile": "./samples/cli/infileJson.json"
   }
 }

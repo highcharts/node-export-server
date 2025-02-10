@@ -10,24 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.x.x'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x.x'
 
-    - name: Install Dependencies
-      run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-    - name: Build Project
-      run: npm run build
+      - name: Build Project
+        run: npm run build
 
-    - name: Commit and Push /dist Directory
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -f dist/
-        git commit -m "Build the dist files after merge."
-        git push -f
+      - name: Commit and Push /dist Directory
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -f dist/
+          git commit -m "Build the dist files after merge."
+          git push -f

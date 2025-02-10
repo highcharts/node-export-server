@@ -1,10 +1,10 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
-    es2021: true,
-    node: true
+    node: true,
+    es2024: true
   },
-  root: true,
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
@@ -24,13 +24,8 @@ module.exports = {
     }
   ],
   rules: {
-    'no-unused-vars': 0,
-    'import/no-cycle': 2,
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: require('os').EOL === '\r\n' ? 'crlf' : 'lf'
-      }
-    ]
+    'no-unused-vars': 'off',
+    'import/no-cycle': 'error',
+    'import/no-named-as-default': 'off'
   }
 };
