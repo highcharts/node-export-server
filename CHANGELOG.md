@@ -1,3 +1,9 @@
+# 4.0.3
+
+_Fixes_:
+
+- Fix the Base64 images not working in exported SVGs (Namespace prefix xlink for href on image is not defined, [#547](https://github.com/highcharts/node-export-server/issues/547)).
+
 # 4.0.2
 
 _Hotfix_:
