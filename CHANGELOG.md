@@ -1,3 +1,146 @@
+# 5.0.0
+
+_Breaking Changes:_
+
+- Renamed and refined from `mapToNewConfig` to `mapToNewOptions`.
+- Renamed the `certPath` CLI equivalent from `certPath` to `sslCertPath`.
+- The `setCliOptions` function (renamed from the `setOptions`) updates additional options only for CLI exports now and it is replaced by the `updateOptions` function.
+- Removed following API functions: `initPool`, `setOptions`, `mapToNewConfig`, `manualConfig`, `printLogo`, `printUsage` (some removed due to refactoring).
+
+_New Features:_
+
+- Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
+- Added a new option called `uploadLimit` to control the maximum size of a request's payload body.
+- Added the possibility to return a Base64 version of the chart using any export method (not only through requests).
+- Added support for displaying CLI usage (`-h`, `--h`, `-help`, `--help`) and version information with license details (`-v`, `--v`).
+- Introduced `validation` middleware to check `Content-Type` headers and validate request bodies.
+
+_Enhancements:_
+
+- Completely redefined, refactored, and optimized options initialization, updating, processing, and management.
+- Simplified and optimized the `./lib/schemas/config.js` module, to export only the default configuration object (`defaultConfig`).
+- Gathered previously scattered meta-information about options into the `defaultConfig` object.
+- Gathered and enhanced logic from multiple modules (mainly from the `./lib/schemas/config.js`) and placed it in the `./lib/config.js` module.
+- Added missing environment variables for all options along with corresponding validators.
+- Global options now initialize with default values from the `defaultConfig` and potential values from the `.env` file.
+- Created a new internal function `_initOptions` (combined from `initOptions` and `updateDefaultConfig` functions) to initialize default values at startup.
+- Adjusted the options loading sequence: `default config -> environment variables` at initialization, `custom JSON -> CLI arguments` when using `setCliOptions` (CLI exports only).
+- The `getOptions` function can now return either a direct reference to the `globalOptions` or a copy (by setting the `getCopy` flag).
+- The `updateOptions` function can now update and return either a direct reference to the `globalOptions` or a copy (by setting the `getCopy` flag).
+- The `_mergeOptions` (renamed from the `mergeConfigOptions`) modifies the first object directly now and is used internally.
+- Replaced the fixed `absoluteProps` array (previously in `./lib/schemas/config.js`) with dynamic generation via `_createAbsoluteProps` function.
+- Enhanced the `isAllowedConfig` (renamed from the `isCorrectJSON`) and `_optionsStringify` functions to better handle stringified options in JSON.
+- Moved options previously used only in the request-oriented export method to the `export` section (`svg`, `b64`, and `noDownload`).
+- Updated default values for certain options in the `.env` file (`HIGHCHARTS_CDN_URL`, `HIGHCHARTS_CACHE_PATH`, `LOGGING_DEST`, `UI_ENABLE`, and `DEBUG_HEADLESS`).
+- Enhanced the `_loadConfigFile` to check if a file can be loaded via `allowFileResources`, for internal use in the `setCliOptions` function.
+- Removed the `initExportSettings` function (no longer required).
+- Major refactor, overhaul, and optimization of the main export functions (`singleExport`, `batchExport`, and `startExport`).
+- The main export functions, such as `batchExport`, `singleExport`, and `startExport`, now accept an object as a parameter, which should include settings from the `export` and `customLogic` sections instead of the full options object.
+- Improved how options are passed, validated, updated, and processed within `startExport`.
+- Allowed partial exports in batch export operations and corrected the corresponding logs.
+- Introduced `_exportFromSvg` and `_exportFromOptions` to handle specific export scenarios with proper validation.
+- Split and enhanced logic of the `doExport` into multiple functions and created `_prepareExport` to gather and calling all these functions responsible for different export preparations (listed below).
+- Created `_fixConstr` for finding correct chart constructor.
+- Created `_fixType` for finding correct type.
+- Created `_fixOutfile` for finding correct outfile.
+- Created `_handleCustomLogic` for handling `customLogic` options.
+- Created `_handleResources` for handling custom logic `resources` option.
+- Created `_handleGlobalAndTheme` for handling `globalOptions` and `themeOptions` options.
+- Created `_handleSize` for handling the `height`, `width`, and `scale` options.
+- Created `_checkDataSize` for handling the data size validation.
+- Optimized `initExport`, utilizing `updateOptions` for global option updates.
+- The `initExport` now have its options parameters set as optional, using global option values if not provided.
+- Updated exported API functions for module usage.
+- Adjusted imports to get functions from corresponding modules rather than `index.js`.
+- Server functions are now directly exported (rather than within a `server` object) as API functions.
+- The `logger` API functions that modify options now update global options.
+- Added following API functions: `getOptions`, `updateOptions`, `mapToNewOptions`, `enableConsoleLogging`.
+- Small corrections of the `_attachProcessExitListeners` (renamed from the `attachProcessExitListeners`).
+- Refactored logic for initial configuration, startup, and HTTP/HTTPS server management.
+- Optimized `startServer`, utilizing `updateOptions` for global option updates.
+- The `startServer` now have its options parameters set as optional, using global option values if not provided.
+- Optimized logic and statistics display in `health.js` router.
+- Optimized logic and corrected the url (from `version/change` to `version_change`) in the `versionChange.js` router.
+- Refactored `exportHandler` (to `requestExport`) by moving some logic to the `validaion` middleware and refactoring the rest.
+- Removed unnecessary `doCallbacks` from the export router.
+- Moved `server/error.js` and `server/rateLimiting.js` to `middlewares/`, optimizing error handling and rate limiting.
+- The `nodeEnv` option is now obtained from `getOptions`, not directly from the environment variables in the `error.js` middleware.
+- Refactored and optimized the entire logic for checking the cache and fetching scripts.
+- Refactored and split the `_updateCache` function into smaller, more manageable parts.
+- The `updateHcVersion` function now correctly updates the global options.
+- The new `_configureRequest` function is responsible for setting the proxy agent.
+- Passing `version` as the first argument to `_saveConfigToManifest`.
+- Removed the `fetchAndProcessScript` and `fetchScripts` functions, replacing them with a single function, `_fetchScript`, for the same purpose.
+- Renamed the `checkAndUpdateCache` function to `checkCache`, the `updateVersion` function to `updateHcVersion`, the `version` function to `getHcVersion`, the `saveConfigToManifest` function to `_saveConfigToManifest`, the `extractModuleName` function to `_extractModuleName`, the `extractVersion` function to `extractHcVersion`, and the `cdnURL` property to `cdnUrl` in the `cache.js` module.
+- Named the default exported function of the `export.js` module, `puppeteerExport`.
+- Optimized `puppeteerExport` by simplifying processing, reducing the size of data passed to the browser, and improving performance and readability.
+- Merged the logic from `createSVG` and `setAsConfig` into the `puppeteerExport` function.
+- Extracted `_getChartSize` from part of the `puppeteerExport` logic to determine the final exported image size.
+- Simplified error handling by removing the `HttpError` class and using only the `ExportError` class throughout the code.
+- Removed forced modification of pool worker numbers for batch exports.
+- Optimized the `initPool` and `postWork` functions.
+- Moved the `factory` object into a separate function, optimizing pool resource functions.
+- Extended and corrected the `poolStats` object.
+- The `newPage` function now accepts the `poolResource` object and throws errors if the `browser` or `page` is incorrect.
+- The `clearPage` function now accepts the `poolResource` object (instead of `page`) and correctly sets `workCount` to an exceeding number in case of issues with clearing the page.
+- The `addPageResources` function now accepts the `customLogicOptions` object instead of an object containing all options.
+- Set the `launchOptions.userDataDir` property to 'tmp'.
+- Secured the `launchOptions.args` by setting it to [] if `puppeteerArgs` is not found in the `createBrowser` function.
+- Renamed the `get` function to `getBrowser`, the `create` function to `createBrowser`, and the `close` function to `closeBrowser`.
+- Renamed `triggerExport` to `createChart`, optimizing the options passed and processed in the `highcharts.js` module.
+- Improved the module's overall logic, optimizing logging functions and the initialization process.
+- Added `pathToLog` to the module's logging options to remember the full path to the log file.
+- Added the `enableConsoleLogging` function.
+- Removed `listen` function and `listeners` array from the module's logging options.
+- Created a new module, `prompts.js`, to manage enhanced and refactored logic related to creating and loading options from prompts, previously handled in `config.js`.
+- Added the `allowCodeExecution` flag as the second argument in the `manualConfig` function to check whether a file is allowed to be loaded.
+- Added `isAllowedConfig` check to the options loaded with the `manualConfig` function.
+- Created a new module, `info.js`, to group togheter and enhance logic (functions like `printInfo` and `printUsage`) previously in `utils.js` related to processing and displaying information such as license, version, and option usage.
+- Created a new internal function `_cycleCategories` from the `printUsage` logic.
+- Minor corrections in the `fetch.js` module, including changing the `fetch` function to `get`.
+- Renamed the `getProtocol` function to `_getProtocolModule` (for internal use).
+- Renamed `intervals.js` to `timer.js`.
+- Added functionality to manage both intervals and timeouts.
+- The default `exitCode` value in the `shutdownCleanUp` function is now set to `0`.
+- Revised all utility functions.
+- Added or moved the following functions: `getAbsolutePath`, `getBase64`, `getNewDate`, `getNewDateTime`.
+- Removed or moved the following functions: `fixType`, `handleResources`, `isCorrectJSON`, `optionsStringify`, `printLogo`, `printUsage`, `wrapAround`.
+- Changed the notation of most functions from `() =>` to `function()` for consistency and readability.
+- Corrected and optimized the data passed to each function.
+- Redefined and corrected which functions and properties should be exported.
+- Fixed and standardized property and function names and values.
+- Optimized dependencies between modules.
+- Reduced unnecessary exports of modules.
+- Marked all internal functions with a `_` prefix.
+- Improved logging and error messages.
+- Improved error handling.
+- Corrections in error status codes.
+- Enhanced all files with improved JSDoc tags, descriptions, and comments, adding extra tags such as `@overview`, `@async`, and `@function`.
+- Corrected function descriptions, parameter types, return values, and documented errors.
+- Fixed all tests, samples, and scenario runners.
+- Created, renamed, or removed various tests, samples, and scenario runners.
+- Removed separate test runner scripts.
+- Made a minor correction in the `build` script.
+- Updated package versions.
+- Corrected the description of options prioritization order in the `Configuration` section.
+- Added explanations of overall option handling, management, and processing, along with descriptions for each export method (`Options Handling` section and subsections).
+- Added, updated, corrected, or redefined descriptions and values of options in the following sections: `Default JSON Config`, `Environment Variables`, `Custom JSON Config`, `Command Line Arguments`, `HTTP Server POST Arguments`.
+- Fixed an incorrect version change endpoint description in the `Switching Highcharts Version at Runtime` section.
+- Corrected example and added description of the `Node.js Module` section.
+- Refreshed, expanded, and completely redefined the API documentation.
+- Added a note on help and version information (`Note About Version and Help Information` section).
+- Added a note about path interpretation for properties requiring path settings (`Note About Paths` section).
+- Corrected the `Note About Chart Size` section.
+- Various other fixes, optimizations and minor stylistic and formatting improvements.
+
+_Fixes:_
+
+- Fixed a recurring issue with images not loading by implementing a mechanism that waits for images for a certain period.
+- Corrected values, types, and other data for each property in the `defaultConfig` object.
+- Corrected the `createConfig` and `loadConfig` options to allow usage with or without the `.json` extension.
+- Fixed the `uiEnabled` by enabling its usage in `ui.js` router.
+- Fixed issues with relative paths when used as a Node.js module.
+
 # 4.1.0
 
 _Enhancements:_
@@ -12,7 +155,7 @@ _Enhancements:_
 
 # 4.0.2
 
-_Hotfix_:
+_Hotfixes:_
 
 - Fixed missing `msg` and `public` folders for a bundle in `v4.0.1` on NPM.
 
@@ -22,7 +165,7 @@ _Fixes:_
 
 # 4.0.1
 
-_Hotfix_:
+_Hotfixes:_
 
 - Fixed missing `dist` folder for a bundle in `v4.0.0` on NPM.
 
@@ -67,7 +210,7 @@ _Enhancements:_
 - Made corrections for gracefully shutting down resources, including running servers, ongoing intervals, browser instance, created pages, and workers pool.
 - Updated `createImage` and `createPDF` functions with faster execution options including `optimizeForSpeed` and `quality`.
 - Set `waitUntil` to `'domcontentloaded'` for `setContent` and `goto` functions to improve performance.
-- Replaced browser's deprecated `isConnected()` with the `connected` property.
+- Replaced browser's deprecated `isConnected` function with the `connected` property.
 - Added information on all available pool resources.
 - Numerous minor improvements for performance and stability.
 - Moved the `listenToProcessExits` from the `pool` to the `other` section of the options.
@@ -180,7 +323,7 @@ _Fixes:_
 
 # 3.0.0
 
-_Fixes and enhancements:_
+_Enhancements and Fixes:_
 
 - Replaced `PhantomJS` with `Puppeteer`.
 - Updated the config handling system to optionally load JSON files, and improved environment var loading.
@@ -192,7 +335,7 @@ _Fixes and enhancements:_
 - Lots of smaller bugfixes and tweaks.
 - Transitioned our public server (export.highcharts.com) from HTTP to HTTPS.
 
-_New features:_
+_New Features:_
 
 - Added `/health` route to server to display basic server information.
 - Added a UI served on `/` to perform exports from JSON configurations in browser.
@@ -201,7 +344,7 @@ _New features:_
 
 This version is not backwards compatible out of the box!
 
-_Breaking changes:_
+_Breaking Changes:_
 
 - Log destinations must now exist before starting file logging.
 - When running in server mode, the following options are now disabled by default:
@@ -211,7 +354,7 @@ _Breaking changes:_
 
 Disabled options can be enabled by adding the `--allowCodeExecution` flag when starting the server. Using this flag is not recommended, and should not be done unless the server is sandboxed and not reachable on the public internet.
 
-_Changelog:_
+_Enhancements:_
 
 - Added the `--allowCodeExecution` flag which is now required to be set when exporting pure JavaScript, using additional external resources, or using callback when running in server mode.
 - Removed the `mkdirp` dependency.
@@ -367,7 +510,7 @@ _Changelog:_
 # 1.0.11
 
 - Fixed an issue with `themeOptions` when using CLI mode.
-- Added `listenToProcessExits` option to `pool.init()`.
+- Added `listenToProcessExits` option to `pool.init` function.
 - Exposed `listenToProcessExits` in CLI mode.
 - Fixed issue with `--callback` when the callback was a file.
 
