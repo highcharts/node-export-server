@@ -27,7 +27,7 @@ const resultsPath = join(__dirname, 'tests', 'other', '_results');
 // Create results folder for CLI exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);
 
-// Urls of Puppeteer and PhantomJS export servers
+// Urls of Puppeteer and PhantomJS Export Servers
 const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message

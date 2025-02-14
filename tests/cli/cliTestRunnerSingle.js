@@ -81,7 +81,7 @@ if (existsSync(file) && file.endsWith('.json')) {
         getNewDateTime() - startDate
       }ms.`;
 
-      // If code is 1, it means that export server thrown an error
+      // If code is 1, it means that Export Server thrown an error
       if (code === 1) {
         return console.error(`[Fail] ${endMessage}`.red);
       }

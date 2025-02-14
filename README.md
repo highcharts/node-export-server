@@ -1115,7 +1115,7 @@ There are two main ways to debug code:
 
 - By adding a `debugger` statement within any client-side code (e.g., inside a `page.evaluate` callback). With the `--devtools` option set to **true**, the code execution will stop automatically.
 
-- By running the export server with the `--inspect-brk=<PORT>` flag, and adding a `debugger` statement within any server-side code. Subsequently, navigate to `chrome://inspect/`, input the server's IP address and port (e.g., `localhost:9229`) in the Configure section. Clicking 'inspect' initiates debugging of the server-side code.
+- By running the Export Server with the `--inspect-brk=<PORT>` flag, and adding a `debugger` statement within any server-side code. Subsequently, navigate to `chrome://inspect/`, input the server's IP address and port (e.g., `localhost:9229`) in the Configure section. Clicking 'inspect' initiates debugging of the server-side code.
 
 The `npm run start:debug` script from the `package.json` allows debugging code using both methods simultaneously. In this setup, client-side code is accessible from the devTools of a specific Puppeteer browser's page, while server-side code can be debugged from the devTools of `chrome://inspect/`.
 
