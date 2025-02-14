@@ -36,7 +36,7 @@ console.log(
   '(results are stored in the ./tests/http/_results).\n'.green
 );
 
-// Url of Puppeteer export server
+// Url of Puppeteer Export Server
 const url = 'http://127.0.0.1:7801';
 
 // Perform a health check before continuing

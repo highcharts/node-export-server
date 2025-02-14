@@ -69,7 +69,7 @@ _Enhancements:_
 - Optimized logic and corrected the url (from `version/change` to `version_change`) in the `versionChange.js` router.
 - Refactored `exportHandler` (to `requestExport`) by moving some logic to the `validaion` middleware and refactoring the rest.
 - Removed unnecessary `doCallbacks` from the export router.
-- Moved `server/error.js` and `server/rateLimiting.js` to `middlewares/`, optimizing error handling and rate limiting.
+- Moved `./lib/server/error.js` and `./lib/server/rateLimiting.js` to `./lib/server/middlewares/`, optimizing error handling and rate limiting.
 - The `nodeEnv` option is now obtained from `getOptions`, not directly from the environment variables in the `error.js` middleware.
 - Refactored and optimized the entire logic for checking the cache and fetching scripts.
 - Refactored and split the `_updateCache` function into smaller, more manageable parts.
@@ -245,7 +245,7 @@ _Enhancements:_
 - Updated the `killPool` function.
 - The `uncaughtException` handler now kills the pool, browser, and terminates the process with exit code 1, when enabled.
 - The browser instance should be correctly closed now when an error occurs during pool creation.
-- Corrected error handling and response sending in the `/change_hc_version.js` route.
+- Corrected error handling and response sending in the `./lib/server/routes/change_hc_version.js` route.
 - Corrected the `handleResources` function.
 - Corrected samples, test scenarios, and test runners.
 - Bumped versions of most packages, with an updating deprecated `Puppeteer` from `v21.1.1` to latest.
