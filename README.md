@@ -311,6 +311,17 @@ _Available default JSON config:_
     "dumpio": false,
     "slowMo": 0,
     "debuggingPort": 9222
+  },
+  "webSocket": {
+    "enable": false,
+    "reconnect": false,
+    "rejectUnauthorized": false,
+    "pingTimeout": 16000,
+    "reconnectInterval": 3000,
+    "reconnectAttempts": 3,
+    "messageInterval": 3600000,
+    "gatherAllOptions": false,
+    "url": null
   }
 }
 ```
@@ -444,6 +455,19 @@ _Available environment variables:_
 - `DEBUG_DUMPIO`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
 - `DEBUG_SLOW_MO`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
 - `DEBUG_DEBUGGING_PORT`: Specifies the debugging port (defaults to `9222`).
+
+### WebSocket Config
+
+- `WEB_SOCKET_ENABLE`: Enables or disables the WebSocket connection (defaults to `false`).
+- `WEB_SOCKET_RECONNECT`: Controls whether or not to try reconnecting to the WebSocket server in case of a disconnect (defaults to `false`).
+- `WEB_SOCKET_REJECT_UNAUTHORIZED`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
+- `WEB_SOCKET_PING_TIMEOUT`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
+- `WEB_SOCKET_RECONNECT_INTERVAL`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
+- `WEB_SOCKET_RECONNECT_ATTEMPTS`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `WEB_SOCKET_MESSAGE_INTERVAL`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
+- `WEB_SOCKET_GATHER_ALL_OPTIONS`: Decides whether or not to gather all chart's options or only ones defined in the **telemetry.json** file (defaults to `false`).
+- `WEB_SOCKET_URL`: The URL of the WebSocket server (defaults to ``).
+- `WEB_SOCKET_SECRET`: The secret used to create a JSON Web Token sent to the WebSocket server (defaults to ``).
 
 ## Custom JSON Config
 
@@ -580,6 +604,18 @@ _Available CLI arguments:_
 - `--dumpio`: Redirects browser process stdout and stderr to process.stdout and process.stderr (defaults to `false`).
 - `--slowMo`: Slows down Puppeteer operations by the specified number of milliseconds (defaults to `0`).
 - `--debuggingPort`: Specifies the debugging port (defaults to `9222`).
+
+### WebSocket Config
+
+- `--enableWs`: Enables or disables the WebSocket connection (defaults to `false`).
+- `--wsReconnect`: Controls whether or not to try reconnecting to the WebSocket server in case of a disconnect (defaults to `false`).
+- `--wsRejectUnauthorized`: Determines whether the client verifies the server's SSL/TLS certificate during the handshake process (defaults to `false`).
+- `--wsPingTimeout`: The timeout, in milliseconds, for the heartbeat mechanism between the client and server (defaults to `16000`).
+- `--wsReconnectInterval`: The interval, in milliseconds, for the reconnect attempt (defaults to `3000`).
+- `--wsReconnectAttempts`: The number of reconnect attempts before returning a connection error (defaults to `3`).
+- `--wsMessageInterval`: The interval, in milliseconds, for auto sending the data through a WebSocket connection (defaults to `3600000`).
+- `--wsGatherAllOptions`: Decides whether or not to gather all chart's options or only ones defined in the **telemetry.json** file (defaults to `false`).
+- `--wsUrl`: The URL of the WebSocket server (defaults to `null`).
 
 # HTTP Server
 
@@ -877,6 +913,30 @@ This package supports both CommonJS and ES modules.
 # Examples
 
 Samples and tests for every mentioned export method can be found in the `./samples` and `./tests` folders. Detailed descriptions are available in their corresponding sections on the [Wiki](https://github.com/highcharts/node-export-server/wiki).
+
+# WebSocket
+
+One of the new features that v4 introduces is the ability to configure and establish a WebSocket connection between the Export Server and a user-configured WebSocket server. This can be useful for gathering telemetry data and statistics about the usage of your Export Server instance.
+
+## How It Works
+
+When enabled, a WebSocket connection will be established on Export Server startup. The WebSocket server to which the connection is made must also be configured. The authorization process is completed by sending a JWT generated based on a secret that must also be set on the WebSocket server side.
+
+Once the connection is established, the chart data from each request to the Export Server is passed to the telemetry module, which filters the data based on a JSON file that specifies which data needs to be sent. This file can be found under `./lib/schemas/telemetry.json` and can be modified as needed, but the proposed structure must be maintained. It is also possible to send the entire object of chart options by setting the `gatherAllOptions` option to **true**.
+
+Data processed in this way is saved in an object that collects information about requests for a certain period and is batch sent to the WebSocket server at specified intervals. After sending, the object is cleared of request data and gathers new data until the next interval.
+
+Please refer to the [Configuration](https://github.com/highcharts/node-export-server?tab=readme-ov-file#configuration) section for descriptions of the options.
+
+## Additional Notes
+
+- In order for the heartbeat mechanism between the WebSocket client and server to work correctly, the `pingTimeout` should be set to a higher value in milliseconds than its equivalent in the WebSocket server.
+
+- Setting **0** for any of the interval/timeout-related options (`pingTimeout`, `reconnectInterval`, or `messageInterval`) will disable that option. Bear in mind, however, that disabling `pingTimeout` might result in WebSocket clients not being terminated if no response is received from the server.
+
+- Disabling `pingTimeout` will also disable the reconnect mechanism.
+
+- When using a self-signed certificate (for example, for testing purposes), the `rejectUnauthorized` option should be disabled. Otherwise, it will result in an error and the connection to the WebSocket server will fail.
 
 # Tips, Tricks & Notes
 

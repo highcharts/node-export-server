@@ -2554,6 +2554,45 @@ export function configTests(schema, strictCheck) {
     },
     debugDebuggingPort: (property) => {
       describe(property, () => validationTests.nonNegativeNum(property));
+    },
+    webSocket: (property, value) => {
+      describe(property, () => validationTests.configObject(property, value));
+    },
+    webSocketEnable: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    webSocketReconnect: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    webSocketRejectUnauthorized: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    webSocketPingTimeout: (property) => {
+      describe(property, () => validationTests.nonNegativeNum(property));
+    },
+    webSocketReconnectInterval: (property) => {
+      describe(property, () => validationTests.nonNegativeNum(property));
+    },
+    webSocketReconnectAttempts: (property) => {
+      describe(property, () => validationTests.nonNegativeNum(property));
+    },
+    webSocketMessageInterval: (property) => {
+      describe(property, () => validationTests.nonNegativeNum(property));
+    },
+    webSocketGatherAllOptions: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
+    webSocketUrl: (property, correctValue, incorrectValue) => {
+      describe(property, () =>
+        validationTests.nullableAcceptValues(
+          property,
+          correctValue,
+          incorrectValue
+        )
+      );
+    },
+    webSocketSecret: (property) => {
+      describe(property, () => validationTests.string(property, false));
     }
   };
 }

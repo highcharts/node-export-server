@@ -51,6 +51,7 @@
     "express-rate-limit": "^7.5.0",
     "https-proxy-agent": "^7.0.6",
     "jsdom": "^26.0.0",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "prompts": "^2.4.2",
     "puppeteer": "^24.2.0",

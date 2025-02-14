@@ -13,6 +13,8 @@ _New Features:_
 - Added the `validateOption` function for validating a single option. It is used in the code to validate individual options (`svg`, `instr`, `resources`, `customCode`, `callback`, `globalOptions`, and `themeOptions`) loaded from a file.
 - Added the `validateOptions` function for validating the full set of options. It is used in the code to validate options coming from functions that update global options, CLI arguments, configurations loaded via `--loadConfig`, and configurations created using the prompts functionality.
 - Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
+- Introduced the ability to enable a customizable `WebSocket` connection between the Export Server instance and any server or service that supports such connections to collect chart options usage data. This is useful for gathering telemetry data.
+- Added a simple filtering mechanism (based on the `./lib/schemas/telemetry.json` file) to control the data being sent.
 - Added a new option called `uploadLimit` to control the maximum size of a request's payload body.
 - Added the possibility to return a Base64 version of the chart using any export method (not only through requests).
 - Added support for displaying CLI usage (`-h`, `--h`, `-help`, `--help`) and version information with license details (`-v`, `--v`).
@@ -135,6 +137,7 @@ _Enhancements:_
 - Fixed an incorrect version change endpoint description in the `Switching Highcharts Version at Runtime` section.
 - Corrected example and added description of the `Node.js Module` section.
 - Refreshed, expanded, and completely redefined the API documentation.
+- Added a `WebSocket` section containing descriptions and information about this feature.
 - Added a note on help and version information (`Note About Version and Help Information` section).
 - Added a note about path interpretation for properties requiring path settings (`Note About Paths` section).
 - Corrected the `Note About Chart Size` section.

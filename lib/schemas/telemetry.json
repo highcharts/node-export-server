@@ -1,0 +1,22 @@
+{
+  "boost": null,
+  "chart": {
+    "type": null,
+    "options3d": {
+      "enabled": null
+    }
+  },
+  "colors": null,
+  "legend": {
+    "enabled": null
+  },
+  "series": {
+    "type": null
+  },
+  "xAxis": {
+    "type": null
+  },
+  "yAxis": {
+    "type": null
+  }
+}
