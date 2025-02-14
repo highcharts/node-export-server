@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,14 +12,14 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { fetch } from '../../lib/fetch.js';
+import { get } from '../../lib/fetch.js';
 import { exec as spawn } from 'child_process';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 // Results paths
 const resultsPath = join(__dirname, 'tests', 'other', '_results');
@@ -27,7 +27,7 @@ const resultsPath = join(__dirname, 'tests', 'other', '_results');
 // Create results folder for CLI exports if doesn't exist
 !existsSync(resultsPath) && mkdirSync(resultsPath);
 
-// Urls of Puppeteer and PhantomJS export servers
+// Urls of Puppeteer and PhantomJS Export Servers
 const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];
 
 // Test message
@@ -41,7 +41,7 @@ try {
   // Run for both servers
   for (const [index, url] of urls.entries()) {
     // Perform a health check before continuing
-    fetch(`${url}/health`)
+    get(`${url}/health`)
       .then(() => {
         // And all types
         for (const type of ['png', 'jpeg', 'svg', 'pdf']) {
@@ -53,7 +53,7 @@ try {
 
           // Payload body
           const payload = JSON.stringify({
-            infile: {
+            options: {
               title: {
                 text: index
                   ? 'Phantom Export Server'
@@ -93,7 +93,7 @@ try {
           ].join(' ');
 
           // The start date of a POST request
-          const startDate = new Date().getTime();
+          const startDate = getNewDateTime();
 
           // Launch command in a new process
           // eslint-disable-next-line no-global-assign
@@ -103,7 +103,7 @@ try {
           process.on('close', () => {
             const message = `Done with ${
               index ? '[PhantomJS]' : '[Puppeteer]'
-            } ${type} export, took ${new Date().getTime() - startDate}ms.`;
+            } ${type} export, took ${getNewDateTime() - startDate}ms.`;
 
             console.log(index ? message.blue : message.green);
           });

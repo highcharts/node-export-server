@@ -1,20 +1,22 @@
-import { writeFileSync } from 'fs';
+/*******************************************************************************
 
-import exporter from '../../lib/index.js';
+Highcharts Export Server
 
-// Export settings with new options structure (Puppeteer)
-const exportSettings = {
-  pool: {
-    minWorkers: 1,
-    maxWorkers: 1
-  },
+Copyright (c) 2016-2025, Highsoft
+
+Licenced under the MIT licence.
+
+Additionally a valid Highcharts license is required for use.
+
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
+import exporter, { initExport } from '../../lib/index.js';
+
+// New options structure (Puppeteer)
+const newOptions = {
   export: {
-    type: 'jpeg',
-    constr: 'chart',
-    outfile: './samples/module/optionsPuppeteer.jpeg',
-    height: 800,
-    width: 1200,
-    scale: 1,
     options: {
       chart: {
         type: 'column'
@@ -62,6 +64,12 @@ const exportSettings = {
         }
       ]
     },
+    outfile: './samples/module/optionsPuppeteer.jpeg',
+    type: 'jpeg',
+    constr: 'chart',
+    height: 800,
+    width: 1200,
+    scale: 1,
     globalOptions: {
       chart: {
         borderWidth: 2,
@@ -112,40 +120,28 @@ const exportSettings = {
   customLogic: {
     allowCodeExecution: true,
     allowFileResources: true,
-    callback: './samples/resources/callback.js',
     customCode: './samples/resources/customCode.js',
+    callback: './samples/resources/callback.js',
     resources: {
       js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
       css: '.highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; }'
     }
+  },
+  pool: {
+    maxWorkers: 1
+  },
+  logging: {
+    toFile: false
   }
 };
 
-const start = async () => {
+(async () => {
   try {
-    // Set the new options
-    const options = exporter.setOptions(exportSettings);
-
     // Init a pool for one export
-    await exporter.initExport(options);
+    await initExport(newOptions);
 
     // Perform an export
-    await exporter.startExport(options, async (error, info) => {
-      // Exit process and display error
-      if (error) {
-        throw error;
-      }
-      const { outfile, type } = info.options.export;
-
-      // Save the base64 from a buffer to a correct image file
-      writeFileSync(
-        outfile,
-        type !== 'svg' ? Buffer.from(info.result, 'base64') : info.result
-      );
-
-      // Kill the pool
-      await exporter.killPool();
-    });
+    await exporter.singleExport(newOptions);
   } catch (error) {
     // Log the error with stack
     exporter.logWithStack(1, error);
@@ -153,6 +149,4 @@ const start = async () => {
     // Gracefully shut down the process
     await exporter.shutdownCleanUp(1);
   }
-};
-
-start();
+})();

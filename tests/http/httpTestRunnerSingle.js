@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,8 +18,8 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import { fetch } from '../../lib/fetch.js';
-import { __dirname, clearText } from '../../lib/utils.js';
+import { get } from '../../lib/fetch.js';
+import { __dirname, clearText, getNewDateTime } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -30,11 +30,11 @@ console.log(
   '(results are stored in the ./tests/http/_results).\n'.green
 );
 
-// Url of Puppeteer export server
+// Url of Puppeteer Export Server
 const url = 'http://127.0.0.1:7801';
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+get(`${url}/health`)
   .then(() => {
     // Results path
     const resultsPath = join(__dirname, 'tests', 'http', '_results');
@@ -64,7 +64,7 @@ fetch(`${url}/health`)
         );
 
         // The start date of a POST request
-        const startDate = new Date().getTime();
+        const startDate = getNewDateTime();
         const request = http.request(
           url,
           {
@@ -87,7 +87,7 @@ fetch(`${url}/health`)
               fileStream.end();
 
               const endMessage = `HTTP request with a payload from file: ${file}, took ${
-                new Date().getTime() - startDate
+                getNewDateTime() - startDate
               }ms.`;
 
               // Based on received status code check if requests failed

@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -19,7 +19,7 @@ import { promisify } from 'util';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 // Convert from callback to promise
 const spawn = promisify(exec);
@@ -81,7 +81,7 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
       cliCommand = cliCommand.join(' ');
 
       // The start date of a CLI command
-      const startDate = new Date().getTime();
+      const startDate = getNewDateTime();
 
       let didFail = false;
       try {
@@ -94,7 +94,7 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
       testCounter++;
 
       const endMessage = `CLI command from file: ${file}, took ${
-        new Date().getTime() - startDate
+        getNewDateTime() - startDate
       }ms.`;
 
       console.log(

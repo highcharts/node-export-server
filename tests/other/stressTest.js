@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -12,8 +12,10 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { fetch, post } from '../../lib/fetch.js';
 import 'colors';
+
+import { get, post } from '../../lib/fetch.js';
+import { getNewDateTime } from '../../lib/utils.js';
 
 // Test message
 console.log(
@@ -24,7 +26,7 @@ console.log(
 // The request options
 const requestBody = {
   type: 'svg',
-  infile: {
+  options: {
     title: {
       text: 'Chart'
     },
@@ -45,14 +47,14 @@ const interval = 150;
 
 const stressTest = () => {
   for (let i = 1; i <= requestsNumber; i++) {
-    const startTime = new Date().getTime();
+    const startTime = getNewDateTime();
 
     // Perform a request
     post(url, requestBody)
-      .then(async (res) => {
-        const postTime = new Date().getTime() - startTime;
+      .then(async (response) => {
+        const postTime = getNewDateTime() - startTime;
         console.log(`${i} request is done, took ${postTime}ms`);
-        console.log(`---\n${res.text}\n---`);
+        console.log(`---\n${response.text}\n---`);
       })
       .catch((error) => {
         return console.log(`[${i}] request returned error: ${error}`);
@@ -61,7 +63,7 @@ const stressTest = () => {
 };
 
 // Perform a health check before continuing
-fetch(`${url}/health`)
+get(`${url}/health`)
   .then(() => {
     stressTest();
     setInterval(stressTest, interval);

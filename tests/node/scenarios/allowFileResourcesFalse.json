@@ -39,8 +39,8 @@
   "customLogic": {
     "allowCodeExecution": true,
     "allowFileResources": false,
-    "callback": "./samples/resources/callback.js",
     "customCode": "./samples/resources/customCode.js",
+    "callback": "./samples/resources/callback.js",
     "resources": "./samples/resources/resources.json"
   }
 }

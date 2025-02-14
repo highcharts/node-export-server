@@ -1,4 +1,19 @@
+/*******************************************************************************
+
+Highcharts Export Server
+
+Copyright (c) 2016-2025, Highsoft
+
+Licenced under the MIT licence.
+
+Additionally a valid Highcharts license is required for use.
+
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
 /* eslint-disable no-undef */
+
 const highexp = {};
 
 (function () {
@@ -44,7 +59,7 @@ const highexp = {};
 
     function toStructure(b64) {
       return {
-        infile: optionsCM.getValue(),
+        options: optionsCM.getValue(),
         width: width.value.length ? width.value : false,
         scale: scale.value.length ? scale.value : false,
         constr: constr.value,
