@@ -9,6 +9,9 @@ _Breaking Changes:_
 
 _New Features:_
 
+- Added a toggleable type validation for all options coming from various sources (environment variables, custom JSON, CLI arguments), providing a rich set of validators with both strict and loose validation. Replaced the `envs.js` module with an expanded validation logic module, `validation.js`.
+- Added the `validateOption` function for validating a single option. It is used in the code to validate individual options (`svg`, `instr`, `resources`, `customCode`, `callback`, `globalOptions`, and `themeOptions`) loaded from a file.
+- Added the `validateOptions` function for validating the full set of options. It is used in the code to validate options coming from functions that update global options, CLI arguments, configurations loaded via `--loadConfig`, and configurations created using the prompts functionality.
 - Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
 - Added a new option called `uploadLimit` to control the maximum size of a request's payload body.
 - Added the possibility to return a Base64 version of the chart using any export method (not only through requests).
@@ -27,6 +30,7 @@ _Enhancements:_
 - Adjusted the options loading sequence: `default config -> environment variables` at initialization, `custom JSON -> CLI arguments` when using `setCliOptions` (CLI exports only).
 - The `getOptions` function can now return either a direct reference to the `globalOptions` or a copy (by setting the `getCopy` flag).
 - The `updateOptions` function can now update and return either a direct reference to the `globalOptions` or a copy (by setting the `getCopy` flag).
+- The `updateOptions` function now validates provided options (using `validateOptions` internally) before merging them into the global options.
 - The `_mergeOptions` (renamed from the `mergeConfigOptions`) modifies the first object directly now and is used internally.
 - Replaced the fixed `absoluteProps` array (previously in `./lib/schemas/config.js`) with dynamic generation via `_createAbsoluteProps` function.
 - Enhanced the `isAllowedConfig` (renamed from the `isCorrectJSON`) and `_optionsStringify` functions to better handle stringified options in JSON.
@@ -49,16 +53,16 @@ _Enhancements:_
 - Created `_handleSize` for handling the `height`, `width`, and `scale` options.
 - Created `_checkDataSize` for handling the data size validation.
 - Optimized `initExport`, utilizing `updateOptions` for global option updates.
-- The `initExport` now have its options parameters set as optional, using global option values if not provided.
+- The `initExport` now have its options parameters defaulted to an empty object, using global option values if none are provided.
 - Updated exported API functions for module usage.
 - Adjusted imports to get functions from corresponding modules rather than `index.js`.
 - Server functions are now directly exported (rather than within a `server` object) as API functions.
 - The `logger` API functions that modify options now update global options.
-- Added following API functions: `getOptions`, `updateOptions`, `mapToNewOptions`, `enableConsoleLogging`.
+- Exposed `getOptions`, `updateOptions`, `mapToNewOptions`, `enableConsoleLogging`, `validateOption`, `validateOptions`, and `logZodIssues` as API functions.
 - Small corrections of the `_attachProcessExitListeners` (renamed from the `attachProcessExitListeners`).
 - Refactored logic for initial configuration, startup, and HTTP/HTTPS server management.
 - Optimized `startServer`, utilizing `updateOptions` for global option updates.
-- The `startServer` now have its options parameters set as optional, using global option values if not provided.
+- The `startServer` now have its options parameters defaulted to an empty object, using global option values if none are provided.
 - Optimized logic and statistics display in `health.js` router.
 - Optimized logic and corrected the url (from `version/change` to `version_change`) in the `versionChange.js` router.
 - Refactored `exportHandler` (to `requestExport`) by moving some logic to the `validaion` middleware and refactoring the rest.
@@ -89,6 +93,7 @@ _Enhancements:_
 - Renamed the `get` function to `getBrowser`, the `create` function to `createBrowser`, and the `close` function to `closeBrowser`.
 - Renamed `triggerExport` to `createChart`, optimizing the options passed and processed in the `highcharts.js` module.
 - Improved the module's overall logic, optimizing logging functions and the initialization process.
+- Added the `logZodIssues` function for displaying correctly formatted validation errors.
 - Added `pathToLog` to the module's logging options to remember the full path to the log file.
 - Added the `enableConsoleLogging` function.
 - Removed `listen` function and `listeners` array from the module's logging options.
@@ -118,12 +123,14 @@ _Enhancements:_
 - Enhanced all files with improved JSDoc tags, descriptions, and comments, adding extra tags such as `@overview`, `@async`, and `@function`.
 - Corrected function descriptions, parameter types, return values, and documented errors.
 - Fixed all tests, samples, and scenario runners.
+- Added unit tests for validating each option from every source (CLI, config, environment variables).
 - Created, renamed, or removed various tests, samples, and scenario runners.
 - Removed separate test runner scripts.
 - Made a minor correction in the `build` script.
 - Updated package versions.
 - Corrected the description of options prioritization order in the `Configuration` section.
 - Added explanations of overall option handling, management, and processing, along with descriptions for each export method (`Options Handling` section and subsections).
+- Added a description of options validation in the `Options Validation` section.
 - Added, updated, corrected, or redefined descriptions and values of options in the following sections: `Default JSON Config`, `Environment Variables`, `Custom JSON Config`, `Command Line Arguments`, `HTTP Server POST Arguments`.
 - Fixed an incorrect version change endpoint description in the `Switching Highcharts Version at Runtime` section.
 - Corrected example and added description of the `Node.js Module` section.

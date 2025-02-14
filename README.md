@@ -115,6 +115,10 @@ The `singleExport()`, `batchExport()`, and `startExport()` functions must be pro
 
 Essentially, all options can be configured through `.env`, the CLI, and prompts, with one exception: the `HIGHCHARTS_ADMIN_TOKEN`, which is only available as an environment variable.
 
+## Options Validation
+
+By default, options validation is enabled, and it is recommended to keep it enabled to ensure that the provided options are correctly checked, validated, and parsed, allowing the exporting process to function without issues. However, it is possible to disable validation (by setting the `validation` option to **false**) if you are confident in the accuracy of the data you provide. Additionaly, when used as a Node.js module, each API function that updates global options with the provided data also offers the ability to validate the data.
+
 ## Default JSON Config
 
 The JSON below represents the default configuration stored in the `./lib/schemas/config.js` file. If no `.env` file is found (more details on the file and environment variables below), these options will be used. The configuration is not recommended to be modified directly, as it can typically be managed through other sources.
@@ -296,7 +300,8 @@ _Available default JSON config:_
     "listenToProcessExits": true,
     "noLogo": false,
     "hardResetPage": false,
-    "browserShellMode": true
+    "browserShellMode": true,
+    "validation": true
   },
   "debug": {
     "enable": false,
@@ -428,6 +433,7 @@ _Available environment variables:_
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `OTHER_VALIDATION`: Decides whether or not to enable validation of options types (defaults to `true`).
 
 ### Debugging Config
 
@@ -563,6 +569,7 @@ _Available CLI arguments:_
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `--browserShellMode`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `--validation`: Decides whether or not to enable validation of options types (defaults to `true`).
 
 ### Debugging Config
 
@@ -716,9 +723,9 @@ This package supports both CommonJS and ES modules.
 
 **highcharts-export-server module**
 
-- `async function startServer(serverOptions)`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
+- `async function startServer(serverOptions = {})`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
 
-  - `@param {Object} serverOptions` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration.
+  - `@param {Object} [serverOptions={}]` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration. The default value is an empty object.
 
   - `@returns {Promise<void>}` A Promise that resolves when the server is either not enabled or no valid Express app is found, signaling the end of the function's execution.
 
@@ -763,10 +770,11 @@ This package supports both CommonJS and ES modules.
 
   - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
 
-- `function updateOptions(newOptions, getCopy = false)`: Updates and returns the global options object or a copy of the global options object, based on the `getCopy` flag.
+- `function updateOptions(newOptions, getCopy = false, strictCheck = true)`: Updates and returns the global options object or a copy of the global options object, based on the `getCopy` flag. The `newOptions` object can be strictly validated depending on the `strictCheck` flag.
 
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
 
   - `@returns {Object}` The updated options object, either the modified global options or a modified copy, based on the value of `getCopy`.
 
@@ -775,6 +783,21 @@ This package supports both CommonJS and ES modules.
   - `@param {Object} oldOptions` - The old, flat configuration options to be converted.
 
   - `@returns {Object}` A new object containing options structured according to the mapping defined in the `nestedProps` object or an empty object if the provided `oldOptions` is not a correct object.
+
+- `function validateOption(name, configOption, strictCheck = true)`: Validates a specified option using the corresponding validator from the configuration object. Returns the original option if the validation is disabled globally.
+
+  - `@param {string} name` - The name of the option to validate.
+  - `@param {any} configOption` - The value of the option to validate.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
+
+  - `@returns {any}` The parsed and validated value of the option.
+
+- `function validateOptions(configOptions, strictCheck = true)`: Validates the provided configuration options for the exporting process. Returns the original option if the validation is disabled globally.
+
+  - `@param {Object} configOptions` - The configuration options to be validated.
+  - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
+
+  - `@returns {Object}` The parsed and validated configuration options object.
 
 - `async function initExport(initOptions = {})`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage.
 
@@ -830,6 +853,12 @@ This package supports both CommonJS and ES modules.
   - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
 
   - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
+
+- `function logZodIssues(newLevel, issues, customMessage)`: Logs an error message related to Zod validation issues. Optionally, a custom message can be provided.
+
+  - `@param {number} newLevel` - The log level.
+  - `@param {Error[]} issues` - An array of Zod validation issues.
+  - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
 
 - `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (`0` = no logging, `1` = error, `2` = warning, `3` = notice, `4` = verbose, or `5` = benchmark).
 
