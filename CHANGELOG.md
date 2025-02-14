@@ -13,6 +13,10 @@ _New Features:_
 - Added the `validateOption` function for validating a single option. It is used in the code to validate individual options (`svg`, `instr`, `resources`, `customCode`, `callback`, `globalOptions`, and `themeOptions`) loaded from a file.
 - Added the `validateOptions` function for validating the full set of options. It is used in the code to validate options coming from functions that update global options, CLI arguments, configurations loaded via `--loadConfig`, and configurations created using the prompts functionality.
 - Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
+- Added a toggleable mechanism to ensure the correct number of resources exist at any given time on an interval, creating them if necessary.
+- Added the `OTHER_CONNECTION_OVER_PIPE` option for a more stable and optimized connection to the browser using a `Pipe` instead of `WebSockets`.
+- Added an optional mechanism to reconnect the browser in case of an unexpected disconnect (only applicable for `WebSocket` connections).
+- Added an optional health-checking mechanism for resource pages, with automatic recreation if needed (only applicable for `WebSocket` connections).
 - Introduced the ability to enable a customizable `WebSocket` connection between the Export Server instance and any server or service that supports such connections to collect chart options usage data. This is useful for gathering telemetry data.
 - Added a simple filtering mechanism (based on the `./lib/schemas/telemetry.json` file) to control the data being sent.
 - Added a new option called `uploadLimit` to control the maximum size of a request's payload body.
@@ -56,6 +60,7 @@ _Enhancements:_
 - Created `_checkDataSize` for handling the data size validation.
 - Optimized `initExport`, utilizing `updateOptions` for global option updates.
 - The `initExport` now have its options parameters defaulted to an empty object, using global option values if none are provided.
+- Various optimizations and performance improvements in functions like `createBrowser`, `killPool`, and `shutdownCleanUp` to enhance performance and address memory issues.
 - Updated exported API functions for module usage.
 - Adjusted imports to get functions from corresponding modules rather than `index.js`.
 - Server functions are now directly exported (rather than within a `server` object) as API functions.
@@ -75,6 +80,7 @@ _Enhancements:_
 - Refactored and split the `_updateCache` function into smaller, more manageable parts.
 - The `updateHcVersion` function now correctly updates the global options.
 - The new `_configureRequest` function is responsible for setting the proxy agent.
+- Improved logging with more detailed information about rejected requests at an early stage (in the `validation` middleware).
 - Passing `version` as the first argument to `_saveConfigToManifest`.
 - Removed the `fetchAndProcessScript` and `fetchScripts` functions, replacing them with a single function, `_fetchScript`, for the same purpose.
 - Renamed the `checkAndUpdateCache` function to `checkCache`, the `updateVersion` function to `updateHcVersion`, the `version` function to `getHcVersion`, the `saveConfigToManifest` function to `_saveConfigToManifest`, the `extractModuleName` function to `_extractModuleName`, the `extractVersion` function to `extractHcVersion`, and the `cdnURL` property to `cdnUrl` in the `cache.js` module.
