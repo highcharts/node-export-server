@@ -3,7 +3,7 @@
   "author": "Highsoft AS <support@highcharts.com> (http://www.highcharts.com/about)",
   "license": "MIT",
   "type": "module",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "main": "./dist/index.esm.js",
   "engines": {
     "node": ">=18.12.0"
