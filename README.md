@@ -98,7 +98,8 @@ The format, along with its default values, is as follows (using the recommended 
 ```
 {
   "puppeteer": {
-    "args": []
+    "args": [],
+    "tempDir": "./tmp/"
   },
   "highcharts": {
     "version": "latest",
@@ -287,6 +288,10 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 ## Environment Variables
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
+
+### Puppeteer Config
+
+- `PUPPETEER_TEMP_DIR`: The directory for Puppeteer to store temporary files (defaults to `./tmp/`).
 
 ### Highcharts Config
 

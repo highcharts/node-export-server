@@ -18,6 +18,10 @@ _New Features:_
 
 - Added proxy authentication [(#631)](https://github.com/highcharts/node-export-server/issues/631).
 
+_New features:_
+
+- Made the temporary Puppeteer directory (`PUPPETEER_TEMP_DIR`) (till now, `'./tmp'`) configurable by the user [(#567)](https://github.com/highcharts/node-export-server/issues/567).
+
 # 4.0.2
 
 _Hotfix_:
