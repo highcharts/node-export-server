@@ -214,6 +214,7 @@ The format, along with its default values, is as follows (using the recommended 
     "host": "0.0.0.0",
     "port": 7801,
     "benchmarking": false,
+    "maxUploadSize": 3,
     "proxy": {
       "host": "",
       "port": 8080,
@@ -316,6 +317,7 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
+- `SERVER_MAX_UPLOAD_SIZE`: The maximum size, in MB, of uploaded files (defaults to `3`).
 
 ### Server Proxy Config
 
@@ -413,6 +415,7 @@ _Available options:_
 - `--enableServer`: If set to **true**, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
+- `--maxUploadSize`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
