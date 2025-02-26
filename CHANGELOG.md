@@ -12,6 +12,10 @@ _Fixes:_
 - Added referrers to CDN cache fetches on first startup/install. 
 - Fixed an issue that would sometimes cause cause a crash due to fail due to `Accept-Ranges` headers
 
+_New Features:_
+
+- Added proxy authentication [(#631)](https://github.com/highcharts/node-export-server/issues/631).
+
 # 4.0.2
 
 _Hotfix_:
