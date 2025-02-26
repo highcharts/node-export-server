@@ -13,6 +13,14 @@ _Fixes:_
 - Fixed an issue that would sometimes cause cause a crash due to fail due to `Accept-Ranges` headers
 - Wrapped the `clearPageResources` function in a try-catch to handle potential page resources errors.
 - Secured against errors caused by `dev-tools` protocol data size limitations.
+- Corrected the `Node.js Module` example in the README.
+- Fixed the warning message when the the default `resources.json` file is not found.
+- Fixed the problem with the lack of the `instr` value, when the `options` is set instead
+
+_New Features:_
+
+- Added proxy authentication [(#631)](https://github.com/highcharts/node-export-server/issues/631).
+- Made the temporary Puppeteer directory (`PUPPETEER_TEMP_DIR`) (till now, `'./tmp'`) configurable by the user [(#567)](https://github.com/highcharts/node-export-server/issues/567).
 
 # 4.0.2
 

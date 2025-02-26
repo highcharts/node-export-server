@@ -98,7 +98,8 @@ The format, along with its default values, is as follows (using the recommended 
 ```
 {
   "puppeteer": {
-    "args": []
+    "args": [],
+    "tempDir": "./tmp/"
   },
   "highcharts": {
     "version": "latest",
@@ -218,6 +219,8 @@ The format, along with its default values, is as follows (using the recommended 
     "proxy": {
       "host": "",
       "port": 8080,
+      "username": false,
+      "password": false,
       "timeout": 5000
     },
     "rateLimiting": {
@@ -286,6 +289,10 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
+### Puppeteer Config
+
+- `PUPPETEER_TEMP_DIR`: The directory for Puppeteer to store temporary files (defaults to `./tmp/`).
+
 ### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
@@ -323,6 +330,8 @@ These variables are set in your environment and take precedence over options fro
 
 - `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
 - `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_USERNAME`: If used proxy with authentication, need to pass username and password (defaults to ``).
+- `SERVER_PROXY_PASSWORD`: If used proxy with authentication, need to pass username and password (defaults to ``).
 - `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ### Server Rate Limiting Config
@@ -419,6 +428,8 @@ _Available options:_
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyUsername`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
+- `--proxyPassword`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
 - `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
@@ -573,20 +584,23 @@ const options = {
   }
 };
 
-// Initialize export settings with your chart's config
-const exportSettings = exporter.setOptions(options);
+// Logic must be triggered in an asynchronous function
+(async () => {
+  // Initialize export settings with your chart's config
+  const exportSettings = exporter.setOptions(options);
 
-// Must initialize exporting before being able to export charts
-await exporter.initExport(exportSettings);
+  // Must initialize exporting before being able to export charts
+  await exporter.initExport(exportSettings);
 
-// Perform an export
-await exporter.startExport(exportSettings, async (error, info) => {
-  // The export result is now in info
-  // It will be base64 encoded (info.data)
+  // Perform an export
+  await exporter.startExport(exportSettings, async (error, info) => {
+    // The export result is now in info
+    // It will be base64 encoded (info.result)
 
-  // Kill the pool when we are done with it
-  await exporter.killPool();
-});
+    // Kill the pool when we are done with it
+    await exporter.killPool();
+  });
+})();
 ```
 
 ## CommonJS support
