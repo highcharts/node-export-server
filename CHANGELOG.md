@@ -11,6 +11,12 @@ _Fixes:_
 - Fixed an issue where the chart constructor was sometimes incorrectly set, causing the export to fail
 - Added referrers to CDN cache fetches on first startup/install. 
 - Fixed an issue that would sometimes cause cause a crash due to fail due to `Accept-Ranges` headers
+- Fixed the warning message when the the default `resources.json` file is not found.
+- Fixed the problem with the lack of the `instr` value, when the `options` is set instead
+
+_New Features:_
+
+- Added proxy authentication [(#631)](https://github.com/highcharts/node-export-server/issues/631).
 
 _New features:_
 
