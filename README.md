@@ -324,7 +324,7 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
-- `SERVER_MAX_UPLOAD_SIZE`: The maximum size, in MB, of uploaded files (defaults to `3`).
+- `SERVER_MAX_UPLOAD_SIZE`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
 
 ### Server Proxy Config
 
@@ -428,8 +428,8 @@ _Available options:_
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
-- `--proxyUsername`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
-- `--proxyPassword`: If you want your proxy to be authenticated, pass the username with password (defaults to `false`).
+- `--proxyUsername`: If used proxy with authentication, need to pass username and password (defaults to `false`).
+- `--proxyPassword`: If used proxy with authentication, need to pass username and password (defaults to `false`).
 - `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
