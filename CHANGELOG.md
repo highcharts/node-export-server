@@ -1,8 +1,21 @@
-# 4.0.3
+# 5.0.0
+
+_Breaking Changes:_
+
+- Removed `xlink:href` from incoming SVGs in preperation for an upcoming puppeteer update that will remove this option.
+- Changed the upload file size limit to 3MB, and exposed settings for configuring it (`SERVER_MAX_UPLOAD_SIZE`/`--maxUploadSize`/`maxUploadSize`). The rational behind this change is that in testing that seems like the most balanced limit along with other default values for pool sizing, timeouts and such to avoid attempting to process requests that would likely end up timing out due to its size.
+
+_Fixes:_
+
+- Fixed an issue where clip size for PDFs would on rare occation be invalid, causing the export to fail
+- Fixed an issue where the chart constructor was sometimes incorrectly set, causing the export to fail
+- Added referrers to CDN cache fetches on first startup/install. 
+- Fixed an issue that would sometimes cause cause a crash due to fail due to `Accept-Ranges` headers
 
 _New features:_
 
 - Made the temporary Puppeteer directory (`PUPPETEER_TEMP_DIR`) (till now, `'./tmp'`) configurable by the user [(#567)](https://github.com/highcharts/node-export-server/issues/567).
+
 
 # 4.0.2
 
