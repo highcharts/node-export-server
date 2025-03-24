@@ -6,6 +6,16 @@ Convert Highcharts.JS charts into static image files.
 
 ## Upgrade Notes
 
+## v4.x.x to v5.x.x
+
+There are two breaking changes in v5.x.x:
+    - `xlink:href` is now dissallowed in incoming SVG. This has adverse effects on exports with e.g. background images or other external resources, and is being done to prevent potential security issues. To allow this attribute, set `OTHER_ALLOW_XLINK_HREF` to `true`.
+    - There is now an active upload limit which defaults to 3MB (can be configured with `SERVER_MAX_UPLOAD_SIZE`/`--maxUploadSize`/`maxUploadSize`)
+
+For other changes and fixes, please see the [changelog](CHANGELOG.md).
+
+## v3.x.x to v4.x.x
+
 In most cases, v4 should serve as a drop-in replacement for v2 and v3. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
@@ -384,6 +394,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `OTHER_ALLOW_XLINK`: If set to true, allow `xlink:href` in incoming SVG (defaults to `false`).
 
 ### Debugging Config
 - `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
