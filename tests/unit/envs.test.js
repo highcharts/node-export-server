@@ -1,6 +1,31 @@
 import { Config } from '../../lib/envs';
 
 describe('Environment variables should be correctly parsed', () => {
+  test('PUPPETEER_TEMP_DIR should be a valid path', () => {
+    const env = { PUPPETEER_TEMP_DIR: '/path/to/dir' };
+    expect(Config.partial().parse(env).PUPPETEER_TEMP_DIR).toEqual(
+      '/path/to/dir'
+    );
+
+    env.PUPPETEER_TEMP_DIR = '/another/path/to/dir';
+    expect(Config.partial().parse(env).PUPPETEER_TEMP_DIR).toEqual(
+      '/another/path/to/dir'
+    );
+
+    env.PUPPETEER_TEMP_DIR = '';
+    expect(() => Config.partial().parse(env)).toThrow();
+  });
+
+  test('PUPPETEER_TEMP_DIR can be a relative path', () => {
+    const env = { PUPPETEER_TEMP_DIR: './tmp/' };
+    expect(Config.partial().parse(env).PUPPETEER_TEMP_DIR).toEqual('./tmp/');
+
+    env.PUPPETEER_TEMP_DIR = '../custom-tmp/';
+    expect(Config.partial().parse(env).PUPPETEER_TEMP_DIR).toEqual(
+      '../custom-tmp/'
+    );
+  });
+
   test('HIGHCHARTS_VERSION accepts latests and not unrelated strings', () => {
     const env = { HIGHCHARTS_VERSION: 'string-other-than-latest' };
     expect(() => Config.partial().parse(env)).toThrow();

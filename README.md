@@ -6,6 +6,16 @@ Convert Highcharts.JS charts into static image files.
 
 ## Upgrade Notes
 
+## v4.x.x to v5.x.x
+
+There are two breaking changes in v5.x.x:
+    - `xlink:href` is now dissallowed in incoming SVG. This has adverse effects on exports with e.g. background images or other external resources, and is being done to prevent potential security issues. To allow this attribute, set `OTHER_ALLOW_XLINK_HREF` to `true`.
+    - There is now an active upload limit which defaults to 3MB (can be configured with `SERVER_MAX_UPLOAD_SIZE`/`--maxUploadSize`/`maxUploadSize`)
+
+For other changes and fixes, please see the [changelog](CHANGELOG.md).
+
+## v3.x.x to v4.x.x
+
 In most cases, v4 should serve as a drop-in replacement for v2 and v3. However, due to changes in the browser backend, various tweaks related to process handling (e.g., worker counts, and so on) may now have different effects than before.
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
@@ -98,7 +108,8 @@ The format, along with its default values, is as follows (using the recommended 
 ```
 {
   "puppeteer": {
-    "args": []
+    "args": [],
+    "tempDir": "./tmp/"
   },
   "highcharts": {
     "version": "latest",
@@ -214,9 +225,12 @@ The format, along with its default values, is as follows (using the recommended 
     "host": "0.0.0.0",
     "port": 7801,
     "benchmarking": false,
+    "maxUploadSize": 3,
     "proxy": {
       "host": "",
       "port": 8080,
+      "username": false,
+      "password": false,
       "timeout": 5000
     },
     "rateLimiting": {
@@ -285,6 +299,10 @@ To load an additional JSON configuration file, use the `--loadConfig <filepath>`
 
 These variables are set in your environment and take precedence over options from the `lib/schemas/config.js` file. They can be set in the `.env` file (refer to the `.env.sample` file). If you prefer setting these variables through the `package.json`, use `export` command on Linux/Mac OS X and `set` command on Windows.
 
+### Puppeteer Config
+
+- `PUPPETEER_TEMP_DIR`: The directory for Puppeteer to store temporary files (defaults to `./tmp/`).
+
 ### Highcharts Config
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
@@ -316,11 +334,14 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_HOST`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
+- `SERVER_MAX_UPLOAD_SIZE`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
 
 ### Server Proxy Config
 
 - `SERVER_PROXY_HOST`: The host of the proxy server to use, if it exists (defaults to ``).
 - `SERVER_PROXY_PORT`: The port of the proxy server to use, if it exists (defaults to ``).
+- `SERVER_PROXY_USERNAME`: Proxy username - if using a proxy server with authentication (defaults to ``).
+- `SERVER_PROXY_PASSWORD`: Proxy password - if using a proxy server with authentication (defaults to ``).
 - `SERVER_PROXY_TIMEOUT`: The timeout for the proxy server to use, if it exists (defaults to ``).
 
 ### Server Rate Limiting Config
@@ -373,6 +394,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_NO_LOGO`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `OTHER_ALLOW_XLINK`: If set to true, allow `xlink:href` in incoming SVG (defaults to `false`).
 
 ### Debugging Config
 - `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
@@ -413,9 +435,12 @@ _Available options:_
 - `--enableServer`: If set to **true**, the server starts on 0.0.0.0 (defaults to `false`).
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
+- `--maxUploadSize`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
+- `--proxyUsername`: Proxy username - if using an authenticated proxy server. (defaults to `false`).
+- `--proxyPassword`: Proxy password - if using an authenticated proxy server. (defaults to `false`).
 - `--proxyTimeout`: The timeout for the proxy server to use, if it exists (defaults to `5000`).
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
@@ -570,20 +595,23 @@ const options = {
   }
 };
 
-// Initialize export settings with your chart's config
-const exportSettings = exporter.setOptions(options);
+// Logic must be triggered in an asynchronous function
+(async () => {
+  // Initialize export settings with your chart's config
+  const exportSettings = exporter.setOptions(options);
 
-// Must initialize exporting before being able to export charts
-await exporter.initExport(exportSettings);
+  // Must initialize exporting before being able to export charts
+  await exporter.initExport(exportSettings);
 
-// Perform an export
-await exporter.startExport(exportSettings, async (error, info) => {
-  // The export result is now in info
-  // It will be base64 encoded (info.data)
+  // Perform an export
+  await exporter.startExport(exportSettings, async (error, info) => {
+    // The export result is now in info
+    // It will be base64 encoded (info.result)
 
-  // Kill the pool when we are done with it
-  await exporter.killPool();
-});
+    // Kill the pool when we are done with it
+    await exporter.killPool();
+  });
+})();
 ```
 
 ## CommonJS support
