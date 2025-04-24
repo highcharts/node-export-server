@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Deploy application
 
 on:
   workflow_dispatch:
@@ -12,14 +12,19 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
+  build:
+    name: Build docker image
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
       attestations: write
-      id-token: write
-      #
+
+    outputs:
+      build_image: ${{ steps.output.outputs.build_image }}
+      build_image_tag: ${{ steps.output.outputs.build_image_tag }}
+      version: ${{ steps.output.outputs.version }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,19 +42,79 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build and push Docker image
+      - name: Extract version number
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Build and publish image
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.package-version.outputs.current-version }}-build.${{ github.run_number }}
           labels: ${{ steps.meta.outputs.labels }}
       
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+      - name: Store outputs
+        id: output
+        run: | 
+          echo "build_image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
+          echo "build_image_tag=${{ steps.package-version.outputs.current-version }}-build.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+          echo "version=${{ steps.package-version.outputs.current-version }}" >> "$GITHUB_OUTPUT"
+
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: build
+    environment: 'development'
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - name: Deploy to Development
+        uses: shrink/actions-docker-registry-tag@v4
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-          subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
-      
+          registry: ghcr.io
+          repository: ${{ needs.build.outputs.build_image }}
+          target: ${{ needs.build.outputs.build_image_tag }}
+          tags: |
+            ${{ needs.build.outputs.version }}-dev
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    environment: 'staging'
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - name: Deploy to Staging
+        uses: shrink/actions-docker-registry-tag@v4
+        with:
+          registry: ghcr.io
+          repository: ${{ needs.build.outputs.build_image }}
+          target: ${{ needs.build.outputs.build_image_tag }}
+          tags: |
+            ${{ needs.build.outputs.version }}-staging
+
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    environment: 'production'
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - name: Deploy to Production
+        uses: shrink/actions-docker-registry-tag@v4
+        with:
+          registry: ghcr.io
+          repository: ${{ needs.build.outputs.build_image }}
+          target: ${{ needs.build.outputs.build_image_tag }}
+          tags: |
+            ${{ needs.build.outputs.version }}
