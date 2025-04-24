@@ -11,6 +11,11 @@ export default {
       sourcemap: true
     },
     {
+      file: 'dist/index.esm.mjs',
+      format: 'es',
+      sourcemap: true
+    },
+    {
       file: 'dist/index.cjs',
       format: 'cjs',
       sourcemap: 'inline'
