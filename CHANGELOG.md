@@ -81,6 +81,7 @@ _Enhancements:_
 - Merged the logic from `createSVG` and `setAsConfig` into the `puppeteerExport` function.
 - Extracted `_getChartSize` from part of the `puppeteerExport` logic to determine the final exported image size.
 - Simplified error handling by removing the `HttpError` class and using only the `ExportError` class throughout the code.
+- Corrected status codes of the most custom errors.
 - Removed forced modification of pool worker numbers for batch exports.
 - Optimized the `initPool` and `postWork` functions.
 - Moved the `factory` object into a separate function, optimizing pool resource functions.
