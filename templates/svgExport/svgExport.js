@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -14,7 +14,14 @@ See LICENSE file in root for details.
 
 import cssTemplate from './css.js';
 
-export default (chart) => `
+/**
+ * The SVG template to use when loading SVG content to be exported.
+ *
+ * @param {string} svg - The SVG input content to be exported.
+ *
+ * @returns {string} The SVG template.
+ */
+export default (svg) => `
 <!DOCTYPE html>
 <html lang='en-US'>
   <head>
@@ -26,7 +33,7 @@ export default (chart) => `
   </style>
   <body>
     <div id="chart-container">
-      ${chart}
+      ${svg}
     </div>
   </body>
 </html>

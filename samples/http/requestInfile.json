@@ -1,5 +1,5 @@
 {
-  "infile": {
+  "options": {
     "chart": {
       "type": "column"
     },
@@ -32,17 +32,12 @@
     ]
   },
   "type": "png",
-  "scale": 2,
-  "width": 800,
-  "height": 800,
-  "callback": "function callback(chart) {chart.renderer.label('This label is added in the stringified callback.<br>Highcharts version ' + Highcharts.version,75,75).attr({fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}",
-  "resources": {
-    "js": "Highcharts.charts[0].update({title: {text: 'Resources title'}});",
-    "css": ".highcharts-color-0 {fill: #7cb5ec; stroke: #7cb5ec;} .highcharts-axis.highcharts-color-0 .highcharts-axis-line {stroke: #7cb5ec;} .highcharts-axis.highcharts-color-0 text {fill: #7cb5ec;}.highcharts-color-1 {fill: #90ed7d; stroke: #90ed7d;} .highcharts-axis.highcharts-color-1 .highcharts-axis-line {stroke: #90ed7d;} .highcharts-axis.highcharts-color-1 text {fill: #90ed7d;}.highcharts-yaxis .highcharts-axis-line {stroke-width: 2px;}"
-  },
   "constr": "chart",
   "b64": false,
   "noDownload": false,
+  "height": 800,
+  "width": 800,
+  "scale": 2,
   "globalOptions": {
     "chart": {
       "borderWidth": 2,
@@ -95,5 +90,10 @@
       }
     }
   },
-  "customCode": "function () {Highcharts.setOptions({chart: {borderWidth: 2, plotBackgroundColor: 'rgba(255, 255, 255, .9)', plotShadow: true, plotBorderWidth: 1, events: {render: function() {this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png', 250, 120, 20, 20).add();}}}});}"
+  "customCode": "function () {Highcharts.setOptions({chart: {borderWidth: 2, plotBackgroundColor: 'rgba(255, 255, 255, .9)', plotShadow: true, plotBorderWidth: 1, events: {render: function() {this.renderer.image('https://www.highcharts.com/samples/graphics/sun.png', 250, 120, 20, 20).add();}}}});}",
+  "callback": "function callback(chart) {chart.renderer.label('This label is added in the stringified callback.<br>Highcharts version ' + Highcharts.version,75,75).attr({fill: '#90ed7d', padding: 10, r: 10, zIndex: 10}).css({color: 'black', width: '100px'}).add();}",
+  "resources": {
+    "js": "Highcharts.charts[0].update({title: {text: 'Resources title'}});",
+    "css": ".highcharts-color-0 {fill: #7cb5ec; stroke: #7cb5ec;} .highcharts-axis.highcharts-color-0 .highcharts-axis-line {stroke: #7cb5ec;} .highcharts-axis.highcharts-color-0 text {fill: #7cb5ec;}.highcharts-color-1 {fill: #90ed7d; stroke: #90ed7d;} .highcharts-axis.highcharts-color-1 .highcharts-axis-line {stroke: #90ed7d;} .highcharts-axis.highcharts-color-1 text {fill: #90ed7d;}.highcharts-yaxis .highcharts-axis-line {stroke-width: 2px;}"
+  }
 }

@@ -16,4 +16,4 @@
 
 <!-- Please describe how to reproduce the issue. -->
 <!-- If you can, please include a curl fetch that demonstrates the issue, e.g. -->
-<!-- curl -H "Content-Type: application/json" -X POST -d '{"infile":{ <CHART OPTIONS HERE> }' 127.0.0.1:7801 -o mychart.png -->
+<!-- curl -H "Content-Type: application/json" -X POST -d '{"options":{ <CHART OPTIONS HERE> }' 127.0.0.1:7801 -o mychart.png -->

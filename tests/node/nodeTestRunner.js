@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -23,8 +23,8 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import exporter from '../../lib/index.js';
-import { __dirname } from '../../lib/utils.js';
+import exporter, { initExport } from '../../lib/index.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -46,12 +46,9 @@ console.log(
     // Get files names
     const files = readdirSync(scenariosPath);
 
-    // Set options
-    const options = exporter.setOptions();
-
     try {
-      // Initialize pool with disabled logging
-      await exporter.initExport(options);
+      // Initialize pool
+      await initExport();
     } catch (error) {
       await exporter.killPool();
       throw error;
@@ -88,11 +85,11 @@ console.log(
               );
 
               // The start date of a startExport function run
-              const startTime = new Date().getTime();
+              const startTime = getNewDateTime();
 
               // Start the export process
               exporter
-                .startExport(fileOptions, (error, info) => {
+                .startExport(fileOptions, (error, data) => {
                   // Throw an error
                   if (error) {
                     throw error;
@@ -100,16 +97,16 @@ console.log(
 
                   // Save returned data to a correct image file if no error occured
                   writeFileSync(
-                    info.options.export.outfile,
-                    info.options?.export?.type !== 'svg'
-                      ? Buffer.from(info.result, 'base64')
-                      : info.result
+                    data.options.export.outfile,
+                    data.options?.export?.type !== 'svg'
+                      ? Buffer.from(data.result, 'base64')
+                      : data.result
                   );
 
                   // Information about the results and the time it took
                   console.log(
                     `[Success] Node module from file: ${file}, took: ${
-                      new Date().getTime() - startTime
+                      getNewDateTime() - startTime
                     }ms.`.green
                   );
                 })
@@ -117,7 +114,7 @@ console.log(
                   // Information about the error and the time it took
                   console.log(
                     `[Fail] Node module from file: ${file}, took: ${
-                      new Date().getTime() - startTime
+                      getNewDateTime() - startTime
                     }ms.`.red
                   );
                   exporter.setLogLevel(1);

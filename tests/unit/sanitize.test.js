@@ -1,3 +1,19 @@
+/*******************************************************************************
+
+Highcharts Export Server
+
+Copyright (c) 2016-2025, Highsoft
+
+Licenced under the MIT licence.
+
+Additionally a valid Highcharts license is required for use.
+
+See LICENSE file in root for details.
+
+*******************************************************************************/
+
+import { describe, expect, it } from '@jest/globals';
+
 import { sanitize } from '../../lib/sanitize.js';
 
 describe('sanitize', () => {

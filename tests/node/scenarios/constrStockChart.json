@@ -1,6 +1,5 @@
 {
   "export": {
-    "constr": "stockChart",
     "options": {
       "rangeSelector": {
         "selected": 1
@@ -520,6 +519,7 @@
           ]
         }
       ]
-    }
+    },
+    "constr": "stockChart"
   }
 }

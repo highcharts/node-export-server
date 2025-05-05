@@ -2,7 +2,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2024, Highsoft
+Copyright (c) 2016-2025, Highsoft
 
 Licenced under the MIT licence.
 
@@ -18,7 +18,7 @@ import { basename, join } from 'path';
 
 import 'colors';
 
-import { __dirname } from '../../lib/utils.js';
+import { __dirname, getNewDateTime } from '../../lib/utils.js';
 
 // Test runner message
 console.log(
@@ -70,7 +70,7 @@ if (existsSync(file) && file.endsWith('.json')) {
     cliCommand = cliCommand.join(' ');
 
     // The start date of a CLI command
-    const startDate = new Date().getTime();
+    const startDate = getNewDateTime();
 
     // Launch command in a new process
     spawn(cliCommand);
@@ -78,10 +78,10 @@ if (existsSync(file) && file.endsWith('.json')) {
     // Close event for a process
     process.on('exit', (code) => {
       const endMessage = `CLI command from file: ${file}, took ${
-        new Date().getTime() - startDate
+        getNewDateTime() - startDate
       }ms.`;
 
-      // If code is 1, it means that export server thrown an error
+      // If code is 1, it means that Export Server thrown an error
       if (code === 1) {
         return console.error(`[Fail] ${endMessage}`.red);
       }
