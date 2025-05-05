@@ -127,6 +127,7 @@ _Enhancements:_
 - Created, renamed, or removed various tests, samples, and scenario runners.
 - Removed separate test runner scripts.
 - Made a minor correction in the `build` script.
+- Added the integrity and crossorigin properties for the scripts in the `public/index.js` file.
 - Updated package versions.
 - Corrected the description of options prioritization order in the `Configuration` section.
 - Added explanations of overall option handling, management, and processing, along with descriptions for each export method (`Options Handling` section and subsections).
