@@ -92,6 +92,7 @@ _Enhancements:_
 - Set the `launchOptions.userDataDir` property to 'tmp'.
 - Secured the `launchOptions.args` by setting it to [] if `puppeteerArgs` is not found in the `createBrowser` function.
 - Renamed the `get` function to `getBrowser`, the `create` function to `createBrowser`, and the `close` function to `closeBrowser`.
+- Limited the the Access-Control-Allow-Methods CORS header to 'POST', 'GET' and 'OPTIONS'.
 - Renamed `triggerExport` to `createChart`, optimizing the options passed and processed in the `highcharts.js` module.
 - Improved the module's overall logic, optimizing logging functions and the initialization process.
 - Added the `logZodIssues` function for displaying correctly formatted validation errors.
