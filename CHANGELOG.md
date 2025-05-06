@@ -214,7 +214,7 @@ _Breaking Changes:_
 _New Features:_
 
 - Implemented debug mode, including new environment variables, a config section, `console` event listener, and npm script for debugging the headful Puppeteer browser.
-- Added the `HIGHCHARTS_CACHE_PATH` option available through `.env` to set a custom directory for the fetched files.
+- Added support for absolute paths in the `HIGHCHARTS_CACHE_PATH` option [(#562)](https://github.com/highcharts/node-export-server/issues/562).
 - Added a moving average indicator for the exporting success rate ratio.
 
 _Enhancements:_
