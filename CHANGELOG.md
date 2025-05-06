@@ -153,6 +153,7 @@ _Enhancements:_
 _Fixes:_
 
 - Fixed a recurring issue with images not loading by implementing a mechanism that waits for images for a certain period.
+- Fixed the Base64 images not working in exported SVGs (Namespace prefix xlink for href on image is not defined, [#547](https://github.com/highcharts/node-export-server/issues/547)).
 - Corrected values, types, and other data for each property in the `defaultConfig` object.
 - Corrected the `createConfig` and `loadConfig` options to allow usage with or without the `.json` extension.
 - Fixed the `uiEnabled` by enabling its usage in `ui.js` router.
