@@ -950,11 +950,11 @@ The latter is preferred, as it allows you to set separate sizing when exporting 
 Like previously mentioned, there are multiple ways to set and prioritize options, and the `height`, `width` and `scale` are no exceptions here. The priority goes like this:
 
 1. The `height`, `width`, and `scale` options from the `export` section of the provided options (CLI, JSON, envs).
-2. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts options.
+2. The `sourceHeight`, `sourceWidth`, and `scale` from the `exporting` section of chart's Highcharts options.
 3. The `height` and `width` from the `chart` section of chart's Highcharts options.
-4. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts global options, if provided.
+4. The `sourceHeight`, `sourceWidth`, and `scale` from the `exporting` section of chart's Highcharts global options, if provided.
 5. The `height` and `width` from the `chart` section of chart's Highcharts global options, if provided.
-6. The `sourceHeight`, `sourceWidth` and `scale` from the `chart.exporting` section of chart's Highcharts theme options, if provided.
+6. The `sourceHeight`, `sourceWidth`, and `scale` from the `exporting` section of chart's Highcharts theme options, if provided.
 7. The `height` and `width` from the `chart` section of chart's Highcharts theme options, if provided.
 8. If no options are found to this point, the default values will be used (`height = 400`, `width = 600` and `scale = 1`).
 
