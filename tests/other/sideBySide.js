@@ -96,11 +96,10 @@ try {
           const startDate = getNewDateTime();
 
           // Launch command in a new process
-          // eslint-disable-next-line no-global-assign
-          process = spawn(command);
+          const proc = spawn(command);
 
           // Close event for a process
-          process.on('close', () => {
+          proc.on('close', () => {
             const message = `Done with ${
               index ? '[PhantomJS]' : '[Puppeteer]'
             } ${type} export, took ${getNewDateTime() - startDate}ms.`;

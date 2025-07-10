@@ -1,10 +1,7 @@
-/** @type {import('jest').Config} */
-const config = {
+export default {
   testEnvironment: 'jest-environment-node',
   testMatch: ['**/tests/unit/**/*.test.js'],
   transform: {
     // '^.+\\.test.js?$': 'babel-jest'
   }
 };
-
-export default config;

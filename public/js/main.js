@@ -12,8 +12,6 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-/* eslint-disable no-undef */
-
 const highexp = {};
 
 (function () {
@@ -34,6 +32,7 @@ const highexp = {};
       'application/pdf': 'pdf'
     };
 
+    // eslint-disable-next-line no-undef
     const optionsCM = CodeMirror.fromTextArea(options, {
       lineNumbers: true,
       mode: 'javascript'

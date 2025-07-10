@@ -659,13 +659,11 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
 ## Available Endpoints
 
 - POST
-
   - `/`: An endpoint for exporting charts.
   - `/:filename` - An endpoint for exporting charts with a specified filename parameter to save the chart to. The file will be downloaded with the _{filename}.{type}_ name (the `noDownload` must be set to **false**).
   - `/version_change/:newVersion`: An authenticated endpoint allowing the modification of the Highcharts version on the server through the use of a token.
 
 - GET
-
   - `/`: An endpoint to perform exports through the user interface the server allows it.
   - `/health`: An endpoint for outputting basic statistics for the server.
 
@@ -747,7 +745,6 @@ This package supports both CommonJS and ES modules.
 **highcharts-export-server module**
 
 - `async function startServer(serverOptions = {})`: Starts an HTTP and/or HTTPS server based on the provided configuration. The `serverOptions` object contains server-related properties (refer to the `server` section in the `./lib/schemas/config.js` file for details).
-
   - `@param {Object} [serverOptions={}]` - The configuration object containing `server` options. This object may include a partial or complete set of the `server` options. If the options are partial, missing values will default to the current global configuration. The default value is an empty object.
 
   - `@returns {Promise<void>}` A Promise that resolves when the server is either not enabled or no valid Express app is found, signaling the end of the function's execution.
@@ -757,44 +754,35 @@ This package supports both CommonJS and ES modules.
 - `function closeServers()`: Closes all servers associated with Express app instance.
 
 - `function getServers()`: Get all servers associated with Express app instance.
-
   - `@returns {Array<Object>}` Servers associated with Express app instance.
 
 - `function getExpress()`: Get the Express instance.
-
   - `@returns {Express}` The Express instance.
 
 - `function getApp()`: Get the Express app instance.
-
   - `@returns {Express}` The Express app instance.
 
 - `function enableRateLimiting(rateLimitingOptions)`: Enable rate limiting for the server.
-
   - `@param {Object} rateLimitingOptions` - The configuration object containing `rateLimiting` options. This object may include a partial or complete set of the `rateLimiting` options. If the options are partial, missing values will default to the current global configuration.
 
 - `function use(path, ...middlewares)`: Apply middleware(s) to a specific path.
-
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `function get(path, ...middlewares)`: Set up a route with GET method and apply middleware(s).
-
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `function post(path, ...middlewares)`: Set up a route with POST method and apply middleware(s).
-
   - `@param {string} path` - The path to which the middleware(s) should be applied.
   - `@param {...Function} middlewares` - The middleware function(s) to be applied.
 
 - `function getOptions(getCopy = true)`: Retrieves a copy of the global options object or an original global options object, based on the `getCopy` flag.
-
   - `@param {boolean} [getCopy=true]` - Specifies whether to return a copied object of the global options (`true`) or a reference to the global options object (`false`). The default value is `true`.
 
   - `@returns {Object}` A copy of the global options object, or a reference to the global options object.
 
 - `function updateOptions(newOptions, getCopy = false, strictCheck = true)`: Updates and returns the global options object or a copy of the global options object, based on the `getCopy` flag. The `newOptions` object can be strictly validated depending on the `strictCheck` flag.
-
   - `@param {Object} newOptions` - An object containing the new options to be merged into the global options.
   - `@param {boolean} [getCopy=false]` - Determines whether to merge the new options into a copy of the global options object (`true`) or directly into the global options object (`false`). The default value is `false`.
   - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
@@ -802,13 +790,11 @@ This package supports both CommonJS and ES modules.
   - `@returns {Object}` The updated options object, either the modified global options or a modified copy, based on the value of `getCopy`.
 
 - `function mapToNewOptions(oldOptions)`: Maps old-structured configuration options (PhantomJS-based) to a new format (Puppeteer-based). This function converts flat, old-structured options into a new, nested configuration format based on a predefined mapping provided in the `nestedProps` object. The new format is used for Puppeteer, while the old format was used for PhantomJS.
-
   - `@param {Object} oldOptions` - The old, flat configuration options to be converted.
 
   - `@returns {Object}` A new object containing options structured according to the mapping defined in the `nestedProps` object or an empty object if the provided `oldOptions` is not a correct object.
 
 - `function validateOption(name, configOption, strictCheck = true)`: Validates a specified option using the corresponding validator from the configuration object. Returns the original option if the validation is disabled globally.
-
   - `@param {string} name` - The name of the option to validate.
   - `@param {any} configOption` - The value of the option to validate.
   - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
@@ -816,7 +802,6 @@ This package supports both CommonJS and ES modules.
   - `@returns {any}` The parsed and validated value of the option.
 
 - `function validateOptions(configOptions, strictCheck = true)`: Validates the provided configuration options for the exporting process. Returns the original option if the validation is disabled globally.
-
   - `@param {Object} configOptions` - The configuration options to be validated.
   - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
 
@@ -825,11 +810,9 @@ This package supports both CommonJS and ES modules.
 - `async function initExport(initOptions = {})`: Initializes the export process. Tasks such as configuring logging, checking the cache and sources, and initializing the resource pool occur during this stage.
 
   This function must be called before attempting to export charts or set up a server.
-
   - `@param {Object} [initOptions={}]` - The `initOptions` object, which may be a partial or complete set of options. If the options are partial, missing values will default to the current global configuration. The default value is an empty object.
 
 - `async function singleExport(options)`: Starts a single export process based on the specified options and saves the resulting image to the provided output file.
-
   - `@param {Object} options` - The `options` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. The object must contain at least one of the following `export` properties: `infile`, `instr`, `options`, or `svg` to generate a valid image.
 
   - `@returns {Promise<void>}` A Promise that resolves once the single export process is completed.
@@ -837,7 +820,6 @@ This package supports both CommonJS and ES modules.
   - `@throws {ExportError}` Throws an `ExportError` if an error occurs during the single export process.
 
 - `async function batchExport(options)`: Starts a batch export process for multiple charts based on information provided in the `batch` option. The `batch` is a string in the following format: "infile1.json=outfile1.png;infile2.json=outfile2.png;...". Results are saved to the specified output files.
-
   - `@param {Object} options` - The `options` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. It must contain the `batch` option from the `export` section to generate valid images.
 
   - `@returns {Promise<void>}` A Promise that resolves once the batch export processes are completed.
@@ -847,7 +829,6 @@ This package supports both CommonJS and ES modules.
 - `async function startExport(exportingOptions, endCallback)`: Starts an export process. The `exportingOptions` parameter is an object that should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. If partial options are provided, missing values will be merged with the current global options.
 
   The `endCallback` function is invoked upon the completion of the export, either successfully or with an error. The `error` object is provided as the first argument, and the `data` object is the second, containing the Base64 representation of the chart in the `result` property and the complete set of options in the `options` property.
-
   - `@param {Object} exportingOptions` - The `exportingOptions` object, which should include settings from the `export` and `customLogic` sections. It can be a partial or complete set of options from these sections. If the provided options are partial, missing values will be merged with the current global options.
   - `@param {Function} endCallback` - The callback function to be invoked upon finalizing the export process or upon encountering an error. The first argument is the `error` object, and the second argument is the `data` object, which includes the Base64 representation of the chart in the `result` property and the full set of options in the `options` property.
 
@@ -856,21 +837,17 @@ This package supports both CommonJS and ES modules.
   - `@throws {ExportError}` Throws an `ExportError` if there is a problem with processing input of any type. The error is passed into the `endCallback` function and processed there.
 
 - `async function killPool()`: Terminates all workers in the pool, destroys the pool, and closes the browser instance.
-
   - `@returns {Promise<void>}` A Promise that resolves once all workers are terminated, the pool is destroyed, and the browser is successfully closed.
 
 - `async function shutdownCleanUp(exitCode = 0)`: Performs cleanup operations to ensure a graceful shutdown of the process. This includes clearing all registered timeouts/intervals, closing active servers, terminating resources (pages) of the pool, pool itself, and closing the browser.
-
   - `@param {number} [exitCode=0]` - The exit code to use with `process.exit()`. The default value is `0`.
 
 - `function log(...args)`: Logs a message with a specified log level. Accepts a variable number of arguments. The arguments after the `level` are passed to `console.log` and/or used to construct and append messages to a log file.
-
   - `@param {...unknown} args` - An array of arguments where the first is the log level and the remaining are strings used to build the log message.
 
   - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
 
 - `function logWithStack(newLevel, error, customMessage)`: Logs an error message along with its stack trace. Optionally, a custom message can be provided.
-
   - `@param {number} newLevel` - The log level.
   - `@param {Error} error` - The error object containing the stack trace.
   - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
@@ -878,21 +855,17 @@ This package supports both CommonJS and ES modules.
   - `@returns {void}` Exits the function execution if attempting to log at a level higher than allowed.
 
 - `function logZodIssues(newLevel, issues, customMessage)`: Logs an error message related to Zod validation issues. Optionally, a custom message can be provided.
-
   - `@param {number} newLevel` - The log level.
   - `@param {Error[]} issues` - An array of Zod validation issues.
   - `@param {string} customMessage` - An optional custom message to be included in the log alongside the error.
 
 - `function setLogLevel(level)`: Sets the log level to the specified value. Log levels are (`0` = no logging, `1` = error, `2` = warning, `3` = notice, `4` = verbose, or `5` = benchmark).
-
   - `@param {number} level` - The log level to be set.
 
 - `function enableConsoleLogging(toConsole)`: Enables console logging.
-
   - `@param {boolean} toConsole` - The flag for setting the logging to the console.
 
 - `function enableFileLogging(dest, file, toFile)`: Enables file logging with the specified destination and log file name.
-
   - `@param {string} dest` - The destination path where the log file should be saved.
   - `@param {string} file` - The name of the log file.
   - `@param {boolean} toFile` - A flag indicating whether logging should be directed to a file.

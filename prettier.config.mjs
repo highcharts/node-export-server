@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   trailingComma: 'none',
   endOfLine: 'auto',
   tabWidth: 2,
