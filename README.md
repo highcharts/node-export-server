@@ -60,7 +60,7 @@ For systems that generate automatic reports, using the Export Server as a Node.j
 
 # Install
 
-First, make sure you have Node.js installed. If not, visit [nodejs.org](https://nodejs.org/en/download/), download and install Node.js for your platform. For compatibility reasons, version `18.12.0` or higher is required.
+First, make sure you have Node.js installed. If not, visit [nodejs.org](https://nodejs.org/en/download/), download and install Node.js for your platform. For compatibility reasons, version `18.18.0` or higher is required.
 
 Once Node.js is installed, proceed to install the Export Server by opening a terminal and typing:
 
