@@ -1,4 +1,4 @@
-# 5.1.0
+# 6.0.0
 
 _Breaking Changes:_
 
@@ -13,7 +13,6 @@ _New Features:_
 - Added the `validateOption` function for validating a single option. It is used in the code to validate individual options (`svg`, `instr`, `resources`, `customCode`, `callback`, `globalOptions`, and `themeOptions`) loaded from a file.
 - Added the `validateOptions` function for validating the full set of options. It is used in the code to validate options coming from functions that update global options, CLI arguments, configurations loaded via `--loadConfig`, and configurations created using the prompts functionality.
 - Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
-- Added a new option called `uploadLimit` to control the maximum size of a request's payload body.
 - Added the possibility to return a Base64 version of the chart using any export method (not only through requests).
 - Added support for displaying CLI usage (`-h`, `--h`, `-help`, `--help`) and version information with license details (`-v`, `--v`).
 - Introduced `validation` middleware to check `Content-Type` headers and validate request bodies.
