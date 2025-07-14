@@ -22,7 +22,7 @@ In most cases, v4 should serve as a drop-in replacement for v2 and v3. However, 
 
 Significant changes have been made to the API for using the server as a Node.js module. While a compatibility layer has been created to address this, it is recommended to transition to the new API described below. It is worth noting that the compatibility layer may be deprecated at some point in the future.
 
-An important note is that the Export Server now requires `Node.js v18.12.0` or a higher version.
+An important note is that the Export Server now requires `Node.js v18.18.0` or a higher version.
 
 Additionally, with the v3 release, we transitioned from HTTP to HTTPS for `export.highcharts.com`, so all requests sent to our public server now must use the HTTPS protocol.
 
