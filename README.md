@@ -799,7 +799,7 @@ This package supports both CommonJS and ES modules.
   - `@param {any} configOption` - The value of the option to validate.
   - `@param {boolean} [strictCheck=true]` - Determines if stricter validation should be applied. The default value is `true`.
 
-  - `@returns {any}` The parsed and validated value of the option.
+  - `@returns {Object}` The parsed and validated value of the option.
 
 - `function validateOptions(configOptions, strictCheck = true)`: Validates the provided configuration options for the exporting process. Returns the original option if the validation is disabled globally.
   - `@param {Object} configOptions` - The configuration options to be validated.
