@@ -1,4 +1,0 @@
-export default {
-  '*.{js,ts}': ['npm run lint'],
-  '*.{json,css,md}': ['npm run format']
-};

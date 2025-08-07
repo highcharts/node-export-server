@@ -1,7 +1,7 @@
-// rollup plugin for minifying the code
+// Rollup plugin for minifying the code
 import terser from '@rollup/plugin-terser';
 
-// exporting the rollup config
+// Exporting the rollup config
 export default {
   input: 'lib/index.js',
   output: [
