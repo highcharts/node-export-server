@@ -87,7 +87,7 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
       try {
         // Launch command as a new child process
         await spawn(cliCommand);
-      } catch (error) {
+      } catch {
         failsCounter++;
         didFail = true;
       }

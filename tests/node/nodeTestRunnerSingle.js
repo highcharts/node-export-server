@@ -95,7 +95,7 @@ console.log(
             }ms.`.green
           );
         });
-      } catch (error) {
+      } catch {
         // Information about the error and the time it took
         console.log(
           `[Fail] Node module from file: ${file}, took: ${
