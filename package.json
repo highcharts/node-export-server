@@ -36,7 +36,7 @@
     "debug": "node --inspect-brk=9229 ./bin/cli.js --enableDebug true --enableServer true --logLevel 4",
     "complete": "npm run format && npm run lint && npm run build",
     "format": "prettier ./ --config prettier.config.js --write",
-    "lint": "eslint ./ --ext .js,.cjs,.mjs --fix",
+    "lint": "eslint ./ --fix",
     "build": "rollup --config --silent",
     "prepack": "npm run build",
     "unit:test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
