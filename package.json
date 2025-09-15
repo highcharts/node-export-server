@@ -70,7 +70,7 @@
     "express-rate-limit": "^7.3.1",
     "https-proxy-agent": "^7.0.5",
     "jsdom": "^24.1.0",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.0.2",
     "prompts": "^2.4.2",
     "puppeteer": "^22.12.1",
     "tarn": "^3.0.2",
