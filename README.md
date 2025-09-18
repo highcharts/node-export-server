@@ -361,6 +361,12 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_SSL_PORT`: The port on which to run the SSL server (defaults to `443`).
 - `SERVER_SSL_CERT_PATH`: The path to the SSL certificate/key file (defaults to ``).
 
+### Server Basic Authentification Config
+
+- `SERVER_BASIC_AUTH_ENABLE`: Enables or disables the basic auth support to protect your server
+- `SERVER_BASIC_AUTH_LOGIN`: Login expected for basic auth
+- `SERVER_BASIC_AUTH_PASSWORD`: Password expected for basic auth
+
 ### Pool Config
 
 - `POOL_MIN_WORKERS`: The number of minimum and initial pool workers to spawn (defaults to `4`).
