@@ -2260,6 +2260,9 @@ export function configTests(schema, strictCheck) {
         validationTests.acceptValues(property, correctValue, incorrectValue)
       );
     },
+    highchartsUseNpm: (property) => {
+      describe(property, () => validationTests.boolean(property));
+    },
     highchartsForceFetch: (property) => {
       describe(property, () => validationTests.boolean(property));
     },

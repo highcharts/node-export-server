@@ -82,6 +82,7 @@ describe('Configuration options should be correctly parsed and validated', () =>
   tests.highcharts('highcharts', {
     version: 'latest',
     cdnUrl: 'https://code.highcharts.com',
+    useNpm: false,
     forceFetch: false,
     cachePath: '.cache',
     coreScripts: ['highcharts', 'highcharts-more', 'highcharts-3d'],
@@ -317,6 +318,9 @@ describe('Highcharts configuration options should be correctly parsed and valida
     ['http://example.com', 'https://example.com'],
     ['http:a.com', 'http:/b.com', 'https:c.com', 'https:/d.com']
   );
+
+  // highcharts.useNpm
+  tests.highchartsUseNpm('useNpm');
 
   // highcharts.forceFetch
   tests.highchartsForceFetch('forceFetch');

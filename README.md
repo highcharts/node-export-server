@@ -148,6 +148,7 @@ _Available default JSON config:_
   "highcharts": {
     "version": "latest",
     "cdnUrl": "https://code.highcharts.com",
+    "useNpm": false,
     "forceFetch": false,
     "cachePath": ".cache"
     "coreScripts": [
@@ -345,6 +346,7 @@ _Available environment variables:_
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com`).
+- `HIGHCHARTS_USE_NPM`: The flag that determines whether to use Highcharts scripts from CDN or NPM package (defaults to `false`).
 - `HIGHCHARTS_FORCE_FETCH`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `HIGHCHARTS_CACHE_PATH`: A directory path where the fetched Highcharts scripts should be placed (defaults to `.cache`). Since v5.1.0 can be either absolute or relative path.
 - `HIGHCHARTS_ADMIN_TOKEN`: An authentication token that is required to switch the Highcharts version on the server at runtime (defaults to ``).
@@ -486,6 +488,7 @@ _Available CLI arguments:_
 
 - `--version`: Highcharts version to use (defaults to `latest`).
 - `--cdnUrl`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com`).
+- `--useNpm`: The flag that determines whether to use Highcharts scripts from CDN or NPM package (defaults to `false`).
 - `--forceFetch`: The flag that determines whether to refetch all scripts after each server rerun (defaults to `false`).
 - `--cachePath`: A directory path where the fetched Highcharts scripts should be placed (defaults to `.cache`). Since v4.0.3 can be either absolute or relative path.
 - `--coreScripts`: Highcharts core scripts to fetch (defaults to [Default JSON Config](#default-json-config)).
@@ -685,6 +688,10 @@ curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change_hc_version/10.3.3
 
 This is useful to e.g. upgrade to the latest HC version without downtime.
 
+IMPORTANT NOTE:
+
+This is not possible when using the Highcharts dependency package directly (by setting the `useNpm` true).
+
 # Node.js Module
 
 Finally, the Export Server can also be used as a Node.js module to simplify integrations:
@@ -879,6 +886,10 @@ Samples and tests for every mentioned export method can be found in the `./sampl
 ## Note About Version And Help Information
 
 Typing `highcharts-export-server --v` will display information about the current version of the Export Server, and `highcharts-export-server --h` will display information about available CLI options.
+
+## Note About Highcharts Version
+
+When `useNpm` is set to **true**, Highcharts uses the version specified in `package.json`. The `version` option or switching the Highcharts version on the server at runtime will have no effect. To change the version of local Highcharts scripts, update `package.json` directly.
 
 ## Note About Paths
 

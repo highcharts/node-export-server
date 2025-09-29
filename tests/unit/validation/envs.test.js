@@ -49,6 +49,9 @@ describe('HIGHCHARTS environment variables should be correctly parsed and valida
     ['http:a.com', 'http:/b.com', 'https:c.com', 'https:/d.com']
   );
 
+  // HIGHCHARTS_USE_NPM
+  tests.highchartsUseNpm('HIGHCHARTS_USE_NPM');
+
   // HIGHCHARTS_FORCE_FETCH
   tests.highchartsForceFetch('HIGHCHARTS_FORCE_FETCH');
 
