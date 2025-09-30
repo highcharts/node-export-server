@@ -46,7 +46,7 @@
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dompurify": "^3.2.7",
-    "dotenv": "^17.2.2",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "highcharts": "^12.4.0",

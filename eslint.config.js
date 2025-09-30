@@ -28,9 +28,12 @@ const baseLanguageOptions = {
 const baseSettings = {
   'import/resolver': {
     node: {
-      extensions: ['.js', 'cjs', 'mjs', '.json']
+      extensions: ['.js', '.cjs', '.mjs', '.json']
     }
-  }
+  },
+
+  // Prevent eslint-plugin-import from traversing ignored dirs
+  'import/ignore': ['node_modules', 'dist', '.cache', 'tmp']
 };
 
 // Base ESLint plugins configuration
@@ -50,13 +53,19 @@ const baseExtends = fixupConfigRules(
 
 // Base ESLint rules configuration
 const baseRules = {
-  'import/no-cycle': 'error'
+  'import/no-cycle': 'error',
+  'import/no-unresolved': [
+    'error',
+    {
+      ignore: ['uuid']
+    }
+  ]
 };
 
 // Function to add ESLint configuration
 export default defineConfig([
   // Ignore
-  globalIgnores(['**/node_modules/', '**/dist/']),
+  globalIgnores(['**/node_modules', '**/dist', '**/.cache', '**/tmp']),
 
   // JS Linting
   {
