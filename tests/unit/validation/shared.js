@@ -1063,6 +1063,10 @@ export function configTests(schema, strictCheck) {
         expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
         obj[property] = '{ a: "1", b: { c: 3 } }';
         expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
+        obj[property] = '{ a: function () {}, b: { c: () => {} } }';
+        expect(schema.parse(obj)[property]).toBe(
+          '{ a: function () {}, b: { c: () => {} } }'
+        );
       });
 
       it('should not accept any array values', () => {
@@ -1138,6 +1142,10 @@ export function configTests(schema, strictCheck) {
         expect(schema.parse(obj)[property]).toBe('{ a: 1 }');
         obj[property] = '{ a: "1", b: { c: 3 } }';
         expect(schema.parse(obj)[property]).toBe('{ a: "1", b: { c: 3 } }');
+        obj[property] = '{ a: function () {}, b: { c: () => {} } }';
+        expect(schema.parse(obj)[property]).toBe(
+          '{ a: function () {}, b: { c: () => {} } }'
+        );
       });
 
       it('should accept string values that end with .json', () => {
@@ -2299,10 +2307,10 @@ export function configTests(schema, strictCheck) {
       describe(property, () => validationTests.infile(property));
     },
     exportInstr: (property) => {
-      describe(property, () => validationTests.chartConfig(property, false));
+      describe(property, () => validationTests.chartConfig(property));
     },
     exportOptions: (property) => {
-      describe(property, () => validationTests.chartConfig(property, false));
+      describe(property, () => validationTests.chartConfig(property));
     },
     exportSvg: (property) => {
       describe(property, () => validationTests.svg(property));
