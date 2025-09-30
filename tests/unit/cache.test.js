@@ -13,8 +13,8 @@ describe('extractVersion', () => {
 describe('extractModuleName', () => {
   it('should extract the module name from a given script path', () => {
     const paths = [
-      { input: 'modules/exporting', expected: 'exporting' },
-      { input: 'maps/modules/map', expected: 'map' }
+      { input: 'modules/exporting.js', expected: 'exporting' },
+      { input: 'maps/modules/map.js', expected: 'map' }
     ];
 
     paths.forEach(({ input, expected }) => {
