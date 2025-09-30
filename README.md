@@ -567,7 +567,7 @@ This is useful to e.g. upgrade to the latest HC version without downtime.
 
 IMPORTANT NOTE:
 
-This is not possible when using the Highcharts dependency package directly (by setting the `useNpm` true).
+This is not possible when using the Highcharts dependency package directly (by setting the `useNpm` to **true**).
 
 # Node.js Module
 
