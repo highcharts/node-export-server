@@ -10,7 +10,6 @@ _Breaking Changes:_
 _New Features:_
 
 - Added a toggleable type validation for all options coming from various sources (environment variables, custom JSON, CLI arguments), providing a rich set of validators with both strict and loose validation. Replaced the `envs.js` module with an expanded validation logic module, `validation.js`.
-- Added the `useNpm` option to load Highcharts scripts from the NPM package instead of the CDN.
 - Added the `validateOption` function for validating a single option. It is used in the code to validate individual options (`svg`, `instr`, `resources`, `customCode`, `callback`, `globalOptions`, and `themeOptions`) loaded from a file.
 - Added the `validateOptions` function for validating the full set of options. It is used in the code to validate options coming from functions that update global options, CLI arguments, configurations loaded via `--loadConfig`, and configurations created using the prompts functionality.
 - Introduced redefined `getOptions` and `updateOptions` functions to retrieve and update the original global options or a copy of global options, allowing flexibility in export scenarios.
@@ -158,6 +157,12 @@ _Fixes:_
 - Corrected the `createConfig` and `loadConfig` options to allow usage with or without the `.json` extension.
 - Fixed the `uiEnabled` by enabling its usage in `ui.js` router.
 - Fixed issues with relative paths when used as a Node.js module.
+
+# 5.1.0
+
+_New Features:_
+
+- Added the `useNpm` option to load Highcharts scripts from the NPM package instead of the CDN.
 
 # 5.0.0
 
