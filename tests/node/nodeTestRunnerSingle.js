@@ -12,13 +12,14 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { basename, join } from 'path';
 
 import 'colors';
 
 import exporter, { initExport } from '../../lib/index.js';
-import { __dirname, getNewDateTime } from '../../lib/utils.js';
+import { createDir, getNewDateTime } from '../../lib/utils.js';
+import { __testsDir } from '../utils/testUtils.js';
 
 console.log(
   'Highcharts Export Server Node Test Runner'.yellow.bold.underline,
@@ -32,10 +33,10 @@ console.log(
 (async () => {
   try {
     // Results and scenarios paths
-    const resultsPath = join(__dirname, 'tests', 'node', '_results');
+    const resultsPath = join(__testsDir, 'node', '_results');
 
     // Create results folder for HTTP exports if doesn't exist
-    !existsSync(resultsPath) && mkdirSync(resultsPath);
+    createDir(resultsPath);
 
     // Get the file's name
     const file = process.argv[2];

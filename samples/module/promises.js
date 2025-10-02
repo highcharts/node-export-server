@@ -13,8 +13,10 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 import exporter, { initExport } from '../../lib/index.js';
+import { __projDir } from '../../lib/utils.js';
 
 const exportCharts = async (charts, initOptions) => {
   // Init the pool
@@ -98,7 +100,7 @@ exportCharts(
     charts.forEach((chart, index) => {
       // Save the base64 from a buffer to a correct image file
       writeFileSync(
-        `./samples/module/promise${index + 1}.jpeg`,
+        join(__projDir, `./samples/module/promise${index + 1}.jpeg`),
         Buffer.from(chart, 'base64')
       );
     });

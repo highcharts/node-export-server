@@ -11,8 +11,10 @@ Additionally a valid Highcharts license is required for use.
 See LICENSE file in root for details.
 
 *******************************************************************************/
+import { join } from 'path';
 
 import exporter, { initExport } from '../../lib/index.js';
+import { __projDir } from '../../lib/utils.js';
 
 // Old options structure (PhantomJS)
 const oldOptions = {
@@ -50,21 +52,21 @@ const oldOptions = {
       }
     ]
   },
-  outfile: './samples/module/optionsPhantom.png',
+  outfile: join(__projDir, './samples/module/optionsPhantom.png'),
   type: 'png',
   constr: 'chart',
   width: 1000,
   scale: 1,
-  globalOptions: './samples/resources/optionsGlobal.json',
+  globalOptions: join(__projDir, './samples/resources/optionsGlobal.json'),
   allowFileResources: true,
-  callback: './samples/resources/callback.js',
-  resources: './samples/resources/resources.json',
-  fromFile: './samples/resources/customOptions.json',
+  callback: join(__projDir, './samples/resources/callback.js'),
+  resources: join(__projDir, './samples/resources/resources.json'),
+  fromFile: join(__projDir, './samples/resources/customOptions.json'),
   workers: 1,
   workLimit: 5,
   logLevel: 4,
   logFile: 'phantom.log',
-  logDest: './samples/module/log',
+  logDest: join(__projDir, './samples/module/log'),
   logToFile: false
 };
 

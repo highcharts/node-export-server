@@ -20,7 +20,14 @@ See LICENSE file in root for details.
  * against allowed and disallowed types.
  */
 
+import { resolve } from 'path';
+
 import { expect } from '@jest/globals';
+
+import { __projDir } from '../../lib/utils';
+
+// The /tests directory path
+export const __testsDir = resolve(__projDir, 'tests');
 
 /**
  * A collection of possible values for various data types used in Jest tests,

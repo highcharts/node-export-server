@@ -14,18 +14,18 @@ See LICENSE file in root for details.
 
 import { get } from '../../lib/fetch.js';
 import { exec as spawn } from 'child_process';
-import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 import 'colors';
 
-import { __dirname, getNewDateTime } from '../../lib/utils.js';
+import { createDir, getNewDateTime } from '../../lib/utils.js';
+import { __testsDir } from '../utils/testUtils.js';
 
 // Results paths
-const resultsPath = join(__dirname, 'tests', 'other', '_results');
+const resultsPath = join(__testsDir, 'other', '_results');
 
 // Create results folder for CLI exports if doesn't exist
-!existsSync(resultsPath) && mkdirSync(resultsPath);
+createDir(resultsPath);
 
 // Urls of Puppeteer and PhantomJS Export Servers
 const urls = ['http://127.0.0.1:7801', 'http://127.0.0.1:7802'];

@@ -143,7 +143,7 @@ _Available default JSON config:_
 {
   "puppeteer": {
     "args": [/* See the `./lib/schemas/config.js` file */],
-    "tempDir": "./tmp/"
+    "tempDir": "tmp"
   },
   "highcharts": {
     "version": "latest",
@@ -705,7 +705,7 @@ Finally, the Export Server can also be used as a Node.js module to simplify inte
 const exporter = require('highcharts-export-server');
 
 // Options correspond to the available CLI/HTTP arguments described above
-const customOptions = {
+const options = {
   export: {
     type: 'png',
     options: {

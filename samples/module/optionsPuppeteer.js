@@ -11,8 +11,10 @@ Additionally a valid Highcharts license is required for use.
 See LICENSE file in root for details.
 
 *******************************************************************************/
+import { join } from 'path';
 
 import exporter, { initExport } from '../../lib/index.js';
+import { __projDir } from '../../lib/utils.js';
 
 // New options structure (Puppeteer)
 const newOptions = {
@@ -64,7 +66,7 @@ const newOptions = {
         }
       ]
     },
-    outfile: './samples/module/optionsPuppeteer.jpeg',
+    outfile: join(__projDir, './samples/module/optionsPuppeteer.jpeg'),
     type: 'jpeg',
     constr: 'chart',
     height: 800,
@@ -120,8 +122,8 @@ const newOptions = {
   customLogic: {
     allowCodeExecution: true,
     allowFileResources: true,
-    customCode: './samples/resources/customCode.js',
-    callback: './samples/resources/callback.js',
+    customCode: join(__projDir, './samples/resources/customCode.js'),
+    callback: join(__projDir, './samples/resources/callback.js'),
     resources: {
       js: "Highcharts.charts[0].update({xAxis: {title: {text: 'Resources axis title'}}});",
       css: '.highcharts-yaxis .highcharts-axis-line { stroke-width: 2px; } .highcharts-color-0 { fill: #f7a35c; stroke: #f7a35c; }'

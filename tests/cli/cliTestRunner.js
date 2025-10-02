@@ -13,13 +13,14 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { exec } from 'child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
 import 'colors';
 
-import { __dirname, getNewDateTime } from '../../lib/utils.js';
+import { createDir, getNewDateTime } from '../../lib/utils.js';
+import { __testsDir } from '../utils/testUtils.js';
 
 // Convert from callback to promise
 const spawn = promisify(exec);
@@ -35,11 +36,11 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, 'tests', 'cli', '_results');
-const scenariosPath = join(__dirname, 'tests', 'cli', 'scenarios');
+const resultsPath = join(__testsDir, 'cli', '_results');
+const scenariosPath = join(__testsDir, 'cli', 'scenarios');
 
 // Create results folder for CLI exports if doesn't exist
-!existsSync(resultsPath) && mkdirSync(resultsPath);
+createDir(resultsPath);
 
 // Get files names
 const files = readdirSync(scenariosPath);

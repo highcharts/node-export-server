@@ -13,12 +13,13 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { exec as spawn } from 'child_process';
-import { existsSync, mkdirSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { basename, join } from 'path';
 
 import 'colors';
 
-import { __dirname, getNewDateTime } from '../../lib/utils.js';
+import { createDir, getNewDateTime } from '../../lib/utils.js';
+import { __testsDir } from '../utils/testUtils.js';
 
 // Test runner message
 console.log(
@@ -29,10 +30,10 @@ console.log(
 );
 
 // Results and scenarios paths
-const resultsPath = join(__dirname, 'tests', 'cli', '_results');
+const resultsPath = join(__testsDir, 'cli', '_results');
 
 // Create results folder for CLI exports if doesn't exist
-!existsSync(resultsPath) && mkdirSync(resultsPath);
+createDir(resultsPath);
 
 // Get the file's name
 const file = process.argv[2];

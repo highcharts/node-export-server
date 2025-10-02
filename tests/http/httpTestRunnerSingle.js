@@ -12,14 +12,15 @@ See LICENSE file in root for details.
 
 *******************************************************************************/
 
-import { createWriteStream, existsSync, mkdirSync, readFileSync } from 'fs';
+import { createWriteStream, existsSync, readFileSync } from 'fs';
 import http from 'http';
 import { basename, join } from 'path';
 
 import 'colors';
 
 import { get } from '../../lib/fetch.js';
-import { __dirname, clearText, getNewDateTime } from '../../lib/utils.js';
+import { clearText, createDir, getNewDateTime } from '../../lib/utils.js';
+import { __testsDir } from '../utils/testUtils.js';
 
 // Test runner message
 console.log(
@@ -37,10 +38,10 @@ const url = 'http://127.0.0.1:7801';
 get(`${url}/health`)
   .then(() => {
     // Results path
-    const resultsPath = join(__dirname, 'tests', 'http', '_results');
+    const resultsPath = join(__testsDir, 'http', '_results');
 
     // Create results folder for HTTP exports if it doesn't exist
-    !existsSync(resultsPath) && mkdirSync(resultsPath);
+    createDir(resultsPath);
 
     // Get the file's name
     const file = process.argv[2];
