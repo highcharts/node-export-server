@@ -76,6 +76,6 @@
     "lint-staged": "^16.2.3",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
-    "rollup": "^4.52.3"
+    "rollup": "^4.52.4"
   }
 }
