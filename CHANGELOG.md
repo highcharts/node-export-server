@@ -1,3 +1,9 @@
+# 5.1.0
+
+_New Features:_
+
+- Added the `useNpm` option to load Highcharts scripts from the NPM package instead of the CDN.
+
 # 5.0.0
 
 _Breaking Changes:_

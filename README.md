@@ -114,6 +114,7 @@ The format, along with its default values, is as follows (using the recommended 
   "highcharts": {
     "version": "latest",
     "cdnURL": "https://code.highcharts.com/",
+    "useNpm": false,
     "coreScripts": [
       "highcharts",
       "highcharts-more",
@@ -307,6 +308,7 @@ These variables are set in your environment and take precedence over options fro
 
 - `HIGHCHARTS_VERSION`: Highcharts version to use (defaults to `latest`).
 - `HIGHCHARTS_CDN_URL`: Highcharts CDN URL of scripts to be used (defaults to `https://code.highcharts.com/`).
+- `HIGHCHARTS_USE_NPM`: The flag that determines whether to use Highcharts scripts from CDN or NPM package (defaults to `false`).
 - `HIGHCHARTS_CORE_SCRIPTS`: Highcharts core scripts to fetch (defaults to ``).
 - `HIGHCHARTS_MODULE_SCRIPTS`: Highcharts module scripts to fetch (defaults to ``).
 - `HIGHCHARTS_INDICATOR_SCRIPTS`: Highcharts indicator scripts to fetch (defaults to ``).
@@ -412,6 +414,7 @@ To supply command line arguments, add them as flags when running the application
 
 _Available options:_
 
+- `--useNpm`: The flag that determines whether to use Highcharts scripts from CDN or NPM package (defaults to `false`).
 - `--infile`: The input file should include a name and a type (**.json** or **.svg**) and must be a correctly formatted JSON or SVG file (defaults to `false`).
 - `--instr`: An input in a form of a stringified JSON or SVG file. Overrides the `--infile` option (defaults to `false`).
 - `--options`: An alias for the `--instr` option (defaults to `false`).
@@ -562,6 +565,10 @@ curl -H 'hc-auth: 12345' -X POST 127.0.0.1:7801/change_hc_version/10.3.3
 
 This is useful to e.g. upgrade to the latest HC version without downtime.
 
+IMPORTANT NOTE:
+
+This is not possible when using the Highcharts dependency package directly (by setting the `useNpm` to **true**).
+
 # Node.js Module
 
 Finally, the Export Server can also be used as a Node.js module to simplify integrations:
@@ -708,6 +715,10 @@ This package supports both CommonJS and ES modules.
 Samples and tests for every mentioned export method can be found in the `./samples` and `./tests` folders. Detailed descriptions are available in their corresponding sections on the [Wiki](https://github.com/highcharts/node-export-server/wiki).
 
 # Tips, Tricks & Notes
+
+## Note About Highcharts Version
+
+When `useNpm` is set to **true**, Highcharts uses the version specified in `package.json`. The `version` option or switching the Highcharts version on the server at runtime will have no effect. To change the version of local Highcharts scripts, update `package.json` directly.
 
 ## Note about Deprecated Options
 
