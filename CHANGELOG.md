@@ -168,7 +168,7 @@ _New Features:_
 
 _Breaking Changes:_
 
-- Removed `xlink:href` from incoming SVGs in preperation for an upcoming Puppeteer update that will remove this option.
+- Removed `xlink:href` from incoming SVGs in preperation for an upcoming Puppeteer update that will remove this option. To allow this attribute, set `OTHER_ALLOW_XLINK_HREF` to `true`.
 - Changed the upload file size limit to 3MB, and exposed settings for configuring it (`SERVER_MAX_UPLOAD_SIZE`/`--maxUploadSize`/`maxUploadSize`). The rational behind this change is that in testing that seems like the most balanced limit along with other default values for pool sizing, timeouts and such to avoid attempting to process requests that would likely end up timing out due to its size.
 
 _Fixes:_
