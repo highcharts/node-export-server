@@ -3,7 +3,7 @@
 
 Highcharts Export Server
 
-Copyright (c) 2016-2025, Highsoft
+Copyright (c) 2016-2026, Highsoft
 
 Licenced under the MIT licence.
 
