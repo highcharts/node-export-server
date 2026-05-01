@@ -7,35 +7,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '18.x.x'
+          node-version: '22.13.0'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run ESLint
         id: eslint
-        continue-on-error: true
-        run: |
-          ESLINT_OUTPUT=$(npx eslint . --ext .js,.jsx,.ts,.tsx)
-          echo "::set-output name=result::$ESLINT_OUTPUT"
-          if [ -z "$ESLINT_OUTPUT" ]; then
-            echo "ESLint found no issues :white_check_mark:"
-            echo "::set-output name=status::success"
-          else
-            echo "$ESLINT_OUTPUT"
-            echo "::set-output name=status::failure"
-            exit 1
-          fi
+        run: npx eslint .
 
       - name: Success Message
-        if: steps.eslint.outputs.status == 'success'
-        run: echo "✅ ESLint check passed successfully!"
+        if: success()
+        run: echo "ESLint check passed successfully."
 
       - name: Failure Message
         if: failure()
-        run: echo "❌ ESLint check failed. Please fix the issues."
+        run: echo "ESLint check failed. Please fix the issues."

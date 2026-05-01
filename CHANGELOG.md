@@ -1,3 +1,24 @@
+# 6.0.0
+
+_Breaking Changes:_
+
+- Dropped support for Node.js 18, Node.js 20, and early Node.js 22 releases. Supported runtimes are now Node.js 22.13.0 or newer on the 22.x line, and Node.js 24.x.
+
+_Dependency Updates:_
+
+- Updated `multer` to the current 2.x release line and `uuid` to the current 14.x release line.
+- Updated direct production dependencies including `dotenv`, `express`, `express-rate-limit`, `https-proxy-agent`, `puppeteer`, and `zod` to their current major release lines.
+- Updated direct development tooling including ESLint, Jest, and lint-staged to their current major release lines.
+- Kept `jsdom` on the latest 24.x release because the current 29.x line introduces ESM-only transitive modules that are not compatible with the existing Jest runtime setup.
+- Refreshed compatible production and development dependency ranges and lockfile resolutions so `npm audit` reports no known vulnerabilities.
+
+_Maintenance:_
+
+- Updated GitHub Actions to current action versions.
+- Migrated ESLint configuration to the flat config format required by current ESLint releases.
+- Added unit-test CI coverage for the minimum supported Node.js versions.
+- Regenerated distribution bundles under the minimum supported Node.js version.
+
 # 5.1.0
 
 _New Features:_
