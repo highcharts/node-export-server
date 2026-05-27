@@ -16,4 +16,4 @@ jobs:
       folder_name: .
       image_name: ${{ github.repository }}
       platforms: linux/amd64
-      deploy_branch: feat/docker
+      deploy_branch: master
