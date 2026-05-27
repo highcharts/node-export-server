@@ -1,0 +1,6 @@
+services:
+  export-server:
+    build: .
+    ports:
+      - "7801:7801"
+    restart: unless-stopped
