@@ -1,0 +1,65 @@
+{
+  "pool": {
+    "minWorkers": 1,
+    "maxWorkers": 1
+  },
+  "other": {
+    "browserShellMode": false
+  },
+  "logging": {
+    "toFile": false,
+    "toConsole": true
+  },
+  "puppeteer": {
+    "args": [
+      "--allow-running-insecure-content",
+      "--ash-no-nudges",
+      "--autoplay-policy=user-gesture-required",
+      "--block-new-web-contents",
+      "--disable-accelerated-2d-canvas",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-breakpad",
+      "--disable-checker-imaging",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-domain-reliability",
+      "--disable-extensions",
+      "--disable-features=CalculateNativeWinOcclusion,InterestFeedContentSuggestions,WebOTP",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-logging",
+      "--disable-notifications",
+      "--disable-offer-store-unmasked-wallet-cards",
+      "--disable-popup-blocking",
+      "--disable-print-preview",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--disable-search-engine-choice-screen",
+      "--disable-session-crashed-bubble",
+      "--disable-setuid-sandbox",
+      "--disable-site-isolation-trials",
+      "--disable-speech-api",
+      "--disable-sync",
+      "--enable-unsafe-webgpu",
+      "--hide-crash-restore-bubble",
+      "--hide-scrollbars",
+      "--metrics-recording-only",
+      "--mute-audio",
+      "--no-default-browser-check",
+      "--no-first-run",
+      "--no-pings",
+      "--pipe",
+      "--no-startup-window",
+      "--password-store=basic",
+      "--process-per-tab",
+      "--use-mock-keychain",
+      "--no-sandbox",
+      "--no-zygote"
+    ]
+  }
+}

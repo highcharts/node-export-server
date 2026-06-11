@@ -1,0 +1,116 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: "The version number"
+        default: "1.0.0"
+        required: false
+        type: string
+      registry:
+        description: "The Docker Registry"
+        default: "ghcr.io"
+        required: false
+        type: string
+      image_name:
+        description: "The Docker image name"
+        default: ${{ github.repository }}
+        required: false
+        type: string
+      folder_name:
+        description: "The folder where the Dockerfile is located"
+        default: .
+        required: false
+        type: string
+      user_name:
+        description: "The name of the user to login to the registry"
+        default: ${{ github.actor }}
+        required: false
+        type: string
+      run_number:
+        description: "The workflow run number"
+        default: ${{ github.run_number }}
+        required: false
+        type: string
+      environment:
+        description: "The GitHub environment to use (for environment-specific secrets/variables)"
+        required: false
+        type: string
+      platforms:
+        description: "The platforms to build for"
+        required: false
+        type: string
+        default: linux/amd64,linux/arm64
+
+    outputs:
+      build_image:
+        description: "The build image"
+        value: ${{ jobs.build.outputs.build_image }}
+      build_image_tag:
+        description: "The build image tag"
+        value: ${{ jobs.build.outputs.build_image_tag }}
+      version:
+        description: "The new version number"
+        value: ${{ jobs.build.outputs.version }}
+
+jobs:
+  build:
+    name: ${{ inputs.environment && format('Build {0} Image', inputs.environment) || 'Build Image' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+
+    outputs:
+      build_image: ${{ steps.output.outputs.build_image }}
+      build_image_tag: ${{ steps.output.outputs.build_image_tag }}
+      version: ${{ steps.output.outputs.version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ inputs.user_name }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ inputs.registry }}/${{ inputs.image_name }}
+
+      - name: Build and publish image
+        id: push
+        uses: docker/build-push-action@v7.0.0
+        with:
+          context: ${{ inputs.folder_name }}
+          push: true
+          tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.version }}${{ inputs.environment && format('-{0}', inputs.environment) || '' }}-build.${{ inputs.run_number }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ inputs.platforms }}
+
+      - name: Store outputs
+        id: output
+        run: |
+          echo "build_image=${{ inputs.registry }}/${{ inputs.image_name }}" >> "$GITHUB_OUTPUT"
+          echo "build_image_tag=${{ inputs.version }}${{ inputs.environment && format('-{0}', inputs.environment) || '' }}-build.${{ inputs.run_number }}" >> "$GITHUB_OUTPUT"
+          echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate summary
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY;
+          echo "Build Image: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.version }}${{ inputs.environment && format('-{0}', inputs.environment) || '' }}-build.${{ inputs.run_number }}" >> $GITHUB_STEP_SUMMARY;
