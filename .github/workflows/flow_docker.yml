@@ -53,7 +53,6 @@ jobs:
           echo "## Version" >> $GITHUB_STEP_SUMMARY
           echo "$VERSION" >> $GITHUB_STEP_SUMMARY
 
-  # Single build (default)
   build:
     name: Build Image
     uses: ./.github/workflows/docker_build.yml
@@ -69,55 +68,6 @@ jobs:
       user_name: ${{ github.actor }}
       platforms: ${{ inputs.platforms }}
 
-  # Per-environment builds
-  build-dev:
-    name: Build Development Image
-    uses: ./.github/workflows/docker_build.yml
-    if: ${{ inputs.use_image_per_environment }}
-    secrets: inherit
-    needs: version
-    with:
-      registry: ${{ inputs.registry }}
-      image_name: ${{ inputs.image_name }}
-      folder_name: ${{ inputs.folder_name }}
-      version: ${{ needs.version.outputs.version }}
-      run_number: ${{ github.run_number }}
-      user_name: ${{ github.actor }}
-      platforms: ${{ inputs.platforms }}
-      environment: development
-
-  build-staging:
-    name: Build Staging Image
-    uses: ./.github/workflows/docker_build.yml
-    if: ${{ inputs.use_image_per_environment }}
-    secrets: inherit
-    needs: version
-    with:
-      registry: ${{ inputs.registry }}
-      image_name: ${{ inputs.image_name }}
-      folder_name: ${{ inputs.folder_name }}
-      version: ${{ needs.version.outputs.version }}
-      run_number: ${{ github.run_number }}
-      user_name: ${{ github.actor }}
-      platforms: ${{ inputs.platforms }}
-      environment: staging
-
-  build-prod:
-    name: Build Production Image
-    uses: ./.github/workflows/docker_build.yml
-    if: ${{ inputs.use_image_per_environment }}
-    secrets: inherit
-    needs: version
-    with:
-      registry: ${{ inputs.registry }}
-      image_name: ${{ inputs.image_name }}
-      folder_name: ${{ inputs.folder_name }}
-      version: ${{ needs.version.outputs.version }}
-      run_number: ${{ github.run_number }}
-      user_name: ${{ github.actor }}
-      platforms: ${{ inputs.platforms }}
-      environment: production
-
   # Deploy to Development
   deploy-dev:
     name: Deploy Development Image
@@ -127,13 +77,12 @@ jobs:
     needs:
       - version
       - build
-      - build-dev
     with:
       version: ${{ needs.version.outputs.version }}
       registry: ${{ inputs.registry }}
       image_name: ${{ inputs.image_name }}
-      build_image: ${{ needs.build.outputs.build_image || needs.build-dev.outputs.build_image }}
-      build_image_tag: ${{ needs.build-dev.outputs.build_image_tag || needs.build.outputs.build_image_tag }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
       deploy_tag: ${{ needs.version.outputs.version }}-dev
       platforms: ${{ inputs.platforms }}
       environment: development
@@ -147,13 +96,12 @@ jobs:
     needs:
       - version
       - build
-      - build-staging
     with:
       version: ${{ needs.version.outputs.version }}
       registry: ${{ inputs.registry }}
       image_name: ${{ inputs.image_name }}
-      build_image: ${{ needs.build.outputs.build_image || needs.build-staging.outputs.build_image }}
-      build_image_tag: ${{ needs.build-staging.outputs.build_image_tag || needs.build.outputs.build_image_tag }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
       deploy_tag: ${{ needs.version.outputs.version }}-staging
       environment: staging
       platforms: ${{ inputs.platforms }}
@@ -167,13 +115,12 @@ jobs:
     needs:
       - version
       - build
-      - build-prod
     with:
       version: ${{ needs.version.outputs.version }}
       registry: ${{ inputs.registry }}
       image_name: ${{ inputs.image_name }}
-      build_image: ${{ needs.build.outputs.build_image || needs.build-prod.outputs.build_image }}
-      build_image_tag: ${{ needs.build-prod.outputs.build_image_tag || needs.build.outputs.build_image_tag }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
       deploy_tag: ${{ needs.version.outputs.version }}
       environment: production
       platforms: ${{ inputs.platforms }}
