@@ -17,3 +17,4 @@ jobs:
       image_name: ${{ github.repository }}
       use_image_per_environment: false
       platforms: linux/amd64
+      deploy_branch: feat/docker
