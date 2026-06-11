@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   flow:
     name: Highsoft Flow
-    uses: highsoft-corp/hs-platform-workflows/.github/workflows/flow_docker.yml@feat/multi-env-builds
+    uses: ./.github/workflows/flow_docker.yml
     secrets: inherit
     with:
       registry: ghcr.io
