@@ -15,6 +15,5 @@ jobs:
       registry: ghcr.io
       folder_name: .
       image_name: ${{ github.repository }}
-      use_image_per_environment: false
-      platforms: linux/amd64,linux/arm64
+      platforms: linux/amd64
       deploy_branch: feat/docker
