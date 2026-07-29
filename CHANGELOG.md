@@ -1,5 +1,9 @@
 # 6.0.0
 
+_Breaking Changes:_
+
+- Exports now queue only up to a bounded limit, and requests arriving beyond it are refused instead of being queued. Previously the queue was unbounded, so a saturated server accepted far more work than it could complete, held each waiting request's parsed body in memory, and then failed a large share of them once they exceeded the acquire timeout. With default pool settings the limit is 32, and refusals are now returned in about half a second rather than after a five second wait. See `queueLimit` and `queueRejectDelay` below for tuning.
+
 _Fixes:_
 
 - Fixed an issue where the server never recovered if the browser process died, for example when killed by an out of memory reaper. The browser was launched once at startup and the guard preventing a second launch could never be cleared, so every export from that point failed while the pool continued to report healthy workers. The browser is now relaunched when it is found to be missing, and the workers holding pages from the dead browser are recognised as stale and replaced. This is detected by tracking which browser a worker was created against, because a page belonging to a browser that no longer exists still reports itself as open and so cannot be asked whether it is usable.
@@ -8,6 +12,8 @@ _Fixes:_
 
 _New Features:_
 
+- Added the `POOL_QUEUE_LIMIT`/`--queueLimit`/`queueLimit` option, capping how many exports may wait for a worker, and defaulting to four times `maxWorkers`. Requests arriving beyond the limit are refused before their body is parsed, so a refused request costs almost nothing. The rationale is that export throughput does not improve past the pool size, so queueing beyond it adds latency and memory use without adding capacity. Raise it to accept deeper queues at the cost of higher latency under load.
+- Added the `POOL_QUEUE_REJECT_DELAY`/`--queueRejectDelay`/`queueRejectDelay` option, defaulting to 500 milliseconds, which is how long the server waits before answering a request it is refusing for capacity. This is deliberate backpressure. Answering instantly lets clients that retry immediately raise the request rate by orders of magnitude, at which point the server spends its whole event loop refusing requests and starves the exports already in progress. The acquire timeout used to provide this throttling as a side effect of making clients wait; bounding the queue removes that, so the delay restores it explicitly and far more cheaply, holding only a socket rather than a parsed body and a queue slot. Set it to 0 to answer immediately, which is only advisable when something upstream is limiting the request rate.
 - Added an `errorCode` property to error responses, so that a request refused because the server was busy can be told apart from one refused because it was malformed. Both are reported with the same status code, which previously left the message text as the only way to distinguish them. The codes are `EXPORT_INVALID_REQUEST`, `EXPORT_QUEUE_FULL`, `EXPORT_ACQUIRE_TIMEOUT`, `EXPORT_RASTERIZATION_TIMEOUT` and `EXPORT_FAILED`, and may be relied upon by callers. Status codes and the rest of the response body are unchanged, and the property is absent on errors that carry no code.
 
 # 5.1.0

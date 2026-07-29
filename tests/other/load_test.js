@@ -86,7 +86,10 @@ const config = {
     ? parseInt(args['client-timeout'], 10)
     : 0,
   abortAfter: args['abort-after'] ? parseInt(args['abort-after'], 10) : 0,
-  json: typeof args.json === 'string' ? args.json : null
+  json: typeof args.json === 'string' ? args.json : null,
+  // Assertions, so this can be used as a gate rather than only for reading
+  minGoodput: args['min-goodput'] ? parseFloat(args['min-goodput']) : 0,
+  maxQueue: args['max-queue'] ? parseInt(args['max-queue'], 10) : 0
 };
 
 const target = new URL(config.url);
@@ -457,6 +460,39 @@ async function run() {
 
   // Leave the process free to exit
   agent.destroy();
+
+  // Assertions. Goodput is what matters under overload: the number of exports
+  // actually completed per second, as distinct from the request rate, which a
+  // server refusing everything instantly can make arbitrarily high.
+  const goodput = report.ok / elapsed;
+  const failures = [];
+
+  if (config.minGoodput && goodput < config.minGoodput) {
+    failures.push(
+      `goodput was ${goodput.toFixed(2)} exports/s, expected at least ${config.minGoodput}`
+    );
+  }
+
+  if (config.maxQueue && maxPending > config.maxQueue) {
+    failures.push(
+      `peak queue reached ${maxPending}, expected at most ${config.maxQueue}`
+    );
+  }
+
+  if (config.minGoodput || config.maxQueue) {
+    console.log('');
+    console.log(`  goodput       : ${goodput.toFixed(2)} exports/s`);
+
+    if (failures.length) {
+      console.log('[FAIL]'.red.bold);
+      for (const failure of failures) {
+        console.log(`  ${failure}`.red);
+      }
+      process.exit(1);
+    }
+
+    console.log('[PASS] assertions met'.green.bold);
+  }
 }
 
 run().catch((error) => {
