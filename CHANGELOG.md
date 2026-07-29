@@ -3,6 +3,7 @@
 _Fixes:_
 
 - Ensured that a worker's page has finished being cleared before the worker is handed to the next export. The clearing was previously started when the worker was released but never awaited, so it overlapped the following export whenever one was already waiting for a worker. A page that cannot be cleared now recycles its worker instead of being exported onto.
+- Fixed a resource leak where a browser page was left open if configuring it failed, for example when injecting the Highcharts scripts did not succeed. As the pool retries worker creation on an interval, a sustained failure leaked a browser page on every attempt until the browser ran out of memory.
 
 # 5.1.0
 
