@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Changed how long idle keep-alive connections are held open, from the Node default of 5 seconds to 65 seconds. Measured, the server was closing idle connections after about 6 seconds while a proxy or load balancer in front of it typically holds them for 60, and the side with the shorter timeout closing first is what produces sporadic gateway errors: the proxy does not know the connection has gone and sends a request into it. Configurable, see `keepAliveTimeout` below.
 - Exports now queue only up to a bounded limit, and requests arriving beyond it are refused instead of being queued. Previously the queue was unbounded, so a saturated server accepted far more work than it could complete, held each waiting request's parsed body in memory, and then failed a large share of them once they exceeded the acquire timeout. With default pool settings the limit is 32, and refusals are now returned in about half a second rather than after a five second wait. See `queueLimit` and `queueRejectDelay` below for tuning.
 
 _Fixes:_
@@ -24,6 +25,7 @@ _New Features:_
 - Added `browserConnected` and `consecutiveCreateFailures` to the `/health` response, reporting whether a browser is currently available and how many worker creations have failed in a row. Between them these distinguish a server that has lost its browser from one that has a browser but cannot make pages with it, which previously looked the same from outside. Existing properties are unchanged.
 - Added `abandonedExports` and `rejectedForCapacity` counters to the `/health` response, reporting exports discarded because their client disconnected and requests refused because the queue was full. Both were previously indistinguishable from ordinary failures. Existing properties are unchanged.
 - Added an `errorCode` property to error responses, so that a request refused because the server was busy can be told apart from one refused because it was malformed. Both are reported with the same status code, which previously left the message text as the only way to distinguish them. The codes are `EXPORT_INVALID_REQUEST`, `EXPORT_QUEUE_FULL`, `EXPORT_ACQUIRE_TIMEOUT`, `EXPORT_RASTERIZATION_TIMEOUT` and `EXPORT_FAILED`, and may be relied upon by callers. Status codes and the rest of the response body are unchanged, and the property is absent on errors that carry no code.
+- Added the `SERVER_KEEP_ALIVE_TIMEOUT`/`--keepAliveTimeout`/`keepAliveTimeout` option, defaulting to 65 seconds, controlling how long an idle keep-alive connection is held open. `headersTimeout` is kept 5 seconds above it automatically. Deployments with nothing in front of the server may wish to lower it.
 - Added the `PUPPETEER_LAUNCH_RETRY_WINDOW`/`--launchRetryWindow`/`launchRetryWindow` option, defaulting to 30 seconds, bounding how long a browser launch is retried before it is reported as failed. Keep it below the time an orchestrator waits before replacing an instance that has not become healthy, so that a browser which cannot start is reported rather than retried past the point anyone is still listening.
 
 _Enhancements:_
