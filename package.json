@@ -51,9 +51,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^1.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.1.0",
     "eslint-plugin-prettier": "^5.5.6",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
