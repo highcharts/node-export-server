@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Updated Highcharts from 12 to 13. This only affects deployments using the `useNpm` option, which load Highcharts from the package rather than the CDN; the runtime version is otherwise chosen by the `HIGHCHARTS_VERSION` option and defaults to the latest. Comparing rendered output between 12.5.0 and 13.0.0 across a range of charts, chart layout is unchanged, with one visible difference: where x axis labels are rotated, the leftmost label no longer extends to the very edge of the image, leaving a small margin instead. All 67 core, module and indicator scripts this server requests are present in 13.
 - Updated `express-rate-limit` from 7 to 8, and removed the `delay`/`SERVER_RATE_LIMITING_DELAY` rate limiting option. It had no effect from `express-rate-limit` v7 onwards and is no longer accepted.
 - Updated zod from 3 to 4, used to validate environment variables at startup.
 - Updated Multer from 1 to 2, which also resolves the advisories against the 1.4.5 line. Only non-file multipart fields are used, so the change is contained, but note that Multer's own errors, such as a field exceeding the upload limit, are reported with their own messages.
