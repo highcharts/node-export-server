@@ -2,6 +2,7 @@
 
 _Fixes:_
 
+- Fixed an issue where the server never recovered if the browser process died, for example when killed by an out of memory reaper. The browser was launched once at startup and the guard preventing a second launch could never be cleared, so every export from that point failed while the pool continued to report healthy workers. The browser is now relaunched when it is found to be missing, and the workers holding pages from the dead browser are recognised as stale and replaced. This is detected by tracking which browser a worker was created against, because a page belonging to a browser that no longer exists still reports itself as open and so cannot be asked whether it is usable.
 - Ensured that a worker's page has finished being cleared before the worker is handed to the next export. The clearing was previously started when the worker was released but never awaited, so it overlapped the following export whenever one was already waiting for a worker. A page that cannot be cleared now recycles its worker instead of being exported onto.
 - Fixed a resource leak where a browser page was left open if configuring it failed, for example when injecting the Highcharts scripts did not succeed. As the pool retries worker creation on an interval, a sustained failure leaked a browser page on every attempt until the browser ran out of memory.
 
