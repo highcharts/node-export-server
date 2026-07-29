@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Updated `express-rate-limit` from 7 to 8, and removed the `delay`/`SERVER_RATE_LIMITING_DELAY` rate limiting option. It had no effect from `express-rate-limit` v7 onwards and is no longer accepted.
 - Updated zod from 3 to 4, used to validate environment variables at startup.
 - Updated Multer from 1 to 2, which also resolves the advisories against the 1.4.5 line. Only non-file multipart fields are used, so the change is contained, but note that Multer's own errors, such as a field exceeding the upload limit, are reported with their own messages.
 - Updated `uuid` from 10 to 14, `dotenv` from 16 to 17, `https-proxy-agent` from 7 to 9, `cors` to 2.8.6, `dompurify` to 3.4.12 and `tarn` to 3.1.2. From v17 dotenv prints a summary of what it loaded on startup; this is now suppressed, as the server writes structured log lines and an unsolicited banner on stdout is noise for anything reading them.
