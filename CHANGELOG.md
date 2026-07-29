@@ -24,6 +24,10 @@ _New Features:_
 - Added `abandonedExports` and `rejectedForCapacity` counters to the `/health` response, reporting exports discarded because their client disconnected and requests refused because the queue was full. Both were previously indistinguishable from ordinary failures. Existing properties are unchanged.
 - Added an `errorCode` property to error responses, so that a request refused because the server was busy can be told apart from one refused because it was malformed. Both are reported with the same status code, which previously left the message text as the only way to distinguish them. The codes are `EXPORT_INVALID_REQUEST`, `EXPORT_QUEUE_FULL`, `EXPORT_ACQUIRE_TIMEOUT`, `EXPORT_RASTERIZATION_TIMEOUT` and `EXPORT_FAILED`, and may be relied upon by callers. Status codes and the rest of the response body are unchanged, and the property is absent on errors that carry no code.
 
+_Enhancements:_
+
+- Reduced the cost of sanitizing incoming SVGs by around ten times, from 2.84ms to 0.27ms per call, by reusing the DOM and purifier between requests rather than building them on every export. As sanitizing is synchronous, that time was spent blocking the event loop, so it delayed every other request in flight rather than only the one being sanitized.
+
 # 5.1.0
 
 _New Features:_
