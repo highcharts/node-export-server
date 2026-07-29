@@ -1,0 +1,126 @@
+name: Build and Deploy Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        description: "The Docker Registry"
+        default: "ghcr.io"
+        required: false
+        type: string
+      image_name:
+        description: "The Docker image name"
+        default: ${{ github.repository }}
+        required: false
+        type: string
+      folder_name:
+        description: "The folder where the Dockerfile is located"
+        default: .
+        required: false
+        type: string
+      deploy_branch:
+        description: "The branch that will be deployed"
+        default: ${{ github.event.repository.default_branch }}
+        required: false
+        type: string
+      platforms:
+        description: "The platforms to build for"
+        required: false
+        type: string
+        default: linux/amd64
+      use_image_per_environment:
+        description: "Whether to create one image for each environment. Needed for statically generated webapps like NextJS"
+        default: false
+        required: false
+        type: boolean
+
+jobs:
+  version:
+    name: Read Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Read version from VERSION file
+        id: version
+        working-directory: ${{ inputs.folder_name }}
+        run: |
+          VERSION=$(cat VERSION)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "## Version" >> $GITHUB_STEP_SUMMARY
+          echo "$VERSION" >> $GITHUB_STEP_SUMMARY
+
+  build:
+    name: Build Image
+    uses: ./.github/workflows/docker_build.yml
+    if: ${{ !inputs.use_image_per_environment }}
+    secrets: inherit
+    needs: version
+    with:
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      folder_name: ${{ inputs.folder_name }}
+      version: ${{ needs.version.outputs.version }}
+      run_number: ${{ github.run_number }}
+      user_name: ${{ github.actor }}
+      platforms: ${{ inputs.platforms }}
+
+  # Deploy to Development
+  deploy-dev:
+    name: Deploy Development Image
+    uses: ./.github/workflows/docker_deploy.yml
+    secrets: inherit
+    if: ${{ !failure() && !cancelled() && github.ref_name == inputs.deploy_branch }}
+    needs:
+      - version
+      - build
+    with:
+      version: ${{ needs.version.outputs.version }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
+      deploy_tag: ${{ needs.version.outputs.version }}-dev
+      platforms: ${{ inputs.platforms }}
+      environment: development
+
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy Staging Image
+    uses: ./.github/workflows/docker_deploy.yml
+    secrets: inherit
+    if: ${{ !failure() && !cancelled() && github.ref_name == inputs.deploy_branch }}
+    needs:
+      - version
+      - build
+    with:
+      version: ${{ needs.version.outputs.version }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
+      deploy_tag: ${{ needs.version.outputs.version }}-staging
+      environment: staging
+      platforms: ${{ inputs.platforms }}
+
+  # Deploy to Production
+  deploy-prod:
+    name: Deploy Production Image
+    uses: ./.github/workflows/docker_deploy.yml
+    secrets: inherit
+    if: ${{ !failure() && !cancelled() && github.ref_name == inputs.deploy_branch }}
+    needs:
+      - version
+      - build
+    with:
+      version: ${{ needs.version.outputs.version }}
+      registry: ${{ inputs.registry }}
+      image_name: ${{ inputs.image_name }}
+      build_image: ${{ needs.build.outputs.build_image }}
+      build_image_tag: ${{ needs.build.outputs.build_image_tag }}
+      deploy_tag: ${{ needs.version.outputs.version }}
+      environment: production
+      platforms: ${{ inputs.platforms }}

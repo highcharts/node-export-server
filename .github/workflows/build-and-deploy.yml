@@ -1,0 +1,19 @@
+name: Create Docker image and deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  flow:
+    name: Highsoft Flow
+    uses: ./.github/workflows/flow_docker.yml
+    secrets: inherit
+    with:
+      registry: ghcr.io
+      folder_name: .
+      image_name: ${{ github.repository }}
+      platforms: linux/amd64
+      deploy_branch: master

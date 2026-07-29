@@ -104,6 +104,42 @@ To use the Export Server, simply run the following command with the correct argu
 highcharts-export-server <arguments>
 ```
 
+# Running with Docker
+
+Build and run:
+
+```
+docker build -t highcharts-export-server .
+docker run --rm -p 7801:7801 highcharts-export-server
+```
+
+Or with Docker Compose:
+
+```
+docker compose up --build
+```
+
+The server listens on port `7801`. Test it with `curl http://localhost:7801/health`.
+
+Settings can be overridden at runtime with environment variables, which take
+precedence over the loaded config file. For example, to allow a few concurrent
+workers or change the port:
+
+```
+docker run --rm -p 8080:8080 \
+  -e POOL_MAX_WORKERS=4 \
+  -e SERVER_PORT=8080 \
+  highcharts-export-server
+```
+
+By default the server fetches Highcharts scripts from the CDN on first export
+(and caches them), so the container needs outbound network access on startup.
+For fully offline operation, use the bundled `highcharts` dependency instead:
+
+```
+docker run --rm -p 7801:7801 -e HIGHCHARTS_USE_NPM=true highcharts-export-server
+```
+
 # Configuration
 
 There are four main ways of loading configurations:
