@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Updated Express from 4 to 5. Route matching, `request.query` and the default for `express.urlencoded`'s `extended` option all changed upstream, which matters to anyone mounting their own middleware or routes onto the exported Express app. The routes and options this server uses were checked against each of those changes and needed no alteration.
 - Updated Puppeteer from 22 to 25, which advances the bundled Chrome several major versions. Rendered output was checked against the previous version for layout changes across a range of charts and found identical, but font hinting and antialiasing may still differ very slightly, as they do with any browser update.
 - Updated jsdom from 24 to 30, used for sanitizing incoming SVGs. Jest was updated from 29 to 30 alongside it, as jsdom 30 pulls in a dependency that Jest 29 cannot load.
 - Raised the minimum supported Node.js version to `^22.22.2 || ^24.15.0 || >=26.0.0`. Node.js 18 and 20 have both reached end of life, and the range mirrors what the dependencies in this release support. Node.js 24 is the recommended target, and both 22 and 24 are tested. Note that the odd-numbered Node.js 25 line is deliberately excluded, as it is not supported by all of the dependencies.
