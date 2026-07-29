@@ -6,6 +6,22 @@ Convert Highcharts.JS charts into static image files.
 
 ## Upgrade Notes
 
+## v5.x.x to v6.x.x
+
+There are several breaking changes in v6.x.x:
+
+- `Node.js v22.22.2` or higher is now required. Node.js 18 and 20 are end of life, and the dependencies in this release no longer support them. Node.js 24 is the recommended target.
+- Exports now queue only up to a limit, `32` with default pool settings, and requests arriving beyond it are refused rather than queued. Configure with `POOL_QUEUE_LIMIT`/`--queueLimit`/`queueLimit`, and see the note about worker count below.
+- Idle connections are now held open for 65 seconds rather than the 5 second Node.js default, which avoids sporadic gateway errors behind a proxy. Configure with `SERVER_KEEP_ALIVE_TIMEOUT`/`--keepAliveTimeout`/`keepAliveTimeout`.
+- The `delay`/`SERVER_RATE_LIMITING_DELAY` rate limiting option has been removed, as it has had no effect since `express-rate-limit` v7.
+- Express has been updated from v4 to v5. This only matters if you mount your own middleware or routes onto the Express app returned by `server.getApp()`, as route matching and some request properties changed upstream.
+- Highcharts has been updated from v12 to v13, which only affects deployments using the `useNpm` option. Everywhere else the runtime version is chosen by `HIGHCHARTS_VERSION` and fetched from the CDN.
+- Puppeteer has been updated from v22 to v25, advancing the bundled browser several major versions. Chart layout is unchanged, but font hinting and antialiasing may differ slightly.
+
+If you build your own container image, note that a newer Puppeteer needs `unzip` present to install its browser, and that the browser process needs to be able to use its sandbox.
+
+For other changes and fixes, please see the [changelog](CHANGELOG.md).
+
 ## v4.x.x to v5.x.x
 
 There are two breaking changes in v5.x.x:
@@ -109,6 +125,7 @@ The format, along with its default values, is as follows (using the recommended 
 {
   "puppeteer": {
     "args": [],
+    "launchRetryWindow": 30000,
     "tempDir": "./tmp/"
   },
   "highcharts": {
@@ -227,6 +244,7 @@ The format, along with its default values, is as follows (using the recommended 
     "port": 7801,
     "benchmarking": false,
     "maxUploadSize": 3,
+    "keepAliveTimeout": 65000,
     "proxy": {
       "host": "",
       "port": 8080,
@@ -238,7 +256,6 @@ The format, along with its default values, is as follows (using the recommended 
       "enable": false,
       "maxRequests": 10,
       "window": 1,
-      "delay": 0,
       "trustProxy": false,
       "skipKey": "",
       "skipToken": ""
@@ -254,6 +271,8 @@ The format, along with its default values, is as follows (using the recommended 
     "minWorkers": 4,
     "maxWorkers": 8,
     "workLimit": 40,
+    "queueLimit": 0,
+    "queueRejectDelay": 500,
     "acquireTimeout": 5000,
     "createTimeout": 5000,
     "destroyTimeout": 5000,
@@ -278,7 +297,8 @@ The format, along with its default values, is as follows (using the recommended 
     "listenToProcessExits": true,
     "noLogo": false,
     "hardResetPage": false,
-    "browserShellMode": true
+    "browserShellMode": true,
+    "shutdownDrainTimeout": 30000
   },
   "debug": {
     "enable": false,
@@ -303,6 +323,7 @@ These variables are set in your environment and take precedence over options fro
 ### Puppeteer Config
 
 - `PUPPETEER_TEMP_DIR`: The directory for Puppeteer to store temporary files (defaults to `./tmp/`).
+- `PUPPETEER_LAUNCH_RETRY_WINDOW`: The duration, in milliseconds, to keep retrying a browser launch before reporting it as failed (defaults to `30000`).
 
 ### Highcharts Config
 
@@ -337,6 +358,7 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_PORT`: The port to be used for the server when enabled (defaults to `7801`).
 - `SERVER_BENCHMARKING`: Indicates whether to display a message with the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `SERVER_MAX_UPLOAD_SIZE`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
+- `SERVER_KEEP_ALIVE_TIMEOUT`: The duration, in milliseconds, an idle keep-alive connection is held open. Keep this above the idle timeout of any proxy in front of the server (defaults to `65000`).
 
 ### Server Proxy Config
 
@@ -351,7 +373,6 @@ These variables are set in your environment and take precedence over options fro
 - `SERVER_RATE_LIMITING_ENABLE`: Enables rate limiting for the server (defaults to `false`).
 - `SERVER_RATE_LIMITING_MAX_REQUESTS`: The maximum number of requests allowed in one minute (defaults to `10`).
 - `SERVER_RATE_LIMITING_WINDOW`: The time window, in minutes, for the rate limiting (defaults to `1`).
-- `SERVER_RATE_LIMITING_DELAY`: The delay duration for each successive request before reaching the maximum limit (defaults to `0`).
 - `SERVER_RATE_LIMITING_TRUST_PROXY`: Set this to **true** if the server is behind a load balancer (defaults to `false`).
 - `SERVER_RATE_LIMITING_SKIP_KEY`: Allows bypassing the rate limiter and should be provided with the `skipToken` argument (defaults to ``).
 - `SERVER_RATE_LIMITING_SKIP_TOKEN`: Allows bypassing the rate limiter and should be provided with the `skipKey` argument (defaults to ``).
@@ -368,6 +389,8 @@ These variables are set in your environment and take precedence over options fro
 - `POOL_MIN_WORKERS`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `POOL_MAX_WORKERS`: The number of maximum pool workers to spawn (defaults to `8`).
 - `POOL_WORK_LIMIT`: The number of work pieces that can be performed before restarting the worker process (defaults to `40`).
+- `POOL_QUEUE_LIMIT`: The maximum number of exports allowed to wait for a worker. Requests beyond this are refused rather than queued. Set to `0` to derive it as four times `maxWorkers` (defaults to `0`).
+- `POOL_QUEUE_REJECT_DELAY`: The duration, in milliseconds, to wait before refusing a request for capacity. This is deliberate backpressure; set to `0` to refuse immediately (defaults to `500`).
 - `POOL_ACQUIRE_TIMEOUT`: The duration, in milliseconds, to wait for acquiring a resource (defaults to `5000`).
 - `POOL_CREATE_TIMEOUT`: The duration, in milliseconds, to wait for creating a resource (defaults to `5000`).
 - `POOL_DESTROY_TIMEOUT`: The duration, in milliseconds, to wait for destroying a resource (defaults to `5000`).
@@ -397,6 +420,7 @@ These variables are set in your environment and take precedence over options fro
 - `OTHER_HARD_RESET_PAGE`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `OTHER_BROWSER_SHELL_MODE`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
 - `OTHER_ALLOW_XLINK`: If set to true, allow `xlink:href` in incoming SVG (defaults to `false`).
+- `OTHER_SHUTDOWN_DRAIN_TIMEOUT`: The duration, in milliseconds, a shutdown lets exports already being served finish. Set it above the deregistration delay of anything routing traffic to the server (defaults to `30000`).
 
 ### Debugging Config
 - `DEBUG_ENABLE`: Enables or disables debug mode for the underlying browser (defaults to `false`).
@@ -414,6 +438,7 @@ To supply command line arguments, add them as flags when running the application
 
 _Available options:_
 
+- `--launchRetryWindow`: The duration, in milliseconds, to keep retrying a browser launch before reporting it as failed (defaults to `30000`).
 - `--useNpm`: The flag that determines whether to use Highcharts scripts from CDN or NPM package (defaults to `false`).
 - `--infile`: The input file should include a name and a type (**.json** or **.svg**) and must be a correctly formatted JSON or SVG file (defaults to `false`).
 - `--instr`: An input in a form of a stringified JSON or SVG file. Overrides the `--infile` option (defaults to `false`).
@@ -439,6 +464,7 @@ _Available options:_
 - `--host`: The hostname of the server. Additionally, it starts a server listening on the provided hostname (defaults to `0.0.0.0`).
 - `--port`: The port to be used for the server when enabled (defaults to `7801`).
 - `--maxUploadSize`: The maximum size, in MB, of files uploaded through the server (defaults to `3`).
+- `--keepAliveTimeout`: The duration, in milliseconds, an idle keep-alive connection is held open. Keep this above the idle timeout of any proxy in front of the server (defaults to `65000`).
 - `--serverBenchmarking`: Indicates whether to display the duration, in milliseconds, of specific actions that occur on the server while serving a request (defaults to `false`).
 - `--proxyHost`: The host of the proxy server to use, if it exists (defaults to `false`).
 - `--proxyPort`: The port of the proxy server to use, if it exists (defaults to `false`).
@@ -448,7 +474,6 @@ _Available options:_
 - `--enableRateLimiting`: Enables rate limiting for the server (defaults to `false`).
 - `--maxRequests`: The maximum number of requests allowed in one minute (defaults to `10`).
 - `--window`: The time window, in minutes, for the rate limiting (defaults to `1`).
-- `--delay`: The delay duration for each successive request before reaching the maximum limit (defaults to `0`).
 - `--trustProxy`: Set this to **true** if the server is behind a load balancer (defaults to `false`).
 - `--skipKey`: Allows bypassing the rate limiter and should be provided with the `--skipToken` argument (defaults to ``).
 - `--skipToken`: Allows bypassing the rate limiter and should be provided with the `--skipKey` argument (defaults to ``).
@@ -459,6 +484,8 @@ _Available options:_
 - `--minWorkers`: The number of minimum and initial pool workers to spawn (defaults to `4`).
 - `--maxWorkers`: The number of maximum pool workers to spawn (defaults to `8`).
 - `--workLimit`: The number of work pieces that can be performed before restarting the worker process (defaults to `40`).
+- `--queueLimit`: The maximum number of exports allowed to wait for a worker. Requests beyond this are refused rather than queued. Set to `0` to derive it as four times `maxWorkers` (defaults to `0`).
+- `--queueRejectDelay`: The duration, in milliseconds, to wait before refusing a request for capacity. Set to `0` to refuse immediately (defaults to `500`).
 - `--acquireTimeout`: The duration, in milliseconds, to wait for acquiring a resource (defaults to `5000`).
 - `--createTimeout`: The duration, in milliseconds, to wait for creating a resource (defaults to `5000`).
 - `--destroyTimeout`: The duration, in milliseconds, to wait for destroying a resource (defaults to `5000`).
@@ -478,6 +505,7 @@ _Available options:_
 - `--noLogo`: Skip printing the logo on a startup. Will be replaced by a simple text (defaults to `false`).
 - `--hardResetPage`: Determines whether the page's content should be reset from scratch, including Highcharts scripts (defaults to `false`).
 - `--browserShellMode`: Decides whether to enable older but much more performant _shell_ mode for the browser (defaults to `true`).
+- `--shutdownDrainTimeout`: The duration, in milliseconds, a shutdown lets exports already being served finish. Set it above the deregistration delay of anything routing traffic to the server (defaults to `30000`).
 - `--enableDebug`: Enables or disables debug mode for the underlying browser (defaults to `false`).
 - `--headless`: Controls the mode in which the browser is launched when in the debug mode (defaults to `true`).
 - `--devtools`: Decides whether to enable DevTools when the browser is in a headful state (defaults to `false`).
@@ -536,6 +564,16 @@ CORS is enabled for the server.
 
 It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm2) unless running in a managed environment/container. Please refer to the pm2 documentation for details on how to set this up.
 
+## Error Responses
+
+A request that cannot be served is answered with a JSON body containing `statusCode`, `message` and, where one applies, an `errorCode`. The server does not respond with 5xx status codes, so the `errorCode` is what distinguishes a request that was refused because the server was busy from one that was refused because it was malformed:
+
+- `EXPORT_INVALID_REQUEST`: The request itself was not usable, such as a missing body or no chart data. Retrying it unchanged will not help.
+- `EXPORT_QUEUE_FULL`: The server was already holding as many queued exports as it is willing to and refused this one without starting work on it. Retrying later, with backoff, is appropriate.
+- `EXPORT_ACQUIRE_TIMEOUT`: No worker became available in time. The same meaning for a caller as `EXPORT_QUEUE_FULL`.
+- `EXPORT_RASTERIZATION_TIMEOUT`: The chart was too large or complex to render in the allotted time.
+- `EXPORT_FAILED`: The export failed for some other reason.
+
 ## Available Endpoints
 
 - POST
@@ -545,7 +583,7 @@ It is recommended to run the server using [pm2](https://www.npmjs.com/package/pm
 
 - GET
   - `/`: An endpoint to perform exports through the user interface the server allows it.
-  - `/health`: An endpoint for outputting basic statistics for the server.
+  - `/health`: An endpoint for outputting basic statistics for the server. Alongside the export counts it reports `browserConnected`, `consecutiveCreateFailures`, `abandonedExports` and `rejectedForCapacity`, which distinguish a server that has lost its browser from one that is merely busy or being abandoned by its callers.
 
 ## Switching Highcharts Version at Runtime
 
@@ -781,7 +819,9 @@ If `--resources` argument is not set and a file named `resources.json` exists in
 
 The Export Server utilizes a pool of workers, where each worker is a Puppeteer process (browser instance's page) responsible for the actual chart rasterization. The pool size can be set with the `--minWorkers` and `--maxWorkers` options, and should be tweaked to fit the hardware on which you are running the server.
 
-It is recommended that you start with the default `4`, and work your way up (or down if `8` is too many for your setup, and things are unstable) gradually. The `tests/other/stress-test.js` script can be used to test the server and expects the server to be running on port `7801`.
+It is recommended that you start with the default `4`, and work your way up (or down if `8` is too many for your setup, and things are unstable) gradually. The `tests/other/load_test.js` script can be used to drive concurrent load at the server and report throughput, latency percentiles and the peak number of exports waiting for a worker. It expects the server to be running on port `7801`.
+
+Beyond the pool size, `--queueLimit` caps how many exports may wait for a worker, and requests arriving beyond it are refused rather than queued. Throughput does not improve past the pool size, so a deeper queue only adds latency and memory use; the default of four times `maxWorkers` is a reasonable starting point, and lowering it sheds load sooner. Refusals are delayed by `--queueRejectDelay` on purpose, since answering instantly lets clients that retry immediately consume the server refusing them.
 
 Each of the workers has a maximum number of requests it can handle before it restarts itself to keep everything responsive. This number is `40` by default, and can be tweaked with `--workLimit`. As with `--minWorkers` and `--maxWorkers`, this number should also be tweaked to fit your use case. Also, the `--acquireTimeout` option is worth to mention as well, in case there would be problems with acquiring resources. It is set in miliseconds with `5000` as a default value. Lastly, the `--createTimeout` and `--destroyTimeout` options are similar to the `--acquireTimeout` but for resource's create and destroy actions.
 
