@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Updated `uuid` from 10 to 14, `dotenv` from 16 to 17, `https-proxy-agent` from 7 to 9, `cors` to 2.8.6, `dompurify` to 3.4.12 and `tarn` to 3.1.2. From v17 dotenv prints a summary of what it loaded on startup; this is now suppressed, as the server writes structured log lines and an unsolicited banner on stdout is noise for anything reading them.
 - Updated Express from 4 to 5. Route matching, `request.query` and the default for `express.urlencoded`'s `extended` option all changed upstream, which matters to anyone mounting their own middleware or routes onto the exported Express app. The routes and options this server uses were checked against each of those changes and needed no alteration.
 - Updated Puppeteer from 22 to 25, which advances the bundled Chrome several major versions. Rendered output was checked against the previous version for layout changes across a range of charts and found identical, but font hinting and antialiasing may still differ very slightly, as they do with any browser update.
 - Updated jsdom from 24 to 30, used for sanitizing incoming SVGs. Jest was updated from 29 to 30 alongside it, as jsdom 30 pulls in a dependency that Jest 29 cannot load.
