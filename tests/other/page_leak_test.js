@@ -32,6 +32,8 @@ See LICENSE file in root for details.
  *   node tests/other/page_leak_test.js [--attempts N]
  */
 
+import { rmSync } from 'fs';
+
 import { setOptions, getOptions } from '../../lib/config.js';
 import { create, newPage, close, get } from '../../lib/browser.js';
 
@@ -53,6 +55,13 @@ console.log(
 // Load the default options, then launch a browser with them
 setOptions({}, {});
 const options = getOptions();
+
+// NOTE: Use a profile directory of our own. Chrome refuses to start a second
+//       instance against a user data directory another live process holds, so
+//       sharing the default one would make this test fail whenever a server
+//       happened to be running alongside it.
+const profileDir = `./tmp-page-leak-test-${process.pid}/`;
+options.puppeteer.tempDir = profileDir;
 
 await create(options.puppeteer?.args ?? []);
 const browser = get();
@@ -80,6 +89,9 @@ console.log(`  pages after failures       : ${after}`);
 console.log('');
 
 await close();
+
+// Leave nothing behind
+rmSync(profileDir, { recursive: true, force: true });
 
 if (failures !== attempts) {
   console.log(
