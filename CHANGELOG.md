@@ -1,3 +1,48 @@
+# 6.0.0
+
+_Breaking Changes:_
+
+- Raised the minimum supported Node.js version to `^22.22.2 || ^24.15.0 || >=26.0.0`. Node.js 18 and 20 are end of life; both 22 and 24 are tested.
+- Updated Puppeteer from 22 to 25, which advances the bundled Chrome several major versions. Chart layout was verified unchanged, though font hinting and antialiasing may differ slightly, as with any browser update.
+- Updated Express from 4 to 5. This matters to anyone mounting their own middleware or routes onto the exported Express app, as route matching, `request.query` and the `extended` default of `express.urlencoded` all changed upstream.
+- Updated Highcharts from 12 to 13, which only affects deployments using the `useNpm` option. Where x axis labels are rotated, the leftmost label no longer extends to the very edge of the image.
+- Updated jsdom from 24 to 30, Multer from 1 to 2, zod from 3 to 4, `uuid` from 10 to 14, `dotenv` from 16 to 17, `https-proxy-agent` from 7 to 9 and `express-rate-limit` from 7 to 8.
+- Removed the `delay`/`SERVER_RATE_LIMITING_DELAY` rate limiting option, which has had no effect since `express-rate-limit` v7.
+- Exports now queue only up to `queueLimit`, 32 by default, and requests arriving beyond it are refused rather than queued. The queue was previously unbounded, so a saturated server accepted far more work than it could complete and then failed most of it on timeout.
+- Changed the default `keepAliveTimeout` from the Node.js default of 5 seconds to 65. A value below the idle timeout of a proxy in front of the server causes sporadic gateway errors, as the proxy sends requests into connections the server has just closed.
+
+_Fixes:_
+
+- Fixed the server never recovering when the browser process died, for example after being killed by an out of memory reaper. The browser was launched once at startup and could never be relaunched, so every export failed from that point on while the pool continued to report healthy workers.
+- Fixed exports whose client had already disconnected still taking a place in the queue and then a worker. An export already being rendered still runs to completion, as the underlying browser operations cannot be cancelled.
+- Fixed a clean client disconnect, such as a proxy idle timeout, not being detected as an abandoned request. Only a socket closing with an error was.
+- Fixed a rasterization timeout leaking the page it timed out on, leaving a renderer process behind for the lifetime of the browser.
+- Fixed the browser process being able to outlive the call that closes it, leaving it holding Chrome's lock on the user data directory and preventing any later browser from starting.
+- Fixed a browser page being left open when configuring it failed, which leaked one on every retry.
+- Fixed a worker's page being handed to the next export before it had finished being cleared.
+- Fixed the shutdown sequence exiting before the HTTP servers had closed, which dropped exports still being served on every restart, deployment and scale-in.
+- Fixed the reported export success ratio counting exports abandoned by their client as failures.
+- Fixed the rasterization timeout keeping its timer alive after a successful image export.
+- Fixed error responses being able to carry a status outside the 1xx to 4xx range, which could happen when the status came from a wrapped error.
+- Fixed the `PUPPETEER_TEMP_DIR` validation message never being shown.
+- Removed a call that stripped every `close` listener from the request socket, including those belonging to Node.js and Express.
+
+_New Features:_
+
+- Added the `POOL_QUEUE_LIMIT`/`--queueLimit`/`queueLimit` option, capping how many exports may wait for a worker, defaulting to four times `maxWorkers`. Requests beyond the limit are refused before their body is parsed.
+- Added the `POOL_QUEUE_REJECT_DELAY`/`--queueRejectDelay`/`queueRejectDelay` option, defaulting to 500ms, being how long the server waits before refusing a request for capacity. This is deliberate backpressure, as answering instantly lets clients that retry immediately consume the event loop being refused.
+- Added the `SERVER_KEEP_ALIVE_TIMEOUT`/`--keepAliveTimeout`/`keepAliveTimeout` option, defaulting to 65 seconds. The `headersTimeout` is kept 5 seconds above it automatically.
+- Added the `OTHER_SHUTDOWN_DRAIN_TIMEOUT`/`--shutdownDrainTimeout`/`shutdownDrainTimeout` option, defaulting to 30 seconds, bounding how long a shutdown lets exports already being served finish.
+- Added the `PUPPETEER_LAUNCH_RETRY_WINDOW`/`--launchRetryWindow`/`launchRetryWindow` option, defaulting to 30 seconds, bounding how long a browser launch is retried before being reported as failed.
+- Added an `errorCode` property to error responses, so a request refused for capacity can be told apart from one refused as malformed. The codes are `EXPORT_INVALID_REQUEST`, `EXPORT_QUEUE_FULL`, `EXPORT_ACQUIRE_TIMEOUT`, `EXPORT_RASTERIZATION_TIMEOUT` and `EXPORT_FAILED`.
+- Added `browserConnected`, `consecutiveCreateFailures`, `abandonedExports` and `rejectedForCapacity` to the `/health` response. Existing properties are unchanged.
+
+_Enhancements:_
+
+- Reduced the cost of sanitizing incoming SVGs by around ten times, by reusing the DOM and purifier between requests instead of building them on every export.
+- Reduced the time taken to report a browser that cannot be launched, from around 100 seconds to a configurable window defaulting to 30, using growing delays with jitter.
+- Added tooling for load, saturation, page isolation, browser recovery and render layout comparison tests, in the `tests/other` folder.
+
 # 5.1.0
 
 _New Features:_

@@ -12,7 +12,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x.x'
+          node-version: '24.x'
 
       - name: Install Dependencies
         run: npm install
@@ -21,7 +21,7 @@ jobs:
         id: eslint
         continue-on-error: true
         run: |
-          ESLINT_OUTPUT=$(npx eslint . --ext .js,.jsx,.ts,.tsx)
+          ESLINT_OUTPUT=$(npx eslint .)
           echo "::set-output name=result::$ESLINT_OUTPUT"
           if [ -z "$ESLINT_OUTPUT" ]; then
             echo "ESLint found no issues :white_check_mark:"
