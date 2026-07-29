@@ -2,6 +2,7 @@
 
 _Breaking Changes:_
 
+- Updated Puppeteer from 22 to 25, which advances the bundled Chrome several major versions. Rendered output was checked against the previous version for layout changes across a range of charts and found identical, but font hinting and antialiasing may still differ very slightly, as they do with any browser update.
 - Updated jsdom from 24 to 30, used for sanitizing incoming SVGs. Jest was updated from 29 to 30 alongside it, as jsdom 30 pulls in a dependency that Jest 29 cannot load.
 - Raised the minimum supported Node.js version to `^22.22.2 || ^24.15.0 || >=26.0.0`. Node.js 18 and 20 have both reached end of life, and the range mirrors what the dependencies in this release support. Node.js 24 is the recommended target, and both 22 and 24 are tested. Note that the odd-numbered Node.js 25 line is deliberately excluded, as it is not supported by all of the dependencies.
 - Changed how long idle keep-alive connections are held open, from the Node default of 5 seconds to 65 seconds. Measured, the server was closing idle connections after about 6 seconds while a proxy or load balancer in front of it typically holds them for 60, and the side with the shorter timeout closing first is what produces sporadic gateway errors: the proxy does not know the connection has gone and sends a request into it. Configurable, see `keepAliveTimeout` below.
