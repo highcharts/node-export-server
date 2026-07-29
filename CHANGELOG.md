@@ -6,6 +6,10 @@ _Fixes:_
 - Ensured that a worker's page has finished being cleared before the worker is handed to the next export. The clearing was previously started when the worker was released but never awaited, so it overlapped the following export whenever one was already waiting for a worker. A page that cannot be cleared now recycles its worker instead of being exported onto.
 - Fixed a resource leak where a browser page was left open if configuring it failed, for example when injecting the Highcharts scripts did not succeed. As the pool retries worker creation on an interval, a sustained failure leaked a browser page on every attempt until the browser ran out of memory.
 
+_New Features:_
+
+- Added an `errorCode` property to error responses, so that a request refused because the server was busy can be told apart from one refused because it was malformed. Both are reported with the same status code, which previously left the message text as the only way to distinguish them. The codes are `EXPORT_INVALID_REQUEST`, `EXPORT_QUEUE_FULL`, `EXPORT_ACQUIRE_TIMEOUT`, `EXPORT_RASTERIZATION_TIMEOUT` and `EXPORT_FAILED`, and may be relied upon by callers. Status codes and the rest of the response body are unchanged, and the property is absent on errors that carry no code.
+
 # 5.1.0
 
 _New Features:_
