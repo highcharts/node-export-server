@@ -21,7 +21,8 @@
     "install.js",
     "lib",
     "msg",
-    "public"
+    "public",
+    "CHANGELOG.md"
   ],
   "repository": {
     "url": "https://github.com/highcharts/node-export-server",
