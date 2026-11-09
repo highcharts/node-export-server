@@ -44,11 +44,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Read version from VERSION file
+      - name: Read version from package.json
         id: version
         working-directory: ${{ inputs.folder_name }}
         run: |
-          VERSION=$(cat VERSION)
+          VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "## Version" >> $GITHUB_STEP_SUMMARY
           echo "$VERSION" >> $GITHUB_STEP_SUMMARY
