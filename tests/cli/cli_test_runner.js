@@ -13,7 +13,14 @@ See LICENSE file in root for details.
 *******************************************************************************/
 
 import { exec } from 'child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  unlinkSync
+} from 'fs';
 import { join } from 'path';
 import { promisify } from 'util';
 
@@ -66,6 +73,11 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
         );
       }
 
+      // Remove stale output so a successful exit cannot hide a missing export.
+      if (!cliJson.batch && existsSync(cliJson.outfile)) {
+        unlinkSync(cliJson.outfile);
+      }
+
       // Complete the CLI command
       let cliCommand = [];
 
@@ -87,9 +99,16 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
       try {
         // Launch command as a new child process
         await spawn(cliCommand);
+        if (
+          !cliJson.batch &&
+          (!existsSync(cliJson.outfile) || statSync(cliJson.outfile).size === 0)
+        ) {
+          throw new Error(`No output written to ${cliJson.outfile}`);
+        }
       } catch (error) {
         failsCounter++;
         didFail = true;
+        console.error(error.stderr || error.stdout || error.message);
       }
       testCounter++;
 
@@ -102,6 +121,8 @@ for (const file of files.filter((file) => file.endsWith('.json'))) {
         '\n'
       );
     } catch (error) {
+      testCounter++;
+      failsCounter++;
       console.error(error);
     }
   })(file);
@@ -115,3 +136,7 @@ console.log(
     : `\n${testCounter} tests done, errors not found!`.green,
   '\n--------------------------------'
 );
+
+if (failsCounter) {
+  process.exitCode = 1;
+}

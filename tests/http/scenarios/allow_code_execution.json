@@ -1,7 +1,7 @@
 {
   "options": {
     "title": {
-      "text": "The default value of the 'allowCodeExecution' allows stringified resources"
+      "text": "The default value of 'allowCodeExecution' rejects stringified resources"
     },
     "xAxis": {
       "categories": ["Jan", "Feb", "Mar", "Apr"]
