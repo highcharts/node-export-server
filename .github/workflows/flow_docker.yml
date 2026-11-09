@@ -27,7 +27,7 @@ on:
         description: "The platforms to build for"
         required: false
         type: string
-        default: linux/amd64
+        default: linux/amd64,linux/arm64
       use_image_per_environment:
         description: "Whether to create one image for each environment. Needed for statically generated webapps like NextJS"
         default: false
