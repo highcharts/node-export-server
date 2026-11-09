@@ -55,6 +55,20 @@ fetch(`${url}/health`)
     // Tests counters
     let testCounter = 0;
     let failsCounter = 0;
+    // Both scenarios submit custom logic, which is disabled by default. Keep
+    // these assertions explicit instead of treating every HTTP 400 as success.
+    const expectedErrors = {
+      'allow_code_execution.json': {
+        status: 400,
+        message:
+          "[chart] The 'callback', 'resources' and 'customCode' options have been disabled for this server."
+      },
+      'do_not_allow_file_resources.json': {
+        status: 400,
+        message:
+          "[chart] The 'callback', 'resources' and 'customCode' options have been disabled for this server."
+      }
+    };
 
     // Disable event listeners limiter
     process.setMaxListeners(0);
@@ -99,10 +113,12 @@ fetch(`${url}/health`)
                 },
                 (response) => {
                   const fileStream = createWriteStream(resultsFile);
+                  const chunks = [];
 
                   // A chunk of data has been received
                   response.on('data', (chunk) => {
                     fileStream.write(chunk);
+                    if (expectedErrors[file]) chunks.push(chunk);
                   });
 
                   // The whole response has been received
@@ -113,22 +129,45 @@ fetch(`${url}/health`)
                       new Date().getTime() - startDate
                     }ms.`;
 
-                    // Based on received status code check if requests failed
-                    if (response.statusCode >= 400) {
+                    const expected = expectedErrors[file];
+                    let matches = response.statusCode < 400;
+                    if (expected) {
+                      try {
+                        const body = JSON.parse(
+                          Buffer.concat(chunks).toString()
+                        );
+                        matches =
+                          response.statusCode === expected.status &&
+                          body.message === expected.message;
+                      } catch {
+                        matches = false;
+                      }
+                    }
+                    testCounter++;
+                    if (!matches) {
                       failsCounter++;
-                      console.log(`[Fail] ${endMessage}`.red);
+                      console.log(
+                        `[Fail] ${endMessage} (HTTP ${response.statusCode})`.red
+                      );
                     } else {
-                      testCounter++;
                       console.log(`[Success] ${endMessage}`.green);
                     }
                     resolve();
                   });
                 }
               );
+              request.on('error', (error) => {
+                testCounter++;
+                failsCounter++;
+                console.error(`[Fail] ${file}:`, error);
+                resolve();
+              });
               request.write(payload);
               request.end();
             });
           } catch (error) {
+            testCounter++;
+            failsCounter++;
             console.error(error);
           }
         })
@@ -140,13 +179,10 @@ fetch(`${url}/health`)
           : `\n${testCounter} tests done, errors not found!`.green,
         '\n--------------------------------'
       );
+      if (failsCounter) process.exitCode = 1;
     });
   })
   .catch((error) => {
-    if (error.code === 'ECONNREFUSED') {
-      return console.log(
-        `[ERROR] Couldn't connect to ${url}.`.red,
-        `Set your server before running tests.`.red
-      );
-    }
+    console.error(`[ERROR] Couldn't connect to ${url}: ${error.message}`.red);
+    process.exitCode = 1;
   });

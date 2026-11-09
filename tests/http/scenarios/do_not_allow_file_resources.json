@@ -1,7 +1,7 @@
 {
   "options": {
     "title": {
-      "text": "The default value of the 'allowFileResources' prevents resources from files"
+      "text": "The default value of 'allowCodeExecution' rejects resources from files"
     },
     "xAxis": {
       "categories": ["Jan", "Feb", "Mar", "Apr"]

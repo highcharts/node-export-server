@@ -15,5 +15,5 @@ jobs:
       registry: ghcr.io
       folder_name: .
       image_name: ${{ github.repository }}
-      platforms: linux/amd64
+      platforms: linux/amd64,linux/arm64
       deploy_branch: master
